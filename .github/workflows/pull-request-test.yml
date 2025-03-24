@@ -1,0 +1,48 @@
+name: Pull Request Test
+on:
+  push:
+    branches-ignore:
+      - develop
+      - production
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  check_pr:
+    runs-on: ubuntu-latest
+    outputs:
+      has_pr: ${{ steps.check.outputs.has_pr }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for PR to develop
+        id: check
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          PR_COUNT=$(gh pr list --head $BRANCH_NAME --base develop --json number --jq 'length')
+          if [[ "$PR_COUNT" -gt 0 ]]; then
+            echo "has_pr=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_pr=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test_branch:
+    needs: check_pr
+    if: needs.check_pr.outputs.has_pr == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run build
+      - run: npm audit signatures
+      - name: Run unit tests
+        run: npm test
+      - name: Run visual tests
+        run: npm run test-visual

@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Navigation> should render five standard links for unautenticated user 1`] = `
+<div>
+  <nav
+    class="nav"
+  >
+    <a
+      class="button"
+      href="/"
+    >
+      <svg />
+      Home
+    </a>
+    <a
+      class="button"
+      href="/explore"
+    >
+      <svg />
+      Explore
+    </a>
+    <a
+      class="button"
+      href="/new-project"
+    >
+      <svg />
+      Creator
+    </a>
+    <a
+      class="button"
+      href="/my-projects"
+    >
+      <svg />
+      Projects
+    </a>
+    <a
+      class="button"
+      href="/login"
+    >
+      <svg />
+      Login
+    </a>
+  </nav>
+</div>
+`;

@@ -15,16 +15,16 @@ export async function createSession(userId: string) {
   const session = await encrypt({ userId, expiresAt })
 
   const requestCookies = await cookies()
-  requestCookies.set("session", session, {
+  requestCookies.set('session', session, {
     httpOnly: true,
     secure: true,
-    expires: expiresAt
+    expires: expiresAt,
   })
 }
 
 export async function deleteSession() {
   const requestCookie = await cookies()
-  requestCookie.delete("session")
+  requestCookie.delete('session')
 }
 
 export async function encrypt(payload: SessionPayload) {
@@ -35,11 +35,15 @@ export async function encrypt(payload: SessionPayload) {
     .sign(encodedKey)
 }
 
-export async function decrypt(session = "") {
+export async function decrypt(session = '') {
+  if (!session) return undefined
+
   try {
     const { payload } = await jwtVerify<SessionPayload>(session, encodedKey, {
-      algorithms: ['HS256']
+      algorithms: ['HS256'],
     })
     return payload
-  } catch(error) {}
+  } catch (error) {
+    console.error(error)
+  }
 }

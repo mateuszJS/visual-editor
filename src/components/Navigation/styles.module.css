@@ -1,9 +1,5 @@
 .nav {
   display: flex;
   justify-content: space-between;
-  padding: 20px var(--global-padding);
-}
-
-.profileIcon {
-  color: var(--background);
+  padding: 0 calc(var(--global-padding) * 0.5) 1.2rem;
 }

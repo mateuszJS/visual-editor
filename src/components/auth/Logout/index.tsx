@@ -1,8 +1,8 @@
 'use client'
 
-import useUserStore from "@/hooks/useUserStore";
-import { logout } from "../actions";
-import Button from "@/components/Button";
+import useUserStore from '@/hooks/useUserStore'
+import { logout } from '../actions'
+import Button from '@/components/Button'
 
 export default function Logout() {
   const userStore = useUserStore()

@@ -21,11 +21,21 @@ jobs:
         id: check
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          PR_COUNT=$(gh pr list --head $BRANCH_NAME --base develop --json number --jq 'length')
+          echo "Current branch: $BRANCH_NAME"
+
+          # Use GitHub API directly instead of gh CLI
+          PR_URL="https://api.github.com/repos/$GITHUB_REPOSITORY/pulls?head=${GITHUB_REPOSITORY_OWNER}:${BRANCH_NAME}&base=develop&state=open"
+          echo "Checking PR URL: $PR_URL"
+
+          PR_COUNT=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$PR_URL" | jq length)
+          echo "Found $PR_COUNT PRs"
+
           if [[ "$PR_COUNT" -gt 0 ]]; then
             echo "has_pr=true" >> $GITHUB_OUTPUT
+            echo "✅ PR to develop exists"
           else
             echo "has_pr=false" >> $GITHUB_OUTPUT
+            echo "❌ No PR to develop found"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

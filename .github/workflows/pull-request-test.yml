@@ -59,12 +59,13 @@ jobs:
 
       - name: Upload snapshots and diffs
         if: always() # Run even if tests fail
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: visual-test-results
           path: |
             src/**/__diff_output__/
           retention-days: 2
+          overwrite: true
 
       - name: Find PR number
         if: failure() && github.event_name == 'pull_request'

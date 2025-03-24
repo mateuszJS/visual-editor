@@ -7,7 +7,8 @@ const config = {
   },
   launch: {
     headless: true,
-  }
+    args: ['--no-sandbox'],
+  },
 }
 
 export default config

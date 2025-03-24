@@ -7,7 +7,8 @@ const config = {
   },
   launch: {
     headless: true,
-    args: ['--no-sandbox'],
+    args: ['--no-sandbox'], // fails to run chrome on ubuntu-latest with sandbox
+    // as long as we trust the content of the pages we render, we shoyld be fine without the sanbox
   },
 }
 

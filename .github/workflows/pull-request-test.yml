@@ -56,3 +56,38 @@ jobs:
         run: npm test
       - name: Run visual tests
         run: npm run test-visual
+
+      - name: Upload snapshots and diffs
+        if: always() # Run even if tests fail
+        uses: actions/upload-artifact@v3
+        with:
+          name: visual-test-results
+          path: |
+            src/**/__diff_output__/
+          retention-days: 2
+
+      - name: Find PR number
+        if: failure() && github.event_name == 'pull_request'
+        id: pr
+        run: echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+
+      - name: Comment on PR with failure details
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const { repo, owner } = context.repo;
+            const issue_number = process.env.PR_NUMBER;
+
+            const diffFiles = glob.sync('src/**/__image_diff__/*.png');
+
+            if (diffFiles.length > 0) {
+              github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: `## Visual Test Failures\n\nFound ${diffFiles.length} visual differences. [Download full report](${process.env.GITHUB_SERVER_URL}/${owner}/${repo}/actions/runs/${context.runId}).`
+              });
+            }

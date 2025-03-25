@@ -78,11 +78,16 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const { globSync } = require("glob");
             const fs = require('fs');
             const { repo, owner } = context.repo;
             const issue_number = process.env.PR_NUMBER;
 
-            const diffFiles = glob.sync('src/**/__image_diff__/*.png');
+            const diffFiles = globSync('src/**/__image_diff__/*.png');
+            console.log(context)
+            diffFiles.forEach(path => {
+              console.log(`💠 ${path}`)
+            })
 
             if (diffFiles.length > 0) {
               github.rest.issues.createComment({

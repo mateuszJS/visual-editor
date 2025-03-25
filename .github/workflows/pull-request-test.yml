@@ -68,7 +68,7 @@ jobs:
           overwrite: true
 
       - name: Find PR number
-        if: failure() && github.event_name == 'pull_request'
+        if: always() # failure() && github.event_name == 'pull_request'
         id: pr
         run: echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
 

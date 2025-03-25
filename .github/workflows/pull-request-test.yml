@@ -70,9 +70,15 @@ jobs:
       - name: Find PR number
         if: always() # failure() && github.event_name == 'pull_request'
         id: pr
-        run: echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+        run: |
+          echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          echo "Pull Request Number: ${{ github.event.pull_request.number }}"
+          pull_number_maybe=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          echo "Found $pull_number_maybe PRs"
 
       - name: Comment on PR with failure details
+        env:
+          PR_NUMBER_FIX: ${{ github.event.number }}
         if: always() # failure() && github.event_name == 'pull_request'
         uses: actions/github-script@v6
         with:
@@ -81,6 +87,7 @@ jobs:
             const fs = require('fs')
             const { repo, owner } = context.repo
             console.log('=========Issue number')
+            console.log(process.env.PR_NUMBER)
             console.log(context.issue)
             const issue_number = context.issue.number
             // const issue_number = process.env.PR_NUMBER

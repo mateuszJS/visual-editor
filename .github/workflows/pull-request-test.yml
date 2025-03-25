@@ -57,6 +57,17 @@ jobs:
       - name: Run visual tests
         run: npm run test-visual
 
+      - name: Find PR number
+        if: always() # failure() && github.event_name == 'pull_request'
+        id: pr
+        run: |
+          echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          echo "Pull Request Number: ${{ github.event.pull_request.number }}"
+          pull_number_maybe=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          PR_NUMBER_ANOTER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo "Found $pull_number_maybe PRs"
+          echo "PR_NUMBER_ANOTER $PR_NUMBER_ANOTER"
+
       - name: Upload snapshots and diffs
         if: always() # Run even if tests fail
         uses: actions/upload-artifact@v4
@@ -66,15 +77,6 @@ jobs:
             src/**/__diff_output__/
           retention-days: 2
           overwrite: true
-
-      - name: Find PR number
-        if: always() # failure() && github.event_name == 'pull_request'
-        id: pr
-        run: |
-          echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
-          echo "Pull Request Number: ${{ github.event.pull_request.number }}"
-          pull_number_maybe=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          echo "Found $pull_number_maybe PRs"
 
       - name: Comment on PR with failure details
         env:

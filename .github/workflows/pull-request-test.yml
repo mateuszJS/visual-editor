@@ -73,7 +73,7 @@ jobs:
         run: echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
 
       - name: Comment on PR with failure details
-        if: failure() && github.event_name == 'pull_request'
+        if: always() # failure() && github.event_name == 'pull_request'
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

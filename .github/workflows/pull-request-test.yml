@@ -81,12 +81,34 @@ jobs:
             const fs = require('fs');
             const { repo, owner } = context.repo;
             const issue_number = process.env.PR_NUMBER;
-            console.log(glob)
+
+
+            const globberAbsolute = await glob.create('/home/runner/work/visual-editor/visual-editor/src/**/__image_diff__/*.png')
+            const diffFilesAbsolute = await globberAbsolute.glob()
+
+            diffFilesAbsolute.forEach(path => {
+              console.log(`Absolute 💠 ${path}`)
+            })
+
+
+
+            const globberRelative = await glob.create('**/src/**/__image_diff__/*.png')
+            const diffFilesRelative = await globberRelative.glob()
+
+            diffFilesRelative.forEach(path => {
+              console.log(`Relative 💠 ${path}`)
+            })
+
+            const globberSource = await glob.create('/src/**/__image_diff__/*.png')
+            const diffFilesSource = await globberSource.glob()
+
+            diffFilesSource.forEach(path => {
+              console.log(`Source 💠 ${path}`)
+            })
 
             const globber = await glob.create('src/**/__image_diff__/*.png')
             const diffFiles = await globber.glob()
 
-            console.log(context)
             diffFiles.forEach(path => {
               console.log(`💠 ${path}`)
             })

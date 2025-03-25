@@ -78,12 +78,14 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { globSync } = require("glob");
             const fs = require('fs');
             const { repo, owner } = context.repo;
             const issue_number = process.env.PR_NUMBER;
+            console.log(glob)
 
-            const diffFiles = globSync('src/**/__image_diff__/*.png');
+            const globber = await glob.create('src/**/__image_diff__/*.png')
+            const diffFiles = await globber.glob()
+
             console.log(context)
             diffFiles.forEach(path => {
               console.log(`💠 ${path}`)

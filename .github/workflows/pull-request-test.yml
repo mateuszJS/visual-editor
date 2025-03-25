@@ -80,10 +80,11 @@ jobs:
           script: |
             const fs = require('fs')
             const { repo, owner } = context.repo
-            const issue_number = context.issue.number
-            # const issue_number = process.env.PR_NUMBER
-            console.log(`=========Issue number`)
+            console.log('=========Issue number')
             console.log(context.issue)
+            const issue_number = context.issue.number
+            // const issue_number = process.env.PR_NUMBER
+
             const globber = await glob.create('src/**/__diff_output__/*.png')
             const diffFiles = await globber.glob()
 

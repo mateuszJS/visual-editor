@@ -86,6 +86,9 @@ jobs:
             const globberAbsolute = await glob.create('/home/runner/work/visual-editor/visual-editor/src/**/__image_diff__/*.png')
             const diffFilesAbsolute = await globberAbsolute.glob()
 
+            console.log('diffFilesAbsolute')
+            console.log(diffFilesAbsolute)
+
             diffFilesAbsolute.forEach(path => {
               console.log(`Absolute 💠 ${path}`)
             })
@@ -94,7 +97,8 @@ jobs:
 
             const globberRelative = await glob.create('**/src/**/__image_diff__/*.png')
             const diffFilesRelative = await globberRelative.glob()
-
+            console.log('diffFilesRelative')
+            console.log(diffFilesRelative)
             diffFilesRelative.forEach(path => {
               console.log(`Relative 💠 ${path}`)
             })

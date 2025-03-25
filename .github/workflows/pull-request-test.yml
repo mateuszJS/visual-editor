@@ -1,9 +1,8 @@
 name: Pull Request Test
 on:
-  push:
-    branches-ignore:
+  pull_request:
+    branches:
       - develop
-      - production
 
 permissions:
   contents: write

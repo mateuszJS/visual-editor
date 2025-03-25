@@ -78,38 +78,12 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const fs = require('fs');
-            const { repo, owner } = context.repo;
-            const issue_number = process.env.PR_NUMBER;
-
-
-            const globberAbsolute = await glob.create('/home/runner/work/visual-editor/visual-editor/src/**/__diff_output__/*.png')
-            const diffFilesAbsolute = await globberAbsolute.glob()
-
-            console.log('diffFilesAbsolute')
-            console.log(diffFilesAbsolute)
-
-            diffFilesAbsolute.forEach(path => {
-              console.log(`Absolute 💠 ${path}`)
-            })
-
-
-
-            const globberRelative = await glob.create('**/src/**/__diff_output__/*.png')
-            const diffFilesRelative = await globberRelative.glob()
-            console.log('diffFilesRelative')
-            console.log(diffFilesRelative)
-            diffFilesRelative.forEach(path => {
-              console.log(`Relative 💠 ${path}`)
-            })
-
-            const globberSource = await glob.create('/src/**/__diff_output__/*.png')
-            const diffFilesSource = await globberSource.glob()
-
-            diffFilesSource.forEach(path => {
-              console.log(`Source 💠 ${path}`)
-            })
-
+            const fs = require('fs')
+            const { repo, owner } = context.repo
+            const issue_number = context.issue.number
+            # const issue_number = process.env.PR_NUMBER
+            console.log(`=========Issue number`)
+            console.log(context.issue)
             const globber = await glob.create('src/**/__diff_output__/*.png')
             const diffFiles = await globber.glob()
 
@@ -122,6 +96,10 @@ jobs:
                 owner,
                 repo,
                 issue_number,
-                body: `## Visual Test Failures\n\nFound ${diffFiles.length} visual differences. [Download full report](${process.env.GITHUB_SERVER_URL}/${owner}/${repo}/actions/runs/${context.runId}).`
+                body: `
+                  ## Visual Test Failures
+                  
+                  Found ${diffFiles.length} visual differences.
+                  [Download full report](${process.env.GITHUB_SERVER_URL}/${owner}/${repo}/actions/runs/${context.runId}).`
               });
             }

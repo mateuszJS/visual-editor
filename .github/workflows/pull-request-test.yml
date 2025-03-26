@@ -104,7 +104,6 @@ jobs:
 
       - name: Comment on PR with failure details
         if: always()
-        # if: env.DIFFS_BRANCH
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -113,7 +112,30 @@ jobs:
             const { repo, owner } = context.repo;
             const issue_number = context.issue.number;
             const branchName = process.env.DIFFS_BRANCH;
+            const commentTitle = '## Visual Test Failures';
 
+            // 1. Find existing visual test comments
+            const comments = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number
+            });
+
+            const visualTestComments = comments.data.filter(comment => 
+              comment.body.includes(commentTitle)
+            );
+
+            // 2. Delete previous comments
+            for (const comment of visualTestComments) {
+              await github.rest.issues.deleteComment({
+                owner,
+                repo,
+                comment_id: comment.id
+              });
+              console.log(`Deleted previous visual test comment: ${comment.id}`);
+            }
+
+            // 3. Post new comment only if we have diffs
             if (!branchName) {
               console.log('No visual diffs found');
               return;
@@ -122,12 +144,13 @@ jobs:
             const diffDir = '.github/visual-diffs';
             const diffFiles = fs.readdirSync(diffDir).filter(file => file.endsWith('.png'));
 
-            let commentBody = `## Visual Test Failures\n\nFound ${diffFiles.length} visual differences:\n\n`;
+            let commentBody = `${commentTitle}\n\nFound ${diffFiles.length} visual differences:\n\n`;
 
             // Add each image to the comment
             diffFiles.forEach(file => {
+              const storybookId = file.split('-diff.png')[0];
               const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branchName}/${diffDir}/${file}`;
-              commentBody += `${diffDir}\n### ${file}\n![${file}](${imageUrl})\n\n`;
+              commentBody += `### ${storybookId}\n![${file}](${imageUrl})\n\n`;
             });
 
             await github.rest.issues.createComment({

@@ -103,6 +103,7 @@ jobs:
           fi
 
       - name: Comment on PR with failure details
+        if: always()
         # if: env.DIFFS_BRANCH
         uses: actions/github-script@v6
         with:

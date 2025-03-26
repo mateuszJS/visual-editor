@@ -103,7 +103,7 @@ jobs:
           fi
 
       - name: Comment on PR with failure details
-        if: env.DIFFS_BRANCH
+        # if: env.DIFFS_BRANCH
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -112,6 +112,11 @@ jobs:
             const { repo, owner } = context.repo;
             const issue_number = context.issue.number;
             const branchName = process.env.DIFFS_BRANCH;
+
+            if (!branchName) {
+              console.log('No visual diffs found');
+              return;
+            }
 
             const diffDir = '.github/visual-diffs';
             const diffFiles = fs.readdirSync(diffDir).filter(file => file.endsWith('.png'));

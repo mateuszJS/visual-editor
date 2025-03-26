@@ -23,7 +23,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     href: 'home',
-    children: [<HomeIcon key="" />, 'Home'],
+    children: [<HomeIcon key="" />, 'Homee'],
   },
 }
 

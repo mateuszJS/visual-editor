@@ -62,7 +62,7 @@ jobs:
         with:
           name: visual-test-results
           path: src/**/__diff_output__/
-          retention-days: 2
+          retention-days: 1
 
       - name: Upload diff images to branch
         if: always()
@@ -71,31 +71,39 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-          # Create a temp branch for the diffs from the current commit
-          BRANCH_NAME="visual-diffs-${{ github.run_id }}"
-          git checkout -b $BRANCH_NAME
+          # Create a branch named after the PR number
+          PR_NUMBER="${{ github.event.number }}"
+          BRANCH_NAME="visual-diffs-pr-${PR_NUMBER}"
+
+          # Make sure we have the latest code
+          git fetch origin
+
+          # Check if branch already exists, force update it
+          if git ls-remote --heads origin ${BRANCH_NAME} | grep ${BRANCH_NAME}; then
+            git checkout -b ${BRANCH_NAME} origin/${BRANCH_NAME} || git checkout -b ${BRANCH_NAME}
+            git reset --hard HEAD
+          else
+            git checkout -b ${BRANCH_NAME}
+          fi
 
           # Create diffs directory and copy the images
           DIFFS_DIR=".github/visual-diffs"
           mkdir -p $DIFFS_DIR
+          rm -rf $DIFFS_DIR/* # Clean previous images
           find src -path "*/__diff_output__/*.png" -exec cp {} $DIFFS_DIR/ \;
 
           # Commit and push if there are diffs
           if [ -n "$(ls -A $DIFFS_DIR)" ]; then
             git add $DIFFS_DIR
-            git commit -m "Add visual test diffs for PR #${{ github.event.number }}"
-            git push origin $BRANCH_NAME
-            echo "DIFFS_BRANCH=$BRANCH_NAME" >> $GITHUB_ENV
-            echo "HAS_DIFFS=true" >> $GITHUB_ENV
+            git commit -m "Update visual test diffs for PR #${PR_NUMBER} (Run #${{ github.run_id }})"
+            git push -f origin ${BRANCH_NAME}
+            echo "DIFFS_BRANCH=${BRANCH_NAME}" >> $GITHUB_ENV
           else
             echo "No diff images found"
-            echo "HAS_DIFFS=false" >> $GITHUB_ENV
           fi
 
       - name: Comment on PR with failure details
-        env:
-          PR_NUMBER_FIX: ${{ github.event.number }}
-        if: always() # failure() && github.event_name == 'pull_request'
+        if: env.DIFFS_BRANCH
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -108,44 +116,17 @@ jobs:
             const diffDir = '.github/visual-diffs';
             const diffFiles = fs.readdirSync(diffDir).filter(file => file.endsWith('.png'));
 
-            if (diffFiles.length > 0) {
-              let commentBody = `## Visual Test Failures\n\nFound ${diffFiles.length} visual differences:\n\n`;
-              
-              // Add each image to the comment
-              diffFiles.forEach(file => {
-                const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branchName}/${diffDir}/${file}`;
-                commentBody += `### ${file}\n![${file}](${imageUrl})\n\n`;
-              });
-              
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number,
-                body: commentBody
-              });
-            }
+            let commentBody = `## Visual Test Failures\n\nFound ${diffFiles.length} visual differences:\n\n`;
 
-          # script: |
-          #   const fs = require('fs')
-          #   const { repo, owner } = context.repo
-          #   const issue_number = context.issue.number
+            // Add each image to the comment
+            diffFiles.forEach(file => {
+              const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branchName}/${diffDir}/${file}`;
+              commentBody += `diffDir\n### ${file}\n![${file}](${imageUrl})\n\n`;
+            });
 
-          #   const globber = await glob.create('src/**/__diff_output__/*.png')
-          #   const diffFiles = await globber.glob()
-
-          #   diffFiles.forEach(path => {
-          #     console.log(`💠 ${path}`)
-          #   })
-
-          #   if (diffFiles.length > 0) {
-          #     github.rest.issues.createComment({
-          #       owner,
-          #       repo,
-          #       issue_number,
-          #       body: `
-          #         ## Visual Test Failures
-
-          #         Found ${diffFiles.length} visual differences.
-          #         [Download full report](${process.env.GITHUB_SERVER_URL}/${owner}/${repo}/actions/runs/${context.runId}).`
-          #     });
-          #   }
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: commentBody
+            });

@@ -1,0 +1,27 @@
+name: Cleanup Visual Diffs
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Delete visual diffs branch
+        run: |
+          PR_NUMBER="${{ github.event.number }}"
+          BRANCH_NAME="visual-diffs-pr-${PR_NUMBER}"
+
+          # Check if branch exists before trying to delete
+          if git ls-remote --heads origin ${BRANCH_NAME} | grep ${BRANCH_NAME}; then
+            git push origin --delete ${BRANCH_NAME}
+            echo "Branch ${BRANCH_NAME} deleted"
+          else
+            echo "Branch ${BRANCH_NAME} does not exist, nothing to delete"
+          fi

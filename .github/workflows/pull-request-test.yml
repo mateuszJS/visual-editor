@@ -127,7 +127,7 @@ jobs:
             // Add each image to the comment
             diffFiles.forEach(file => {
               const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branchName}/${diffDir}/${file}`;
-              commentBody += `diffDir\n### ${file}\n![${file}](${imageUrl})\n\n`;
+              commentBody += `${diffDir}\n### ${file}\n![${file}](${imageUrl})\n\n`;
             });
 
             await github.rest.issues.createComment({

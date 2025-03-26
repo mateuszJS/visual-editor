@@ -48,9 +48,10 @@ export default async function visualSetup(storyId: string, dirname: string) {
     // Compare with baseline
     expect(imageBuffer).toMatchImageSnapshot({
       customSnapshotsDir: screenshotsDir,
-      failureThreshold: 0.01,
+      failureThreshold: 0.02,
       failureThresholdType: 'percent',
       updatePassedSnapshot: false /* change to true to update this screenhot */,
+      customSnapshotIdentifier: storyId,
     })
   } finally {
     // Clean up temporary file

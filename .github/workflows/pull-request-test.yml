@@ -105,6 +105,13 @@ jobs:
             echo "No diff images found in __diff_output__ directories"
           fi
 
+
+          echo "git ls-files --other --directory"
+          git ls-files --other --directory 
+
+          echo "git ls-files --other --directory --exclude-standard"
+          git ls-files --other --directory --exclude-standard
+
           # Commit and push if there are diffs
           if [ -n "$(ls -A $DIFFS_DIR)" ]; then
             echo "What the hek is going on here??"

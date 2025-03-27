@@ -86,18 +86,34 @@ jobs:
             git checkout -b ${BRANCH_NAME}
           fi
 
-          # Create diffs directory and copy the images
+          # Debug: List all diff output directories and their contents
+          echo "Looking for diff output files:"
+          find src -path "*/__diff_output__" -type d -exec ls -la {} \;
+
+          # Create diffs directory and make sure it's empty
           DIFFS_DIR=".github/visual-diffs"
           mkdir -p $DIFFS_DIR
-          rm -rf $DIFFS_DIR/* # Clean previous images
-          find src -path "*/__diff_output__/*.png" -exec cp {} $DIFFS_DIR/ \;
+          rm -rf $DIFFS_DIR/*
+
+          # Copy diff images if they exist
+          FOUND_DIFFS=false
+          if find src -path "*/__diff_output__/*.png" -exec cp {} $DIFFS_DIR/ \; -quit; then
+            FOUND_DIFFS=true
+            echo "Copied diff images to $DIFFS_DIR"
+            ls -la $DIFFS_DIR
+          else
+            echo "No diff images found in __diff_output__ directories"
+          fi
 
           # Commit and push if there are diffs
           if [ -n "$(ls -A $DIFFS_DIR)" ]; then
+            echo "What the hek is going on here??"
             git add $DIFFS_DIR
+            git status # Debug: Show what's staged
             git commit -m "Update visual test diffs for PR #${PR_NUMBER} (Run #${{ github.run_id }})"
             git push -f origin ${BRANCH_NAME}
             echo "DIFFS_BRANCH=${BRANCH_NAME}" >> $GITHUB_ENV
+            echo "✅ Successfully pushed diff images to branch"
           else
             echo "No diff images found"
           fi
@@ -143,6 +159,10 @@ jobs:
 
             const diffDir = '.github/visual-diffs';
             const diffFiles = fs.readdirSync(diffDir).filter(file => file.endsWith('.png'));
+
+            if (diffFiles.length === 0) {
+              console.log('No image files found in diff directory, it should never happen');
+            }
 
             let commentBody = `${commentTitle}\n\nFound ${diffFiles.length} visual differences:\n\n`;
 

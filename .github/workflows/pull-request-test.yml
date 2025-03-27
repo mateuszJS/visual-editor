@@ -54,16 +54,8 @@ jobs:
       - name: Run unit tests
         run: npm test
       - name: Run visual tests
+        if: always()
         run: npm run test-visual
-
-      - name: Upload snapshots and diffs
-        if: always() # Run even if tests fail
-        uses: actions/upload-artifact@v4
-        with:
-          name: visual-test-results
-          path: src/**/__diff_output__/
-          retention-days: 1
-
       - name: Upload diff images to branch
         if: always()
         run: |
@@ -149,7 +141,10 @@ jobs:
             const diffFiles = fs.readdirSync(diffDir).filter(file => file.endsWith('.png'));
 
             if (diffFiles.length === 0) {
-              console.log('No image files found in diff directory, it should never happen');
+              // It means that previous diffs were removed, that's why branchName exists!
+              // Files deletion was pushed!
+              console.log('No image files found in diff directory');
+              return;
             }
 
             let commentBody = `${commentTitle}\n\nFound ${diffFiles.length} visual differences:\n\n`;

@@ -95,6 +95,14 @@ jobs:
           mkdir -p $DIFFS_DIR
           rm -rf $DIFFS_DIR/*
 
+          touch $DIFFS_DIR/file.txt
+
+          # Create diffs directory and make sure it's empty
+          mkdir -p new-directory-temp-test/visual-diffs
+          rm -rf new-directory-temp-test/visual-diffs/*
+          find src -path "*/__diff_output__/*.png" -exec cp {} new-directory-temp-test/visual-diffs/ \;
+
+
           # Copy diff images if they exist
           FOUND_DIFFS=false
           if find src -path "*/__diff_output__/*.png" -exec cp {} $DIFFS_DIR/ \; -quit; then

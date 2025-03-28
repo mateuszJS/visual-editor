@@ -99,6 +99,7 @@ export const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^assets/(.*)$': '<rootDir>/public/$1',
+    '^test/(.*)$': '<rootDir>/test/$1',
     '^.+\\.(svg)$': '<rootDir>/src/__mocks__/svg.tsx',
   },
 
@@ -150,7 +151,7 @@ export const config: Config = {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,

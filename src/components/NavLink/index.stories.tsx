@@ -10,7 +10,7 @@ const meta = {
     nextjs: {
       appDirectory: true,
       navigation: {
-        pathname: '/home-active',
+        pathname: '/explore',
       },
     },
   },
@@ -22,14 +22,14 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    href: 'home',
+    href: '/creator',
     children: [<HomeIcon key="" />, 'Home'],
   },
 }
 
 export const Active: Story = {
   args: {
-    href: '/home-active',
+    href: '/explore',
     children: [<HomeIcon key="" />, 'Home'],
   },
 }

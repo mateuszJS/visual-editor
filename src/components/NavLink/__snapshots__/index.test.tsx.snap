@@ -1,22 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<NavLink> TEEESTING 1`] = `
-<div>
-  <a
-    class="button"
-    href="/my-link"
-  >
-    <svg />
-    Content
-  </a>
-</div>
-`;
-
 exports[`<NavLink> should add class active when is active 1`] = `
 <div>
   <a
     class="button active"
-    href="/my-link"
+    href="/explore"
   >
     <svg />
     Content
@@ -28,7 +16,7 @@ exports[`<NavLink> should render icon and text> 1`] = `
 <div>
   <a
     class="button"
-    href="my-link"
+    href="/explore"
   >
     <svg />
     Content

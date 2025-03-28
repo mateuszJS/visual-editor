@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 import HomeIcon from 'assets/home-icon.svg'
 import NavLink from '.'
 
-const mockUsePathname = jest.fn(() => '/home')
+const mockUsePathname = jest.fn(() => '/')
 
 jest.mock('next/navigation', () => ({
   usePathname: () => mockUsePathname(),
@@ -12,7 +12,7 @@ jest.mock('next/navigation', () => ({
 describe('<NavLink>', () => {
   it('should render icon and text>', () => {
     const { container } = render(
-      <NavLink href="my-link">
+      <NavLink href="/explore">
         <>
           <HomeIcon />
           Content
@@ -23,22 +23,9 @@ describe('<NavLink>', () => {
   })
 
   it('should add class active when is active', () => {
-    mockUsePathname.mockImplementationOnce(() => '/my-link')
+    mockUsePathname.mockImplementationOnce(() => '/explore')
     const { container } = render(
-      <NavLink href="/my-link">
-        <>
-          <HomeIcon />
-          Content
-        </>
-      </NavLink>
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  it('TEEESTING', () => {
-    // mockUsePathname.mockImplementation(() => '/link')
-    const { container } = render(
-      <NavLink href="/my-link">
+      <NavLink href="/explore">
         <>
           <HomeIcon />
           Content

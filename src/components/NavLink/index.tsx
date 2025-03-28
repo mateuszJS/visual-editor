@@ -2,13 +2,14 @@ import Link from 'next/link'
 import styles from './styles.module.css'
 import { usePathname } from 'next/navigation'
 import cn from 'classnames'
+import type { Route } from 'next'
 
-interface Props {
+interface Props<T extends string> {
   children: React.ReactNode
-  href: string
+  href: Route<T> | URL
 }
 
-export default function NavLink({ children, href }: Props) {
+export default function NavLink<T extends string>({ children, href }: Props<T>) {
   const pathname = usePathname()
 
   return (

@@ -4,8 +4,9 @@ import webpackConfig from './webpack.config'
 const nextConfig: NextConfig = {
   webpack: webpackConfig,
   experimental: {
-    // typedRoutes: true,
+    typedRoutes: true,
     // https://nextjs.org/docs/app/api-reference/config/typescript#statically-typed-links
+
     turbo: {
       rules: {
         '*.svg': {

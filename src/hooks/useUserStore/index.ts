@@ -20,9 +20,12 @@ const useUserStore = create<UserStore>((set) => ({
 
 export async function initUserStore() {
   try {
-    const response = await fetch('/me')
-    const user = await response.json()
-    useUserStore.setState({ user })
+    const response = await fetch('/api/me')
+
+    if (response.ok) {
+      const user = await response.json()
+      useUserStore.setState({ user })
+    }
   } catch (error) {
     console.error('Error fetching user data', error)
   }

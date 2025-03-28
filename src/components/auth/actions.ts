@@ -1,7 +1,7 @@
 'use server'
 
 import { UserStore } from '@/hooks/useUserStore'
-import { createSession, deleteSession } from '@/lib/session'
+import { createSession, deleteSession } from '@/app/api/session'
 import { OAuth2Client } from 'google-auth-library'
 import { redirect } from 'next/navigation'
 

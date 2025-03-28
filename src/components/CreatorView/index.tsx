@@ -1,26 +1,37 @@
 'use client'
 
 import initCreator from '@mateuszjs/magic-render'
-import { ChangeEventHandler, useEffect, useRef } from "react"
+import { ChangeEventHandler, useEffect, useRef } from 'react'
 
 export default function CreatorView() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const creatorRef = useRef<Awaited<ReturnType<typeof initCreator>>>(null) // TODO: change type to Creator
 
   useEffect(() => {
-    (async () => {
-      creatorRef.current = await initCreator(canvasRef.current!)
-    })()
+    initCreator(canvasRef.current!).then((creator) => {
+      creatorRef.current = creator
+    })
   }, [])
 
   const onFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    const { files } = (event.target as HTMLInputElement)
-    if (!files) return
+    const { files } = event.target as HTMLInputElement
+    if (!files || files.length === 0) return
+
+    const file = files[0]
+    if (!file.type.startsWith('image/')) {
+      console.error('Please select an image file')
+      return
+    }
 
     const img = new Image()
-    img.src = URL.createObjectURL(files[0])
+    const objectUrl = URL.createObjectURL(file)
+    img.src = objectUrl
     img.onload = () => {
       creatorRef.current!.addImage(img)
+    }
+    img.onerror = () => {
+      console.error('Failed to load the image')
+      URL.revokeObjectURL(objectUrl)
     }
   }
 

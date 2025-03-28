@@ -1,10 +1,10 @@
 import { act, render, screen } from '@testing-library/react'
 import Navigation from '.'
-import useUserStore from '@/hooks/useUserStore'
+import { initUserStore } from '@/hooks/useUserStore'
 
 jest.mock('next/navigation', () => ({
   usePathname() {
-    return () => '/explore'
+    return '/explore'
   },
 }))
 
@@ -21,7 +21,7 @@ describe('<Navigation>', () => {
     expect(loginLink).toBeInTheDocument()
 
     await act(async () => {
-      useUserStore.setState({ user: {} })
+      initUserStore()
     })
 
     const profileLink = screen.getByText('Profile')

@@ -1,4 +1,4 @@
-import visualSetup from '@/test-utils/visual-setup'
+import visualSetup from 'test/visual-setup'
 
 describe('<Navigation /> Visual Tests', () => {
   it('default', async () => {

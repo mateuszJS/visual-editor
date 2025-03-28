@@ -13,7 +13,7 @@ exports[`<Navigation> should render five standard links for unautenticated user 
       Home
     </a>
     <a
-      class="button"
+      class="button active"
       href="/explore"
     >
       <svg />

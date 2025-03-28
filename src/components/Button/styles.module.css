@@ -14,9 +14,9 @@
   background: var(--primary);
   color: var(--background);
 
-  /* &:hover {
-    background: rgba(var(--primary-rgb), 0.8);
-  } */
+  &:hover {
+    background: rgba(var(--primary-rgb), 0.9);
+  }
 }
 
 .secondary {

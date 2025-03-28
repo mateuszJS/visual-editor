@@ -21,7 +21,8 @@
     "baseUrl": "./src", // not "src" because we want to acces "public" folder by alias, which is outside of "src"
     "paths": {
       "@/*": ["./*"],
-      "assets/*": ["../public/*"]
+      "assets/*": ["../public/*"],
+      "test/*": ["../test/*"]
     }
   },
   "include": ["svgr.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

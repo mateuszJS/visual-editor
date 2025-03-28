@@ -1,9 +1,14 @@
 import { http, HttpResponse } from 'msw'
 
-const handlers = [
-  http.get('/me', () => {
-    return HttpResponse.json({ firstName: 'John' })
-  }),
-]
+export const mockApiMe = jest.fn(() =>
+  HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
+)
 
-export { handlers }
+/*
+To mock for a one testcase:
+mockApiMe.mockImplementationOnce(() =>
+  HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
+)
+*/
+
+export default [http.get('/api/me', mockApiMe)]

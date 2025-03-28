@@ -10,7 +10,7 @@ import useUserStore from '@/hooks/useUserStore'
 import NavLink from '@/components/NavLink'
 
 export default function Navigation() {
-  const userStore = useUserStore()
+  const { user } = useUserStore()
 
   return (
     <nav className={styles.nav}>
@@ -34,9 +34,9 @@ export default function Navigation() {
         Projects
       </NavLink>
 
-      <NavLink href={userStore.user ? '/profile' : '/login'}>
+      <NavLink href={user ? '/profile' : '/login'}>
         <ProfileIcon />
-        {userStore.user ? 'Profile' : 'Login'}
+        {user ? 'Profile' : 'Login'}
       </NavLink>
     </nav>
   )

@@ -4,7 +4,7 @@ import webpackConfig from './webpack.config'
 const nextConfig: NextConfig = {
   webpack: webpackConfig,
   experimental: {
-    typedRoutes: true,
+    typedRoutes: process.env.NODE_ENV === 'production', // not supported with trurbo pack(dev mode)
     // https://nextjs.org/docs/app/api-reference/config/typescript#statically-typed-links
 
     turbo: {

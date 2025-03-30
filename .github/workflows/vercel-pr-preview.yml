@@ -74,7 +74,7 @@ jobs:
             // Add new comment
             const body = `## ${commentTitle}
             Your changes were deployed to a preview environment:
-            [deployUrl](${ deployUrl })`;
+            [${deployUrl}](${ deployUrl })`;
 
             await github.rest.issues.createComment({
               owner,

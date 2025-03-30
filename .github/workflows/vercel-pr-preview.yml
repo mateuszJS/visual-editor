@@ -7,6 +7,11 @@ on:
     branches-ignore:
       - develop
       - production
+
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
@@ -24,3 +29,57 @@ jobs:
           DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "deployment_url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
           echo "Deployed to: $DEPLOYMENT_URL"
+
+      - name: Find PR Number
+        id: find-pr
+        run: |
+          PR_NUMBER=$(gh pr list --head ${GITHUB_REF#refs/heads/} --base develop --json number --jq '.[0].number')
+          if [ -n "$PR_NUMBER" ]; then
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "Found PR #$PR_NUMBER"
+          else
+            echo "No PR found for this branch"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on PR
+        if: steps.find-pr.outputs.pr_number != ''
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { repo, owner } = context.repo;
+            const prNumber = ${{ steps.find-pr.outputs.pr_number }};
+            const deployUrl = '${{ steps.deploy.outputs.deployment_url }}';
+
+            // Delete previous comment
+            const comments = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number: prNumber
+            });
+
+            for (const comment of comments.data) {
+              if (comment.body.includes('🚀 Vercel Preview Deployed!')) {
+                await github.rest.issues.deleteComment({
+                  owner,
+                  repo,
+                  comment_id: comment.id
+                });
+              }
+            }
+
+            // Add new comment
+            const body = `## 🚀 Vercel Preview Deployed!
+
+            Your changes were deployed to a preview environment:
+
+            🔗 [View Preview](${ deployUrl })`;
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: body
+            });

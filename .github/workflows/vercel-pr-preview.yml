@@ -16,7 +16,7 @@ jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
@@ -52,6 +52,7 @@ jobs:
             const { repo, owner } = context.repo;
             const prNumber = ${{ steps.find-pr.outputs.pr_number }};
             const deployUrl = '${{ steps.deploy.outputs.deployment_url }}';
+            const commentTitle = '▲ Vercel Preview Deployed!';
 
             // Delete previous comment
             const comments = await github.rest.issues.listComments({
@@ -61,7 +62,7 @@ jobs:
             });
 
             for (const comment of comments.data) {
-              if (comment.body.includes('🚀 Vercel Preview Deployed!')) {
+              if (comment.body.includes(commentTitle)) {
                 await github.rest.issues.deleteComment({
                   owner,
                   repo,
@@ -71,11 +72,9 @@ jobs:
             }
 
             // Add new comment
-            const body = `## 🚀 Vercel Preview Deployed!
-
+            const body = `## ${commentTitle}
             Your changes were deployed to a preview environment:
-
-            🔗 [View Preview](${ deployUrl })`;
+            [deployUrl](${ deployUrl })`;
 
             await github.rest.issues.createComment({
               owner,

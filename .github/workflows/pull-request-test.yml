@@ -4,6 +4,10 @@ on:
     branches:
       - develop
 
+env:
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+  SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+
 permissions:
   contents: write
   issues: write

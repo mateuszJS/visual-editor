@@ -10,7 +10,7 @@ jest.mock('next/navigation', () => ({
 }))
 
 describe('<NavLink>', () => {
-  it('should render icon and text>', () => {
+  it('should render icon and text', () => {
     const { container } = render(
       <NavLink href="/explore">
         <>

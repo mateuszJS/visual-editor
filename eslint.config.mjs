@@ -14,6 +14,13 @@ const eslintConfig = [
     extends: ['next/core-web-vitals', 'next/typescript'],
     rules: {
       'import/no-anonymous-default-export': 'off',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "CallExpression[callee.name='fetch']",
+          message: 'Use fetcher instead of native fetch.',
+        },
+      ],
     },
   }),
 ]

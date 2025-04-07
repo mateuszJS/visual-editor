@@ -1,15 +1,22 @@
 'use client'
 
 import useUserStore from '@/hooks/useUserStore'
-import { logout } from '../actions'
 import Button from '@/components/Button'
+import fetcher from '@/utils/fetcher'
 
 export default function Logout() {
   const userStore = useUserStore()
 
   const onClick = async () => {
-    await logout()
-    userStore.set(null)
+    try {
+      await fetcher('/api/auth/logout', {
+        method: 'DELETE',
+      })
+
+      userStore.set(null)
+    } catch (err: unknown) {
+      console.error(err)
+    }
   }
 
   return <Button onClick={onClick}>Logout</Button>

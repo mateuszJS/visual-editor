@@ -12,7 +12,7 @@ exports[`<NavLink> should add class active when is active 1`] = `
 </div>
 `;
 
-exports[`<NavLink> should render icon and text> 1`] = `
+exports[`<NavLink> should render icon and text 1`] = `
 <div>
   <a
     class="button"

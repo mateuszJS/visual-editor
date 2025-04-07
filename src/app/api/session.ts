@@ -1,9 +1,13 @@
 import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
-import { cookies } from 'next/headers'
 import type { NextRequest } from 'next/server'
+import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 
-const secretKey = process.env.AUTH_SECRET // generated with: openssl rand -base64 32
+if (!process.env.SESSION_SECRET) {
+  throw new Error('env var SESSION_SECRET is missing!')
+}
+
+const secretKey = process.env.SESSION_SECRET // generated with: openssl rand -base64 32
 const encodedKey = new TextEncoder().encode(secretKey)
 
 export type SessionPayload = {
@@ -11,28 +15,29 @@ export type SessionPayload = {
   expiresAt: Date
 }
 
-export async function createSession(userId: string) {
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+const SESSION_LIFETIME_DAYS = 7
+
+export async function createSessionCookie(userId: string): Promise<ResponseCookie> {
+  const tokenLifetime = Date.now() + SESSION_LIFETIME_DAYS * 24 * 60 * 60 * 1000
+  const expiresAt = new Date(tokenLifetime)
+  // new Date().toISOString()
   const session = await encrypt({ userId, expiresAt })
 
-  const requestCookies = await cookies()
-  requestCookies.set('session', session, {
+  return {
+    name: 'session',
+    value: session,
     httpOnly: true,
     secure: true,
     expires: expiresAt,
-  })
-}
-
-export async function deleteSession() {
-  const requestCookie = await cookies()
-  requestCookie.delete('session')
+    sameSite: 'strict',
+  }
 }
 
 export async function encrypt(payload: SessionPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('7d')
+    .setExpirationTime('10s')
     .sign(encodedKey)
 }
 
@@ -43,6 +48,7 @@ async function decrypt(session = '') {
     const { payload } = await jwtVerify<SessionPayload>(session, encodedKey, {
       algorithms: ['HS256'],
     })
+    // check if token has expired!
     return payload as SessionPayload
   } catch (error) {
     console.error(error)
@@ -50,16 +56,15 @@ async function decrypt(session = '') {
 }
 
 type RouteParams = Record<string, string | string[]>
-type AuthHandler<Params> = (
+type SessionHandler<Params> = (
   session: SessionPayload,
   req: NextRequest,
-  params: Promise<Params>
+  params: { params: Promise<Params> }
 ) => Promise<Response>
 
-export function withAuth<Params extends RouteParams>(handler: AuthHandler<Params>) {
+export function withSession<Params extends RouteParams>(handler: SessionHandler<Params>) {
   return async (req: NextRequest, context: { params: Promise<Params> }) => {
-    const requestCookies = await cookies()
-    const sessionCookie = requestCookies.get('session')?.value
+    const sessionCookie = req.cookies.get('session')?.value
     const session = await decrypt(sessionCookie)
 
     if (!session?.userId) {
@@ -69,6 +74,6 @@ export function withAuth<Params extends RouteParams>(handler: AuthHandler<Params
       })
     }
 
-    return handler(session, req, context.params)
+    return handler(session, req, context)
   }
 }

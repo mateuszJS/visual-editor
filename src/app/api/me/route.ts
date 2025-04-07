@@ -1,5 +1,6 @@
+import 'server-only'
 import { NextResponse } from 'next/server'
-import { withAuth } from '@/app/api/session'
+import { withSession } from '@/app/api/session'
 
 async function getUser() {
   return NextResponse.json({
@@ -9,4 +10,4 @@ async function getUser() {
   })
 }
 
-export const GET = withAuth(getUser)
+export const GET = withSession(getUser)

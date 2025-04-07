@@ -24,10 +24,6 @@ export default function useCSRF() {
   }, [])
 
   return async function csrfToken() {
-    if (typeof window === 'undefined') {
-      throw new Error('CSRF token can only be used in the browser.')
-    }
-
     if (tokenPromise) {
       await tokenPromise
     }

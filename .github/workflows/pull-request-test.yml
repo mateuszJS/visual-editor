@@ -1,0 +1,168 @@
+name: Pull Request Test
+on:
+  pull_request:
+    branches:
+      - develop
+
+env:
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+  SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  check_pr:
+    runs-on: ubuntu-latest
+    outputs:
+      has_pr: ${{ steps.check.outputs.has_pr }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for PR to develop
+        id: check
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "Current branch: $BRANCH_NAME"
+
+          # Use GitHub API directly instead of gh CLI
+          PR_URL="https://api.github.com/repos/$GITHUB_REPOSITORY/pulls?head=${GITHUB_REPOSITORY_OWNER}:${BRANCH_NAME}&base=develop&state=open"
+          echo "Checking PR URL: $PR_URL"
+
+          PR_COUNT=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$PR_URL" | jq length)
+          echo "Found $PR_COUNT PRs"
+
+          if [[ "$PR_COUNT" -gt 0 ]]; then
+            echo "has_pr=true" >> $GITHUB_OUTPUT
+            echo "✅ PR to develop exists"
+          else
+            echo "has_pr=false" >> $GITHUB_OUTPUT
+            echo "❌ No PR to develop found"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test_branch:
+    needs: check_pr
+    if: needs.check_pr.outputs.has_pr == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run build
+      - run: npm audit signatures
+      - name: Run unit tests
+        run: npm test
+      - name: Run visual tests
+        if: always()
+        run: npm run test-visual
+      - name: Upload diff images to branch
+        if: always()
+        run: |
+          # Setup git
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          # Create a branch named after the PR number
+          PR_NUMBER="${{ github.event.number }}"
+          BRANCH_NAME="visual-diffs-pr-${PR_NUMBER}"
+
+          # Make sure we have the latest code
+          git fetch origin
+
+          # Check if branch already exists, force update it
+          if git ls-remote --heads origin ${BRANCH_NAME} | grep ${BRANCH_NAME}; then
+            git checkout -b ${BRANCH_NAME} origin/${BRANCH_NAME} || git checkout -b ${BRANCH_NAME}
+            git reset --hard HEAD
+          else
+            git checkout -b ${BRANCH_NAME}
+          fi
+
+          # Create diffs directory and make sure it's empty
+          DIFFS_DIR=".github/visual-diffs"
+          mkdir -p $DIFFS_DIR
+          rm -rf $DIFFS_DIR/*
+
+          # Copy diff images
+          find src -path "*/__diff_output__/*.png" -exec cp {} $DIFFS_DIR/ \;
+
+          git add $DIFFS_DIR
+
+          # Check if git detected any changes
+          if git diff --staged --quiet; then
+            echo "No diff images found"
+          else
+            git commit -m "Update visual test diffs for PR #${PR_NUMBER} (Run #${{ github.run_id }})"
+            git push -f origin ${BRANCH_NAME}
+            echo "DIFFS_BRANCH=${BRANCH_NAME}" >> $GITHUB_ENV
+            echo "✅ Successfully pushed diff images to branch"
+          fi
+
+      - name: Comment on PR with failure details
+        if: always()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const { repo, owner } = context.repo;
+            const issue_number = context.issue.number;
+            const branchName = process.env.DIFFS_BRANCH;
+            const commentTitle = '## Visual Test Failures';
+
+            // 1. Find existing visual test comments
+            const comments = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number
+            });
+
+            const visualTestComments = comments.data.filter(comment => 
+              comment.body.includes(commentTitle)
+            );
+
+            // 2. Delete previous comments
+            for (const comment of visualTestComments) {
+              await github.rest.issues.deleteComment({
+                owner,
+                repo,
+                comment_id: comment.id
+              });
+              console.log(`Deleted previous visual test comment: ${comment.id}`);
+            }
+
+            // 3. Post new comment only if we have diffs
+            if (!branchName) {
+              console.log('No visual diffs found');
+              return;
+            }
+
+            const diffDir = '.github/visual-diffs';
+            const diffFiles = fs.readdirSync(diffDir).filter(file => file.endsWith('.png'));
+
+            if (diffFiles.length === 0) {
+              // It means that previous diffs were removed, that's why branchName exists!
+              // Files deletion was pushed!
+              console.log('No image files found in diff directory');
+              return;
+            }
+
+            let commentBody = `${commentTitle}\n\nFound ${diffFiles.length} visual differences:\n\n`;
+
+            // Add each image to the comment
+            diffFiles.forEach(file => {
+              const storybookId = file.split('-diff.png')[0];
+              const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branchName}/${diffDir}/${file}`;
+              commentBody += `### ${storybookId}\n![${file}](${imageUrl})\n\n`;
+            });
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: commentBody
+            });

@@ -50,8 +50,10 @@ async function decrypt(session = '') {
     })
     // check if token has expired!
     return payload as SessionPayload
-  } catch (error) {
-    console.error(error)
+  } catch (error: unknown) {
+    if ((error as { code: string }).code !== 'ERR_JWT_EXPIRED') {
+      console.error(error)
+    }
   }
 }
 

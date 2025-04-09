@@ -7,41 +7,131 @@ export type Json =
   | Json[]
 
 export type Database = {
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          operationName?: string
+          query?: string
+          variables?: Json
+          extensions?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       projects: {
         Row: {
-          created_at: string
+          assets: Json[] | null
+          created_at: string | null
+          height: number
           id: number
+          last_updated: string | null
+          name: string
+          owner_id: number
+          width: number
         }
         Insert: {
-          created_at?: string
-          id?: number
+          assets?: Json[] | null
+          created_at?: string | null
+          height: number
+          id?: never
+          last_updated?: string | null
+          name: string
+          owner_id: number
+          width: number
         }
         Update: {
-          created_at?: string
-          id?: number
+          assets?: Json[] | null
+          created_at?: string | null
+          height?: number
+          id?: never
+          last_updated?: string | null
+          name?: string
+          owner_id?: number
+          width?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "projects_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       users: {
         Row: {
-          created_at: string
+          avatar: string | null
+          browser: string | null
+          browser_engine: string | null
+          country: string | null
+          created_at: string | null
+          device_model: string | null
+          device_type: string | null
           email: string
           id: number
-          projects: number[]
+          is_bot: boolean
+          language: string | null
+          last_login: string | null
+          login_method: string
+          name: string | null
+          oidc_google_id: string | null
+          os: string | null
+          projects: number[] | null
         }
         Insert: {
-          created_at?: string
+          avatar?: string | null
+          browser?: string | null
+          browser_engine?: string | null
+          country?: string | null
+          created_at?: string | null
+          device_model?: string | null
+          device_type?: string | null
           email: string
-          id?: number
-          projects: number[]
+          id?: never
+          is_bot: boolean
+          language?: string | null
+          last_login?: string | null
+          login_method: string
+          name?: string | null
+          oidc_google_id?: string | null
+          os?: string | null
+          projects?: number[] | null
         }
         Update: {
-          created_at?: string
+          avatar?: string | null
+          browser?: string | null
+          browser_engine?: string | null
+          country?: string | null
+          created_at?: string | null
+          device_model?: string | null
+          device_type?: string | null
           email?: string
-          id?: number
-          projects?: number[]
+          id?: never
+          is_bot?: boolean
+          language?: string | null
+          last_login?: string | null
+          login_method?: string
+          name?: string | null
+          oidc_google_id?: string | null
+          os?: string | null
+          projects?: number[] | null
         }
         Relationships: []
       }
@@ -167,7 +257,11 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },
 } as const
+

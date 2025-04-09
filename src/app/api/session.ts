@@ -20,7 +20,6 @@ const SESSION_LIFETIME_DAYS = 7
 export async function createSessionCookie(userId: string): Promise<ResponseCookie> {
   const tokenLifetime = Date.now() + SESSION_LIFETIME_DAYS * 24 * 60 * 60 * 1000
   const expiresAt = new Date(tokenLifetime)
-  // new Date().toISOString()
   const session = await encrypt({ userId, expiresAt })
 
   return {

@@ -17,6 +17,7 @@
   "dependencies": {
     "@mateuszjs/magic-render": "^0.0.1-next.3",
     "@supabase/supabase-js": "^2.49.4",
+    "@vercel/functions": "^2.0.0",
     "classnames": "^2.5.1",
     "google-auth-library": "^9.15.1",
     "jose": "^5.9.6",

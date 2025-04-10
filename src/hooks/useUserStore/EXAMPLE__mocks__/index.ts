@@ -1,7 +1,7 @@
-import { User } from '..'
+import type { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
 
-let mockUser: User | null = null
-export function __setMockUser(user: User) {
+let mockUser: SanitizedUser | null = null
+export function __setMockUser(user: SanitizedUser) {
   mockUser = user
 }
 

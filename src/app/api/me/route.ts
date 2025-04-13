@@ -1,7 +1,7 @@
 import 'server-only'
 import { NextResponse } from 'next/server'
 import { SessionPayload, withSession } from '@/app/api/session'
-import supabase from '@/utils/supabaseClient'
+import supabase from '@/app/api/supabaseClient'
 import getResponseError from '../utils/getResponseError'
 import sanitizeUserData from '../utils/sanitizeUserData'
 

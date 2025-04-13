@@ -1,15 +1,25 @@
 type FieldValue = string | number | null | boolean
 type Row = Record<string, FieldValue>
 
-export function getInitialDB(arg = '') {
-  console.log('getInitialDB' + arg)
+export function __getCleanDBMock() {
   return {
     tables: {
       users: [
         {
-          id: 'user-1',
-          email: 'test@example.com',
+          avatar: 'https://example.com/avatar.jpg',
+          browser: 'Firefox',
+          browser_engine: 'Gecko',
+          country: 'JP',
+          device_model: 'Macintosh',
+          device_type: null,
+          email: 'first-user@example.com',
+          id: 0,
+          is_bot: false,
+          language: 'en-US',
+          login_method: 'google',
+          name: null,
           oidc_google_id: 'google-1',
+          os: 'Mac OS',
         },
       ] as Row[],
       projects: [] as Row[],
@@ -17,16 +27,17 @@ export function getInitialDB(arg = '') {
   }
 }
 
-const mockDB = getInitialDB()
-export function getMockDB() {
-  return mockDB
-}
+export let dbMock: ReturnType<typeof __getCleanDBMock>
+
+beforeEach(() => {
+  dbMock = __getCleanDBMock()
+})
 
 const supabaseClientMock = {
-  from: (tableId: keyof typeof mockDB.tables) => {
+  from: (tableId: keyof typeof dbMock.tables) => {
     return {
       ...supabaseClientMock,
-      select: () => supabaseClientMock.select(mockDB.tables[tableId]),
+      select: () => supabaseClientMock.select(dbMock.tables[tableId]),
       insert: supabaseClientMock.insert.bind(null, tableId),
     }
   },
@@ -53,12 +64,12 @@ const supabaseClientMock = {
     }
   },
   insert: (
-    tableId: keyof typeof mockDB.tables,
+    tableId: keyof typeof dbMock.tables,
     data: Record<string, string | number>,
     error: Error | null = null
   ) => {
     const newRow = {
-      id: mockDB.tables[tableId].length,
+      id: dbMock.tables[tableId].length,
       ...Object.entries(data).reduce(
         (acc, [key, value]) => ({
           ...acc,
@@ -67,18 +78,14 @@ const supabaseClientMock = {
         {}
       ),
     }
-    mockDB.tables[tableId].push(newRow)
+    dbMock.tables[tableId].push(newRow)
     console.log('==================')
-    console.log(mockDB) // This console log correctly shows two users in DB
+    console.log(dbMock) // This console log correctly shows two users in DB
     return {
       error,
       select: () => supabaseClientMock.select([newRow]),
     }
   },
 }
-
-afterEach(() => {
-  // mockDB = getInitialDB()
-})
 
 export default supabaseClientMock

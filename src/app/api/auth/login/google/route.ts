@@ -1,12 +1,11 @@
 import 'server-only'
 import { createSessionCookie } from '@/app/api/session'
-import { OAuth2Client, TokenPayload } from 'google-auth-library'
-import { NextResponse, NextRequest, userAgent } from 'next/server'
+import { OAuth2Client } from 'google-auth-library'
+import { NextResponse, NextRequest } from 'next/server'
 import { withCSRFProtection } from '@/app/api/csrf'
-import supabase from '@/app/api/supabaseClient'
 import sanitizeUserData from '@/app/api/utils/sanitizeUserData'
-import { geolocation } from '@vercel/functions'
 import getResponseError from '@/app/api/utils/getResponseError'
+import getUserData from '../getUserData'
 
 if (!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
   throw Error('env var NEXT_PUBLIC_GOOGLE_CLIENT_ID is missing!')

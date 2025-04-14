@@ -78,9 +78,9 @@ const supabaseClientMock = {
         {}
       ),
     }
+
     dbMock.tables[tableId].push(newRow)
-    console.log('==================')
-    console.log(dbMock) // This console log correctly shows two users in DB
+
     return {
       error,
       select: () => supabaseClientMock.select([newRow]),

@@ -7,7 +7,7 @@ export default async function getUserData(payload: TokenPayload, req: NextReques
   const existingUser = await supabase.from('users').select().eq('oidc_google_id', payload.sub)
 
   if (existingUser.error) {
-    throw new Error('SUPABSE ERROR: ' + existingUser.error.message)
+    throw new Error('SUPABASE ERROR: ' + existingUser.error.message)
   }
 
   if (existingUser.data[0]) {
@@ -43,11 +43,11 @@ export default async function getUserData(payload: TokenPayload, req: NextReques
     .single()
 
   if (createUser.error) {
-    throw new Error('SUPABSE ERROR: ' + createUser.error.message)
+    throw new Error('SUPABASE ERROR: ' + createUser.error.message)
   }
 
   if (!createUser.data) {
-    throw new Error('Failed to create user')
+    throw new Error('Failed to create user.')
   }
 
   return createUser.data

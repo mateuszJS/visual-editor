@@ -61,7 +61,6 @@ const supabaseClientMock = {
         return Promise.resolve({
           data: data ? data.filter((item) => item[key] === value) : null,
           error: error,
-          single: data ? data[0] : null,
         })
       },
       single: () => {

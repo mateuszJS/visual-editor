@@ -1,6 +1,6 @@
 import { TokenPayload } from 'google-auth-library'
 import getUserData from './getUserData'
-import { __getCleanDBMock, dbMock } from '@/app/api/supabaseClient'
+import { __getCleanDBMock, dbMock, __setErrorQueue } from '@/app/api/supabaseClient'
 import createMockNextRequest from '@/app/api/test/mockNextRequest'
 
 jest.mock('@/app/api/supabaseClient')
@@ -78,5 +78,25 @@ describe('getUserData', () => {
     const expectedDB = __getCleanDBMock()
     expectedDB.tables.users.push(expectedUser)
     expect(dbMock).toEqual(expectedDB)
+  })
+
+  test('propagates error occured during search for existign user', async () => {
+    __setErrorQueue([new Error('Error during search for existing user')])
+
+    await expect(getUserData(googleOidcPayload, request)).rejects.toThrow(
+      'Error during search for existing user'
+    )
+  })
+
+  test('propagates error occured during creation of a new user', async () => {
+    __setErrorQueue([null, new Error('Error during creating of a new user')])
+    const nonExistingUser = {
+      ...googleOidcPayload,
+      sub: 'non-existing-google-id',
+    }
+
+    await expect(getUserData(nonExistingUser, request)).rejects.toThrow(
+      'Error during creating of a new user'
+    )
   })
 })

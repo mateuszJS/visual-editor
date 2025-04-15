@@ -20,7 +20,6 @@ const SESSION_LIFETIME_DAYS = 7
 export async function createSessionCookie(userId: string): Promise<ResponseCookie> {
   const tokenLifetime = Date.now() + SESSION_LIFETIME_DAYS * 24 * 60 * 60 * 1000
   const expiresAt = new Date(tokenLifetime)
-  // new Date().toISOString()
   const session = await encrypt({ userId, expiresAt })
 
   return {
@@ -50,8 +49,10 @@ async function decrypt(session = '') {
     })
     // check if token has expired!
     return payload as SessionPayload
-  } catch (error) {
-    console.error(error)
+  } catch (error: unknown) {
+    if ((error as { code: string }).code !== 'ERR_JWT_EXPIRED') {
+      console.error(error)
+    }
   }
 }
 

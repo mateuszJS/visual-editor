@@ -1,5 +1,5 @@
+'use client'
+
 export default function Explore() {
-  return (
-    <h1>Explore</h1>
-  )
+  return <h1>Explore</h1>
 }

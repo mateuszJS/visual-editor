@@ -26,12 +26,11 @@ export default async function fetcher(
 
     if (withRedirect && response.status === 401) {
       window.history.replaceState(null, '', '/login')
-      return Promise.reject(new Error('Unauthorized'))
+      return Promise.reject(new Error('User is not autohrized.'))
     }
 
     return response
   } catch (err) {
-    console.error('Error fetching data:', err)
     throw err
   }
 }

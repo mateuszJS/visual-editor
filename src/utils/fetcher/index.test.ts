@@ -52,7 +52,7 @@ describe('fetcher', () => {
 
     expect(window.location.href).toBe('http://localhost/')
 
-    await expect(fetcher('/api/me')).rejects.toThrow('Unauthorized')
+    await expect(fetcher('/api/me')).rejects.toThrow('User is not autohrized.')
 
     expect(window.location.href).toBe('http://localhost/login')
   })

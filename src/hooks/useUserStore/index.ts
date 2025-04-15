@@ -1,17 +1,12 @@
 'use client'
 
+import type { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
 import fetcher from '@/utils/fetcher'
 import { create } from 'zustand'
 
-export interface User {
-  picture?: string
-  firstName?: string
-  lastName?: string
-}
-
 export interface UserStore {
-  user: User | null | undefined // null if not logged in, undefined if request is pending and we don't yet know
-  set: (user: User | null) => void
+  user: SanitizedUser | null | undefined // null if not logged in, undefined if request is pending and we don't yet know
+  set: (user: SanitizedUser | null) => void
 }
 
 const useUserStore = create<UserStore>((set) => ({

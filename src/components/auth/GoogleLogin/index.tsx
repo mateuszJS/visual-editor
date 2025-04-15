@@ -1,13 +1,14 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import useUserStore, { User } from '@/hooks/useUserStore'
+import useUserStore from '@/hooks/useUserStore'
 import Script from 'next/script'
 import Button from '@/components/Button'
 import GoogleIcon from 'assets/google-logo.svg'
 import styles from './styles.module.css'
 import useCSRF from '@/hooks/useCSRF'
 import fetcher from '@/utils/fetcher'
+import { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
 
 interface Props {
   onSuccess: VoidFunction
@@ -39,7 +40,7 @@ export default function GoogleLogin({ onSuccess }: Props) {
             json: { idToken: credential },
           })
 
-          const { user } = (await response.json()) as { user: User }
+          const { user } = (await response.json()) as { user: SanitizedUser }
           if (response.status !== 200) {
             setError('Something went wrong, try again later.')
           } else {

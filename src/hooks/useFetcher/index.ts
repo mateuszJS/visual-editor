@@ -18,7 +18,7 @@ export default function useFetcher<T>() {
       const json = contentType === 'application/json' ? await response.json() : null
 
       if (!response.ok) {
-        setError(json.error || 'Something went wrong')
+        setError(json?.error || 'Something went wrong')
       } else {
         if (json) {
           setSuccess({ json })

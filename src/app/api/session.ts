@@ -56,7 +56,7 @@ async function decrypt(session = ''): Promise<SessionPayload | undefined | { err
       userId: Number(payload.userId),
     }
   } catch (error: unknown) {
-    const isSessionExpired = (error as { code: string }).code !== 'ERR_JWT_EXPIRED'
+    const isSessionExpired = (error as { code: string }).code === 'ERR_JWT_EXPIRED'
     return {
       error: isSessionExpired
         ? 'Your session has expired. Please sign in again.'

@@ -2,10 +2,12 @@ import fetcher, { FetcherOptions } from '@/utils/fetcher'
 import { getErrorMessage } from '@/utils/fetcher/getErrorMessage'
 import { useState } from 'react'
 
-export default function useFetcher<T>() {
+type Success<T> = [T] extends [never] ? Record<string, never> : { json: T }
+
+export default function useFetcher<T = never>() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<{ json: T }>()
+  const [success, setSuccess] = useState<Success<T>>()
 
   async function enhancedFetcher(url: string, fetcherOptions: FetcherOptions) {
     setLoading(true)
@@ -21,9 +23,9 @@ export default function useFetcher<T>() {
         setError(json?.error || 'Something went wrong')
       } else {
         if (json) {
-          setSuccess({ json })
+          setSuccess({ json } as Success<T>)
         } else {
-          setSuccess({})
+          setSuccess({} as Success<T>)
         }
       }
     } catch (err) {

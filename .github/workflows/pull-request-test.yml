@@ -147,7 +147,7 @@ jobs:
             }
 
             // 3. Post new comment only if we have diffs
-            if (!process.env.IS_ANY_DIFF) {
+            if (process.env.IS_ANY_DIFF === 'false') {
               console.log('No visual diffs found');
               return;
             }

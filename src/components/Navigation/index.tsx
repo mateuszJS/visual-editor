@@ -2,12 +2,12 @@
 
 import HomeIcon from 'assets/home-icon.svg'
 import CompassIcon from 'assets/compass-icon.svg'
-import PlusIcon from 'assets/plus-icon.svg'
 import FolderIcon from 'assets/folder-icon.svg'
 import ProfileIcon from 'assets/profile-icon.svg'
 import styles from './styles.module.css'
 import useUserStore from '@/hooks/useUserStore'
 import NavLink from '@/components/NavLink'
+import CreateButton from '@/components/CreateButton'
 
 export default function Navigation() {
   const { user } = useUserStore()
@@ -24,10 +24,7 @@ export default function Navigation() {
         Explore
       </NavLink>
 
-      <NavLink href="/new-project">
-        <PlusIcon />
-        Creator
-      </NavLink>
+      <CreateButton />
 
       <NavLink href="/my-projects">
         <FolderIcon />

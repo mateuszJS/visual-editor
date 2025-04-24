@@ -1,5 +1,5 @@
 supabase login
-supabase gen types typescript --local > src/utils/supabaseClient/database.types.ts
+supabase gen types typescript --local > src/app/api/supabaseClient/database.types.ts
 
 supabase db diff -f create_employees_table --project-id dstjhnkpqxtxnnbfbwxw
 

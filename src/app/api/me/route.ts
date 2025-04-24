@@ -1,12 +1,12 @@
 import 'server-only'
 import { NextResponse } from 'next/server'
 import { SessionPayload, withSession } from '@/app/api/session'
-import supabase from '@/app/api/supabaseClient'
+import supabaseClient from '@/app/api/supabaseClient'
 import getResponseError from '../utils/getResponseError'
 import sanitizeUserData from '../utils/sanitizeUserData'
 
 async function getUser(session: SessionPayload) {
-  const { data, error } = await supabase.from('users').select().eq('id', parseInt(session.userId))
+  const { data, error } = await supabaseClient.from('users').select().eq('id', session.userId)
 
   if (error) {
     return getResponseError(error.message)

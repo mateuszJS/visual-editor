@@ -14,7 +14,7 @@ export default function NavLink<T extends string>({ children, href }: Props<T>) 
 
   return (
     <Link
-      className={cn(styles.button, {
+      className={cn(styles.navLink, {
         [styles.active]: pathname === href,
       })}
       href={href}

@@ -1,0 +1,135 @@
+.modal {
+  --modal-space-inline: 1rem;
+  --modal-background: rgb(60, 60, 60);
+  align-self: flex-end;
+  background: var(--modal-background);
+  padding: 1rem var(--modal-space-inline) 2rem;
+  width: 100%;
+  translate: 0 100%;
+  transition: translate var(--transition-time) ease;
+  border-radius: 8px 8px 0 0;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.modalOpen:not(.modalClosed) {
+  translate: 0 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.title {
+  margin-inline: auto;
+  color: var(--secondary);
+  font-size: 0.8rem;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.closeButton {
+  position: absolute;
+  left: 0;
+  color: var(--secondary);
+}
+
+.divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-block: 20px;
+  color: var(--secondary);
+  text-transform: uppercase;
+
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+    max-width: 80px;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+  }
+}
+
+.blankCanvasTitle {
+  font-size: 1.1rem;
+  font-weight: 300;
+  margin-bottom: 10px;
+}
+
+.blankCanvasList {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+
+  margin-inline: calc(-1 * var(--modal-space-inline));
+  padding-inline: var(--modal-space-inline);
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    display: block;
+    height: 100%;
+    width: calc(2 * var(--modal-space-inline));
+    background: linear-gradient(90deg, transparent 0%, var(--modal-background) 100%);
+    pointer-events: none;
+  }
+}
+
+.blankCanvasOption {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 20px;
+  height: 100%;
+  background: none;
+  font-size: 0.8rem;
+  font-weight: 300;
+  border-radius: 5px;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba(var(--primary-rgb), 0.1);
+  }
+}
+
+.screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: 1px solid var(--secondary);
+  border-radius: 5px;
+
+  background: linear-gradient(
+    136deg,
+    rgba(var(--secondary-rgb), 0.25) 20%,
+    rgba(var(--secondary-rgb), 0.6) 65%,
+    rgba(var(--secondary-rgb), 0.25) 85%
+  );
+
+  & svg {
+    max-width: 1.2rem;
+    max-height: 1.2rem;
+    width: 100%;
+    height: 100%;
+  }
+}

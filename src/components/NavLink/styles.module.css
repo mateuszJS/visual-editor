@@ -1,4 +1,4 @@
-.button {
+.navLink {
   user-select: none;
   display: flex;
   flex-direction: column;
@@ -10,9 +10,6 @@
   font-weight changes impacts the width of button and all elements start moving */
   padding: 0 0.5rem;
   font-size: 0.8rem;
-  background: none;
-  border: none;
-  cursor: pointer;
   transition: opacity 0.2s ease;
   opacity: 0.5;
   font-weight: 300;

@@ -2,6 +2,7 @@ import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
 import type { NextRequest } from 'next/server'
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
+import getResponseError from './utils/getResponseError'
 
 if (!process.env.SESSION_SECRET) {
   throw new Error('env var SESSION_SECRET is missing!')
@@ -11,16 +12,19 @@ const secretKey = process.env.SESSION_SECRET // generated with: openssl rand -ba
 const encodedKey = new TextEncoder().encode(secretKey)
 
 export type SessionPayload = {
+  userId: number
+}
+
+type RawSessionPayload = {
   userId: string
-  expiresAt: Date
 }
 
 const SESSION_LIFETIME_DAYS = 7
 
-export async function createSessionCookie(userId: string): Promise<ResponseCookie> {
+export async function createSessionCookie(userId: number): Promise<ResponseCookie> {
   const tokenLifetime = Date.now() + SESSION_LIFETIME_DAYS * 24 * 60 * 60 * 1000
   const expiresAt = new Date(tokenLifetime)
-  const session = await encrypt({ userId, expiresAt })
+  const session = await encrypt({ userId: userId.toString() })
 
   return {
     name: 'session',
@@ -32,7 +36,7 @@ export async function createSessionCookie(userId: string): Promise<ResponseCooki
   }
 }
 
-export async function encrypt(payload: SessionPayload) {
+export async function encrypt(payload: RawSessionPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -40,18 +44,23 @@ export async function encrypt(payload: SessionPayload) {
     .sign(encodedKey)
 }
 
-async function decrypt(session = '') {
+async function decrypt(session = ''): Promise<SessionPayload | undefined | { error: string }> {
   if (!session) return undefined
 
   try {
-    const { payload } = await jwtVerify<SessionPayload>(session, encodedKey, {
+    const { payload } = await jwtVerify<RawSessionPayload>(session, encodedKey, {
       algorithms: ['HS256'],
     })
-    // check if token has expired!
-    return payload as SessionPayload
+
+    return {
+      userId: Number(payload.userId),
+    }
   } catch (error: unknown) {
-    if ((error as { code: string }).code !== 'ERR_JWT_EXPIRED') {
-      console.error(error)
+    const isSessionExpired = (error as { code: string }).code !== 'ERR_JWT_EXPIRED'
+    return {
+      error: isSessionExpired
+        ? 'Your session has expired. Please sign in again.'
+        : 'Session is invalid. Please sign in again.',
     }
   }
 }
@@ -68,11 +77,12 @@ export function withSession<Params extends RouteParams>(handler: SessionHandler<
     const sessionCookie = req.cookies.get('session')?.value
     const session = await decrypt(sessionCookie)
 
+    if (session && 'error' in session) {
+      return getResponseError(session.error, 401)
+    }
+
     if (!session?.userId) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        statusText: 'Unauthorized',
-      })
+      return getResponseError('Unauthorized', 401)
     }
 
     return handler(session, req, context)

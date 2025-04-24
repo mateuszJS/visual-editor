@@ -14,7 +14,7 @@ export default function Button({
   expand = false,
   className,
   children,
-  onClick
+  onClick,
 }: Props) {
   const classNames = cn(styles.button, className, {
     [styles.primary]: type === 'primary',
@@ -23,6 +23,8 @@ export default function Button({
   })
 
   return (
-    <button className={classNames} onClick={onClick}>{children}</button>
+    <button className={classNames} onClick={onClick}>
+      {children}
+    </button>
   )
 }

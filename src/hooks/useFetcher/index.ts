@@ -33,7 +33,7 @@ export default function useFetcher<T>() {
       setLoading(false)
     }
   }
-  console.log('success', success)
+
   return {
     loading,
     success,

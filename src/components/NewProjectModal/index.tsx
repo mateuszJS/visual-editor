@@ -17,7 +17,9 @@ import classNamesOverlay from '@/components/shared/overlayStyles'
 import OverlayLoader from '../OverlayLoader'
 import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 
-Modal.setAppElement('#non-modal-content')
+if (process.env.NODE_ENV !== 'test') {
+  Modal.setAppElement('#non-modal-content')
+}
 
 interface Props {
   isOpen: boolean

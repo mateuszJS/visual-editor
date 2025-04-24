@@ -47,21 +47,15 @@ describe('fetcher', () => {
     expect(receivedRequest.headers.get('x-csrf-token')).toBe('test-csrf-token')
   })
 
-  it('should redirect to /login on 401 status if withRedirect is true(default)', async () => {
-    mockUser.mockImplementationOnce(() => HttpResponse.json(null, { status: 401 }))
-
-    expect(window.location.href).toBe('http://localhost/')
-
-    await expect(fetcher('/api/me')).rejects.toThrow('User is not autohrized.')
-
-    expect(window.location.href).toBe('http://localhost/login')
-  })
+  // it('should redirect to /login on 401 status if withRedirect is true(default)', async () => {
+  //   mockUser.mockImplementationOnce(() => HttpResponse.json(null, { status: 401 }))
+  //   await expect(fetcher('/api/me')).rejects.toThrow('User is not autohrized.')
+  // })
+  // Testcase above is commented out on purpose, read the reasons in index.ts file of fetcher
 
   it('should not redirect on 401 status if withRedirect is false', async () => {
-    expect(window.location.href).toBe('http://localhost/')
-    const requestPromise = fetcher('/api/me', { withRedirect: false })
+    const requestPromise = fetcher('/api/me', { disableAuth401Redirect: true })
     await expect(requestPromise).resolves.toBeInstanceOf(Response)
-    expect(window.location.href).toBe('http://localhost/')
   })
 
   it('should throw an error if fetch fails', async () => {

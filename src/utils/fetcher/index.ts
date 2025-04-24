@@ -35,6 +35,11 @@ export default async function fetcher(
     })
 
     if (!disableAuth401Redirect && response.status === 401) {
+      /* The number of issues that window.location is causign durign tests is sky rocketing:
+      - we cannot mock winding.location.replace because its read only
+      - we cannot mock whole window.location because msw stops respecting our handlers
+      - if you try to call window.location.repalce u will get an errror "Error: Not implemented: navigation (except hash changes)"
+      Because of that I've decided to not test this one redirect until we find a solution */
       window.location.replace('/login') // TODO: Add a redirect to the login page
       /* app reload is used to clear all JS memory data, hide all modals(like new project modal) */
       throw new Error('User is not autohrized.')

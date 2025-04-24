@@ -21,7 +21,7 @@
     "classnames": "^2.5.1",
     "google-auth-library": "^9.15.1",
     "jose": "^5.9.6",
-    "next": "^15.2.3",
+    "next": "^15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "server-only": "^0.0.1",

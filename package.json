@@ -22,7 +22,7 @@
     "google-auth-library": "^9.15.1",
     "joi": "^17.13.3",
     "jose": "^5.9.6",
-    "next": "^15.2.3",
+    "next": "^15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.8",

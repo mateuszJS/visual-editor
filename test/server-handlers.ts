@@ -1,13 +1,11 @@
 import { http, HttpResponse } from 'msw'
 
-export const mockUser = jest.fn(
-  (context: { request: Request }): Response =>
-    HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
+export const mockUser = jest.fn((context: { request: Request }): Response | Promise<Response> =>
+  HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
 )
 
-export const mockCsrf = jest.fn(
-  (context: { request: Request }): Response =>
-    HttpResponse.json({ csrfToken: 'csrf-token' }, { status: 200 })
+export const mockCsrf = jest.fn((context: { request: Request }): Response | Promise<Response> =>
+  HttpResponse.json({ csrfToken: 'csrf-token' }, { status: 200 })
 )
 
 /*

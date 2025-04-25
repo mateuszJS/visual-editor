@@ -4,10 +4,6 @@ import { mockCsrf } from 'test/server-handlers'
 import { HttpResponse } from 'msw'
 
 describe('useCSRF', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('fetches and returns the CSRF token', async () => {
     const { result } = renderHook(() => useCSRF())
 

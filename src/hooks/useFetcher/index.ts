@@ -7,9 +7,9 @@ type Success<T> = [T] extends [never] ? Record<string, never> : { json: T }
 export default function useFetcher<T = never>() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<Success<T>>()
+  const [success, setSuccess] = useState<Success<T> | null>(null)
 
-  async function enhancedFetcher(url: string, fetcherOptions: FetcherOptions) {
+  async function enhancedFetcher(url: string, fetcherOptions: FetcherOptions = {}) {
     setLoading(true)
     setError(null)
 

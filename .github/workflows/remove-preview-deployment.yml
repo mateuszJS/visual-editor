@@ -1,0 +1,36 @@
+name: Remove Preview Deployment
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - develop
+
+jobs:
+  remove_preview_deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      - name: Delete Preview Deployment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          # Extract PR number or branch name for the deployment alias
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+
+          # List deployments and filter to find the one for this PR/branch
+          DEPLOYMENTS=$(vercel list --token=$VERCEL_TOKEN)
+
+          # Filter deployments by branch name or PR number
+          DEPLOYMENT_ID=$(echo "$DEPLOYMENTS" | grep -E "pr-${PR_NUMBER}-|${BRANCH_NAME}" | awk '{print $1}')
+
+          if [ -n "$DEPLOYMENT_ID" ]; then
+            echo "Removing deployment $DEPLOYMENT_ID"
+            vercel remove $DEPLOYMENT_ID --token=$VERCEL_TOKEN --yes
+          else
+            echo "No matching deployment found for PR #$PR_NUMBER or branch $BRANCH_NAME"
+          fi

@@ -1,4 +1,4 @@
-name: Pull Request Test
+name: Unit Tests
 on:
   pull_request:
     branches:
@@ -16,7 +16,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  check_pr:
+  check_if_pull_request_exists:
     runs-on: ubuntu-latest
     outputs:
       has_pr: ${{ steps.check.outputs.has_pr }}
@@ -45,9 +45,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  test_branch:
-    needs: check_pr
-    if: needs.check_pr.outputs.has_pr == 'true'
+  run_unit_tests:
+    needs: check_if_pull_request_exists
+    if: needs.check_if_pull_request_exists.outputs.has_pr == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

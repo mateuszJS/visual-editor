@@ -11,7 +11,7 @@ export default function IconButton({ className, children, onClick }: Props) {
   const classNames = cn(styles.iconButton, className)
 
   return (
-    <button className={classNames} onClick={onClick}>
+    <button className={classNames} onClick={onClick} type="button">
       {children}
     </button>
   )

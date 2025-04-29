@@ -21,6 +21,7 @@ exports[`<Navigation> should render five standard links for unautenticated user 
     </a>
     <button
       class="createButton"
+      type="button"
     >
       <svg />
     </button>

@@ -12,7 +12,7 @@ async function getProject(
   const { id } = await context.params
   const projectId = Number(id)
 
-  if (!projectId || !Number.isInteger(Number(projectId))) {
+  if (!projectId || !Number.isInteger(Number(projectId)) || projectId <= 0) {
     return getResponseError('Invalid project id.')
   }
 

@@ -5,6 +5,9 @@ on:
     branches:
       - develop
 
+permissions:
+  contents: read
+
 jobs:
   remove_preview_deployment:
     runs-on: ubuntu-latest

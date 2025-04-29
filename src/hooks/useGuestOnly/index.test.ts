@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react'
 import useGuestOnly from './index'
 import { initUserStore } from '../useUserStore'
-import { mockUser } from 'test/server-handlers'
-import { HttpResponse } from 'msw'
+import { http, HttpResponse } from 'msw'
 import mockRouter from 'next-router-mock'
+import { server } from 'test/server'
 
 describe('useGuestOnly', () => {
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('useGuestOnly', () => {
       expect(mockRouter.asPath).toBe('/login')
 
       await act(async () => {
-        mockUser.mockImplementationOnce(() => HttpResponse.json(null, { status: 401 }))
+        server.use(http.get('/api/me', () => HttpResponse.json(null, { status: 401 })))
         initUserStore()
       })
 

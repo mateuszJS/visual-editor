@@ -10,12 +10,11 @@ import UploadFile from '@/components/UploadFile'
 import IconButton from '../IconButton'
 import type { FileWithPath } from 'react-dropzone'
 import getImageSize from '@/utils/getImageSize'
-import useFetcher from '@/hooks/useFetcher'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import classNamesOverlay from '@/components/shared/overlayStyles'
 import OverlayLoader from '../OverlayLoader'
-import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
+import useCreateProject from '@/hooks/projects/useCreateProject'
 
 if (process.env.NODE_ENV !== 'test') {
   Modal.setAppElement('#non-modal-content')
@@ -49,26 +48,15 @@ const style = {
 }
 
 export default function NewProjectModal({ isOpen, close }: Props) {
-  const { fetcher, loading, success } = useFetcher<SanitizedProject>()
   const router = useRouter()
+  const { createProject, loading, project } = useCreateProject()
 
   useEffect(() => {
-    if (success) {
+    if (project) {
       close()
-      router.push(`/project/${success.json.id}`)
+      router.push(`/project/${project.id}`)
     }
-  }, [success])
-
-  async function createProject(width: number, height: number, assets: HTMLImageElement[]) {
-    fetcher('/api/projects', {
-      method: 'POST',
-      json: {
-        width,
-        height,
-        assets,
-      },
-    })
-  }
+  }, [project])
 
   async function createProjectFromFiles(files: readonly FileWithPath[]) {
     // https://react-dropzone.js.org/#section-previews

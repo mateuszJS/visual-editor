@@ -1,6 +1,6 @@
 'use client'
 
-import useProject from '@/hooks/useProject'
+import useProject from '@/hooks/projects/useProject'
 import { useParams } from 'next/navigation'
 
 export default function Project() {

@@ -288,9 +288,9 @@ describe('useFetcher', () => {
       it('before current one completes', async () => {
         /*
           1. fetcher('api/me')
-          2. fetcher('api/project/1')
+          2. fetcher('api/projects/1')
           3. Receives response for api/me
-          4. Receives response for api/project/1
+          4. Receives response for api/projects/1
         */
 
         server.use(
@@ -348,8 +348,8 @@ describe('useFetcher', () => {
       it('after current one completes', async () => {
         /*
           1. fetcher('api/me')
-          2. fetcher('api/project/1')
-          3. Receives response for api/project/1
+          2. fetcher('api/projects/1')
+          3. Receives response for api/projects/1
           4. Receives response for api/me
         */
 

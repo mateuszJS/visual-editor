@@ -17,7 +17,7 @@ const useUserStore = create<UserStore>((set) => ({
 export async function initUserStore() {
   try {
     const response = await fetcher('/api/me', {
-      withRedirect: false,
+      disableAuth401Redirect: true,
     })
 
     if (response.ok) {

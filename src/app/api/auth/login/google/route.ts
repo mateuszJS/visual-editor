@@ -38,7 +38,7 @@ async function googleLogin(req: NextRequest) {
     const userData = await getUserData(payload, req)
     const response = NextResponse.json({ user: sanitizeUserData(userData) }, { status: 200 })
 
-    const sessionCookie = await createSessionCookie(userData.id.toString())
+    const sessionCookie = await createSessionCookie(userData.id)
     response.cookies.set(sessionCookie)
 
     return response

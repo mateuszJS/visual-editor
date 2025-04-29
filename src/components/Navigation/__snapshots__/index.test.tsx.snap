@@ -6,35 +6,34 @@ exports[`<Navigation> should render five standard links for unautenticated user 
     class="nav"
   >
     <a
-      class="button"
+      class="navLink"
       href="/"
     >
       <svg />
       Home
     </a>
     <a
-      class="button active"
+      class="navLink active"
       href="/explore"
     >
       <svg />
       Explore
     </a>
-    <a
-      class="button"
-      href="/new-project"
+    <button
+      class="createButton"
+      type="button"
     >
       <svg />
-      Creator
-    </a>
+    </button>
     <a
-      class="button"
+      class="navLink"
       href="/my-projects"
     >
       <svg />
       Projects
     </a>
     <a
-      class="button"
+      class="navLink"
       href="/login"
     >
       <svg />

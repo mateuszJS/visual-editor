@@ -1,13 +1,9 @@
-import { renderHook } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 import useCSRF from './index'
-import { mockCsrf } from 'test/server-handlers'
-import { HttpResponse } from 'msw'
+import { http, HttpResponse } from 'msw'
+import { server } from 'test/server'
 
 describe('useCSRF', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('fetches and returns the CSRF token', async () => {
     const { result } = renderHook(() => useCSRF())
 
@@ -15,8 +11,14 @@ describe('useCSRF', () => {
   })
 
   it('if initial request failes, it retries when token is requested', async () => {
-    mockCsrf.mockImplementationOnce(() => HttpResponse.error())
+    server.use(http.get('/api/csrf', () => HttpResponse.error()))
     const { result } = renderHook(() => useCSRF())
+
+    await act(() => {}) // wait for current request/renders to complete
+
+    server.use(
+      http.get('/api/csrf', () => HttpResponse.json({ csrfToken: 'csrf-token' }, { status: 200 }))
+    )
 
     expect(await result.current()).toBe('csrf-token')
   })
@@ -24,10 +26,7 @@ describe('useCSRF', () => {
   it('reuses the token if already fetched', async () => {
     const { result } = renderHook(() => useCSRF())
 
-    mockCsrf.mockImplementationOnce(() => HttpResponse.error())
-    expect(await result.current()).toBe('csrf-token')
-
-    mockCsrf.mockImplementationOnce(() => HttpResponse.error())
+    server.use(http.get('/api/csrf', () => HttpResponse.error()))
     expect(await result.current()).toBe('csrf-token')
   })
 })

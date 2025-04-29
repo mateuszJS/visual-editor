@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react'
 import useAuthOnly from '.'
 import { initUserStore } from '../useUserStore'
-import { mockUser } from 'test/server-handlers'
-import { HttpResponse } from 'msw'
+import { http, HttpResponse } from 'msw'
 import mockRouter from 'next-router-mock'
+import { server } from 'test/server'
 
 describe('useAuthOnly', () => {
   beforeEach(() => {
@@ -15,8 +15,9 @@ describe('useAuthOnly', () => {
 
     expect(mockRouter.asPath).toBe('/profile')
 
+    server.use(http.get('/api/me', () => HttpResponse.json(null, { status: 401 })))
+
     await act(async () => {
-      mockUser.mockImplementationOnce(() => HttpResponse.json(null, { status: 401 }))
       initUserStore()
     })
 

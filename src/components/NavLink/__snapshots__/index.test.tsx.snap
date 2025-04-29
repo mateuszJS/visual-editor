@@ -3,7 +3,7 @@
 exports[`<NavLink> should add class active when is active 1`] = `
 <div>
   <a
-    class="button active"
+    class="navLink active"
     href="/explore"
   >
     <svg />
@@ -15,7 +15,7 @@ exports[`<NavLink> should add class active when is active 1`] = `
 exports[`<NavLink> should render icon and text 1`] = `
 <div>
   <a
-    class="button"
+    class="navLink"
     href="/explore"
   >
     <svg />

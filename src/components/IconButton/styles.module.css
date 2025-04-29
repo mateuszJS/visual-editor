@@ -1,0 +1,17 @@
+.iconButton {
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  font-size: 0.8rem;
+  text-align: center;
+  border-radius: 5px;
+  transition: background 0.2s ease;
+
+  & svg {
+    vertical-align: middle;
+  }
+
+  &:hover {
+    background: rgba(var(--primary-rgb), 0.1);
+  }
+}

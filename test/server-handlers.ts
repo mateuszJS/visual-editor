@@ -1,25 +1,22 @@
 import { http, HttpResponse } from 'msw'
 
-export const mockUser = jest.fn(
-  (context: { request: Request }): Response =>
-    HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
-)
-
-export const mockCsrf = jest.fn(
-  (context: { request: Request }): Response =>
-    HttpResponse.json({ csrfToken: 'csrf-token' }, { status: 200 })
-)
-
-/*
-To mock for a one testcase:
-mockUser.mockImplementationOnce(({ request }: { request: Request }) =>
-  HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
-)
-*/
-
 export default [
-  http.get('/api/me', mockUser),
-  http.delete('/api/auth/logout', () => HttpResponse.json({}, { status: 200 })),
-  http.post('/api/auth/login/google', mockUser),
-  http.get('/api/csrf', mockCsrf),
+  http.get('/api/me', () => {
+    return HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
+  }),
+  http.delete('/api/auth/logout', () => {
+    return HttpResponse.json({}, { status: 200 })
+  }),
+  http.post('/api/auth/login/google', () => {
+    return HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
+  }),
+  http.get('/api/csrf', () => {
+    return HttpResponse.json({ csrfToken: 'csrf-token' }, { status: 200 })
+  }),
+  http.get('/api/projects/:id', () => {
+    return HttpResponse.json({ id: 1 }, { status: 200 })
+  }),
+  http.post('/api/projects', () => {
+    return HttpResponse.json({ id: 1 }, { status: 201 })
+  }),
 ]

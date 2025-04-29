@@ -1,0 +1,11 @@
+.createButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #8731dc;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.9rem;
+}

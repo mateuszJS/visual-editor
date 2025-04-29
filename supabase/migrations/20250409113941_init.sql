@@ -24,7 +24,7 @@ where oidc_google_id is not null;
 
 create table projects (
   id bigint generated always as identity primary key,
-  name text not null,
+  name text,
   owner_id bigint references users not null,
   created_at timestamp default now(),
   assets jsonb array default '{}',

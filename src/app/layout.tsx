@@ -22,9 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.variable}`}>
-        <InitializeData />
-        <div className="page">{children}</div>
-        <Navigation />
+        <div id="non-modal-content">
+          <InitializeData />
+          <div className="page">{children}</div>
+          <Navigation />
+        </div>
       </body>
     </html>
   )

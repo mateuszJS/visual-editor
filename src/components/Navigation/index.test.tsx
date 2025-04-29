@@ -6,11 +6,15 @@ jest.mock('next/navigation', () => ({
   usePathname() {
     return '/explore'
   },
+  useRouter() {},
 }))
 
 describe('<Navigation>', () => {
-  it('should render five standard links for unautenticated user', () => {
+  it('should render five standard links for unautenticated user', async () => {
     const { container } = render(<Navigation />)
+
+    await act(() => {}) // wait for lazy loaded components
+
     expect(container).toMatchSnapshot()
   })
 

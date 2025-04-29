@@ -1,4 +1,4 @@
-name: Pull Request Test
+name: Unit Tests
 on:
   pull_request:
     branches:
@@ -16,7 +16,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  check_pr:
+  check_if_pull_request_exists:
     runs-on: ubuntu-latest
     outputs:
       has_pr: ${{ steps.check.outputs.has_pr }}
@@ -45,9 +45,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  test_branch:
-    needs: check_pr
-    if: needs.check_pr.outputs.has_pr == 'true'
+  run_unit_tests:
+    needs: check_if_pull_request_exists
+    if: needs.check_if_pull_request_exists.outputs.has_pr == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -72,6 +72,7 @@ jobs:
           # Create a branch named after the PR number
           PR_NUMBER="${{ github.event.number }}"
           BRANCH_NAME="visual-diffs-pr-${PR_NUMBER}"
+          echo "DIFFS_BRANCH=${BRANCH_NAME}" >> $GITHUB_ENV
 
           # Make sure we have the latest code
           git fetch origin
@@ -96,12 +97,20 @@ jobs:
 
           # Check if git detected any changes
           if git diff --staged --quiet; then
-            echo "No diff images found"
+            echo "No new diff images found"
           else
             git commit -m "Update visual test diffs for PR #${PR_NUMBER} (Run #${{ github.run_id }})"
             git push -f origin ${BRANCH_NAME}
-            echo "DIFFS_BRANCH=${BRANCH_NAME}" >> $GITHUB_ENV
-            echo "✅ Successfully pushed diff images to branch"
+            echo "✅ Successfully pushed new diff images to branch"
+          fi
+
+          # Check if the diff directory has any files
+          if [ -n "$(ls -A $DIFFS_DIR 2>/dev/null)" ]; then
+            echo "IS_ANY_DIFF=true" >> $GITHUB_ENV
+            echo "Diff images found"
+          else
+            echo "IS_ANY_DIFF=false" >> $GITHUB_ENV
+            echo "No diff images found"
           fi
 
       - name: Comment on PR with failure details
@@ -138,7 +147,7 @@ jobs:
             }
 
             // 3. Post new comment only if we have diffs
-            if (!branchName) {
+            if (process.env.IS_ANY_DIFF === 'false') {
               console.log('No visual diffs found');
               return;
             }

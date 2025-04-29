@@ -1,0 +1,9 @@
+.loader {
+  display: flex;
+  transition: opacity var(--transition-time) ease;
+  opacity: 0;
+}
+
+.loaderOpen:not(.loaderClosed) {
+  opacity: 1;
+}

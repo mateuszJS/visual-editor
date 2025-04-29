@@ -1,0 +1,69 @@
+.dropZone {
+  --border-radius: 15px;
+  position: relative;
+  display: block;
+  cursor: pointer;
+  transition: background ease 0.2s;
+  background: rgba(var(--primary-rgb), 0.1);
+  border-radius: var(--border-radius);
+}
+
+.border {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  --border-width: 4px;
+  --dash-length: 6px;
+  --gap-length: 18px;
+
+  stroke: rgba(var(--primary-rgb), 0.5);
+  padding: calc(var(--border-width) / 2);
+  overflow: visible;
+}
+
+.borderRect {
+  rx: var(--border-radius);
+  ry: var(--border-radius);
+  fill: none;
+  stroke-dasharray: var(--dash-length) var(--gap-length);
+  stroke-width: var(--border-width);
+  stroke-linecap: square;
+
+  animation: dash 0.5s linear infinite paused;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: calc(var(--dash-length) + var(--gap-length));
+  }
+}
+
+.text {
+  vertical-align: middle;
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.dropZone:hover {
+  background: rgba(var(--primary-rgb), 0.15);
+}
+
+.borderRectActive {
+  animation-play-state: running;
+}
+
+.fileInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.header {
+  font-weight: 600;
+  font-size: 1.17rem;
+}
+
+.dropZone.reject {
+  background: rgba(255, 0, 0, 0.35);
+}

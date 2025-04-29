@@ -1,0 +1,15 @@
+.overlay {
+  position: fixed;
+  inset: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(40, 40, 40, 0.75);
+  transition: opacity var(--transition-time) ease;
+  opacity: 0;
+}
+
+.overlayOpen:not(.overlayClosed) {
+  opacity: 1;
+}

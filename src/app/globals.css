@@ -4,6 +4,10 @@
 
   --primary-rgb: 17, 17, 17;
   --primary: rgb(var(--primary-rgb));
+
+  --secondary-rgb: 177, 177, 177;
+  --secondary: rgb(var(--secondary-rgb));
+
   --global-padding: 15px;
 }
 
@@ -23,7 +27,8 @@
 }
 
 html,
-body {
+body,
+#non-modal-content {
   width: 100%;
   height: 100%;
 }
@@ -95,9 +100,15 @@ button {
   -webkit-user-select: none;
   color: inherit;
   font: inherit;
+  border: none;
+  cursor: pointer;
 }
 
-body {
+ul {
+  list-style: none;
+}
+
+#non-modal-content {
   display: flex;
   flex-direction: column;
 }

@@ -41,7 +41,7 @@ export type Database = {
           height: number
           id: number
           last_updated: string | null
-          name: string
+          name: string | null
           owner_id: number
           width: number
         }
@@ -51,7 +51,7 @@ export type Database = {
           height: number
           id?: never
           last_updated?: string | null
-          name: string
+          name?: string | null
           owner_id: number
           width: number
         }
@@ -61,7 +61,7 @@ export type Database = {
           height?: number
           id?: never
           last_updated?: string | null
-          name?: string
+          name?: string | null
           owner_id?: number
           width?: number
         }

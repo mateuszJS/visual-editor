@@ -1,5 +1,4 @@
-.navLink {
-  user-select: none;
+.navItem {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -7,15 +6,19 @@
   gap: 0.3rem;
 
   width: 3.9rem; /* absolute width, otherwise
-  font-weight changes impacts the width of button and all elements start moving */
+  font-weight changes(on hover) impacts the width of button and all elements start moving */
   padding: 0 0.5rem;
+  background: none;
+
   font-size: 0.8rem;
+  font-weight: 300;
+
   transition: opacity 0.2s ease;
   opacity: 0.5;
-  font-weight: 300;
+  user-select: none;
 }
 
-.navLink svg {
+.navItem svg {
   font-size: 1rem;
 }
 

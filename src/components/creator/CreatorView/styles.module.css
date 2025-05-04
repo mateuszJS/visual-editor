@@ -1,0 +1,12 @@
+.root {
+  display: grid;
+  grid-template-rows: 1fr 80px 120px;
+
+  height: 100%;
+  margin: 0 calc(var(--global-padding) * -1);
+}
+
+.canvas {
+  height: 100%;
+  width: 100%;
+}

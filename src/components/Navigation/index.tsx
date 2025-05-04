@@ -6,7 +6,7 @@ import FolderIcon from 'assets/folder-icon.svg'
 import ProfileIcon from 'assets/profile-icon.svg'
 import styles from './styles.module.css'
 import useUserStore from '@/hooks/useUserStore'
-import NavLink from '@/components/NavLink'
+import NavItem from '@/components/NavLink'
 import CreateButton from '@/components/CreateButton'
 
 export default function Navigation() {
@@ -14,27 +14,27 @@ export default function Navigation() {
 
   return (
     <nav className={styles.nav}>
-      <NavLink href="/">
+      <NavItem href="/">
         <HomeIcon />
         Home
-      </NavLink>
+      </NavItem>
 
-      <NavLink href="/explore">
+      <NavItem href="/explore">
         <CompassIcon />
         Explore
-      </NavLink>
+      </NavItem>
 
       <CreateButton />
 
-      <NavLink href="/my-projects">
+      <NavItem href="/my-projects">
         <FolderIcon />
         Projects
-      </NavLink>
+      </NavItem>
 
-      <NavLink href={user ? '/profile' : '/login'}>
+      <NavItem href={user ? '/profile' : '/login'}>
         <ProfileIcon />
         {user ? 'Profile' : 'Login'}
-      </NavLink>
+      </NavItem>
     </nav>
   )
 }

@@ -2,11 +2,20 @@
 
 import useProject from '@/hooks/projects/useProject'
 import { useParams } from 'next/navigation'
+import OverlayLoader from '@/components/OverlayLoader'
+import styles from './styles.module.css'
+import CreatorView from '@/components/creator/CreatorView'
 
 export default function Project() {
   const params = useParams<{ id: string }>()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const project = useProject(Number(params.id))
+  const { loading, error, project } = useProject(Number(params.id))
 
-  return <h1>User&apos;s Projects</h1>
+  return (
+    <main className={styles.page}>
+      <OverlayLoader loading={loading} />
+      <div className={styles.topNavigtion}>Navigation</div>
+      {project && <CreatorView height={project.height} width={project.width} assets={[]} />}
+    </main>
+  )
 }

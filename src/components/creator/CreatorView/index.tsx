@@ -13,6 +13,7 @@ interface Props {
 
 type Creator = Awaited<ReturnType<typeof initCreator>>
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function Canvas({ width, height, assets }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const creatorRef = useRef<Creator>(null) // TODO: change type to Creator

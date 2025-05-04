@@ -6,14 +6,14 @@ exports[`<Navigation> should render five standard links for unautenticated user 
     class="nav"
   >
     <a
-      class="navLink"
+      class="navItem"
       href="/"
     >
       <svg />
       Home
     </a>
     <a
-      class="navLink active"
+      class="navItem active"
       href="/explore"
     >
       <svg />
@@ -26,14 +26,14 @@ exports[`<Navigation> should render five standard links for unautenticated user 
       <svg />
     </button>
     <a
-      class="navLink"
+      class="navItem"
       href="/my-projects"
     >
       <svg />
       Projects
     </a>
     <a
-      class="navLink"
+      class="navItem"
       href="/login"
     >
       <svg />

@@ -1,20 +1,18 @@
 'use client'
 
 import Modal from 'react-modal'
-import CloseIcon from 'assets/close-icon.svg'
 import TikTokIcon from 'assets/tiktok-logo.svg'
 import InstagramIcon from 'assets/instagram-logo.svg'
 import YouTubeIcon from 'assets/youtube-logo.svg'
 import styles from './styles.module.css'
 import UploadFile from '@/components/UploadFile'
-import IconButton from '../IconButton'
 import type { FileWithPath } from 'react-dropzone'
 import getImageSize from '@/utils/getImageSize'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import classNamesOverlay from '@/components/shared/overlayStyles'
 import OverlayLoader from '../OverlayLoader'
 import useCreateProject from '@/hooks/projects/useCreateProject'
+import ActionSheets from '../ActionSheets'
 
 if (process.env.NODE_ENV !== 'test') {
   Modal.setAppElement('#non-modal-content')
@@ -35,18 +33,6 @@ const blankCanvasSizes = [
   { width: 3, height: 3, label: 'Custom' },
 ]
 
-const classNamesModal = {
-  base: styles.modal,
-  afterOpen: styles.modalOpen,
-  beforeClose: styles.modalClosed,
-}
-
-const TRANSITION_TIME_MS = 300
-
-const style = {
-  overlay: { '--transition-time': `${TRANSITION_TIME_MS}ms` } as React.CSSProperties,
-}
-
 export default function NewProjectModal({ isOpen, close }: Props) {
   const router = useRouter()
   const { createProject, loading, project } = useCreateProject()
@@ -58,7 +44,7 @@ export default function NewProjectModal({ isOpen, close }: Props) {
     }
   }, [project])
 
-  async function createProjectFromFiles(files: readonly FileWithPath[]) {
+  const createProjectFromFiles = async (files: readonly FileWithPath[]) => {
     // https://react-dropzone.js.org/#section-previews
 
     /* getImageSize should be upgraded to upload iamge to our BE and return custom Asset object */
@@ -75,22 +61,8 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={close}
-      className={classNamesModal}
-      contentLabel="Start new project"
-      overlayClassName={classNamesOverlay}
-      closeTimeoutMS={TRANSITION_TIME_MS}
-      style={style}
-    >
+    <ActionSheets isOpen={isOpen} close={close} title="Start new project">
       <OverlayLoader loading={loading} />
-      <div className={styles.header}>
-        <IconButton onClick={close} className={styles.closeButton}>
-          <CloseIcon />
-        </IconButton>
-        <h2 className={styles.title}>Start new project</h2>
-      </div>
       <UploadFile onUpload={createProjectFromFiles} />
       <p className={styles.divider}>Or</p>
       <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with desired size</h3>
@@ -113,6 +85,6 @@ export default function NewProjectModal({ isOpen, close }: Props) {
           </li>
         ))}
       </ul>
-    </Modal>
+    </ActionSheets>
   )
 }

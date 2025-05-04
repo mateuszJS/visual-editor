@@ -117,3 +117,14 @@ ul {
   flex-grow: 1;
   padding: 0 var(--global-padding);
 }
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.child-overflow-fix {
+  min-width: 0;
+  min-height: 0;
+}

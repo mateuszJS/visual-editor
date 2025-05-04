@@ -4,7 +4,7 @@ import { FileRejection, FileWithPath, useDropzone } from 'react-dropzone'
 import styles from './styles.module.css'
 
 interface Props {
-  onUpload: (files: readonly FileWithPath[]) => void
+  onUpload: (files: FileWithPath[]) => void
 }
 
 const MAX_FILE_SIZE_MBs = 3
@@ -42,7 +42,7 @@ export default function UploadFile({ onUpload }: Props) {
   useEffect(() => {
     if (acceptedFiles.length > 0) {
       console.log('acceptedFiles', acceptedFiles)
-      onUpload(acceptedFiles)
+      onUpload(acceptedFiles as FileWithPath[]) // just do not not carry al lthe time "readonly" type
     }
   }, [acceptedFiles])
 

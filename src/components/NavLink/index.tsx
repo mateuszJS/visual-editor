@@ -13,7 +13,7 @@ export default function NavLink({ children, href }: Props) {
 
   return (
     <Link
-      className={cn(styles.navLink, {
+      className={cn(styles.navItem, {
         [styles.active]: pathname === href,
       })}
       href={href}

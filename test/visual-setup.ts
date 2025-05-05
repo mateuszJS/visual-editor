@@ -6,8 +6,19 @@ import { toMatchImageSnapshot } from 'jest-image-snapshot'
 
 expect.extend({ toMatchImageSnapshot })
 
+/* to filter out unnecessayr console logs form visual regression tests */
+const knownTrashConsoleLogs = [
+  '%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold',
+  'Failed to load resource: the server responded with a status of 404 (Not Found)',
+]
+
 beforeAll(async () => {
-  page.on('console', (msg) => console.log('BROWSER CONSOLE:', msg.text()))
+  page.on('console', (msg) => {
+    const text = msg.text()
+    if (!knownTrashConsoleLogs.includes(text)) {
+      console.log('BROWSER CONSOLE:', text)
+    }
+  })
   await page.setViewport({ width: 1280, height: 720 })
   await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'dark' }])
 }, 20000)

@@ -9,11 +9,7 @@
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "jest",
-    "test-backend": "jest --config jest.backend.config.ts",
-    "test-visual": "npm run build-storybook && jest --config jest.visual.config.ts",
-    "test-visual-update": "jest --config jest.visual.config.ts -u",
-    "test:watch": "jest --watch"
+    "test": "jest"
   },
   "dependencies": {
     "@mateuszjs/magic-render": "^0.0.1-next.3",

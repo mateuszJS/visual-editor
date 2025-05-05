@@ -1,5 +1,5 @@
 import 'server-only'
-import { withSession } from '@/app/api/session'
+import { withSession } from '@/app/api/wrappers/session'
 import { NextResponse } from 'next/server'
 
 async function logout() {

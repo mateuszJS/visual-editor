@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import supabaseClient from '../../supabaseClient'
 import getResponseError from '../../utils/getResponseError'
 import { v4 as uuidv4 } from 'uuid'
-import { SessionPayload, withSession } from '../../session'
+import { SessionPayload, withSession } from '@/app/api/wrappers/session'
 import getValidId from '../../utils/getValidId'
 
 async function uploadFile(file: Blob, fileName: string, projectId: number) {
@@ -16,7 +16,7 @@ async function uploadFile(file: Blob, fileName: string, projectId: number) {
   return supabaseClient.storage.from('project-assets').upload(filePath, file)
 }
 
-export async function uploadProjectAsset(
+async function uploadProjectAsset(
   session: SessionPayload,
   request: NextRequest,
   context: { params: Promise<{ projectId: string }> }

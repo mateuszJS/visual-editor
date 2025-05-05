@@ -2,7 +2,7 @@ import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
 import type { NextRequest } from 'next/server'
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
-import getResponseError from './utils/getResponseError'
+import getResponseError from '../utils/getResponseError'
 
 if (!process.env.SESSION_SECRET) {
   throw new Error('env var SESSION_SECRET is missing!')

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { SessionPayload, withSession } from '../session'
+import { SessionPayload, withSession } from '../wrappers/session'
 import supabaseClient from '../supabaseClient'
 import Joi from 'joi'
 import getResponseError from '@/app/api/utils/getResponseError'

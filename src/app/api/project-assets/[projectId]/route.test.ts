@@ -1,9 +1,10 @@
 import { __getCleanDBMock, dbMock } from '@/app/api/supabaseClient'
 import createMockNextRequest from '@/app/api/test/mockNextRequest'
 import mockNextContext from '@/app/api/test/mockNextContext'
-import { uploadProjectAsset } from './route'
+import { POST } from './route'
 
 jest.mock('@/app/api/supabaseClient')
+jest.mock('@/app/api/wrappers/session')
 jest.mock('uuid', () => ({ v4: () => '123' }))
 
 const blob = new Blob(['image-blob'], { type: 'image/png' })
@@ -17,11 +18,7 @@ const request = createMockNextRequest({
 
 describe('uploadProjectAsset', () => {
   test('returns path if file was uploaded correctly', async () => {
-    const response = await uploadProjectAsset(
-      { userId: 1 },
-      request,
-      mockNextContext({ projectId: '1' })
-    )
+    const response = await POST(request, mockNextContext({ projectId: '1' }))
     const json = await response.json()
     const expectedPath =
       '1' /*project id*/ +

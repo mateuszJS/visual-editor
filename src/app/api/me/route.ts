@@ -1,6 +1,6 @@
 import 'server-only'
 import { NextResponse } from 'next/server'
-import { SessionPayload, withSession } from '@/app/api/session'
+import { SessionPayload, withSession } from '@/app/api/wrappers/session'
 import supabaseClient from '@/app/api/supabaseClient'
 import getResponseError from '../utils/getResponseError'
 import sanitizeUserData from '../utils/sanitizeUserData'

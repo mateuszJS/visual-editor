@@ -32,3 +32,14 @@ create table projects (
   width int not null,
   height int not null
 );
+
+insert into storage.buckets
+  (id, name, public)
+values
+  ('project-assets', 'project-assets', true);
+
+create policy "public-storage-objects"
+on storage.objects
+for insert with check (
+  true
+);

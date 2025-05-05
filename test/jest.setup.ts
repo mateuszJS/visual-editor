@@ -12,7 +12,7 @@ afterEach(() => {
 afterAll(() => server.close())
 
 beforeEach(() => {
-  window.history.replaceState(null, '', 'http://localhost/')
+  window.history.replaceState(null, '', 'http://localhost/') // not sure if we need this anymore
 })
 
 // server.events.on('request:start', ({ request }) => {

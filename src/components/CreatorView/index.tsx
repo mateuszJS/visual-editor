@@ -3,7 +3,7 @@
 import initCreator from '@mateuszjs/magic-render'
 import { useEffect, useRef } from 'react'
 import styles from './styles.module.css'
-import Toolbox from '../Toolbox'
+import Toolbox from './components/Toolbox'
 
 interface Props {
   width: number

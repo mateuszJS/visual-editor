@@ -10,6 +10,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "jest",
+    "test-backend": "jest --config jest.backend.config.ts",
     "test-visual": "npm run build-storybook && jest --config jest.visual.config.ts",
     "test-visual-update": "jest --config jest.visual.config.ts -u",
     "test:watch": "jest --watch"
@@ -28,6 +29,7 @@
     "react-dropzone": "^14.3.8",
     "react-modal": "^3.16.3",
     "server-only": "^0.0.1",
+    "uuid": "^11.1.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

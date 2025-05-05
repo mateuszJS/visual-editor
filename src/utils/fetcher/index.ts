@@ -4,6 +4,7 @@ export interface FetcherOptions {
   options?: RequestInit
   disableAuth401Redirect?: boolean
   csrfToken?: string
+  formData?: FormData
 }
 
 /**
@@ -18,6 +19,7 @@ export default async function fetcher(
     options,
     disableAuth401Redirect = false,
     csrfToken,
+    formData = undefined,
   }: FetcherOptions = {}
 ): Promise<Response> {
   try {
@@ -31,7 +33,7 @@ export default async function fetcher(
         ...(csrfToken ? { 'x-csrf-token': csrfToken } : {}),
         ...options?.headers,
       },
-      body: json ? JSON.stringify(json) : undefined,
+      body: json ? JSON.stringify(json) : formData,
     })
 
     if (!disableAuth401Redirect && response.status === 401) {

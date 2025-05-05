@@ -1,4 +1,4 @@
-/** returns null if number is not valid */
+/** @returns null if number is not valid */
 export default async function getValidId(
   context: { params: Promise<Record<string, string>> },
   paramName: string

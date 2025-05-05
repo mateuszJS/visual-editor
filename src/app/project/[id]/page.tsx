@@ -4,7 +4,7 @@ import useProject from '@/hooks/projects/useProject'
 import { useParams } from 'next/navigation'
 import OverlayLoader from '@/components/OverlayLoader'
 import styles from './styles.module.css'
-import CreatorView from '@/components/creator/CreatorView'
+import CreatorView from '@/components/CreatorView'
 
 export default function Project() {
   const params = useParams<{ id: string }>()

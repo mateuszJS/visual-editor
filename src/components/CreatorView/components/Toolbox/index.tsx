@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './styles.module.css'
-import UploadButton from './components/UploadButton'
+import UploadButton from '../UploadButton'
 
 interface Props {
   onUploadImage: VoidFunction

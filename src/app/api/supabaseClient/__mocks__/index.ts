@@ -24,6 +24,9 @@ export function __getCleanDBMock() {
       ] as Row[],
       projects: [] as Row[],
     },
+    storage: {
+      'project-assets': {} as Record<string, File>,
+    },
   }
 }
 
@@ -50,6 +53,7 @@ const supabaseClientMock = {
       ...supabaseClientMock,
       select: () => supabaseClientMock.select(dbMock.tables[tableId], nextError),
       insert: supabaseClientMock.insert.bind(null, tableId, nextError),
+      upload: supabaseClientMock.upload.bind(null, tableId, nextError),
     }
   },
   select: (selectedData: Row[], error: Error | null = null) => {
@@ -100,6 +104,28 @@ const supabaseClientMock = {
     return {
       error,
       select: () => supabaseClientMock.select([newRow], error),
+    }
+  },
+  storage: {
+    from: (bucketId: keyof typeof dbMock.storage) => {
+      const nextError = errorsQueue.shift() || null
+
+      return {
+        upload: supabaseClientMock.upload.bind(null, bucketId, nextError),
+      }
+    },
+  },
+  upload: (
+    bucketId: keyof typeof dbMock.storage,
+    error: Error | null = null,
+    filePath: string,
+    file: File
+  ) => {
+    dbMock.storage[bucketId][filePath] = file
+
+    return {
+      error,
+      data: { id: '1', path: filePath, fullPath: `${bucketId}/${filePath}` },
     }
   },
 }

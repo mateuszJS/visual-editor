@@ -151,7 +151,7 @@ export const config: Config = {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/test/jest.backend.setup.ts'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -160,24 +160,22 @@ export const config: Config = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: 'jest-fixed-jsdom',
+  testEnvironment: 'node',
 
   // Options that will be passed to the testEnvironment
-  testEnvironmentOptions: {
-    // DO we need it??
-    // customExportConditions: ['msw'],
-    // customExportConditions: [''],
-  },
+  // testEnvironmentOptions: {},
 
   // Adds a location field to test results
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  // testMatch: [],
+  testMatch: ['<rootDir>/src/app/api/**/*.test.ts'],
+  // testMatch: ['<rootDir>/src/app/api/**/.*test\\.ts$'],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  testPathIgnorePatterns: ['/src/app/api/.*test\\.ts$'],
-  //node_modules/|/.next/|/src/app/api/**/test.ts/: Nothing to repeat
+  // testPathIgnorePatterns: [
+  //   "/node_modules/"
+  // ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],

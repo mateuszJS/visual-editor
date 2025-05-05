@@ -57,6 +57,7 @@ export default function createMockNextRequest(options: MockNextRequestOptions = 
   // Add default headers
   headersObj.set('accept-language', 'en-US,en;q=0.9')
   headersObj.set('user-agent', userAgent)
+
   // Add custom headers
   Object.entries(headers).forEach(([key, value]) => {
     headersObj.set(key, value)

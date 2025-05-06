@@ -4,7 +4,6 @@ import initCreator from '@mateuszjs/magic-render'
 import { useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import Toolbox from './components/Toolbox'
-import fetcher from '@/utils/fetcher'
 
 interface Props {
   width: number

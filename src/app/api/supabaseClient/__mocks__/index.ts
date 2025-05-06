@@ -53,7 +53,6 @@ const supabaseClientMock = {
       ...supabaseClientMock,
       select: () => supabaseClientMock.select(dbMock.tables[tableId], nextError),
       insert: supabaseClientMock.insert.bind(null, tableId, nextError),
-      upload: supabaseClientMock.upload.bind(null, tableId, nextError),
     }
   },
   select: (selectedData: Row[], error: Error | null = null) => {
@@ -112,6 +111,10 @@ const supabaseClientMock = {
 
       return {
         upload: supabaseClientMock.upload.bind(null, bucketId, nextError),
+        download: (path: string) => ({
+          error: nextError,
+          data: dbMock.storage[bucketId][path] || null,
+        }),
       }
     },
   },

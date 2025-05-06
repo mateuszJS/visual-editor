@@ -4,7 +4,7 @@ import styles from './styles.module.css'
 import UploadButton from '../UploadButton'
 
 interface Props {
-  onUploadImage: VoidFunction
+  onUploadImage: (path: string) => void
 }
 
 export default function Toolbox({ onUploadImage }: Props) {

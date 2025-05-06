@@ -24,7 +24,11 @@ export default function Canvas({ width, height, assets }: Props) {
     })
   }, [])
 
-  const openUploadModal = () => {}
+  const openUploadModal = async (path: string) => {
+    // A little test
+    const img = new Image()
+    img.src = `/api/project-assets?path=${encodeURIComponent(path)}`
+  }
 
   return (
     <div className={styles.root}>

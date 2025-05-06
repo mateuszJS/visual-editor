@@ -26,10 +26,8 @@ export default function Canvas({ width, height, assets }: Props) {
   }, [])
 
   const openUploadModal = async (path: string) => {
+    // A little test
     const img = new Image()
-
-    // const response = await fetcher(`/api/project-assets/?path=${encodeURIComponent(path)}`)
-    // const json = await response.json()
     img.src = `/api/project-assets?path=${encodeURIComponent(path)}`
   }
 

@@ -12,7 +12,7 @@ async function uploadFile(file: Blob, fileName: string, projectId: string) {
   create two exactly same looking strings */
 
   const filePath = `${projectId}/${new Date().toISOString().replaceAll(':', '_')}/${uniqueFileName}`
-  // colons might cause troubles in AWS S3 namign convention
+  // colons might cause troubles in AWS S3 naming convention
   return supabaseClient.storage.from('project-assets').upload(filePath, file)
 }
 

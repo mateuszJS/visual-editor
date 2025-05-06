@@ -10,30 +10,28 @@ import useFetcher from '@/hooks/useFetcher'
 import { useParams } from 'next/navigation'
 
 interface Props {
-  onUploadImage: (files: FileWithPath[]) => void
+  onUploadImage: (path: string) => void
 }
 
 export default function UploadButton({ onUploadImage }: Props) {
   const [usUploadShown, setIsUploadShown] = useState(false)
-  const { fetcher, success } = useFetcher()
+  const { fetcher, success } = useFetcher<{ path: string }>()
   const params = useParams<{ id: string }>()
 
   const createProjectFromFiles = async (files: FileWithPath[]) => {
     const formData = new FormData()
     formData.append('file', files[0])
+    formData.append('projectId', params.id)
 
-    fetcher(`/api/project-assets/${params.id}`, {
+    fetcher('/api/project-assets', {
       method: 'POST',
       formData,
     })
-
-    onUploadImage(files)
-    console.log('files', files)
   }
 
   useEffect(() => {
     if (success) {
-      console.log('success', success)
+      onUploadImage(success.json.path)
       setIsUploadShown(false)
     }
   }, [success])

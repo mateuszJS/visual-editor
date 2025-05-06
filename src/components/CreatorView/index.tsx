@@ -4,6 +4,7 @@ import initCreator from '@mateuszjs/magic-render'
 import { useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import Toolbox from './components/Toolbox'
+import fetcher from '@/utils/fetcher'
 
 interface Props {
   width: number
@@ -24,7 +25,13 @@ export default function Canvas({ width, height, assets }: Props) {
     })
   }, [])
 
-  const openUploadModal = () => {}
+  const openUploadModal = async (path: string) => {
+    const img = new Image()
+
+    // const response = await fetcher(`/api/project-assets/?path=${encodeURIComponent(path)}`)
+    // const json = await response.json()
+    img.src = `/api/project-assets?path=${encodeURIComponent(path)}`
+  }
 
   return (
     <div className={styles.root}>

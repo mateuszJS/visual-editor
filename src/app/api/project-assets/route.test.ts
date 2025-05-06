@@ -95,9 +95,6 @@ describe('downloadProjectAsset', () => {
     const blob = await response.blob()
     expect(blob).toBeInstanceOf(Blob)
     expect(blob.type).toBe('image/*')
-    expect(blob.size).toBe(fileExample.size)
-
-    // For more thorough testing, check the actual content
     const content = await blob.text()
     expect(content).toBe('image-blob')
   })

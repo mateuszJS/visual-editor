@@ -15,7 +15,14 @@ export default function Project() {
     <main className={styles.page}>
       <OverlayLoader loading={loading} />
       <div className={styles.topNavigtion}>Navigation</div>
-      {project && <CreatorView height={project.height} width={project.width} assets={[]} />}
+      {project && (
+        <CreatorView
+          height={project.height}
+          width={project.width}
+          assets={[]}
+          projectId={project.id.toString()}
+        />
+      )}
     </main>
   )
 }

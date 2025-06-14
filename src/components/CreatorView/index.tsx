@@ -4,22 +4,19 @@ import { useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import Toolbox from './components/Toolbox'
 import useCreator from './useCreator'
+import type { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 
 interface Props {
-  projectId: string
-  width: number
-  height: number
-  assets: unknown[]
+  project: SanitizedProject
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function CreatorView({ projectId, width, height, assets }: Props) {
+export default function CreatorView({ project }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const creator = useCreator()
 
   useEffect(() => {
     const canvas = canvasRef.current!
-    creator.init(canvas, projectId)
+    creator.init(canvas, project)
     return creator.destroy.bind(null, canvas)
   }, [])
 

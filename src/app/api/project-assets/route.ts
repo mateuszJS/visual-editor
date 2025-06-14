@@ -17,6 +17,7 @@ async function uploadFile(file: Blob, fileName: string, projectId: string) {
 }
 
 async function uploadProjectAsset(session: SessionPayload, request: NextRequest) {
+  console.log('uploadProjectAsset called')
   const formData = await request.formData()
   const file = formData.get('file') as File | null
   const projectId = formData.get('projectId') as string

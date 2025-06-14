@@ -27,8 +27,8 @@ create table projects (
   name text,
   owner_id bigint references users not null,
   created_at timestamp default now(),
-  assets jsonb array default '{}',
-  last_updated timestamp default now(),
+  assets jsonb array default '{}' not null,
+  last_updated timestamp default now() not null,
   width int not null,
   height int not null
 );

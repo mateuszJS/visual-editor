@@ -1,27 +1,37 @@
 'use client'
 
+import { UpdateProjectPayload } from '@/app/api/utils/projectSchema'
+import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
+import fetcher from '@/utils/fetcher'
 import initMagicRender from '@mateuszjs/magic-render'
 import { create } from 'zustand'
+import { proxy, useSnapshot } from 'valtio'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 
-export interface CreatorStore {
+interface CreatorStore {
   creator: MagicRender | null
   projectId: string | null
-  set: (state: Partial<CreatorStore>) => void
 }
 
-const useCreatorStore = create<CreatorStore>((set) => ({
+function onProjectUpdate(id: number, project: UpdateProjectPayload) {
+  fetcher(`/api/projects/${id}`, {
+    method: 'PATCH',
+    json: project,
+  })
+}
+
+const creatorState = proxy<CreatorStore>({
   creator: null,
   projectId: null,
-  set,
-}))
+})
 
-let validCanvas: HTMLCanvasElement | null = null
+// const stores: CreatorStore[] = []
 
 function useCreator() {
-  const store = useCreatorStore()
-
+  const store = useSnapshot(creatorState)
+  // console.log('useCreator - render', { ...store })
+  // stores.push(store)
   return {
     isReady: !!store.creator,
     get creator() {
@@ -32,31 +42,41 @@ function useCreator() {
       if (store.projectId === null) throw new Error('Project id is not initialized')
       return store.projectId
     },
-    async init(canvas: HTMLCanvasElement, projectId: string) {
-      if (validCanvas === canvas) {
-        // Canvas was alreayd lniekd with device, We cannot link one canvas element to multiple devices
-        // this issue happens in react strict mode(useEffect is called twice)
-        return
-      }
+    async init(canvas: HTMLCanvasElement, project: SanitizedProject) {
+      console.log('useCreator - init')
+      if (canvas.hasAttribute('data-connected')) return
+      // is already connected to the creator
+      // and we assume that canvas is mounted to DOM
 
-      validCanvas = canvas
-      const creator = await initMagicRender(canvas)
+      canvas.setAttribute('data-connected', '')
+      console.log('useCreator - initMagicRender')
+      const creator = await initMagicRender(canvas, project.assets, (assets) =>
+        onProjectUpdate(project.id, { assets })
+      )
 
-      // check if it's the same canvas as before the promsie was resolved
-      if (validCanvas === canvas) {
-        store.set({ creator, projectId })
+      // check if canvas is still used(user might already left the page)
+      // and destory cannot be called before creator is initialized
+      // console.log('useCreator - initMagicRender - done', canvas.isConnected)
+      if (canvas.isConnected) {
+        creatorState.creator = creator
+        creatorState.projectId = project.id.toString()
       } else {
         creator.destroy()
       }
     },
     destroy(canvas: HTMLCanvasElement) {
-      if (store.creator) {
-        store.creator.destroy() // if initMagicRender takes too long, then created might be requested to destroy before creation
-        store.set({ creator: null, projectId: null })
-      } else if (validCanvas === canvas) {
-        // if canvas was not yet initialized, then make sure listCanvas doesn't points and canvas
-        // only lastCanvas will finish initialization completly, other will be immidiately destroyed after their initialization
-        validCanvas = null
+      console.log('useCreator - destroyyyyyyyyyyyyyyyyyy', store.creator)
+
+      // stores.forEach((s, i) => {
+      //   const prevI = i === 0 ? stores.length - 1 : i - 1
+      //   console.log(prevI, i, s === stores[prevI])
+      // })
+      // console.log('areTheSame', stores)
+      if (!canvas.isConnected) {
+        // canvas is still rendered, mainly because react in strict mode calls useEffect twice
+        store.creator?.destroy()
+        creatorState.creator = null
+        creatorState.projectId = null
       }
     },
   }

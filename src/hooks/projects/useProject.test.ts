@@ -142,7 +142,7 @@ describe('useProject', () => {
   })
 
   describe('updating project', () => {
-    it('throw error if project is not in the store', async () => {
+    it('throws an error if the project is not yet in the store', async () => {
       const { result } = renderHook(() => useProject())
       await act(() => {
         expect(() => result.current.updateProject(1, { width: 200 })).toThrow(
@@ -176,7 +176,7 @@ describe('useProject', () => {
       })
     })
 
-    it('sucessfuly returns updated proejct from the hook', async () => {
+    it('successfully returns updated proejct from the hook', async () => {
       const { result } = renderHook(() => useProject())
 
       await act(() => {

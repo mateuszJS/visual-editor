@@ -18,8 +18,8 @@ const creatorState = proxy<CreatorStore>({
 })
 
 /*
-  Hook to be used whenever reference o the creator is needed, like in all Tollbox components.
-  Cannot accept any arguments because might be used in very deep nested component inside creator view.
+  Hook to be used whenever reference to the creator is needed, like in many Tollbox components.
+  Cannot accept any arguments because might be used in a very deep nested component inside creator view.
 */
 
 function useCreator() {

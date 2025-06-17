@@ -66,13 +66,3 @@ export default function useProject(id?: number) {
     updateProject,
   }
 }
-
-/*
-  The fact that project is during loading or there is an error needs to be know only on the top actually
-  
-  We don't need to know currently focused project, sicne creator handles it already
-
-  we need project for:
-    - view with list of projects
-    - top of creator just to display right informations
-*/

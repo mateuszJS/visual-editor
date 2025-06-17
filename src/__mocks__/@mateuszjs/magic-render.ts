@@ -12,7 +12,7 @@ export default function initMagicRenderMock(canvas: HTMLCanvasElement) {
     /** We need to figure otu the wya how ot notify outside world about changes in creator canvas
      * it will be also useful in the test
      */
-    addImage: () => {},
+    addImage: jest.fn(),
     updatePoints: () => {},
     destroy: () => {
       canvas.removeAttribute('data-magic-render-linked')

@@ -1,11 +1,18 @@
-import { fireEvent, render, renderHook, screen } from '@testing-library/react'
+import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
 import UploadButton from '.'
 import useCreator from '../../useCreator'
+import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
+
+const project = getSanitizedProject()
 
 describe('UploadButton', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    result.current.init(document.createElement('canvas'), 'project-id')
+    await act(() => {
+      const canvas = document.createElement('canvas')
+      document.body.appendChild(canvas)
+      result.current.init(canvas, project)
+    })
   })
 
   it('should upload image button', () => {
@@ -13,21 +20,22 @@ describe('UploadButton', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('renders upload modal when clicked', () => {
+  it('renders upload modal when clicked', async () => {
     render(<UploadButton />)
+
     const uploadBtn = screen.getByRole('button', {
       name: /image/i,
     })
     fireEvent.click(uploadBtn)
 
     expect(
-      screen.findByRole('dialog', {
+      await screen.findByRole('dialog', {
         name: /upload image/i,
       })
     ).toBeInTheDocument()
   })
 
-  it('uploads file when file is selected', () => {
+  it('uploads a file when the file is selected', async () => {
     render(<UploadButton />)
     const uploadBtn = screen.getByRole('button', {
       name: /image/i,
@@ -37,12 +45,22 @@ describe('UploadButton', () => {
     const blob = new Blob(['image-blob'], { type: 'image/png' })
     const file = new File([blob], 'image-blob.png')
 
-    const fileInputTrigger = screen.getByText(/Upload an image/i)
+    const fileInputTrigger = screen.getByLabelText(/Upload an image/i)
+
+    global.Image = class {
+      // we have to mock new Image().onload
+      set onload(cb: VoidFunction) {
+        cb()
+      }
+    } as unknown as typeof Image
+
     fireEvent.change(fileInputTrigger, {
       target: {
         files: [file],
       },
     })
+
+    await act(async () => {})
 
     const { result } = renderHook(useCreator)
     expect(result.current.creator.addImage).toHaveBeenCalledTimes(1)

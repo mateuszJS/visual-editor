@@ -17,7 +17,7 @@ export default function UploadButton() {
   const createProjectFromFiles = async (files: FileWithPath[]) => {
     const formData = new FormData()
     formData.append('file', files[0])
-    formData.append('projectId', projectId)
+    formData.append('projectId', projectId.toString())
 
     fetcher('/api/project-assets', {
       method: 'POST',
@@ -28,6 +28,7 @@ export default function UploadButton() {
   useEffect(() => {
     if (success) {
       const img = new Image()
+
       img.src = `/api/project-assets?path=${encodeURIComponent(success.json.path)}`
       img.onload = function () {
         creator.addImage(img)

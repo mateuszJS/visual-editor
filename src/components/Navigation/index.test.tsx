@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react'
 import Navigation from '.'
-import { initUserStore } from '@/hooks/useUserStore'
+import { initUserStore } from '@/hooks/userStore'
 
 jest.mock('next/navigation', () => ({
   usePathname() {

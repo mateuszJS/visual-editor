@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import useUserStore from '@/hooks/useUserStore'
+import useUserStore from '@/hooks/userStore'
 import Script from 'next/script'
 import Button from '@/components/Button'
 import GoogleIcon from 'assets/google-logo.svg'

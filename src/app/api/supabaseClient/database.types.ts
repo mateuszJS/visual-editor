@@ -36,31 +36,31 @@ export type Database = {
     Tables: {
       projects: {
         Row: {
-          assets: Json[] | null
+          assets: Json[]
           created_at: string | null
           height: number
           id: number
-          last_updated: string | null
+          last_updated: string
           name: string | null
           owner_id: number
           width: number
         }
         Insert: {
-          assets?: Json[] | null
+          assets?: Json[]
           created_at?: string | null
           height: number
           id?: never
-          last_updated?: string | null
+          last_updated?: string
           name?: string | null
           owner_id: number
           width: number
         }
         Update: {
-          assets?: Json[] | null
+          assets?: Json[]
           created_at?: string | null
           height?: number
           id?: never
-          last_updated?: string | null
+          last_updated?: string
           name?: string | null
           owner_id?: number
           width?: number

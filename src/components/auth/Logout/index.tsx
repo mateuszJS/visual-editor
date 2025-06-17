@@ -1,6 +1,6 @@
 'use client'
 
-import useUserStore from '@/hooks/useUserStore'
+import useUserStore from '@/hooks/userStore'
 import Button from '@/components/Button'
 import fetcher from '@/utils/fetcher'
 

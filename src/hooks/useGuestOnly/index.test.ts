@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import useGuestOnly from './index'
-import { initUserStore } from '../useUserStore'
+import { initUserStore } from '../userStore'
 import { http, HttpResponse } from 'msw'
 import mockRouter from 'next-router-mock'
 import { server } from 'test/server'

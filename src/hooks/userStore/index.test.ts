@@ -1,11 +1,12 @@
 import { renderHook, act } from '@testing-library/react'
-import useUserStore, { initUserStore } from '.'
+import userStore, { initUserStore } from '.'
 import { http, HttpResponse } from 'msw'
 import { server } from 'test/server'
+import { useSnapshot } from 'valtio'
 
-describe('useUserStore', () => {
+describe('userStore', () => {
   it('updates user data once successful fetch with user details is completed', async () => {
-    const { result } = renderHook(() => useUserStore())
+    const { result } = renderHook(() => useSnapshot(userStore))
 
     expect(result.current.user).toBeUndefined()
 
@@ -17,7 +18,7 @@ describe('useUserStore', () => {
   })
 
   it('updates user data once failed fetch with no user details is completed', async () => {
-    const { result } = renderHook(() => useUserStore())
+    const { result } = renderHook(() => useSnapshot(userStore))
 
     expect(result.current.user).toBeUndefined()
 
@@ -32,7 +33,7 @@ describe('useUserStore', () => {
   })
 
   it('sets user data correctly', async () => {
-    const { result } = renderHook(() => useUserStore())
+    const { result } = renderHook(() => useSnapshot(userStore))
 
     const mockUser = {
       id: 1,
@@ -41,8 +42,8 @@ describe('useUserStore', () => {
       avatar: 'http://alice.jpg',
       projects: [],
     }
-    await act(() => {
-      result.current.set(mockUser)
+    await act(async () => {
+      userStore.user = mockUser
     })
 
     expect(result.current.user).toEqual(mockUser)

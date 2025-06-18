@@ -7,12 +7,12 @@ import YouTubeIcon from 'assets/youtube-logo.svg'
 import styles from './styles.module.css'
 import UploadFile from '@/components/UploadFile'
 import type { FileWithPath } from 'react-dropzone'
-import getImageSize from '@/utils/getImageSize'
+import loadImageFromFile from '@/utils/loadImageFromFile'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import OverlayLoader from '../OverlayLoader'
-import useCreateProject from '@/hooks/projects/useCreateProject'
 import ActionSheets from '../ActionSheets'
+import useProject from '@/hooks/projects/useProject'
 
 if (process.env.NODE_ENV !== 'test') {
   Modal.setAppElement('#non-modal-content')
@@ -35,7 +35,7 @@ const blankCanvasSizes = [
 
 export default function NewProjectModal({ isOpen, close }: Props) {
   const router = useRouter()
-  const { createProject, loading, project } = useCreateProject()
+  const { createProject, loading, project } = useProject()
 
   useEffect(() => {
     if (project) {
@@ -45,10 +45,7 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   }, [project])
 
   const createProjectFromFiles = async (files: readonly FileWithPath[]) => {
-    // https://react-dropzone.js.org/#section-previews
-
-    /* getImageSize should be upgraded to upload iamge to our BE and return custom Asset object */
-    const images = await Promise.all(files.map(getImageSize))
+    const images = await Promise.all(files.map(loadImageFromFile))
     const projectSize = images.reduce(
       (maxSize, img) => ({
         width: Math.max(maxSize.width, img.width),

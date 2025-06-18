@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { SessionPayload, withSession } from '../wrappers/session'
 import supabaseClient from '../supabaseClient'
-import Joi from 'joi'
 import getResponseError from '@/app/api/utils/getResponseError'
 import sanitizeProjectData from '@/app/api/utils/sanitizeProjectData'
-
-const schema = Joi.object<{ width: string; height: string; assets?: string[] }>({
-  width: Joi.number().integer().min(1).max(3000).required(),
-  height: Joi.number().integer().min(1).max(3000).required(),
-  assets: Joi.array().optional(),
-})
+import { createProjectSchema } from '../utils/projectSchema'
 
 async function createProject(session: SessionPayload, request: NextRequest) {
   const requestPayload = await request.json()
-  const { value: input, error: inputError } = schema.validate(requestPayload)
+  const { value: input, error: inputError } = createProjectSchema.validate(requestPayload)
 
   if (inputError) {
     return getResponseError(inputError.message)

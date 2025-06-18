@@ -21,6 +21,7 @@ const eslintConfig = [
           message: 'Use fetcher instead of native fetch.',
         },
       ],
+      'react-hooks/exhaustive-deps': 'off',
     },
   }),
 ]

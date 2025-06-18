@@ -5,7 +5,7 @@ export default [
     return HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
   }),
   http.delete('/api/auth/logout', () => {
-    return HttpResponse.json({}, { status: 200 })
+    return new HttpResponse(null, { status: 204 })
   }),
   http.post('/api/auth/login/google', () => {
     return HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
@@ -18,5 +18,11 @@ export default [
   }),
   http.post('/api/projects', () => {
     return HttpResponse.json({ id: 1 }, { status: 201 })
+  }),
+  http.patch('/api/projects/:id', () => {
+    return new HttpResponse(null, { status: 204 })
+  }),
+  http.post('/api/project-assets', () => {
+    return HttpResponse.json({ path: 'path/to/image.jpg' }, { status: 200 })
   }),
 ]

@@ -18,7 +18,7 @@ if you are just creating initial version(migration) and keep modifying it, use:
 
 `supabase db reset --version 20241005112233` with id of the migration which you want roll back to.
 
-# to create a new everythin
+# to create a new everything
 
 drop schema public cascade;
 create schema public;

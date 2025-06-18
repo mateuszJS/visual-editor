@@ -34,7 +34,11 @@ describe('useCreator', () => {
 
     const canvas = document.createElement('canvas')
     window.document.body.appendChild(canvas)
-    result.current.init(canvas, project)
+
+    await act(async () => {
+      result.current.init(canvas, project)
+    })
+
     expect(canvas.hasAttribute('data-connected')).toBe(true)
   })
 
@@ -138,12 +142,10 @@ describe('useCreator', () => {
     await act(async () => {
       result.current.init(firstCanvas, project) // without 'act' wrapper on purpose
       // to do not await for the promsies to resolve(promise which spawns creator)
-
       expect(result.current.isReady).toBe(false)
 
       result.current.init(secondCanvas, project) // without 'act' wrapper on purpose
-      // do not await foe the promsies to resolve(promise which spawns creator)
-
+      // do not await for the promsies to resolve(promise which spawns creator)
       expect(result.current.isReady).toBe(false)
     })
 

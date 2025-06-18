@@ -58,7 +58,7 @@ jobs:
             const prNumber = ${{ steps.find-pr.outputs.pr_number }};
             const deployUrl = '${{ steps.deploy.outputs.deployment_url }}';
             const commentTitle = '▲ Vercel Preview Deployed!';
-
+            console.log('deployUrl', deployUrl);
             // Delete previous comment
             const comments = await github.rest.issues.listComments({
               owner,
@@ -80,7 +80,8 @@ jobs:
             const body = `## ${commentTitle}
             Your changes were deployed to a preview environment:
             [${deployUrl}](${ deployUrl })`;
-
+            console.log('deployUrl', deployUrl);
+            console.log(body);
             await github.rest.issues.createComment({
               owner,
               repo,

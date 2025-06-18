@@ -41,7 +41,6 @@ export default function UploadFile({ onUpload }: Props) {
 
   useEffect(() => {
     if (acceptedFiles.length > 0) {
-      console.log('acceptedFiles', acceptedFiles)
       onUpload(acceptedFiles as FileWithPath[]) // just do not not carry al lthe time "readonly" type
     }
   }, [acceptedFiles])
@@ -56,7 +55,7 @@ export default function UploadFile({ onUpload }: Props) {
         [styles.reject]: isDragReject || fileRejections.length > 0,
       })}
     >
-      <input {...getInputProps()} />
+      <input {...getInputProps()} id="upload-file-input" />
       <svg className={styles.border} xmlns="http://www.w3.org/2000/svg" fill="red">
         {/* CSS rules width: 100% doesn't trigger reflow when window size changes */}
         <rect
@@ -69,10 +68,10 @@ export default function UploadFile({ onUpload }: Props) {
           height="100%"
         />
       </svg>
-      <div className={styles.text}>
+      <label htmlFor="upload-file-input" className={styles.text}>
         <p className={styles.header}>{title}</p>
         <p>{subtitle}</p>
-      </div>
+      </label>
     </div>
   )
 }

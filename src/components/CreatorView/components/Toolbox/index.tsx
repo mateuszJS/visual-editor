@@ -3,14 +3,10 @@
 import styles from './styles.module.css'
 import UploadButton from '../UploadButton'
 
-interface Props {
-  onUploadImage: (path: string) => void
-}
-
-export default function Toolbox({ onUploadImage }: Props) {
+export default function Toolbox() {
   return (
     <nav className={styles.toolbox}>
-      <UploadButton onUploadImage={onUploadImage} />
+      <UploadButton />
     </nav>
   )
 }

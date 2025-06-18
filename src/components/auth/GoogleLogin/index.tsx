@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import useUserStore from '@/hooks/useUserStore'
+import userStore from '@/hooks/userStore'
 import Script from 'next/script'
 import Button from '@/components/Button'
 import GoogleIcon from 'assets/google-logo.svg'
@@ -16,7 +16,6 @@ interface Props {
 
 export default function GoogleLogin({ onSuccess }: Props) {
   const [error, setError] = useState<string | null>(null)
-  const userStore = useUserStore()
   const googleWrapper = useRef<HTMLDivElement>(null)
   const getCsrfToken = useCSRF()
 
@@ -44,7 +43,7 @@ export default function GoogleLogin({ onSuccess }: Props) {
           if (response.status !== 200) {
             setError('Something went wrong, try again later.')
           } else {
-            userStore.set(user)
+            userStore.user = user
             onSuccess()
           }
         } catch (err: unknown) {

@@ -2,17 +2,15 @@
 
 import type { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
 import fetcher from '@/utils/fetcher'
-import { create } from 'zustand'
+import { proxy } from 'valtio'
 
 export interface UserStore {
   user: SanitizedUser | null | undefined // null if not logged in, undefined if request is pending and we don't yet know
-  set: (user: SanitizedUser | null) => void
 }
 
-const useUserStore = create<UserStore>((set) => ({
+const userStore = proxy<UserStore>({
   user: undefined,
-  set: (userData) => set({ user: userData }),
-}))
+})
 
 export async function initUserStore() {
   try {
@@ -21,15 +19,14 @@ export async function initUserStore() {
     })
 
     if (response.ok) {
-      const user = await response.json()
-      useUserStore.setState({ user })
+      userStore.user = (await response.json()) as SanitizedUser
     } else {
-      useUserStore.setState({ user: null })
+      userStore.user = null
     }
   } catch (error) {
-    useUserStore.setState({ user: null })
+    userStore.user = null
     console.error('Error fetching user data', error)
   }
 }
 
-export default useUserStore
+export default userStore

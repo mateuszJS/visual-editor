@@ -21,7 +21,7 @@ describe('useFetcher', () => {
 
     server.use(
       http.get('/api/me', async () => {
-        await delay()
+        await delay('infinite')
         return HttpResponse.json({ userId: 0 }, { status: 200 })
       })
     )
@@ -140,7 +140,7 @@ describe('useFetcher', () => {
       // make request pending
       server.use(
         http.get('/api/me', async () => {
-          await delay()
+          await delay('infinite')
           return HttpResponse.json({ userId: 0 }, { status: 200 })
         })
       )
@@ -181,7 +181,7 @@ describe('useFetcher', () => {
       // make request pending
       server.use(
         http.get('/api/me', async () => {
-          await delay()
+          await delay('infinite')
           return HttpResponse.json({ userId: 0 }, { status: 200 })
         })
       )

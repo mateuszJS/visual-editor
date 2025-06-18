@@ -6,7 +6,12 @@ import styles from './styles.module.css'
 import classNamesOverlay from '@/components/shared/overlayStyles'
 import IconButton from '@/components/IconButton'
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV === 'test') {
+  const testElement = document.createElement('div')
+  testElement.id = 'non-modal-content'
+  document.body.append(testElement)
+  Modal.setAppElement(testElement)
+} else {
   Modal.setAppElement('#non-modal-content')
 }
 

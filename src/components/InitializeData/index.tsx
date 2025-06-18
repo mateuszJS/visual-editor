@@ -1,6 +1,6 @@
 'use client'
 
-import { initUserStore } from '@/hooks/useUserStore'
+import { initUserStore } from '@/hooks/userStore'
 import { useEffect } from 'react'
 
 /** This component is used to initialize all data necessary to be ready on client side */

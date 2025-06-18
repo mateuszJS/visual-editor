@@ -42,7 +42,7 @@ describe('useProject', () => {
     it('set loading to true while requesting', async () => {
       server.use(
         http.get('/api/projects/1', async () => {
-          await delay()
+          await delay('infinite')
           return HttpResponse.json({ id: 1 }, { status: 200 })
         })
       )
@@ -91,7 +91,7 @@ describe('useProject', () => {
 
       server.use(
         http.post('/api/projects', async () => {
-          await delay()
+          await delay('infinite')
           return HttpResponse.json({ id: 1 }, { status: 201 })
         })
       )
@@ -162,7 +162,7 @@ describe('useProject', () => {
       server.use(
         http.patch('/api/projects/:id', async () => {
           console.log('http.patch')
-          await delay()
+          await delay('infinite')
           return HttpResponse.json(null, { status: 204 })
         })
       )

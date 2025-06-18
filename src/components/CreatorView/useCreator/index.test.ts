@@ -132,19 +132,20 @@ describe('useCreator', () => {
     const firstCanvas = document.createElement('canvas')
     document.body.appendChild(firstCanvas)
 
-    result.current.init(firstCanvas, project) // without 'act' wrapper on purpose
-    // do not await foe the promsies to resolve(promise which spawns creator)
-
-    expect(result.current.isReady).toBe(false)
-
     const secondCanvas = document.createElement('canvas')
     document.body.appendChild(secondCanvas)
-    result.current.init(secondCanvas, project) // without 'act' wrapper on purpose
-    // do not await foe the promsies to resolve(promise which spawns creator)
 
-    expect(result.current.isReady).toBe(false)
+    await act(async () => {
+      result.current.init(firstCanvas, project) // without 'act' wrapper on purpose
+      // to do not await for the promsies to resolve(promise which spawns creator)
 
-    await act(async () => {})
+      expect(result.current.isReady).toBe(false)
+
+      result.current.init(secondCanvas, project) // without 'act' wrapper on purpose
+      // do not await foe the promsies to resolve(promise which spawns creator)
+
+      expect(result.current.isReady).toBe(false)
+    })
 
     expect(firstCanvas.hasAttribute('data-magic-render-linked')).toBe(true)
     expect(secondCanvas.hasAttribute('data-magic-render-linked')).toBe(true)

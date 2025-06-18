@@ -48,7 +48,6 @@ function useCreator() {
       })
       // check if canvas is still used(user might already left the page)
       // and destory cannot be called before creator is initialized
-      // console.log('useCreator - initMagicRender - done', canvas.isConnected)
 
       if (canvas.isConnected) {
         creatorState.creator = ref(creator)

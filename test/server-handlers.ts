@@ -17,11 +17,9 @@ export default [
     return HttpResponse.json({ id: 1 }, { status: 200 })
   }),
   http.post('/api/projects', () => {
-    console.log('default http.POST for projects')
     return HttpResponse.json({ id: 1 }, { status: 201 })
   }),
   http.patch('/api/projects/:id', () => {
-    console.log('default http.PATCH for projects')
     return new HttpResponse(null, { status: 204 })
   }),
   http.post('/api/project-assets', () => {

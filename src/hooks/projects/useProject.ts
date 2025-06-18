@@ -27,7 +27,6 @@ async function updateProject(id: number, project: UpdateProjectPayload) {
         ...project,
       })
     )
-    console.log('update is completed', id, project)
   } catch (err) {
     throw Error(`Failed to update project with id ${id}: ${err}`)
   }
@@ -38,7 +37,7 @@ export default function useProject(id?: number) {
   const projects = useSnapshot(projectsStore)
 
   const { success, error, loading, fetcher } = useFetcher<SanitizedProject>()
-  console.log(success, error, loading, projects.size)
+
   useEffect(() => {
     if (id && !projectsStore.has(id)) {
       fetcher(`/api/projects/${id}`)

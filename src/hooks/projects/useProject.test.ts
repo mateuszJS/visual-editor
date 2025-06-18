@@ -49,8 +49,6 @@ describe('useProject', () => {
 
       const { result } = renderHook(() => useProject(1))
 
-      await act(() => {})
-
       expect(result.current).toMatchObject({
         loading: true,
         error: null,
@@ -163,6 +161,7 @@ describe('useProject', () => {
 
       server.use(
         http.patch('/api/projects/:id', async () => {
+          console.log('http.patch')
           await delay()
           return HttpResponse.json(null, { status: 204 })
         })
@@ -183,10 +182,12 @@ describe('useProject', () => {
       const { result } = renderHook(() => useProject())
 
       await act(() => {
+        console.log('Creating project...')
         result.current.createProject(100, 100, [])
       })
 
       await act(() => {
+        console.log('Updating project...')
         result.current.updateProject(1, { width: 200 })
       })
 

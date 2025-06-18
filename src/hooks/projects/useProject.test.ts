@@ -8,7 +8,10 @@ describe('useProject', () => {
     it('that is already in the the storage does not trigger a request', async () => {
       const { result, rerender } = renderHook(() => useProject(1))
 
-      await act(() => {})
+      await act(() => {
+        // allow the micro-tasks / timers to run
+      })
+
       // make sure project is already fetched
       expect(result.current).toMatchObject({
         loading: false,
@@ -40,7 +43,7 @@ describe('useProject', () => {
       server.use(
         http.get('/api/projects/1', async () => {
           await delay()
-          return HttpResponse.json({ id: 1 }, { status: 201 })
+          return HttpResponse.json({ id: 1 }, { status: 200 })
         })
       )
 

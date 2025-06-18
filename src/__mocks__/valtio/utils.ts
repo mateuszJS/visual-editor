@@ -23,6 +23,9 @@ afterEach(() => {
   act(() => {
     storeResets.forEach(({ actual, initial }) => {
       // Remove all existing keys from actual
+      console.log('actual', actual)
+      console.log('actual.keys()', actual.keys())
+      console.log('actual.keys().forEach', actual.keys().forEach)
       actual.keys().forEach((key) => {
         actual.delete(key)
       })

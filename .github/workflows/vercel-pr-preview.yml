@@ -30,6 +30,7 @@ jobs:
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
+        id: deploy
         run: |
           DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "deployment_url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
@@ -58,7 +59,7 @@ jobs:
             const prNumber = ${{ steps.find-pr.outputs.pr_number }};
             const deployUrl = '${{ steps.deploy.outputs.deployment_url }}';
             const commentTitle = '▲ Vercel Preview Deployed!';
-            console.log('deployUrl', deployUrl);
+
             // Delete previous comment
             const comments = await github.rest.issues.listComments({
               owner,
@@ -80,8 +81,7 @@ jobs:
             const body = `## ${commentTitle}
             Your changes were deployed to a preview environment:
             [${deployUrl}](${ deployUrl })`;
-            console.log('deployUrl', deployUrl);
-            console.log(body);
+
             await github.rest.issues.createComment({
               owner,
               repo,

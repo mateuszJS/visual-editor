@@ -42,7 +42,7 @@ describe('userStore', () => {
       avatar: 'http://alice.jpg',
       projects: [],
     }
-    await act(() => {
+    await act(async () => {
       userStore.user = mockUser
     })
 

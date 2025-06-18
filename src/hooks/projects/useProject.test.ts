@@ -144,8 +144,8 @@ describe('useProject', () => {
   describe('updating project', () => {
     it('throws an error if the project is not yet in the store', async () => {
       const { result } = renderHook(() => useProject())
-      await act(() => {
-        expect(() => result.current.updateProject(1, { width: 200 })).toThrow(
+      await act(async () => {
+        await expect(result.current.updateProject(1, { width: 200 })).rejects.toThrow(
           'Project with id 1 does not exist in the store'
         )
       })
@@ -159,7 +159,7 @@ describe('useProject', () => {
       })
 
       server.use(
-        http.patch('/api/projects', async () => {
+        http.patch('/api/projects/:id', async () => {
           await delay()
           return HttpResponse.json(null, { status: 204 })
         })

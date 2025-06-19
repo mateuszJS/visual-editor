@@ -7,7 +7,7 @@ jest.mock('@/app/api/supabaseClient')
 jest.mock('@/app/api/wrappers/session')
 
 describe('getProjectsList', () => {
-  test('returns path if file was uploaded correctly', async () => {
+  test('returns list of projects owned by user', async () => {
     const response = await GET(createMockNextRequest(), mockNextContext())
     const json = await response.json()
 
@@ -23,7 +23,7 @@ describe('getProjectsList', () => {
     ])
   })
 
-  test('returns error if upload failed', async () => {
+  test('propagates error that occured during obtaining the list of projects from DB', async () => {
     __setErrorQueue([new Error('Error during fetch')])
     const response = await GET(createMockNextRequest(), mockNextContext())
     const json = await response.json()

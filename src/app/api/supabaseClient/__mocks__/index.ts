@@ -21,21 +21,38 @@ export function __getCleanDBMock() {
           oidc_google_id: 'google-1',
           os: 'Mac OS',
         },
-      ] as Row[],
+      ],
       projects: [
         {
           id: 1,
+          name: 'First Project',
+          last_updated: '2023-10-01T12:00:00Z',
+          height: 600,
+          width: 800,
           owner_id: 1,
+          assets: [],
         },
         {
           id: 2,
+          name: 'Second Project',
+          last_updated: '2023-10-02T12:00:00Z',
+          height: 1200,
+          width: 650,
           owner_id: 1,
+          assets: [
+            { points: [0, 0, 100, 100], type: 'image', url: 'https://example.com/image.png' },
+          ],
         },
         {
           id: 3,
+          name: 'Third Project',
+          last_updated: '2023-10-03T12:00:00Z',
+          height: 900,
+          width: 100,
           owner_id: 2,
+          assets: [],
         },
-      ] as Row[],
+      ],
     },
     storage: {
       'project-assets': {} as Record<string, File>,
@@ -63,7 +80,7 @@ const supabaseClientMock = {
     const nextError = errorsQueue.shift() || null
     return {
       ...supabaseClientMock,
-      select: () => supabaseClientMock.select(dbMock.tables[tableId], nextError),
+      select: () => supabaseClientMock.select(dbMock.tables[tableId] as Row[], nextError),
       insert: supabaseClientMock.insert.bind(null, tableId, nextError),
     }
   },
@@ -73,10 +90,15 @@ const supabaseClientMock = {
       data,
       error,
       eq: (key: string, value: string | number) => {
-        return Promise.resolve({
-          data: data ? data.filter((item) => item[key] === value) : null,
+        const filteredData = data ? data.filter((item) => item[key] === value) : null
+        return {
+          data: filteredData,
           error: error,
-        })
+          order: () => ({
+            data: filteredData,
+            error: error,
+          }),
+        }
       },
       single: () => {
         if (!data) {

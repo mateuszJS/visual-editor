@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Navigation from '.'
 
 const meta = {
-  title: 'Navigation/Wrapper',
+  title: 'Navigation/Navigation',
   component: Navigation,
   parameters: {
     layout: 'padded',

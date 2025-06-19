@@ -12,7 +12,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import OverlayLoader from '../OverlayLoader'
 import ActionSheets from '../ActionSheets'
-import useProject from '@/hooks/projects/useProject'
+import useProject from '@/hooks/useProject/useProject'
 
 if (process.env.NODE_ENV !== 'test') {
   Modal.setAppElement('#non-modal-content')

@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ProjectPanel> should render a project details link with provided text 1`] = `
+<div>
+  <a
+    class="projectPanel"
+    href="/project/0"
+    style="--project-color: #c32222;"
+  >
+    <p>
+      project name
+    </p>
+  </a>
+</div>
+`;

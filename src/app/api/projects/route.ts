@@ -4,6 +4,7 @@ import supabaseClient from '../supabaseClient'
 import getResponseError from '@/app/api/utils/getResponseError'
 import sanitizeProjectData from '@/app/api/utils/sanitizeProjectData'
 import { createProjectSchema } from '../utils/projectSchema'
+import sanitizeProjectMetaData from '../utils/sanitizeProjectMetaData'
 
 async function createProject(session: SessionPayload, request: NextRequest) {
   const requestPayload = await request.json()
@@ -37,13 +38,14 @@ async function getProjectsList(session: SessionPayload) {
     .from('projects')
     .select()
     .eq('owner_id', session.userId)
+    .order('last_updated', { ascending: true })
 
   if (error) {
     return getResponseError(error.message)
   }
 
   return NextResponse.json(
-    data.map((project) => sanitizeProjectData(project)),
+    data.map((project) => sanitizeProjectMetaData(project)),
     { status: 200 }
   )
 }

@@ -13,7 +13,7 @@ export function __getCleanDBMock() {
           device_model: 'Macintosh',
           device_type: null,
           email: 'first-user@example.com',
-          id: 0,
+          id: 1,
           is_bot: false,
           language: 'en-US',
           login_method: 'google',
@@ -22,7 +22,20 @@ export function __getCleanDBMock() {
           os: 'Mac OS',
         },
       ] as Row[],
-      projects: [] as Row[],
+      projects: [
+        {
+          id: 1,
+          owner_id: 1,
+        },
+        {
+          id: 2,
+          owner_id: 1,
+        },
+        {
+          id: 3,
+          owner_id: 2,
+        },
+      ] as Row[],
     },
     storage: {
       'project-assets': {} as Record<string, File>,
@@ -48,7 +61,6 @@ beforeEach(() => {
 const supabaseClientMock = {
   from: (tableId: keyof typeof dbMock.tables) => {
     const nextError = errorsQueue.shift() || null
-
     return {
       ...supabaseClientMock,
       select: () => supabaseClientMock.select(dbMock.tables[tableId], nextError),

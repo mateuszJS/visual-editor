@@ -37,7 +37,7 @@ describe('getUserData', () => {
       country: 'JP',
       device_model: 'Macintosh',
       device_type: null,
-      id: 0,
+      id: 1,
       is_bot: false,
       language: 'en-US',
       login_method: 'google',

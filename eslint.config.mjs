@@ -14,6 +14,18 @@ const eslintConfig = [
     extends: ['next/core-web-vitals', 'next/typescript'],
     rules: {
       'import/no-anonymous-default-export': 'off',
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/__mocks__/**'],
+              message:
+                'Importing from __mocks__ directories will create another module and import from there, not from the file with mock used by jest. Import directly from the file you are mocking.',
+            },
+          ],
+        },
+      ],
       'no-restricted-syntax': [
         'error',
         {

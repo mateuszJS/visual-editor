@@ -31,3 +31,21 @@ async function createProject(session: SessionPayload, request: NextRequest) {
 }
 
 export const POST = withSession(createProject)
+
+async function getProjectsList(session: SessionPayload) {
+  const { data, error } = await supabaseClient
+    .from('projects')
+    .select()
+    .eq('owner_id', session.userId)
+
+  if (error) {
+    return getResponseError(error.message)
+  }
+
+  return NextResponse.json(
+    data.map((project) => sanitizeProjectData(project)),
+    { status: 200 }
+  )
+}
+
+export const GET = withSession(getProjectsList)

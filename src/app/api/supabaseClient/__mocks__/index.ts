@@ -13,7 +13,7 @@ export function __getCleanDBMock() {
           device_model: 'Macintosh',
           device_type: null,
           email: 'first-user@example.com',
-          id: 0,
+          id: 1,
           is_bot: false,
           language: 'en-US',
           login_method: 'google',
@@ -22,7 +22,20 @@ export function __getCleanDBMock() {
           os: 'Mac OS',
         },
       ] as Row[],
-      projects: [] as Row[],
+      projects: [
+        {
+          id: 1,
+          owner_id: 1,
+        },
+        {
+          id: 2,
+          owner_id: 1,
+        },
+        {
+          id: 3,
+          owner_id: 2,
+        },
+      ] as Row[],
     },
     storage: {
       'project-assets': {} as Record<string, File>,
@@ -32,23 +45,25 @@ export function __getCleanDBMock() {
 
 export let dbMock: ReturnType<typeof __getCleanDBMock>
 
-let errorsQueue: Array<Error | null> = []
+const errorsQueue: Array<Error | null> = []
 // example: [null, Error, null] will return error only with the second usage of "supabaseCliebt.from()"
 /* This is not THE BEST solution because a test need to know in what order requests are made
 so it's a bit of "implementation change detection" but I haven't came up with something better for now */
 export function __setErrorQueue(queue: Array<Error | null>) {
-  errorsQueue = queue
+  // errorsQueue = queue
+  console.log('inside __setErrorQueue:', queue)
+  errorsQueue.push(...queue)
 }
 
 beforeEach(() => {
   dbMock = __getCleanDBMock()
-  errorsQueue = []
+  // errorsQueue = []
 })
 
 const supabaseClientMock = {
   from: (tableId: keyof typeof dbMock.tables) => {
+    console.log('FROM', tableId, 'errorsQueue:', errorsQueue)
     const nextError = errorsQueue.shift() || null
-
     return {
       ...supabaseClientMock,
       select: () => supabaseClientMock.select(dbMock.tables[tableId], nextError),

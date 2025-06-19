@@ -45,24 +45,21 @@ export function __getCleanDBMock() {
 
 export let dbMock: ReturnType<typeof __getCleanDBMock>
 
-const errorsQueue: Array<Error | null> = []
+let errorsQueue: Array<Error | null> = []
 // example: [null, Error, null] will return error only with the second usage of "supabaseCliebt.from()"
 /* This is not THE BEST solution because a test need to know in what order requests are made
 so it's a bit of "implementation change detection" but I haven't came up with something better for now */
 export function __setErrorQueue(queue: Array<Error | null>) {
-  // errorsQueue = queue
-  console.log('inside __setErrorQueue:', queue)
-  errorsQueue.push(...queue)
+  errorsQueue = queue
 }
 
 beforeEach(() => {
   dbMock = __getCleanDBMock()
-  // errorsQueue = []
+  errorsQueue = []
 })
 
 const supabaseClientMock = {
   from: (tableId: keyof typeof dbMock.tables) => {
-    console.log('FROM', tableId, 'errorsQueue:', errorsQueue)
     const nextError = errorsQueue.shift() || null
     return {
       ...supabaseClientMock,

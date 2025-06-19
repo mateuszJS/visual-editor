@@ -9,7 +9,7 @@ type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 
 interface CreatorStore {
   creator: MagicRender | null
-  projectId: number | null
+  projectId: string | null
 }
 
 const creatorState = proxy<CreatorStore>({

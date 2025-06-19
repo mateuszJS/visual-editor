@@ -67,7 +67,7 @@ describe('useCreator', () => {
       result.current.init(canvas, project)
     })
 
-    expect(result.current.projectId).toEqual(0)
+    expect(result.current.projectId).toEqual('0')
   })
 
   it("initializing creator with same canvas element twice doesn't produce a new creator", async () => {

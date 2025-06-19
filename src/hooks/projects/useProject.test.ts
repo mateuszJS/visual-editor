@@ -6,7 +6,7 @@ import { server } from 'test/server'
 describe('useProject', () => {
   describe('fetching project', () => {
     it('that is already in the the storage does not trigger a request', async () => {
-      const { result, rerender } = renderHook(() => useProject(1))
+      const { result, rerender } = renderHook(() => useProject('1'))
 
       await act(() => {
         // allow the micro-tasks / timers to run
@@ -16,7 +16,7 @@ describe('useProject', () => {
       expect(result.current).toMatchObject({
         loading: false,
         error: null,
-        project: { id: 1 },
+        project: { id: '1' },
       })
 
       let madeRequest = false
@@ -35,7 +35,7 @@ describe('useProject', () => {
       expect(result.current).toMatchObject({
         loading: false,
         error: null,
-        project: { id: 1 },
+        project: { id: '1' },
       })
     })
 
@@ -43,11 +43,11 @@ describe('useProject', () => {
       server.use(
         http.get('/api/projects/1', async () => {
           await delay('infinite')
-          return HttpResponse.json({ id: 1 }, { status: 200 })
+          return HttpResponse.json({ id: '1' }, { status: 200 })
         })
       )
 
-      const { result } = renderHook(() => useProject(1))
+      const { result } = renderHook(() => useProject('1'))
 
       expect(result.current).toMatchObject({
         loading: true,
@@ -63,7 +63,7 @@ describe('useProject', () => {
         )
       )
 
-      const { result } = renderHook(() => useProject(1))
+      const { result } = renderHook(() => useProject('1'))
 
       await act(() => {})
 
@@ -92,7 +92,7 @@ describe('useProject', () => {
       server.use(
         http.post('/api/projects', async () => {
           await delay('infinite')
-          return HttpResponse.json({ id: 1 }, { status: 201 })
+          return HttpResponse.json({ id: '1' }, { status: 201 })
         })
       )
 
@@ -137,7 +137,7 @@ describe('useProject', () => {
       expect(result.current).toMatchObject({
         loading: false,
         error: null,
-        project: { id: 1 },
+        project: { id: '1' },
       })
     })
   })
@@ -146,7 +146,7 @@ describe('useProject', () => {
     it('throws an error if the project is not yet in the store', async () => {
       const { result } = renderHook(() => useProject())
       await act(async () => {
-        await expect(result.current.updateProject(1, { width: 200 })).rejects.toThrow(
+        await expect(result.current.updateProject('1', { width: 200 })).rejects.toThrow(
           'Project with id 1 does not exist in the store'
         )
       })
@@ -167,13 +167,13 @@ describe('useProject', () => {
       )
 
       await act(() => {
-        result.current.updateProject(1, { width: 200 })
+        result.current.updateProject('1', { width: 200 })
       })
 
       expect(result.current).toMatchObject({
         loading: false,
         error: null,
-        project: { id: 1 },
+        project: { id: '1' },
       })
     })
 
@@ -185,13 +185,13 @@ describe('useProject', () => {
       })
 
       await act(() => {
-        result.current.updateProject(1, { width: 200 })
+        result.current.updateProject('1', { width: 200 })
       })
 
       expect(result.current).toMatchObject({
         loading: false,
         error: null,
-        project: { id: 1, width: 200 },
+        project: { id: '1', width: 200 },
       })
     })
   })

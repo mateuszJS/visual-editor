@@ -8,9 +8,9 @@ import { UpdateProjectPayload } from '@/app/api/utils/projectSchema'
 import { proxyMap } from 'valtio/utils'
 import { ref, useSnapshot } from 'valtio'
 
-const projectsStore = proxyMap<number, SanitizedProject>()
+const projectsStore = proxyMap<string, SanitizedProject>()
 
-async function updateProject(id: number, project: UpdateProjectPayload) {
+async function updateProject(id: string, project: UpdateProjectPayload) {
   if (!projectsStore.has(id)) {
     throw Error(`Project with id ${id} does not exist in the store`)
   }
@@ -32,8 +32,8 @@ async function updateProject(id: number, project: UpdateProjectPayload) {
   }
 }
 
-export default function useProject(id?: number) {
-  const newProjId = useRef<number | undefined>(undefined)
+export default function useProject(id?: string) {
+  const newProjId = useRef<string | undefined>(undefined)
   const projects = useSnapshot(projectsStore)
 
   const { success, error, loading, fetcher } = useFetcher<SanitizedProject>()

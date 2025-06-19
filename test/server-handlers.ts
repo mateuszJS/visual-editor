@@ -14,10 +14,10 @@ export default [
     return HttpResponse.json({ csrfToken: 'csrf-token' }, { status: 200 })
   }),
   http.get('/api/projects/:id', () => {
-    return HttpResponse.json({ id: 1 }, { status: 200 })
+    return HttpResponse.json({ id: '1' }, { status: 200 })
   }),
   http.post('/api/projects', () => {
-    return HttpResponse.json({ id: 1 }, { status: 201 })
+    return HttpResponse.json({ id: '1' }, { status: 201 })
   }),
   http.patch('/api/projects/:id', () => {
     return new HttpResponse(null, { status: 204 })

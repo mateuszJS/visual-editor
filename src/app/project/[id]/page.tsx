@@ -9,7 +9,7 @@ import CreatorView from '@/components/CreatorView'
 export default function Project() {
   const params = useParams<{ id: string }>()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { loading, error, project } = useProject(Number(params.id))
+  const { loading, error, project } = useProject(params.id)
 
   return (
     <main className={styles.page}>

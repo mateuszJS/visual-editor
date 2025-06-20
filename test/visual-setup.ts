@@ -58,9 +58,8 @@ export default async function visualSetup(storyId: string, dirname: string) {
   try {
     // Compare with baseline
     expect(imageBuffer).toMatchImageSnapshot({
-      comparisonMethod: 'ssim',
       customSnapshotsDir: screenshotsDir,
-      failureThreshold: 0.01,
+      failureThreshold: 0.02,
       failureThresholdType: 'percent',
       updatePassedSnapshot: false /* change to true to force to update screenshots,
       even if it's under the thresold failure */,

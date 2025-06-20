@@ -3,6 +3,7 @@
 exports[`<ProjectPanel> should render a project details link with provided text 1`] = `
 <div>
   <a
+    aria-label="Go to project name project details"
     class="projectPanel"
     href="/project/0"
     style="--project-color: #c32222;"

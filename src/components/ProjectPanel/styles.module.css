@@ -1,0 +1,8 @@
+.projectPanel {
+  display: flex;
+  align-items: flex-end;
+  aspect-ratio: 1;
+  border-radius: 0.5rem;
+  background: var(--project-color);
+  padding: 1rem;
+}

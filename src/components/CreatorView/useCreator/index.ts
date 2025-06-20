@@ -1,7 +1,7 @@
 'use client'
 
 import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
-import useProject from '@/hooks/projects/useProject'
+import useProject from '@/hooks/useProject/useProject'
 import initMagicRender from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
 

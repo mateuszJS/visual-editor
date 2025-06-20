@@ -15,10 +15,18 @@ describe('getProjectsList', () => {
       {
         id: '1',
         owner_id: '1',
+        height: 600,
+        width: 800,
+        last_updated: '2023-10-01T12:00:00Z',
+        name: 'First Project',
       },
       {
         id: '2',
         owner_id: '1',
+        height: 1200,
+        width: 650,
+        last_updated: '2023-10-02T12:00:00Z',
+        name: 'Second Project',
       },
     ])
   })

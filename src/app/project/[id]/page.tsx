@@ -1,6 +1,6 @@
 'use client'
 
-import useProject from '@/hooks/projects/useProject'
+import useProject from '@/hooks/useProject/useProject'
 import { useParams } from 'next/navigation'
 import OverlayLoader from '@/components/OverlayLoader'
 import styles from './styles.module.css'

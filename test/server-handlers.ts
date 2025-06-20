@@ -16,6 +16,9 @@ export default [
   http.get('/api/projects/:id', () => {
     return HttpResponse.json({ id: '1' }, { status: 200 })
   }),
+  http.get('/api/projects', () => {
+    return HttpResponse.json([{ id: '1' }, { id: '2' }], { status: 200 })
+  }),
   http.post('/api/projects', () => {
     return HttpResponse.json({ id: '1' }, { status: 201 })
   }),

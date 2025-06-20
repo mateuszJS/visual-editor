@@ -1,0 +1,7 @@
+/* ubuntu on github actions does not support sub-pixel font aliasing,
+so we set to smooth text on pixel(not sub-pixel) level so there is
+no difference between screenshot goldens from macOS and tests on ubuntu */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

@@ -38,6 +38,7 @@ export default function ProjectPanel({ id, text }: Props) {
       className={styles.projectPanel}
       style={{ '--project-color': generateVibrantColorFromId(Number(id)) } as React.CSSProperties}
       href={`/project/${id}`}
+      aria-label={`Go to ${text} project details`}
     >
       <p>{text}</p>
     </a>

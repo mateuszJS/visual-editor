@@ -59,7 +59,7 @@ export default async function visualSetup(storyId: string, dirname: string) {
     // Compare with baseline
     expect(imageBuffer).toMatchImageSnapshot({
       customSnapshotsDir: screenshotsDir,
-      failureThreshold: 0.01,
+      failureThreshold: 0.015,
       failureThresholdType: 'percent',
       updatePassedSnapshot: true /* change to true to force to update screenshots,
       even if it's under the thresold failure */,

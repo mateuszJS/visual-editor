@@ -61,7 +61,7 @@ export default async function visualSetup(storyId: string, dirname: string) {
       customSnapshotsDir: screenshotsDir,
       failureThreshold: 0.02,
       failureThresholdType: 'percent',
-      updatePassedSnapshot: false /* change to true to force to update screenshots,
+      updatePassedSnapshot: true /* change to true to force to update screenshots,
       even if it's under the thresold failure */,
       customSnapshotIdentifier: storyId,
     })

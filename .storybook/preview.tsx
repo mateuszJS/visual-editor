@@ -2,7 +2,6 @@ import type { Preview } from '@storybook/react'
 import { themes } from '@storybook/theming'
 import { Outfit } from 'next/font/google'
 import '../src/app/globals.css'
-import './font-aliasing.css'
 
 const outfit = Outfit({
   variable: '--font-outfit',

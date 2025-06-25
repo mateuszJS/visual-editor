@@ -1,6 +1,6 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
 import UploadButton from '.'
-import useCreator from '../../useCreator'
+import useCreator from '../../useCreator/useCreator'
 import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 
 const project = getSanitizedProject()

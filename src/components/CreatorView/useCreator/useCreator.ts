@@ -10,11 +10,13 @@ type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 interface CreatorStore {
   creator: MagicRender | null
   projectId: string | null
+  initialAssets: { projectId: string; assets: HTMLImageElement[] } | null
 }
 
 const creatorState = proxy<CreatorStore>({
   creator: null,
   projectId: null,
+  initialAssets: null,
 })
 
 /*
@@ -48,6 +50,12 @@ function useCreator() {
       })
       // check if canvas is still used(user might already left the page)
       // and destory cannot be called before creator is initialized
+      if (creatorState.initialAssets?.projectId === project.id) {
+        creatorState.initialAssets.assets.forEach((asset) => {
+          creator.addImage(asset)
+        })
+        creatorState.initialAssets = null
+      }
 
       if (canvas.isConnected) {
         creatorState.creator = ref(creator)
@@ -63,6 +71,10 @@ function useCreator() {
         creatorState.creator = null
         creatorState.projectId = null
       }
+    },
+    setInitialAssets(projectId: string, assets: HTMLImageElement[]) {
+      console.log('setInitialAssets', projectId, assets)
+      creatorState.initialAssets = ref({ projectId, assets })
     },
   }
 }

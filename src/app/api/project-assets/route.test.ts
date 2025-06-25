@@ -5,7 +5,6 @@ import { GET, POST } from './route'
 
 jest.mock('@/app/api/supabaseClient')
 jest.mock('@/app/api/wrappers/session')
-jest.mock('uuid', () => ({ v4: () => '123' }))
 
 const blob = new Blob(['image-blob'], { type: 'image/png' })
 const fileExample = new File([blob], 'image-blob.png')

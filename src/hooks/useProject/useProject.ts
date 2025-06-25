@@ -52,13 +52,12 @@ export default function useProject(id?: string) {
     }
   }, [success])
 
-  function createProject(width: number, height: number, assets: HTMLImageElement[]) {
-    fetcher('/api/projects', {
+  function createProject(width: number, height: number) {
+    return fetcher('/api/projects', {
       method: 'POST',
       json: {
         width,
         height,
-        assets,
       },
     })
   }

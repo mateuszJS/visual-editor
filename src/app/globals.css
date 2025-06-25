@@ -1,6 +1,19 @@
 :root {
   --background-rgb: 255, 255, 255;
   --background: rgb(var(--background-rgb));
+  /*
+    better naming for colors proposal:
+    bg-dark
+    bg
+    bg-light
+    dark/light applies same way to light and dark mode
+
+    highlight, ighlight-muted
+
+    text(dont make it at 100% bightness, do hsl(0, 0, 95) to do not be so sharp
+    text-muted
+
+  */
 
   --primary-rgb: 17, 17, 17;
   --primary: rgb(var(--primary-rgb));

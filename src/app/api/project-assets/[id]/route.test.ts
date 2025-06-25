@@ -1,4 +1,4 @@
-import { __getCleanDBMock, dbMock, __setErrorQueue } from '@/app/api/supabaseClient'
+import { __setErrorQueue } from '@/app/api/supabaseClient'
 import createMockNextRequest from '@/app/api/test/mockNextRequest'
 import mockNextContext from '@/app/api/test/mockNextContext'
 import { GET } from './route'

@@ -1,3 +1,5 @@
+import { getErrorMessage } from './fetcher/getErrorMessage'
+
 export default function loadImageFromAssetId(assetId: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image()
@@ -7,7 +9,8 @@ export default function loadImageFromAssetId(assetId: string): Promise<HTMLImage
     }
 
     img.onerror = (err) => {
-      reject(new Error(`Failed to load image from asset ID ${assetId}: ${err}`))
+      console.error(err)
+      reject(new Error(`Failed to load image from asset ID ${assetId}: ${getErrorMessage(err)}`))
     }
 
     img.src = `/api/project-assets/${assetId}`

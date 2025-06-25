@@ -151,24 +151,25 @@ const supabaseClientMock = {
   insert: (
     tableId: keyof typeof dbMock.tables,
     error: Error | null = null,
-    data: Record<string, string | number>
+    data: Record<string, string | number> | Record<string, string | number>[]
   ) => {
-    const newRow = {
-      id: dbMock.tables[tableId].length + 1,
-      ...Object.entries(data).reduce(
+    const rows = Array.isArray(data) ? data : [data]
+    const newRows = rows.map((row, i) => ({
+      id: dbMock.tables[tableId].length + 1 + i,
+      ...Object.entries(row).reduce(
         (acc, [key, value]) => ({
           ...acc,
           [key]: value === undefined ? null : value,
         }),
         {}
       ),
-    }
+    }))
 
-    dbMock.tables[tableId].push(newRow)
+    dbMock.tables[tableId].push(...newRows)
 
     return {
       error,
-      select: () => supabaseClientMock.select([newRow], error),
+      select: () => supabaseClientMock.select(newRows, error),
     }
   },
   storage: {

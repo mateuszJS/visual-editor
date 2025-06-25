@@ -5,35 +5,48 @@ import { SessionPayload, withSession } from '@/app/api/wrappers/session'
 
 async function uploadProjectAsset(session: SessionPayload, request: NextRequest) {
   const formData = await request.formData()
-  const file = formData.get('file') as File | null
+  const files = formData.getAll('files[]') as File[]
 
-  if (!file || !(file instanceof File)) {
-    return getResponseError('File is missing or invalid.')
+  if (!files || files.length === 0) {
+    return getResponseError('Files are missing.')
   }
 
   const { data: dbData, error: dbError } = await supabaseClient
     .from('project_assets')
-    .insert({
-      owner_id: session.userId,
-    })
+    .insert(
+      new Array(files.length).fill({
+        owner_id: session.userId,
+      })
+    )
     .select()
-    .single()
 
   if (dbError) {
     return getResponseError(dbError.message)
   }
 
-  const { error: storageError } = await supabaseClient.storage
-    .from('project-assets')
-    .upload(dbData.id.toString(), file)
+  const results = await Promise.all(
+    dbData.map((item, i) =>
+      supabaseClient.storage.from('project-assets').upload(item.id.toString(), files[i])
+    )
+  )
 
-  if (storageError) {
-    return getResponseError(storageError.message)
-  }
+  const successfullyUploadedIds = results
+    .map((result, i) => ({ ...result, id: dbData[i].id }))
+    .filter((result) => !result.error)
+    .map((result) => result.id.toString())
+
+  const filesWhichUploadFailed = results
+    .map((result, i) => ({ ...result, file: files[i] }))
+    .filter((result) => result.error)
+    .map((result) => ({
+      file: result.file.name,
+      error: result.error!.message,
+    }))
 
   return NextResponse.json(
     {
-      id: dbData.id.toString(),
+      succeded: successfullyUploadedIds,
+      failed: filesWhichUploadFailed,
     },
     { status: 201 }
   )

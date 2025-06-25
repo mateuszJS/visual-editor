@@ -17,9 +17,9 @@ describe('downloadProjectAsset', () => {
   test('returns blob if asset id is correct and file exists', async () => {
     const response = await GET(
       createMockNextRequest({
-        url: 'https://example.com/api/project-assets/0',
+        url: 'https://example.com/api/project-assets/1',
       }),
-      mockNextContext()
+      mockNextContext({ id: '1' })
     )
 
     const blob = await response.blob()
@@ -34,12 +34,12 @@ describe('downloadProjectAsset', () => {
       createMockNextRequest({
         url: 'https://example.com/api/project-assets/2',
       }),
-      mockNextContext()
+      mockNextContext({ id: '2' })
     )
     const json = await response.json()
 
     expect(json).toEqual({
-      error: 'Path is missing.',
+      error: 'Something went wrong while downloading the file.',
     })
   })
 
@@ -48,12 +48,12 @@ describe('downloadProjectAsset', () => {
       createMockNextRequest({
         url: 'https://example.com/api/project-assets/invalid-id',
       }),
-      mockNextContext()
+      mockNextContext({ id: 'invalid-id' })
     )
     const json = await response.json()
 
     expect(json).toEqual({
-      error: 'Invalid path.',
+      error: 'Invalid id.',
     })
   })
 
@@ -63,7 +63,7 @@ describe('downloadProjectAsset', () => {
       createMockNextRequest({
         url: 'https://example.com/api/project-assets/1',
       }),
-      mockNextContext()
+      mockNextContext({ id: '1' })
     )
     const json = await response.json()
 
@@ -72,13 +72,13 @@ describe('downloadProjectAsset', () => {
     })
   })
 
-  test('returns error if there is an error from the stora', async () => {
+  test('propagates error from db to be returned in response', async () => {
     __setErrorQueue([null, new Error('Error during upload')])
     const response = await GET(
       createMockNextRequest({
         url: 'https://example.com/api/project-assets/1',
       }),
-      mockNextContext()
+      mockNextContext({ id: '1' })
     )
     const json = await response.json()
 
@@ -87,5 +87,17 @@ describe('downloadProjectAsset', () => {
     })
   })
 
-  test('returns error if user is not the owner of the asset', async () => {})
+  test('returns error if user is not the owner of the asset', async () => {
+    const response = await GET(
+      createMockNextRequest({
+        url: 'https://example.com/api/project-assets/4',
+      }),
+      mockNextContext({ id: '4' })
+    )
+    const json = await response.json()
+
+    expect(json).toEqual({
+      error: 'Something went wrong while downloading the file.',
+    })
+  })
 })

@@ -73,7 +73,6 @@ function useCreator() {
       }
     },
     setInitialAssets(projectId: string, assets: HTMLImageElement[]) {
-      console.log('setInitialAssets', projectId, assets)
       creatorState.initialAssets = ref({ projectId, assets })
     },
   }

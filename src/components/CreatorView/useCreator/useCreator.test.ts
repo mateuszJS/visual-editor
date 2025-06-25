@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
-import useCreator from '.'
+import useCreator from './useCreator'
 import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 
 const project = getSanitizedProject()
@@ -151,5 +151,65 @@ describe('useCreator', () => {
 
     expect(firstCanvas.hasAttribute('data-magic-render-linked')).toBe(true)
     expect(secondCanvas.hasAttribute('data-magic-render-linked')).toBe(true)
+  })
+
+  describe('providing inital assets to creator', () => {
+    it('with matching project id assets will be used right after creator initialization', async () => {
+      const { result } = renderHook(useCreator)
+
+      const assets = [new Image(), new Image()]
+      await act(async () => {
+        result.current.setInitialAssets(project.id, assets)
+
+        const canvas = document.createElement('canvas')
+        window.document.body.appendChild(canvas)
+
+        result.current.init(canvas, project)
+      })
+
+      expect(result.current.creator.addImage).toHaveBeenNthCalledWith(1, assets[0])
+      expect(result.current.creator.addImage).toHaveBeenNthCalledWith(2, assets[1])
+    })
+
+    it('if different project id assets will be dismissed', async () => {
+      const { result } = renderHook(useCreator)
+
+      const assets = [new Image(), new Image()]
+      await act(async () => {
+        result.current.setInitialAssets('1', assets)
+
+        const canvas = document.createElement('canvas')
+        window.document.body.appendChild(canvas)
+
+        result.current.init(canvas, project)
+      })
+
+      expect(result.current.creator.addImage).toHaveBeenCalledTimes(0)
+    })
+
+    it('initial assets are used only once', async () => {
+      const { result } = renderHook(useCreator)
+
+      const assets = [new Image(), new Image()]
+      await act(async () => {
+        result.current.setInitialAssets(project.id, assets)
+
+        const canvas = document.createElement('canvas')
+        window.document.body.appendChild(canvas)
+
+        result.current.init(canvas, project)
+      })
+
+      await act(async () => {
+        const canvas = document.createElement('canvas')
+        window.document.body.appendChild(canvas)
+
+        result.current.init(canvas, project)
+      })
+
+      // remember that with init(canvas, project) we return a new creator instance
+      // with a new addImage jest spy function, so thats why it should be 0 called, not 2
+      expect(result.current.creator.addImage).not.toHaveBeenCalled()
+    })
   })
 })

@@ -1,5 +1,7 @@
-type FieldValue = string | number | null | boolean
+type FieldValue = string | number | null | boolean | object[]
 type Row = Record<string, FieldValue>
+
+const firstImage = new File([new Blob(['image-blob'], { type: 'image/png' })], 'image-blob.png')
 
 export function __getCleanDBMock() {
   return {
@@ -21,7 +23,23 @@ export function __getCleanDBMock() {
           oidc_google_id: 'google-1',
           os: 'Mac OS',
         },
-      ],
+        {
+          avatar: 'https://example.com/photo.jpg',
+          browser: 'Chrome',
+          browser_engine: 'Chromium',
+          country: 'DK',
+          device_model: 'Macintosh',
+          device_type: null,
+          email: 'second-user@example.com',
+          id: 2,
+          is_bot: false,
+          language: 'dk',
+          login_method: 'google',
+          name: null,
+          oidc_google_id: 'google-2',
+          os: 'Mac OS',
+        },
+      ] as Row[],
       projects: [
         {
           id: 1,
@@ -52,10 +70,17 @@ export function __getCleanDBMock() {
           owner_id: 2,
           assets: [],
         },
-      ],
+      ] as Row[],
+      project_assets: [
+        { id: 1, owner_id: 1 },
+        { id: 3, owner_id: 1 },
+        { id: 4, owner_id: 2 },
+      ] as Row[],
     },
     storage: {
-      'project-assets': {} as Record<string, File>,
+      'project-assets': {
+        '1': firstImage,
+      } as Record<string, File>,
     },
   }
 }
@@ -84,45 +109,52 @@ const supabaseClientMock = {
       insert: supabaseClientMock.insert.bind(null, tableId, nextError),
     }
   },
-  select: (selectedData: Row[], error: Error | null = null) => {
-    const data = error ? null : selectedData
+  select: (data: Row[], error: Error | null = null) => {
     return {
       data,
       error,
-      eq: (key: string, value: string | number) => {
-        const filteredData = data ? data.filter((item) => item[key] === value) : null
-        return {
-          data: filteredData,
-          error: error,
-          order: () => ({
-            data: filteredData,
-            error: error,
-          }),
-        }
-      },
-      single: () => {
-        if (!data) {
-          return {
-            error,
-            data,
-          }
-        }
-        if (data.length !== 1) {
-          throw new Error('Expected a single row, but got multiple rows or zero.')
-        }
-        return {
-          data: data[0],
-        }
-      },
+      single: supabaseClientMock.single.bind(null, data, error),
+      eq: supabaseClientMock.eq.bind(null, data, error),
     }
   },
+  single: (data: Row[], error: Error | null = null) => {
+    if (error) {
+      return {
+        error,
+        data,
+      }
+    }
+    if (data.length !== 1) {
+      return {
+        error: new Error('Expected a single row, but got multiple rows or zero.'),
+      }
+    }
+    return {
+      data: data[0],
+    }
+  },
+  eq: (data: Row[], error: Error | null = null, key: string, value: string | number) => {
+    const filteredData = data.filter((item) => item[key] === value)
+    return {
+      data: filteredData,
+      error: error,
+      order: supabaseClientMock.order.bind(null, filteredData, error),
+      single: supabaseClientMock.single.bind(null, filteredData, error),
+      eq: (key: string, value: string | number) =>
+        supabaseClientMock.eq(filteredData, error, key, value), // cannot do bind because of TS recursion
+    }
+  },
+  order: (data: Row[], error: Error | null = null) => ({
+    data,
+    error,
+  }),
   insert: (
     tableId: keyof typeof dbMock.tables,
     error: Error | null = null,
     data: Record<string, string | number>
   ) => {
     const newRow = {
-      id: dbMock.tables[tableId].length,
+      id: dbMock.tables[tableId].length + 1,
       ...Object.entries(data).reduce(
         (acc, [key, value]) => ({
           ...acc,

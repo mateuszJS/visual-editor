@@ -65,7 +65,7 @@ describe('getUserData', () => {
       device_model: null,
       device_type: null,
       email: 'test@example.com',
-      id: 1,
+      id: 3,
       is_bot: false,
       language: 'en-US',
       login_method: 'google',

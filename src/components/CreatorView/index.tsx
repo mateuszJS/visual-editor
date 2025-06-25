@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 import Toolbox from './components/Toolbox'
-import useCreator from './useCreator'
+import useCreator from './useCreator/useCreator'
 import type { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 
 interface Props {

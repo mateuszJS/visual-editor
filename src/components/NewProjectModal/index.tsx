@@ -1,22 +1,16 @@
 'use client'
 
-import Modal from 'react-modal'
 import TikTokIcon from 'assets/tiktok-logo.svg'
 import InstagramIcon from 'assets/instagram-logo.svg'
 import YouTubeIcon from 'assets/youtube-logo.svg'
 import styles from './styles.module.css'
-import UploadFile from '@/components/UploadFile'
-import type { FileWithPath } from 'react-dropzone'
-import loadImageFromFile from '@/utils/loadImageFromFile'
-import { useEffect } from 'react'
+import UploadAssets from '@/components/UploadAssets'
+import loadImageFromAssetId from '@/utils/loadImageFromAssetId'
 import { useRouter } from 'next/navigation'
 import OverlayLoader from '../OverlayLoader'
 import ActionSheets from '../ActionSheets'
 import useProject from '@/hooks/useProject/useProject'
-
-if (process.env.NODE_ENV !== 'test') {
-  Modal.setAppElement('#non-modal-content')
-}
+import useCreator from '../CreatorView/useCreator/useCreator'
 
 interface Props {
   isOpen: boolean
@@ -35,32 +29,32 @@ const blankCanvasSizes = [
 
 export default function NewProjectModal({ isOpen, close }: Props) {
   const router = useRouter()
-  const { createProject, loading, project } = useProject()
+  const { createProject, loading } = useProject()
+  const { setInitialAssets } = useCreator()
 
-  useEffect(() => {
-    if (project) {
-      close()
-      router.push(`/project/${project.id}`)
-    }
-  }, [project])
-
-  const createProjectFromFiles = async (files: readonly FileWithPath[]) => {
-    const images = await Promise.all(files.map(loadImageFromFile))
+  const createProjectFrom = async (width: number, height: number, assetIds: string[]) => {
+    const images = await Promise.all(assetIds.map(loadImageFromAssetId))
     const projectSize = images.reduce(
       (maxSize, img) => ({
         width: Math.max(maxSize.width, img.width),
         height: Math.max(maxSize.height, img.height),
       }),
-      { width: 0, height: 0 }
+      { width, height }
     )
 
-    createProject(projectSize.width, projectSize.height, images)
+    createProject(projectSize.width, projectSize.height, (project) => {
+      if (images.length > 0) {
+        setInitialAssets(project.id, images)
+      }
+      close()
+      router.push(`/project/${project.id}`)
+    })
   }
 
   return (
     <ActionSheets isOpen={isOpen} close={close} title="Start new project">
       <OverlayLoader loading={loading} />
-      <UploadFile onUpload={createProjectFromFiles} />
+      <UploadAssets onUpload={(assetIds) => createProjectFrom(0, 0, assetIds)} />
       <p className={styles.divider}>Or</p>
       <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with desired size</h3>
       <ul className={styles.blankCanvasList}>
@@ -68,7 +62,7 @@ export default function NewProjectModal({ isOpen, close }: Props) {
           <li key={size.label}>
             <button
               className={styles.blankCanvasOption}
-              onClick={() => createProject(size.width * 500, size.height * 500, [])}
+              onClick={() => createProjectFrom(size.width * 500, size.height * 500, [])}
               type="button"
             >
               <div

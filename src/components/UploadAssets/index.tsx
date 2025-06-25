@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import cn from 'classnames'
-import { FileRejection, FileWithPath, useDropzone } from 'react-dropzone'
+import { FileRejection, useDropzone } from 'react-dropzone'
 import styles from './styles.module.css'
+import useFetcher from '@/hooks/useFetcher'
 
 interface Props {
-  onUpload: (files: FileWithPath[]) => void
+  onUpload: (assetIds: string[]) => void
 }
 
 const MAX_FILE_SIZE_MBs = 3
@@ -31,7 +32,8 @@ const getRejectionReason = (fileRejections: readonly FileRejection[]) => {
   return ['File rejected', 'Please try again with a valid files']
 }
 
-export default function UploadFile({ onUpload }: Props) {
+export default function UploadAsset({ onUpload }: Props) {
+  const { fetcher } = useFetcher<{ id: string }>()
   const { acceptedFiles, getRootProps, getInputProps, isDragAccept, isDragReject, fileRejections } =
     useDropzone({
       accept: { 'image/*': [] },
@@ -41,7 +43,17 @@ export default function UploadFile({ onUpload }: Props) {
 
   useEffect(() => {
     if (acceptedFiles.length > 0) {
-      onUpload(acceptedFiles as FileWithPath[]) // just do not not carry al lthe time "readonly" type
+      const formData = new FormData()
+      formData.append('file', acceptedFiles[0])
+
+      fetcher(
+        '/api/project-assets',
+        {
+          method: 'POST',
+          formData,
+        },
+        ({ id }) => onUpload([id])
+      )
     }
   }, [acceptedFiles])
 

@@ -97,7 +97,7 @@ describe('useProject', () => {
       )
 
       await act(() => {
-        result.current.createProject(100, 100, [])
+        result.current.createProject(100, 100, () => {})
       })
 
       expect(result.current).toMatchObject({
@@ -117,7 +117,7 @@ describe('useProject', () => {
       )
 
       await act(() => {
-        result.current.createProject(100, 100, [])
+        result.current.createProject(100, 100, () => {})
       })
 
       expect(result.current).toMatchObject({
@@ -131,7 +131,9 @@ describe('useProject', () => {
       const { result } = renderHook(() => useProject())
 
       await act(() => {
-        result.current.createProject(100, 100, [])
+        result.current.createProject(100, 100, (project) => {
+          expect(project).toMatchObject({ id: '1' })
+        })
       })
 
       expect(result.current).toMatchObject({
@@ -156,7 +158,7 @@ describe('useProject', () => {
       const { result } = renderHook(() => useProject())
 
       await act(() => {
-        result.current.createProject(100, 100, [])
+        result.current.createProject(100, 100, () => {})
       })
 
       server.use(
@@ -181,7 +183,7 @@ describe('useProject', () => {
       const { result } = renderHook(() => useProject())
 
       await act(() => {
-        result.current.createProject(100, 100, [])
+        result.current.createProject(100, 100, () => {})
       })
 
       await act(() => {

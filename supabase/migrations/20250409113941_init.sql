@@ -33,6 +33,12 @@ create table projects (
   height int not null
 );
 
+
+create table project_assets (
+  id bigint generated always as identity primary key,
+  owner_id bigint references users not null
+);
+
 insert into storage.buckets
   (id, name, public)
 values

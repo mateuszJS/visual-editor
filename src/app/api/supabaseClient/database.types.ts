@@ -34,6 +34,29 @@ export type Database = {
   }
   public: {
     Tables: {
+      project_assets: {
+        Row: {
+          id: number
+          owner_id: number
+        }
+        Insert: {
+          id?: never
+          owner_id: number
+        }
+        Update: {
+          id?: never
+          owner_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_assets_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           assets: Json[]

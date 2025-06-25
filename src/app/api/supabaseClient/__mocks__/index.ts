@@ -1,6 +1,8 @@
 type FieldValue = string | number | null | boolean | object[]
 type Row = Record<string, FieldValue>
 
+const firstImage = new File([new Blob(['image-blob'], { type: 'image/png' })], 'image-blob.png')
+
 export function __getCleanDBMock() {
   return {
     tables: {
@@ -76,7 +78,9 @@ export function __getCleanDBMock() {
       ] as Row[],
     },
     storage: {
-      'project-assets': {} as Record<string, File>,
+      'project-assets': {
+        '1': firstImage,
+      } as Record<string, File>,
     },
   }
 }

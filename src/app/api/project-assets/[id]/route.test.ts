@@ -6,14 +6,7 @@ import { GET } from './route'
 jest.mock('@/app/api/supabaseClient')
 jest.mock('@/app/api/wrappers/session')
 
-const blob = new Blob(['image-blob'], { type: 'image/png' })
-const fileExample = new File([blob], 'image-blob.png')
-
 describe('downloadProjectAsset', () => {
-  beforeEach(async () => {
-    dbMock.storage['project-assets']['1'] = fileExample
-  })
-
   test('returns blob if asset id is correct and file exists', async () => {
     const response = await GET(
       createMockNextRequest({
@@ -98,6 +91,20 @@ describe('downloadProjectAsset', () => {
 
     expect(json).toEqual({
       error: 'Something went wrong while downloading the file.',
+    })
+  })
+
+  test('returns error if asset does not exist in storage', async () => {
+    const response = await GET(
+      createMockNextRequest({
+        url: 'https://example.com/api/project-assets/3',
+      }),
+      mockNextContext({ id: '3' })
+    )
+    const json = await response.json()
+
+    expect(json).toEqual({
+      error: 'No file found under passed path.',
     })
   })
 })

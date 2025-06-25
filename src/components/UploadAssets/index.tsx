@@ -46,12 +46,14 @@ export default function UploadAsset({ onUpload }: Props) {
       const formData = new FormData()
       formData.append('file', acceptedFiles[0])
 
-      fetcher('/api/project-assets', {
-        method: 'POST',
-        formData,
-      }).then(({ id }) => {
-        onUpload([id])
-      })
+      fetcher(
+        '/api/project-assets',
+        {
+          method: 'POST',
+          formData,
+        },
+        ({ id }) => onUpload([id])
+      )
     }
   }, [acceptedFiles])
 

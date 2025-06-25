@@ -33,7 +33,6 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   const { setInitialAssets } = useCreator()
 
   const createProjectFrom = async (width: number, height: number, assetIds: string[]) => {
-    console.log(assetIds)
     const images = await Promise.all(assetIds.map(loadImageFromAssetId))
     const projectSize = images.reduce(
       (maxSize, img) => ({
@@ -43,8 +42,7 @@ export default function NewProjectModal({ isOpen, close }: Props) {
       { width, height }
     )
 
-    createProject(projectSize.width, projectSize.height).then((project) => {
-      console.log('images', images)
+    createProject(projectSize.width, projectSize.height, (project) => {
       if (images.length > 0) {
         setInitialAssets(project.id, images)
       }

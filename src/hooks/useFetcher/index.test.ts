@@ -80,8 +80,13 @@ describe('useFetcher', () => {
     const { result } = renderHook(() => useFetcher())
     const { fetcher } = result.current
 
-    await act(() => {
-      fetcher('/api/me')
+    await act(async () => {
+      fetcher('/api/me', (user) => {
+        expect(user).toEqual({
+          firstName: 'John',
+          lastName: 'Smith',
+        })
+      })
     })
 
     expect(result.current).toEqual({
@@ -103,8 +108,10 @@ describe('useFetcher', () => {
 
     server.use(http.get('/api/me', () => new HttpResponse()))
 
-    await act(() => {
-      fetcher('/api/me')
+    await act(async () => {
+      fetcher('/api/me', (success) => {
+        expect(success).toBeUndefined()
+      })
     })
 
     expect(result.current).toEqual({
@@ -120,8 +127,13 @@ describe('useFetcher', () => {
       const { result } = renderHook(() => useFetcher())
       const { fetcher } = result.current
 
-      await act(() => {
-        fetcher('/api/me')
+      await act(async () => {
+        fetcher('/api/me', (user) => {
+          expect(user).toEqual({
+            firstName: 'John',
+            lastName: 'Smith',
+          })
+        })
       })
 
       // test if first request was handled correctly
@@ -222,8 +234,10 @@ describe('useFetcher', () => {
       server.use(http.get('/api/me', () => HttpResponse.json({ userId: 0 }, { status: 200 })))
 
       // requests again
-      await act(() => {
-        fetcher('/api/me')
+      await act(async () => {
+        fetcher('/api/me', (user) => {
+          expect(user).toEqual({ userId: 0 })
+        })
       })
 
       // test if first request was handled correctly
@@ -258,8 +272,13 @@ describe('useFetcher', () => {
         )
       )
 
-      await act(() => {
-        fetcher('/api/me')
+      await act(async () => {
+        await fetcher('/api/me', (user) => {
+          expect(user).toEqual({
+            firstName: 'John',
+            lastName: 'Smith',
+          })
+        })
       })
 
       // test if first request was handled correctly

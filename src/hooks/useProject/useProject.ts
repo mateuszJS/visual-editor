@@ -36,30 +36,36 @@ export default function useProject(id?: string) {
   const newProjId = useRef<string | undefined>(undefined)
   const projects = useSnapshot(projectsStore)
 
-  const { success, error, loading, fetcher } = useFetcher<SanitizedProject>()
+  const { error, loading, fetcher } = useFetcher<SanitizedProject>()
 
   useEffect(() => {
     if (id && !projectsStore.has(id)) {
-      fetcher(`/api/projects/${id}`)
+      fetcher(`/api/projects/${id}`, (project) => {
+        projectsStore.set(id, ref(project))
+      })
     }
   }, [id])
 
-  useEffect(() => {
-    // methods like "update" give success but no json
-    if (success?.json?.id && !projectsStore.has(success.json.id)) {
-      projectsStore.set(success.json.id, ref(success.json))
-      newProjId.current = success.json.id
-    }
-  }, [success])
-
-  function createProject(width: number, height: number) {
-    return fetcher('/api/projects', {
-      method: 'POST',
-      json: {
-        width,
-        height,
+  function createProject(
+    width: number,
+    height: number,
+    successCallback: (project: SanitizedProject) => void
+  ) {
+    fetcher(
+      '/api/projects',
+      {
+        method: 'POST',
+        json: {
+          width,
+          height,
+        },
       },
-    })
+      (project) => {
+        projectsStore.set(project.id, ref(project))
+        newProjId.current = project.id
+        successCallback(project)
+      }
+    )
   }
 
   const projectId = id || newProjId.current

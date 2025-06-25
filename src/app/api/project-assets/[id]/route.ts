@@ -15,16 +15,15 @@ async function downloadProjectAsset(
     return getResponseError('Invalid id.')
   }
 
-  const [{ data: dbData, error: dbError }, { data: storageData, error: storageError }] =
-    await Promise.all([
-      supabaseClient
-        .from('project_assets')
-        .select()
-        .eq('id', Number(id))
-        .eq('owner_id', session.userId)
-        .single(),
-      supabaseClient.storage.from('project-assets').download(id),
-    ])
+  const [{ error: dbError }, { data: storageData, error: storageError }] = await Promise.all([
+    supabaseClient
+      .from('project_assets')
+      .select()
+      .eq('id', Number(id))
+      .eq('owner_id', session.userId)
+      .single(),
+    supabaseClient.storage.from('project-assets').download(id),
+  ])
 
   if (storageError || dbError) {
     return getResponseError('Something went wrong while downloading the file.')

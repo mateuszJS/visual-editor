@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<NavLink> should render icon and text and close button 1`] = `
+<div>
+  <section
+    aria-live="assertive"
+    class="root"
+    role="alert"
+  >
+    <svg
+      class="errorIcon"
+    />
+    <p>
+      An error occurred
+    </p>
+    <button
+      aria-label="Close"
+      class="iconButton closeButton"
+      type="button"
+    >
+      <svg />
+    </button>
+  </section>
+</div>
+`;

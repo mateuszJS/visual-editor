@@ -9,6 +9,7 @@ import styles from './styles.module.css'
 import useCSRF from '@/hooks/useCSRF'
 import fetcher from '@/utils/fetcher'
 import { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
+import ErrorToast from '@/components/ErrorToast/ErrorToast'
 
 interface Props {
   onSuccess: VoidFunction
@@ -48,7 +49,9 @@ export default function GoogleLogin({ onSuccess }: Props) {
           }
         } catch (err: unknown) {
           console.error(err)
-          setError('Something went wrong, try again later.')
+          setError(
+            'Something went wrong. Please try again. If the issue still persist, please contact support.'
+          )
         }
       },
     })
@@ -67,6 +70,10 @@ export default function GoogleLogin({ onSuccess }: Props) {
         <span className={styles.label}>Continue with Google</span>
         <div className={styles.googleWrapper} ref={googleWrapper} />
       </Button>
+      <ErrorToast
+        error="Something went wrong. Please try again. If the issue still persist, please contact support."
+        close={() => setError(null)}
+      />
       {error && <p>{error}</p>}
     </>
   )

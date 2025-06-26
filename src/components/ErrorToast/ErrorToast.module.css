@@ -1,0 +1,23 @@
+.root {
+  position: absolute;
+  bottom: 100px;
+  left: 30px;
+  right: 30px;
+
+  display: flex;
+  gap: 1rem;
+
+  background-color: var(--danger);
+  padding: 1rem 1.3rem 1.3rem;
+  border-radius: 1rem;
+  text-align: left;
+}
+
+.closeButton {
+  margin: -0.4rem -0.6rem 0 auto;
+}
+
+.errorIcon {
+  margin-top: 0.2rem;
+  font-size: 1.2rem;
+}

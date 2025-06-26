@@ -156,12 +156,8 @@ const supabaseClientMock = {
     const rows = Array.isArray(data) ? data : [data]
     const newRows = rows.map((row, i) => ({
       id: dbMock.tables[tableId].length + 1 + i,
-      ...Object.entries(row).reduce(
-        (acc, [key, value]) => ({
-          ...acc,
-          [key]: value === undefined ? null : value,
-        }),
-        {}
+      ...Object.fromEntries(
+        Object.entries(row).map(([key, value]) => [key, value === undefined ? null : value])
       ),
     }))
 

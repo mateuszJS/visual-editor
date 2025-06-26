@@ -45,7 +45,7 @@ async function uploadProjectAsset(session: SessionPayload, request: NextRequest)
 
   return NextResponse.json(
     {
-      succeded: successfullyUploadedIds,
+      succeeded: successfullyUploadedIds,
       failed: filesWhichUploadFailed,
     },
     { status: 201 }

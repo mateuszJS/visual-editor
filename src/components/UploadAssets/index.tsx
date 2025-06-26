@@ -34,7 +34,7 @@ const getRejectionReason = (fileRejections: readonly FileRejection[]) => {
 
 export default function UploadAsset({ onUpload }: Props) {
   const { fetcher } = useFetcher<{
-    succeded: string[]
+    succeeded: string[]
     failed: Array<{ file: string; error: string }>
   }>()
   const { acceptedFiles, getRootProps, getInputProps, isDragAccept, isDragReject, fileRejections } =
@@ -57,8 +57,8 @@ export default function UploadAsset({ onUpload }: Props) {
           method: 'POST',
           formData,
         },
-        ({ succeded, failed }) => {
-          onUpload(succeded)
+        ({ succeeded, failed }) => {
+          onUpload(succeeded)
           console.error(failed)
         }
       )

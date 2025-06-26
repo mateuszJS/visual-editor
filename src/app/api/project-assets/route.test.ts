@@ -27,7 +27,7 @@ describe('uploadProjectAsset', () => {
     const json = await response.json()
 
     expect(json).toEqual({
-      succeded: ['4', '5'],
+      succeeded: ['4', '5'],
       failed: [],
     })
 
@@ -53,7 +53,7 @@ describe('uploadProjectAsset', () => {
     const json = await response.json()
 
     expect(json).toEqual({
-      succeded: ['5'],
+      succeeded: ['5'],
       failed: [
         {
           file: 'first-image-blob.png',

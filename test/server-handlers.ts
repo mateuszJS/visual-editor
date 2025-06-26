@@ -26,6 +26,6 @@ export default [
     return new HttpResponse(null, { status: 204 })
   }),
   http.post('/api/project-assets', () => {
-    return HttpResponse.json({ path: 'path/to/image.jpg' }, { status: 200 })
+    return HttpResponse.json({ succeeded: ['3'], failed: [] }, { status: 201 })
   }),
 ]

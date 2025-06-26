@@ -12,12 +12,14 @@ export default function UploadButton() {
   const { creator } = useCreator()
 
   function createProjectFromAssets(assetIds: string[]) {
-    const img = new Image()
-    img.src = `/api/project-assets/${assetIds[0]}`
-    img.onload = function () {
-      creator.addImage(img)
-      setIsUploadShown(false)
-    }
+    assetIds.forEach((id) => {
+      const img = new Image()
+      img.src = `/api/project-assets/${id}`
+      img.onload = function () {
+        creator.addImage(img)
+        setIsUploadShown(false)
+      }
+    })
   }
 
   return (

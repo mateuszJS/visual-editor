@@ -33,7 +33,10 @@ const getRejectionReason = (fileRejections: readonly FileRejection[]) => {
 }
 
 export default function UploadAsset({ onUpload }: Props) {
-  const { fetcher } = useFetcher<{ id: string }>()
+  const { fetcher } = useFetcher<{
+    succeeded: string[]
+    failed: Array<{ file: string; error: string }>
+  }>()
   const { acceptedFiles, getRootProps, getInputProps, isDragAccept, isDragReject, fileRejections } =
     useDropzone({
       accept: { 'image/*': [] },
@@ -44,7 +47,9 @@ export default function UploadAsset({ onUpload }: Props) {
   useEffect(() => {
     if (acceptedFiles.length > 0) {
       const formData = new FormData()
-      formData.append('file', acceptedFiles[0])
+      acceptedFiles.forEach((file) => {
+        formData.append('files[]', file)
+      })
 
       fetcher(
         '/api/project-assets',
@@ -52,7 +57,10 @@ export default function UploadAsset({ onUpload }: Props) {
           method: 'POST',
           formData,
         },
-        ({ id }) => onUpload([id])
+        ({ succeeded, failed }) => {
+          onUpload(succeeded)
+          console.error(failed)
+        }
       )
     }
   }, [acceptedFiles])

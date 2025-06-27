@@ -6,7 +6,7 @@ type MockNextRequestOptions = {
   headers?: Record<string, string>
   cookies?: Record<string, string>
   body?: ReadableStream | null
-  formData?: Record<string, string | File>
+  formData?: Record<string, string | File | (string | File)[]>
   geo?: {
     city?: string
     country?: string
@@ -75,7 +75,13 @@ export default function createMockNextRequest(options: MockNextRequestOptions = 
   // Create mock formData method
   const formDataMethod = jest.fn().mockResolvedValue(
     Object.entries(formData).reduce((acc, [key, value]) => {
-      acc.append(key, value)
+      if (Array.isArray(value)) {
+        value.forEach((item) => {
+          acc.append(key, item)
+        })
+      } else {
+        acc.append(key, value)
+      }
       return acc
     }, new FormData())
   )

@@ -48,7 +48,7 @@ describe('UploadButton', () => {
     const fileInputTrigger = screen.getByLabelText(/Upload an image/i)
 
     global.Image = class {
-      // we have to mock new Image().onload
+      // we have to mock new Image().onload to execute the callback
       set onload(cb: VoidFunction) {
         cb()
       }

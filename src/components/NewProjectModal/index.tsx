@@ -5,13 +5,12 @@ import InstagramIcon from 'assets/instagram-logo.svg'
 import YouTubeIcon from 'assets/youtube-logo.svg'
 import styles from './styles.module.css'
 import UploadAssets from '@/components/UploadAssets'
-import loadImageFromAssetId from '@/utils/loadImageFromAssetId'
+import loadImagesFromAssetIds from '@/utils/loadImagesFromAssetIds'
 import { useRouter } from 'next/navigation'
 import OverlayLoader from '../OverlayLoader'
 import ActionSheets from '../ActionSheets'
 import useProject from '@/hooks/useProject/useProject'
 import useCreator from '../CreatorView/useCreator/useCreator'
-import errorStore from '@/stores/error'
 
 interface Props {
   isOpen: boolean
@@ -34,16 +33,7 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   const { setInitialAssets } = useCreator()
 
   const createProjectFrom = async (width: number, height: number, assetIds: string[]) => {
-    const results = await Promise.allSettled(assetIds.map(loadImageFromAssetId))
-
-    const fulfilled = results.filter((result) => result.status === 'fulfilled')
-    const rejected = results.filter((result) => result.status === 'rejected')
-
-    const images = fulfilled.map((result) => result.value)
-
-    if (rejected.length > 0) {
-      errorStore.message = `Failed to load ${rejected.length} images`
-    }
+    const images = await loadImagesFromAssetIds(assetIds)
 
     const projectSize = images.reduce(
       (maxSize, img) => ({

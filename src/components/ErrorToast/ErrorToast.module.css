@@ -11,6 +11,22 @@
   padding: 1rem 1.3rem 1.3rem;
   border-radius: 1rem;
   text-align: left;
+
+  /* Smooth transitions for both enter and exit */
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  /* Default visible state */
+  transform: translateY(0);
+  opacity: 1;
+
+  @starting-style {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+}
+
+.root.exiting {
+  transform: translateY(100px);
+  opacity: 0;
 }
 
 .closeButton {

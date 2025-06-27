@@ -9,7 +9,6 @@ export default function loadImageFromAssetId(assetId: string): Promise<HTMLImage
     }
 
     img.onerror = (err) => {
-      console.error(err)
       reject(new Error(`Failed to load image from asset ID ${assetId}: ${getErrorMessage(err)}`))
     }
 

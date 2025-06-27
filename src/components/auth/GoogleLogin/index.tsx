@@ -1,24 +1,23 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import userStore from '@/hooks/userStore'
 import Script from 'next/script'
 import Button from '@/components/Button'
 import GoogleIcon from 'assets/google-logo.svg'
 import styles from './styles.module.css'
 import useCSRF from '@/hooks/useCSRF'
-import fetcher from '@/utils/fetcher'
 import { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
-import ErrorToast from '@/components/ErrorToast/ErrorToast'
+import useFetcher from '@/hooks/useFetcher'
 
 interface Props {
   onSuccess: VoidFunction
 }
 
 export default function GoogleLogin({ onSuccess }: Props) {
-  const [error, setError] = useState<string | null>(null)
   const googleWrapper = useRef<HTMLDivElement>(null)
   const getCsrfToken = useCSRF()
+  const { fetcher } = useFetcher<SanitizedUser>()
 
   const initGooglBtn = () => {
     // Migration docs: https://developers.google.com/identity/gsi/web/guides/migration
@@ -33,26 +32,18 @@ export default function GoogleLogin({ onSuccess }: Props) {
       // since I receive my jwt token directly, there is no redirect
       callback: async ({ credential }) => {
         const csrfToken = await getCsrfToken()
-        try {
-          const response = await fetcher('/api/auth/login/google', {
+        fetcher(
+          '/api/auth/login/google',
+          {
             method: 'POST',
             csrfToken,
             json: { idToken: credential },
-          })
-
-          const { user } = (await response.json()) as { user: SanitizedUser }
-          if (response.status !== 200) {
-            setError('Something went wrong, try again later.')
-          } else {
+          },
+          (user) => {
             userStore.user = user
             onSuccess()
           }
-        } catch (err: unknown) {
-          console.error(err)
-          setError(
-            'Something went wrong. Please try again. If the issue still persist, please contact support.'
-          )
-        }
+        )
       },
     })
     google.accounts.id.renderButton(
@@ -70,11 +61,6 @@ export default function GoogleLogin({ onSuccess }: Props) {
         <span className={styles.label}>Continue with Google</span>
         <div className={styles.googleWrapper} ref={googleWrapper} />
       </Button>
-      <ErrorToast
-        error="Something went wrong. Please try again. If the issue still persist, please contact support."
-        close={() => setError(null)}
-      />
-      {error && <p>{error}</p>}
     </>
   )
 }

@@ -3,6 +3,7 @@ import { Outfit } from 'next/font/google'
 import Navigation from '@/components/Navigation'
 import './globals.css'
 import InitializeData from '@/components/InitializeData'
+import GlobalErros from '@/components/GlobalErrors/GlobalErrors'
 
 const outfit = Outfit({
   variable: '--font-outfit',
@@ -26,6 +27,7 @@ export default function RootLayout({
           <InitializeData />
           <div className="page">{children}</div>
           <Navigation />
+          <GlobalErros />
         </div>
       </body>
     </html>

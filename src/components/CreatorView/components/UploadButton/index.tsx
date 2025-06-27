@@ -6,18 +6,22 @@ import { useState } from 'react'
 import ActionSheets from '@/components/ActionSheets'
 import UploadAssets from '@/components/UploadAssets'
 import useCreator from '@/components/CreatorView/useCreator/useCreator'
+import errorStore from '@/stores/error'
 
 export default function UploadButton() {
   const [usUploadShown, setIsUploadShown] = useState(false)
   const { creator } = useCreator()
 
-  function createProjectFromAssets(assetIds: string[]) {
+  function addAssetsToProject(assetIds: string[]) {
     assetIds.forEach((id) => {
       const img = new Image()
       img.src = `/api/project-assets/${id}`
-      img.onload = function () {
+      img.onload = () => {
         creator.addImage(img)
         setIsUploadShown(false)
+      }
+      img.onerror = () => {
+        errorStore.message = 'Failed to load some of the images'
       }
     })
   }
@@ -33,7 +37,7 @@ export default function UploadButton() {
         isOpen={usUploadShown}
         close={() => setIsUploadShown(false)}
       >
-        <UploadAssets onUpload={createProjectFromAssets} />
+        <UploadAssets onUpload={addAssetsToProject} />
       </ActionSheets>
     </>
   )

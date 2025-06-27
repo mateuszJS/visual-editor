@@ -35,7 +35,7 @@ describe('UploadButton', () => {
     ).toBeInTheDocument()
   })
 
-  it('uploads a file when the file is selected', async () => {
+  it('uploads files and adds to the project', async () => {
     render(<UploadButton />)
     const uploadBtn = screen.getByRole('button', {
       name: /image/i,

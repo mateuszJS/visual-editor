@@ -1,7 +1,9 @@
 'use client'
 
 import type { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
+import errorStore from '@/stores/error'
 import fetcher from '@/utils/fetcher'
+import { getErrorMessage } from '@/utils/fetcher/getErrorMessage'
 import { proxy } from 'valtio'
 
 export interface UserStore {
@@ -25,7 +27,7 @@ export async function initUserStore() {
     }
   } catch (error) {
     userStore.user = null
-    console.error('Error fetching user data', error)
+    errorStore.message = 'Error fetching user data: ' + getErrorMessage(error)
   }
 }
 

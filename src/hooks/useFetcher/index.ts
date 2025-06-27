@@ -1,6 +1,7 @@
+import errorStore from '@/stores/error'
 import nativeFetcher, { FetcherOptions } from '@/utils/fetcher'
 import { getErrorMessage } from '@/utils/fetcher/getErrorMessage'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Success<T> = [T] extends [never] ? Record<string, never> : { json: T }
 
@@ -69,6 +70,15 @@ export default function useFetcher<T = never>() {
       }
     }
   }
+
+  useEffect(() => {
+    errorStore.message = error
+    return () => {
+      if (errorStore.message === error) {
+        errorStore.message = null
+      }
+    }
+  }, [error])
 
   return {
     loading,

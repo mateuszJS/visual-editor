@@ -1,7 +1,7 @@
 import errorStore from '@/stores/error'
 import loadImagesFromAssetIds from './loadImagesFromAssetIds'
 
-describe('loadImageFromAssetId', () => {
+describe('loadImagesFromAssetIds', () => {
   it('returns successfully loaded images', async () => {
     const successQueue = [true, false, true, false, false]
     // true -> image will call onload, false -> img will call onerror

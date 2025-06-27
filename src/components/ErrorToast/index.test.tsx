@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import ErrorToast from './ErrorToast'
 
-describe('<NavLink>', () => {
+describe('<ErrorToast>', () => {
   it('should render icon and text and close button', () => {
     const { container } = render(<ErrorToast error="An error occurred" close={() => {}} />)
     expect(container).toMatchSnapshot()

@@ -1,3 +1,9 @@
+/* this is EcmaScript module(.mjs) on purpose, when it was a TS file there was an error occusing like once per 1000 runs:
+ TypeScript Error in /visual-editor/jest-puppeteer.config.ts:
+    Cannot find module '/visual-editor/jest-puppeteer.config.mjs'
+    imported from /visual-editor/node_modules/jest-environment-puppeteer/node_modules/cosmiconfig/dist/loaders.js
+    */
+
 const config = {
   server: {
     command: 'npm run build-storybook && npx http-server storybook-static -p 6006',

@@ -7,7 +7,7 @@ interface Props {
 
 export default function NavButton({ children, onClick }: Props) {
   return (
-    <button className={styles.navItem} onClick={onClick} type="button">
+    <button className={styles.navItem} onClick={onClick}>
       {children}
     </button>
   )

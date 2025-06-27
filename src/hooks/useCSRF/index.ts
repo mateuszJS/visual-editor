@@ -1,4 +1,6 @@
+import errorStore from '@/stores/error'
 import fetcher from '@/utils/fetcher'
+import { getErrorMessage } from '@/utils/fetcher/getErrorMessage'
 import { useEffect } from 'react'
 
 let token = ''
@@ -10,7 +12,7 @@ async function getCSRFToken() {
     const { csrfToken } = await response.json()
     token = csrfToken
   } catch (error) {
-    console.error('Error fetching CSRF token', error)
+    errorStore.message = 'Error fetching CSRF token' + getErrorMessage(error)
   } finally {
     tokenPromise = null
   }

@@ -22,6 +22,8 @@
   --secondary: rgb(var(--secondary-rgb));
 
   --global-padding: 15px;
+
+  --danger: #f8504d;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -106,6 +108,7 @@ a {
 
 svg {
   height: 1lh;
+  flex-shrink: 0;
 }
 
 button {
@@ -122,12 +125,12 @@ ul {
 }
 
 #non-modal-content {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 1fr auto;
 }
 
 .page {
-  flex-grow: 1;
+  overflow-y: auto;
   padding: 0 var(--global-padding);
 }
 

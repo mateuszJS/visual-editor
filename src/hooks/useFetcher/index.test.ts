@@ -70,7 +70,8 @@ describe('useFetcher', () => {
 
     expect(result.current).toEqual({
       loading: false,
-      error: 'Something went wrong',
+      error:
+        'Something went wrong. Please try again. If the issue still persist, please contact support.',
       success: null,
       fetcher: expect.any(Function),
     })

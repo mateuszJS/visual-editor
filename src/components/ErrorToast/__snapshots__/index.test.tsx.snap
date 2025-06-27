@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ErrorToast> should render icon and text and close button 1`] = `
+<div>
+  <section
+    aria-live="assertive"
+    class="root"
+    role="alert"
+  >
+    <svg
+      class="errorIcon"
+    />
+    <p>
+      An error occurred
+    </p>
+    <button
+      aria-label="Close"
+      class="iconButton closeButton"
+    >
+      <svg />
+    </button>
+  </section>
+</div>
+`;

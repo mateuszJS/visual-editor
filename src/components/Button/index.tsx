@@ -23,7 +23,7 @@ export default function Button({
   })
 
   return (
-    <button className={classNames} onClick={onClick} type="button">
+    <button className={classNames} onClick={onClick}>
       {children}
     </button>
   )

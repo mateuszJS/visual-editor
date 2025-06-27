@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<GlobalError /> should render error message when there is one 1`] = `
+<div>
+  <section
+    aria-live="assertive"
+    class="root"
+    role="alert"
+  >
+    <svg
+      class="errorIcon"
+    />
+    <p>
+      Test error message
+    </p>
+    <button
+      aria-label="Close"
+      class="iconButton closeButton"
+    >
+      <svg />
+    </button>
+  </section>
+</div>
+`;

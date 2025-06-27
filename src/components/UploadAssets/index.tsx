@@ -3,6 +3,7 @@ import cn from 'classnames'
 import { FileRejection, useDropzone } from 'react-dropzone'
 import styles from './styles.module.css'
 import useFetcher from '@/hooks/useFetcher'
+import errorStore from '@/stores/error'
 
 interface Props {
   onUpload: (assetIds: string[]) => void
@@ -59,7 +60,10 @@ export default function UploadAsset({ onUpload }: Props) {
         },
         ({ succeeded, failed }) => {
           onUpload(succeeded)
-          console.error(failed)
+          if (failed.length > 0) {
+            const filesList = failed.map((f) => `${f.file} (${f.error})`).join(', ')
+            errorStore.message = `Failed to upload ${failed.length} files: ${filesList}`
+          }
         }
       )
     }

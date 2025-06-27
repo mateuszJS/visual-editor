@@ -5,7 +5,7 @@ import InstagramIcon from 'assets/instagram-logo.svg'
 import YouTubeIcon from 'assets/youtube-logo.svg'
 import styles from './styles.module.css'
 import UploadAssets from '@/components/UploadAssets'
-import loadImageFromAssetId from '@/utils/loadImageFromAssetId'
+import loadImagesFromAssetIds from '@/utils/loadImagesFromAssetIds'
 import { useRouter } from 'next/navigation'
 import OverlayLoader from '../OverlayLoader'
 import ActionSheets from '../ActionSheets'
@@ -33,7 +33,8 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   const { setInitialAssets } = useCreator()
 
   const createProjectFrom = async (width: number, height: number, assetIds: string[]) => {
-    const images = await Promise.all(assetIds.map(loadImageFromAssetId))
+    const images = await loadImagesFromAssetIds(assetIds)
+
     const projectSize = images.reduce(
       (maxSize, img) => ({
         width: Math.max(maxSize.width, img.width),
@@ -63,7 +64,6 @@ export default function NewProjectModal({ isOpen, close }: Props) {
             <button
               className={styles.blankCanvasOption}
               onClick={() => createProjectFrom(size.width * 500, size.height * 500, [])}
-              type="button"
             >
               <div
                 className={styles.screen}

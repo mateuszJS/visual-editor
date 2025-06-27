@@ -4,7 +4,6 @@ exports[`<NavButton> should render icon and text 1`] = `
 <div>
   <button
     class="navItem"
-    type="button"
   >
     <svg />
     Content

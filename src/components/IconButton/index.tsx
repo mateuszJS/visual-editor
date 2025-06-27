@@ -11,7 +11,7 @@ export default function IconButton({ className, children, onClick, ...buttonProp
   const classNames = cn(styles.iconButton, className)
 
   return (
-    <button className={classNames} onClick={onClick} type="button" {...buttonProps}>
+    <button className={classNames} onClick={onClick} {...buttonProps}>
       {children}
     </button>
   )

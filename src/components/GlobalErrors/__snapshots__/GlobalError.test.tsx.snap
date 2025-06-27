@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<NavLink> should render icon and text and close button 1`] = `
+exports[`<GlobalError /> should render error message when there is one 1`] = `
 <div>
   <section
     aria-live="assertive"
@@ -11,7 +11,7 @@ exports[`<NavLink> should render icon and text and close button 1`] = `
       class="errorIcon"
     />
     <p>
-      An error occurred
+      Test error message
     </p>
     <button
       aria-label="Close"

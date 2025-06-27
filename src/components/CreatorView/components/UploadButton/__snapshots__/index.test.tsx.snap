@@ -4,7 +4,6 @@ exports[`UploadButton should upload image button 1`] = `
 <div>
   <button
     class="navItem"
-    type="button"
   >
     <svg />
     Image

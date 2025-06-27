@@ -74,7 +74,6 @@ export default function NewProjectModal({ isOpen, close }: Props) {
             <button
               className={styles.blankCanvasOption}
               onClick={() => createProjectFrom(size.width * 500, size.height * 500, [])}
-              type="button"
             >
               <div
                 className={styles.screen}

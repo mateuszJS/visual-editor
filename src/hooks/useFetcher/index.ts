@@ -8,6 +8,9 @@ type Success<T> = [T] extends [never] ? Record<string, never> : { json: T }
 // Conditional return type based on whether T is provided
 type FetcherReturn<T> = [T] extends [never] ? void : T
 
+const DEFAULT_ERROR_MESSAGE =
+  'Something went wrong. Please try again. If the issue still persist, please contact support.'
+
 /**
  * Custom hook to fetch data with enhanced error handling and loading state management.
  * Returned response body can be retrived in two ways:
@@ -48,7 +51,7 @@ export default function useFetcher<T = never>() {
       const json = contentType === 'application/json' ? await response.json() : null
 
       if (!response.ok) {
-        setError(json?.error || 'Something went wrong')
+        setError(json?.error || DEFAULT_ERROR_MESSAGE)
       } else {
         if (json) {
           setSuccess({ json } as Success<T>)

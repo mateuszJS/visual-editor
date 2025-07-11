@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CreatorNav /> should render navigation items 1`] = `
+<div>
+  <nav
+    class="page navigation-bar"
+  >
+    <a
+      class="navItem active"
+      href="/"
+    >
+      <svg />
+    </a>
+    <a
+      class="navItem active"
+      href="/"
+    >
+      <svg />
+    </a>
+  </nav>
+</div>
+`;

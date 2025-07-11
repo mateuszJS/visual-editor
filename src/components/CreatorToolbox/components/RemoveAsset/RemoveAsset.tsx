@@ -1,7 +1,7 @@
 'use client'
 
 import TrashIcon from 'assets/trash-bin-icon.svg'
-import NavButton from '@/components/NavButton'
+import NavButton from '@/components/NavButton/NavButton'
 import useCreator from '@/hooks/useCreator/useCreator'
 
 export default function RemoveAsset() {

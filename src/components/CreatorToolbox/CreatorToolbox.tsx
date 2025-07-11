@@ -1,6 +1,6 @@
 'use client'
 
-import UploadAsset from './components/UploadAsset'
+import UploadAsset from './components/UploadAsset/UploadAsset'
 import RemoveAsset from './components/RemoveAsset/RemoveAsset'
 import useCreator from '@/hooks/useCreator/useCreator'
 

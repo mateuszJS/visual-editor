@@ -2,7 +2,7 @@
 
 import type { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 import { useEffect, useRef } from 'react'
-import useFetcher from '../useFetcher'
+import useFetcher from '../useFetcher/useFetcher'
 import nativeFetcher from '@/utils/fetcher'
 import { UpdateProjectPayload } from '@/app/api/utils/projectSchema'
 import { proxyMap } from 'valtio/utils'

@@ -2,9 +2,9 @@
 
 import useProject from '@/hooks/useProject/useProject'
 import { useParams } from 'next/navigation'
-import OverlayLoader from '@/components/OverlayLoader'
+import OverlayLoader from '@/components/OverlayLoader/OverlayLoader'
 import styles from './styles.module.css'
-import CreatorView from '@/components/CreatorView'
+import CreatorView from '@/components/CreatorView/CreatorView'
 import CreatorToolbox from '@/components/CreatorToolbox/CreatorToolbox'
 
 export default function Project() {

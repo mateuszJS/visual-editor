@@ -1,6 +1,6 @@
 import ErrorMarkIcon from 'assets/exclamation-mark-icon.svg'
 import CloseIcon from 'assets/close-icon.svg'
-import IconButton from '@/components/IconButton'
+import IconButton from '@/components/IconButton/IconButton'
 import styles from './ErrorToast.module.css'
 import cn from 'classnames'
 import { useState } from 'react'

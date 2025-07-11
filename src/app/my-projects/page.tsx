@@ -1,9 +1,9 @@
 'use client'
 
-import useProjectsList from '@/hooks/useProjectsList'
+import useProjectsList from '@/hooks/useProjectsList/useProjectsList'
 import styles from './styles.module.css'
-import ProjectPanel from '@/components/ProjectPanel'
-import Navigation from '@/components/Navigation'
+import ProjectPanel from '@/components/ProjectPanel/ProjectPanel'
+import Navigation from '@/components/Navigation/Navigation'
 
 export default function MyProjects() {
   const { loading, error, projectsList } = useProjectsList()

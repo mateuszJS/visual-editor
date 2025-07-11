@@ -1,5 +1,5 @@
-import Button from '@/components/Button'
-import Navigation from '@/components/Navigation'
+import Button from '@/components/Button/Button'
+import Navigation from '@/components/Navigation/Navigation'
 
 export default function Home() {
   return (

@@ -1,11 +1,11 @@
 'use client'
 
-import GoogleLogin from '@/components/auth/GoogleLogin'
+import GoogleLogin from '@/components/auth/GoogleLogin/GoogleLogin'
 import styles from './styles.module.css'
-import Button from '@/components/Button'
+import Button from '@/components/Button/Button'
 import { useRouter } from 'next/navigation'
-import useGuestOnly from '@/hooks/useGuestOnly'
-import Navigation from '@/components/Navigation'
+import useGuestOnly from '@/hooks/useGuestOnly/useGuestOnly'
+import Navigation from '@/components/Navigation/Navigation'
 
 export default function Login() {
   useGuestOnly()

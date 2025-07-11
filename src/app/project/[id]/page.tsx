@@ -5,21 +5,19 @@ import { useParams } from 'next/navigation'
 import OverlayLoader from '@/components/OverlayLoader/OverlayLoader'
 import styles from './styles.module.css'
 import CreatorView from '@/components/CreatorView/CreatorView'
+import CreatorNav from '@/components/CreatorNav/CreatorNav'
 import CreatorToolbox from '@/components/CreatorToolbox/CreatorToolbox'
 
 export default function Project() {
   const params = useParams<{ id: string }>()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { loading, error, project } = useProject(params.id)
+  const { loading, project } = useProject(params.id)
 
   return (
-    <div className="page">
-      <main className={styles.page}>
-        <OverlayLoader loading={loading} />
-        <div className={styles.topNavigtion}>Navigation</div>
-        {project && <CreatorView project={project} />}
-      </main>
+    <main className={styles.page}>
+      <OverlayLoader loading={loading} />
+      <CreatorNav />
+      {project && <CreatorView project={project} />}
       <CreatorToolbox />
-    </div>
+    </main>
   )
 }

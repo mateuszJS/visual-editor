@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import cn from 'classnames'
 import styles from './styles.module.css'
-import Toolbox from './components/Toolbox'
-import useCreator from './useCreator/useCreator'
+import useCreator from '@/hooks/useCreator/useCreator'
 import type { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 
 interface Props {
@@ -20,11 +20,5 @@ export default function CreatorView({ project }: Props) {
     return creator.destroy.bind(null, canvas)
   }, [])
 
-  return (
-    <div className={styles.root}>
-      <canvas className={styles.canvas} ref={canvasRef} />
-      {creator.isReady ? <Toolbox /> : <div>small sub navigation</div>}
-      <div>navigation</div>
-    </div>
-  )
+  return <canvas className={cn(styles.root, 'child-overflow-fix')} ref={canvasRef} />
 }

@@ -1,5 +1,0 @@
-.toolbox {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 calc(var(--global-padding) * 0.5) 1.2rem;
-}

@@ -1,9 +1,13 @@
-import Button from "@/components/Button";
+import Button from '@/components/Button'
+import Navigation from '@/components/Navigation'
 
 export default function Home() {
   return (
-    <main>
-      <Button expand>Start a new Project</Button>
-    </main>
-  );
+    <div className="page">
+      <main>
+        <Button expand>Start a new Project</Button>
+      </main>
+      <Navigation />
+    </div>
+  )
 }

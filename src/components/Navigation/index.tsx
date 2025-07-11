@@ -4,7 +4,6 @@ import HomeIcon from 'assets/home-icon.svg'
 import CompassIcon from 'assets/compass-icon.svg'
 import FolderIcon from 'assets/folder-icon.svg'
 import ProfileIcon from 'assets/profile-icon.svg'
-import styles from './styles.module.css'
 import userStore from '@/hooks/userStore'
 import NavItem from '@/components/NavLink'
 import CreateButton from '@/components/CreateButton'
@@ -14,7 +13,7 @@ export default function Navigation() {
   const { user } = useSnapshot(userStore)
 
   return (
-    <nav className={styles.nav}>
+    <nav className="navigation-bar">
       <NavItem href="/">
         <HomeIcon />
         Home

@@ -2,13 +2,17 @@
 
 import Logout from '@/components/auth/Logout'
 import useAuthOnly from '@/hooks/useAuthOnly'
+import Navigation from '@/components/Navigation'
 
 export default function Profile() {
   useAuthOnly()
 
   return (
-    <main>
-      <Logout />
-    </main>
+    <div className="page">
+      <main>
+        <Logout />
+      </main>
+      <Navigation />
+    </div>
   )
 }

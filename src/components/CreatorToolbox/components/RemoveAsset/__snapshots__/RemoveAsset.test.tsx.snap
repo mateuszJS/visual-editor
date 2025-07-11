@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RemoveAsset should upload image button 1`] = `
+<div>
+  <button
+    class="navItem"
+  >
+    <svg />
+    Remove
+  </button>
+</div>
+`;

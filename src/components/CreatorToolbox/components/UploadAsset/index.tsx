@@ -5,10 +5,10 @@ import NavButton from '@/components/NavButton'
 import { useState } from 'react'
 import ActionSheets from '@/components/ActionSheets'
 import UploadAssets from '@/components/UploadAssets'
-import useCreator from '@/components/CreatorView/useCreator/useCreator'
+import useCreator from '@/hooks/useCreator/useCreator'
 import loadImagesFromAssetIds from '@/utils/loadImagesFromAssetIds'
 
-export default function UploadButton() {
+export default function UploadAsset() {
   const [usUploadShown, setIsUploadShown] = useState(false)
   const { creator } = useCreator()
 

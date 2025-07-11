@@ -1,11 +1,11 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
 import UploadButton from '.'
-import useCreator from '../../useCreator/useCreator'
+import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 
-describe('UploadButton', () => {
+describe('UploadAsset', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
     await act(() => {

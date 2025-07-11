@@ -5,4 +5,5 @@
   border-radius: 0.5rem;
   background: var(--project-color);
   padding: 1rem;
+  word-break: break-word;
 }

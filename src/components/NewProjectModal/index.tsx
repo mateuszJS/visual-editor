@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 import OverlayLoader from '../OverlayLoader'
 import ActionSheets from '../ActionSheets'
 import useProject from '@/hooks/useProject/useProject'
-import useCreator from '../CreatorView/useCreator/useCreator'
+import useCreator from '@/hooks/useCreator/useCreator'
 
 interface Props {
   isOpen: boolean

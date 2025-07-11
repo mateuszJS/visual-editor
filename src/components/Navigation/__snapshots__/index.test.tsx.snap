@@ -3,7 +3,7 @@
 exports[`<Navigation> should render five standard links for unautenticated user 1`] = `
 <div>
   <nav
-    class="nav"
+    class="navigation-bar"
   >
     <a
       class="navItem"

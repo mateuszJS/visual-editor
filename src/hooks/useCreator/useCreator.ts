@@ -11,12 +11,14 @@ interface CreatorStore {
   creator: MagicRender | null
   projectId: string | null
   initialAssets: { projectId: string; assets: HTMLImageElement[] } | null
+  selectedAssetId: number | null
 }
 
 const creatorState = proxy<CreatorStore>({
   creator: null,
   projectId: null,
   initialAssets: null,
+  selectedAssetId: null,
 })
 
 /*
@@ -30,6 +32,7 @@ function useCreator() {
 
   return {
     isReady: !!stateSnapshot.creator,
+    selectedAssetId: stateSnapshot.selectedAssetId,
     get creator() {
       if (stateSnapshot.creator === null) throw new Error('Creator is not initialized')
       return stateSnapshot.creator
@@ -45,9 +48,16 @@ function useCreator() {
 
       canvas.setAttribute('data-connected', '')
 
-      const creator = await initMagicRender(canvas, project.assets, (assets) => {
-        updateProject(project.id, { assets })
-      })
+      const creator = await initMagicRender(
+        canvas,
+        project.assets,
+        (assets) => {
+          updateProject(project.id, { assets })
+        },
+        (assetId) => {
+          creatorState.selectedAssetId = assetId || null
+        }
+      )
       // check if canvas is still used(user might already left the page)
       // and destory cannot be called before creator is initialized
       if (creatorState.initialAssets?.projectId === project.id) {

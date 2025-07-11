@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Outfit } from 'next/font/google'
-import Navigation from '@/components/Navigation'
 import './globals.css'
 import InitializeData from '@/components/InitializeData'
 import GlobalErrors from '@/components/GlobalErrors/GlobalErrors'
@@ -25,8 +24,7 @@ export default function RootLayout({
       <body className={`${outfit.variable}`}>
         <div id="non-modal-content">
           <InitializeData />
-          <div className="page">{children}</div>
-          <Navigation />
+          {children}
           <GlobalErrors />
         </div>
       </body>

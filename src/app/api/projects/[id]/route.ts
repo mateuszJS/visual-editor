@@ -3,7 +3,6 @@ import { SessionPayload, withSession } from '@/app/api/wrappers/session'
 import getResponseError from '@/app/api/utils/getResponseError'
 import sanitizeProjectData from '@/app/api/utils/sanitizeProjectData'
 import supabaseClient from '@/app/api/supabaseClient'
-import isValidId from '../../utils/isValidId'
 import { updateProjectSchema } from '../../utils/projectSchema'
 
 async function getProject(
@@ -13,15 +12,14 @@ async function getProject(
 ) {
   const { id } = await context.params
 
-  if (!isValidId(id)) {
-    return getResponseError('Invalid project id.')
+  if (!id) {
+    return getResponseError('No id provided.')
   }
 
-  const projectId = Number(id)
   const { data, error } = await supabaseClient
     .from('projects')
     .select()
-    .eq('id', projectId)
+    .eq('id', id)
     .eq('owner_id', session.userId)
     .single()
 
@@ -41,8 +39,8 @@ async function patchProject(
 ) {
   const { id } = await context.params
 
-  if (!isValidId(id)) {
-    return getResponseError('Invalid project id.')
+  if (!id) {
+    return getResponseError('No id provided.')
   }
 
   const requestPayload = await request.json()
@@ -52,11 +50,10 @@ async function patchProject(
     return getResponseError(inputError.message)
   }
 
-  const projectId = Number(id)
   const { error } = await supabaseClient
     .from('projects')
     .update(input)
-    .eq('id', projectId)
+    .eq('id', id)
     .eq('owner_id', session.userId)
     .single()
 

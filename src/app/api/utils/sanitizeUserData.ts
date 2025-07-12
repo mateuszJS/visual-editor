@@ -6,7 +6,7 @@ export type SanitizedUser = Pick<Tables<'users'>, 'email' | 'name' | 'avatar' | 
 
 export default function sanitizeUserData(data: Tables<'users'>): SanitizedUser {
   return {
-    id: data.id.toString(),
+    id: data.id,
     email: data.email,
     name: data.name,
     avatar: data.avatar,

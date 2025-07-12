@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import supabaseClient from '../../supabaseClient'
 import getResponseError from '../../utils/getResponseError'
 import { SessionPayload, withSession } from '@/app/api/wrappers/session'
-import isValidId from '../../utils/isValidId'
 
 async function downloadProjectAsset(
   session: SessionPayload,
@@ -11,15 +10,11 @@ async function downloadProjectAsset(
 ) {
   const { id } = await context.params
 
-  if (!isValidId(id)) {
-    return getResponseError('Invalid id.')
-  }
-
   const [{ error: dbError }, { data: storageData, error: storageError }] = await Promise.all([
     supabaseClient
       .from('project_assets')
       .select()
-      .eq('id', Number(id))
+      .eq('id', id)
       .eq('owner_id', session.userId)
       .single(),
     supabaseClient.storage.from('project-assets').download(id),

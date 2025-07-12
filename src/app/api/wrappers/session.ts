@@ -12,7 +12,7 @@ const secretKey = process.env.SESSION_SECRET // generated with: openssl rand -ba
 const encodedKey = new TextEncoder().encode(secretKey)
 
 export type SessionPayload = {
-  userId: number
+  userId: string
 }
 
 type RawSessionPayload = {
@@ -21,10 +21,10 @@ type RawSessionPayload = {
 
 const SESSION_LIFETIME_DAYS = 7
 
-export async function createSessionCookie(userId: number): Promise<ResponseCookie> {
+export async function createSessionCookie(userId: string): Promise<ResponseCookie> {
   const tokenLifetime = Date.now() + SESSION_LIFETIME_DAYS * 24 * 60 * 60 * 1000
   const expiresAt = new Date(tokenLifetime)
-  const session = await encrypt({ userId: userId.toString() })
+  const session = await encrypt({ userId })
 
   return {
     name: 'session',
@@ -53,7 +53,7 @@ async function decrypt(session = ''): Promise<SessionPayload | undefined | { err
     })
 
     return {
-      userId: Number(payload.userId),
+      userId: payload.userId,
     }
   } catch (error: unknown) {
     const isSessionExpired = (error as { code: string }).code === 'ERR_JWT_EXPIRED'

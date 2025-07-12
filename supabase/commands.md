@@ -8,6 +8,8 @@ supabase db diff -f create_employees_table --project-id dstjhnkpqxtxnnbfbwxw
 
 if you are just creating initial version(migration) and keep modifying it, use:
 `supabase db reset`
+and to do it remotely:
+`npx supabase@beta db reset --linked`
 
 # Deploy schema:
 

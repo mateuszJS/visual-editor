@@ -25,15 +25,13 @@ async function uploadProjectAsset(session: SessionPayload, request: NextRequest)
   }
 
   const results = await Promise.all(
-    dbData.map((item, i) =>
-      supabaseClient.storage.from('project-assets').upload(item.id.toString(), files[i])
-    )
+    dbData.map((item, i) => supabaseClient.storage.from('project-assets').upload(item.id, files[i]))
   )
 
   const successfullyUploadedIds = results
     .map((result, i) => ({ ...result, id: dbData[i].id }))
     .filter((result) => !result.error)
-    .map((result) => result.id.toString())
+    .map((result) => result.id)
 
   const filesWhichUploadFailed = results
     .map((result, i) => ({ ...result, file: files[i] }))

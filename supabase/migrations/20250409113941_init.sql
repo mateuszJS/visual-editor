@@ -1,5 +1,5 @@
 create table users (
-  id bigint generated always as identity primary key,
+  id uuid default gen_random_uuid() primary key,
   name text,
   avatar text,
   projects bigint array default '{}', -- would be a foregin key if array field supports foregin keys
@@ -23,9 +23,9 @@ create index idx_users_oidc_google_id on users (oidc_google_id)
 where oidc_google_id is not null;
 
 create table projects (
-  id bigint generated always as identity primary key,
+  id uuid default gen_random_uuid() primary key,
   name text,
-  owner_id bigint references users not null,
+  owner_id uuid references users not null,
   created_at timestamp default now(),
   assets jsonb array default '{}' not null,
   last_updated timestamp default now() not null,
@@ -35,8 +35,8 @@ create table projects (
 
 
 create table project_assets (
-  id bigint generated always as identity primary key,
-  owner_id bigint references users not null
+  id uuid default gen_random_uuid() primary key,
+  owner_id uuid references users not null
 );
 
 insert into storage.buckets

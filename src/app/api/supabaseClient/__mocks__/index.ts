@@ -15,7 +15,7 @@ export function __getCleanDBMock() {
           device_model: 'Macintosh',
           device_type: null,
           email: 'first-user@example.com',
-          id: 1,
+          id: '1',
           is_bot: false,
           language: 'en-US',
           login_method: 'google',
@@ -31,7 +31,7 @@ export function __getCleanDBMock() {
           device_model: 'Macintosh',
           device_type: null,
           email: 'second-user@example.com',
-          id: 2,
+          id: '2',
           is_bot: false,
           language: 'dk',
           login_method: 'google',
@@ -42,39 +42,39 @@ export function __getCleanDBMock() {
       ] as Row[],
       projects: [
         {
-          id: 1,
+          id: '1',
           name: 'First Project',
           last_updated: '2023-10-01T12:00:00Z',
           height: 600,
           width: 800,
-          owner_id: 1,
+          owner_id: '1',
           assets: [],
         },
         {
-          id: 2,
+          id: '2',
           name: 'Second Project',
           last_updated: '2023-10-02T12:00:00Z',
           height: 1200,
           width: 650,
-          owner_id: 1,
+          owner_id: '1',
           assets: [
             { points: [0, 0, 100, 100], type: 'image', url: 'https://example.com/image.png' },
           ],
         },
         {
-          id: 3,
+          id: '3',
           name: 'Third Project',
           last_updated: '2023-10-03T12:00:00Z',
           height: 900,
           width: 100,
-          owner_id: 2,
+          owner_id: '2',
           assets: [],
         },
       ] as Row[],
       project_assets: [
-        { id: 1, owner_id: 1 },
-        { id: 3, owner_id: 1 },
-        { id: 4, owner_id: 2 },
+        { id: '1', owner_id: '1' },
+        { id: '3', owner_id: '1' },
+        { id: '4', owner_id: '2' },
       ] as Row[],
     },
     storage: {
@@ -155,7 +155,7 @@ const supabaseClientMock = {
   ) => {
     const rows = Array.isArray(data) ? data : [data]
     const newRows = rows.map((row, i) => ({
-      id: dbMock.tables[tableId].length + 1 + i,
+      id: (dbMock.tables[tableId].length + 1 + i).toString(),
       ...Object.fromEntries(
         Object.entries(row).map(([key, value]) => [key, value === undefined ? null : value])
       ),

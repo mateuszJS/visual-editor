@@ -34,12 +34,12 @@ describe('uploadProjectAsset', () => {
     const expectedDB = __getCleanDBMock()
     expectedDB.tables.project_assets.push(
       {
-        id: 4,
-        owner_id: 1,
+        id: '4',
+        owner_id: '1',
       },
       {
-        id: 5,
-        owner_id: 1,
+        id: '5',
+        owner_id: '1',
       }
     )
     expectedDB.storage['project-assets']['4'] = firstFile

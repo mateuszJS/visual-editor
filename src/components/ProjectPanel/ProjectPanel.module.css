@@ -3,7 +3,7 @@
   align-items: flex-end;
   aspect-ratio: 1;
   border-radius: 0.5rem;
-  background: var(--project-color);
+  background: #555555;
   padding: 1rem;
   word-break: break-word;
 }

@@ -10,11 +10,11 @@ export type SanitizedProjectMeta = Pick<
 
 export default function sanitizeProjectMetaData(data: Tables<'projects'>): SanitizedProjectMeta {
   return {
-    id: data.id.toString(),
+    id: data.id,
     name: data.name,
     last_updated: data.last_updated,
     height: data.height,
     width: data.width,
-    owner_id: data.owner_id.toString(),
+    owner_id: data.owner_id,
   }
 }

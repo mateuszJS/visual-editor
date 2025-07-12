@@ -36,20 +36,6 @@ describe('downloadProjectAsset', () => {
     })
   })
 
-  test('returns error if id is invalid', async () => {
-    const response = await GET(
-      createMockNextRequest({
-        url: 'https://example.com/api/project-assets/invalid-id',
-      }),
-      mockNextContext({ id: 'invalid-id' })
-    )
-    const json = await response.json()
-
-    expect(json).toEqual({
-      error: 'Invalid id.',
-    })
-  })
-
   test('returns error if there is an error from the database', async () => {
     __setErrorQueue([new Error('Error during upload')])
     const response = await GET(

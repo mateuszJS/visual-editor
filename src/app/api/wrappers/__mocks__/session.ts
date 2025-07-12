@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { SessionPayload } from '../session'
 
 const session: SessionPayload = {
-  userId: 1,
+  userId: '1',
 }
 
 export function withSession(

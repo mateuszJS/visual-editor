@@ -36,16 +36,16 @@ export type Database = {
     Tables: {
       project_assets: {
         Row: {
-          id: number
-          owner_id: number
+          id: string
+          owner_id: string
         }
         Insert: {
-          id?: never
-          owner_id: number
+          id?: string
+          owner_id: string
         }
         Update: {
-          id?: never
-          owner_id?: number
+          id?: string
+          owner_id?: string
         }
         Relationships: [
           {
@@ -62,30 +62,30 @@ export type Database = {
           assets: Json[]
           created_at: string | null
           height: number
-          id: number
+          id: string
           last_updated: string
           name: string | null
-          owner_id: number
+          owner_id: string
           width: number
         }
         Insert: {
           assets?: Json[]
           created_at?: string | null
           height: number
-          id?: never
+          id?: string
           last_updated?: string
           name?: string | null
-          owner_id: number
+          owner_id: string
           width: number
         }
         Update: {
           assets?: Json[]
           created_at?: string | null
           height?: number
-          id?: never
+          id?: string
           last_updated?: string
           name?: string | null
-          owner_id?: number
+          owner_id?: string
           width?: number
         }
         Relationships: [
@@ -108,7 +108,7 @@ export type Database = {
           device_model: string | null
           device_type: string | null
           email: string
-          id: number
+          id: string
           is_bot: boolean
           language: string | null
           last_login: string | null
@@ -127,7 +127,7 @@ export type Database = {
           device_model?: string | null
           device_type?: string | null
           email: string
-          id?: never
+          id?: string
           is_bot: boolean
           language?: string | null
           last_login?: string | null
@@ -146,7 +146,7 @@ export type Database = {
           device_model?: string | null
           device_type?: string | null
           email?: string
-          id?: never
+          id?: string
           is_bot?: boolean
           language?: string | null
           last_login?: string | null

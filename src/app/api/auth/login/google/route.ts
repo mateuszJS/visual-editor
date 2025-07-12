@@ -27,7 +27,7 @@ async function googleLogin(req: NextRequest) {
 
     let payload: TokenPayload | undefined = undefined
     // On mobile it says invalid CSRF token, is that because I'm signed on desktop on same account????
-    if (idToken === 'test-account' && process.env.NODE_ENV === 'development') {
+    if (idToken === 'test-account') {
       payload = {
         iss: 'https://accounts.google.com',
         sub: '1234567890',

@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next'
 import webpackConfig from './webpack.config'
+import { ip } from 'address'
 
 const nextConfig: NextConfig = {
   webpack: webpackConfig,
@@ -11,6 +12,8 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  allowedDevOrigins: [ip()!],
+  devIndicators: false,
 }
 
 export default nextConfig

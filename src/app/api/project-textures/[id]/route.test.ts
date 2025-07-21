@@ -10,7 +10,7 @@ describe('downloadProjectAsset', () => {
   test('returns blob if asset id is correct and file exists', async () => {
     const response = await GET(
       createMockNextRequest({
-        url: 'https://example.com/api/project-assets/1',
+        url: 'https://example.com/api/project-textures/1',
       }),
       mockNextContext({ id: '1' })
     )
@@ -25,7 +25,7 @@ describe('downloadProjectAsset', () => {
   test('returns error if there is no asset with passed id', async () => {
     const response = await GET(
       createMockNextRequest({
-        url: 'https://example.com/api/project-assets/2',
+        url: 'https://example.com/api/project-textures/2',
       }),
       mockNextContext({ id: '2' })
     )
@@ -40,7 +40,7 @@ describe('downloadProjectAsset', () => {
     __setErrorQueue([new Error('Error during upload')])
     const response = await GET(
       createMockNextRequest({
-        url: 'https://example.com/api/project-assets/1',
+        url: 'https://example.com/api/project-textures/1',
       }),
       mockNextContext({ id: '1' })
     )
@@ -55,7 +55,7 @@ describe('downloadProjectAsset', () => {
     __setErrorQueue([null, new Error('Error during upload')])
     const response = await GET(
       createMockNextRequest({
-        url: 'https://example.com/api/project-assets/1',
+        url: 'https://example.com/api/project-textures/1',
       }),
       mockNextContext({ id: '1' })
     )
@@ -69,7 +69,7 @@ describe('downloadProjectAsset', () => {
   test('returns error if user is not the owner of the asset', async () => {
     const response = await GET(
       createMockNextRequest({
-        url: 'https://example.com/api/project-assets/4',
+        url: 'https://example.com/api/project-textures/4',
       }),
       mockNextContext({ id: '4' })
     )
@@ -83,7 +83,7 @@ describe('downloadProjectAsset', () => {
   test('returns error if asset does not exist in storage', async () => {
     const response = await GET(
       createMockNextRequest({
-        url: 'https://example.com/api/project-assets/3',
+        url: 'https://example.com/api/project-textures/3',
       }),
       mockNextContext({ id: '3' })
     )

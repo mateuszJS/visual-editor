@@ -12,7 +12,7 @@ async function uploadProjectAsset(session: SessionPayload, request: NextRequest)
   }
 
   const { data: dbData, error: dbError } = await supabaseClient
-    .from('project_assets')
+    .from('project_textures')
     .insert(
       new Array(files.length).fill({
         owner_id: session.userId,
@@ -25,7 +25,9 @@ async function uploadProjectAsset(session: SessionPayload, request: NextRequest)
   }
 
   const results = await Promise.all(
-    dbData.map((item, i) => supabaseClient.storage.from('project-assets').upload(item.id, files[i]))
+    dbData.map((item, i) =>
+      supabaseClient.storage.from('project-textures').upload(item.id, files[i])
+    )
   )
 
   const successfullyUploadedIds = results

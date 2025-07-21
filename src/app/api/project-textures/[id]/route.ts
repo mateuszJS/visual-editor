@@ -12,12 +12,12 @@ async function downloadProjectAsset(
 
   const [{ error: dbError }, { data: storageData, error: storageError }] = await Promise.all([
     supabaseClient
-      .from('project_assets')
+      .from('project_textures')
       .select()
       .eq('id', id)
       .eq('owner_id', session.userId)
       .single(),
-    supabaseClient.storage.from('project-assets').download(id),
+    supabaseClient.storage.from('project-textures').download(id),
   ])
 
   if (storageError || dbError) {

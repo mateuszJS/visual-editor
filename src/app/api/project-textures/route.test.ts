@@ -32,7 +32,7 @@ describe('uploadProjectAsset', () => {
     })
 
     const expectedDB = __getCleanDBMock()
-    expectedDB.tables.project_assets.push(
+    expectedDB.tables.project_textures.push(
       {
         id: '4',
         owner_id: '1',
@@ -42,8 +42,8 @@ describe('uploadProjectAsset', () => {
         owner_id: '1',
       }
     )
-    expectedDB.storage['project-assets']['4'] = firstFile
-    expectedDB.storage['project-assets']['5'] = secondFile
+    expectedDB.storage['project-textures']['4'] = firstFile
+    expectedDB.storage['project-textures']['5'] = secondFile
     expect(dbMock).toEqual(expectedDB)
   })
 

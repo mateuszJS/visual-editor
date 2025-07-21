@@ -71,14 +71,14 @@ export function __getCleanDBMock() {
           assets: [],
         },
       ] as Row[],
-      project_assets: [
+      project_textures: [
         { id: '1', owner_id: '1' },
         { id: '3', owner_id: '1' },
         { id: '4', owner_id: '2' },
       ] as Row[],
     },
     storage: {
-      'project-assets': {
+      'project-textures': {
         '1': firstImage,
       } as Record<string, File>,
     },

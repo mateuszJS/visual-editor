@@ -13,7 +13,7 @@ async function loadImage(id: string): Promise<HTMLImageElement> {
       reject(new Error(`Failed to load image from asset ID ${id}: ${getErrorMessage(err)}`))
     }
 
-    img.src = `/api/project-assets/${id}`
+    img.src = `/api/project-textures/${id}`
   })
 }
 

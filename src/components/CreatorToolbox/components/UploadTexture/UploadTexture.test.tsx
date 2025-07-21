@@ -1,11 +1,11 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
-import UploadAsset from './UploadAsset'
+import UploadTexture from './UploadTexture'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 
-describe('UploadAsset', () => {
+describe('UploadTexture', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
     await act(() => {
@@ -16,12 +16,12 @@ describe('UploadAsset', () => {
   })
 
   it('should upload image button', () => {
-    const { container } = render(<UploadAsset />)
+    const { container } = render(<UploadTexture />)
     expect(container).toMatchSnapshot()
   })
 
   it('renders upload modal when clicked', async () => {
-    render(<UploadAsset />)
+    render(<UploadTexture />)
 
     const uploadBtn = screen.getByRole('button', {
       name: /image/i,
@@ -36,7 +36,7 @@ describe('UploadAsset', () => {
   })
 
   it('uploads files and adds to the project', async () => {
-    render(<UploadAsset />)
+    render(<UploadTexture />)
     const uploadBtn = screen.getByRole('button', {
       name: /image/i,
     })

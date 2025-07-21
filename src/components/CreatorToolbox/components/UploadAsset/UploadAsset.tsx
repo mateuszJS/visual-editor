@@ -16,7 +16,7 @@ export default function UploadAsset() {
     const images = await loadImagesFromAssetIds(assetIds)
 
     images.forEach((img) => {
-      creator.addImage(img)
+      creator.addImage(img.src)
     })
 
     setIsUploadShown(false)

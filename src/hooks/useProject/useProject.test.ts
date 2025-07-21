@@ -179,7 +179,7 @@ describe('useProject', () => {
       })
     })
 
-    it('successfully returns updated proejct from the hook', async () => {
+    it('successfully returns updated project from the hook', async () => {
       const { result } = renderHook(() => useProject())
 
       await act(() => {

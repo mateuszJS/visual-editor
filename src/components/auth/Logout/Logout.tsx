@@ -14,6 +14,7 @@ export default function Logout() {
       },
       () => {
         userStore.user = null
+        window.location.reload()
       }
     )
   }

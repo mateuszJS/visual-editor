@@ -10,7 +10,7 @@ import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 const project = getSanitizedProject()
 
 describe('useCreator', () => {
-  it('creator is ready only after initalization', async () => {
+  it('creator is ready only after initialization', async () => {
     const { result } = renderHook(useCreator)
 
     await act(async () => {
@@ -94,7 +94,7 @@ describe('useCreator', () => {
     expect(creatorFirstInit).toBe(creatorSecondInit)
   })
 
-  it('destroying destroys connection between creator and canvas and resets all data to inital state', async () => {
+  it('destroying destroys connection between creator and canvas and resets all data to initial state', async () => {
     // currently this test case tests the mock rather then real implementation,
     // but once WebGPU is supproted in github acitons we can remvoe the mock and start testign real implementation
     const { result } = renderHook(useCreator)
@@ -289,7 +289,7 @@ describe('useCreator', () => {
     expect(secondCanvas.hasAttribute('data-magic-render-linked')).toBe(true)
   })
 
-  describe('providing inital assets to creator', () => {
+  describe('providing initial assets to creator', () => {
     it('with matching project id assets will be used right after creator initialization', async () => {
       const { result } = renderHook(useCreator)
 

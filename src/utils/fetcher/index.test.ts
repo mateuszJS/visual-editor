@@ -72,7 +72,7 @@ describe('fetcher', () => {
         return HttpResponse.json(null, { status: 401 })
       })
     )
-    await expect(fetcher('/api/me')).rejects.toThrow('User is not autohrized.')
+    await expect(fetcher('/api/me')).rejects.toThrow('User is not authorized.')
     expect(window.location.replace).toHaveBeenCalledWith('/login')
 
     window.location.replace = replace

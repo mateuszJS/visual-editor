@@ -39,7 +39,7 @@ export default async function fetcher(
     if (!disableAuth401Redirect && response.status === 401) {
       window.location.replace('/login')
       /* app reload is used to clear all JS memory data, hide all modals(like new project modal) */
-      throw new Error('User is not autohrized.')
+      throw new Error('User is not authorized.')
     }
 
     return response

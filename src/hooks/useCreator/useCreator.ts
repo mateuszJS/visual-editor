@@ -2,7 +2,10 @@
 
 import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 import useProject from '@/hooks/useProject/useProject'
-import initMagicRender, { SerializedOutputAsset } from '@mateuszjs/magic-render'
+import initMagicRender, {
+  SerializedInputAsset,
+  SerializedOutputAsset,
+} from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
@@ -97,7 +100,7 @@ function useCreator() {
           ? creatorState.initialAssets.assets.map((img) => ({ url: img.src }))
           : project.assets
 
-      creator.resetAssets(initialAssets, true)
+      creator.resetAssets(initialAssets as SerializedInputAsset[], true)
       creatorState.initialAssets = null
 
       if (canvas.isConnected) {

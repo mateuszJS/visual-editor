@@ -2,7 +2,7 @@
 
 import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 import useProject from '@/hooks/useProject/useProject'
-import initMagicRender from '@mateuszjs/magic-render'
+import initMagicRender, { SerializedOutputAsset } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
@@ -12,6 +12,8 @@ interface CreatorStore {
   projectId: string | null
   initialAssets: { projectId: string; assets: HTMLImageElement[] } | null
   selectedAssetId: number | null
+  historySnapshots: SerializedOutputAsset[][]
+  historySnapshotIndex: number
 }
 
 const creatorState = proxy<CreatorStore>({
@@ -19,6 +21,8 @@ const creatorState = proxy<CreatorStore>({
   projectId: null,
   initialAssets: null,
   selectedAssetId: null,
+  historySnapshots: [],
+  historySnapshotIndex: 0,
 })
 
 /*
@@ -26,13 +30,35 @@ const creatorState = proxy<CreatorStore>({
   Cannot accept any arguments because might be used in a very deep nested component inside creator view.
 */
 
+function serializeAssets(assets: SerializedOutputAsset[]) {
+  return assets.map((asset) => ({
+    points: asset.points,
+    url: asset.url,
+  }))
+}
+
 function useCreator() {
   const stateSnapshot = useSnapshot(creatorState)
   const { updateProject } = useProject()
 
+  const canUndo = stateSnapshot.historySnapshotIndex > 0
+  const canRedo = stateSnapshot.historySnapshots.length - 1 > stateSnapshot.historySnapshotIndex
+
+  function setHistoricSnapshot(snapshotIndex: number) {
+    creatorState.historySnapshotIndex = snapshotIndex
+    const assets = stateSnapshot.historySnapshots[
+      creatorState.historySnapshotIndex
+    ] as SerializedOutputAsset[]
+    creatorState.creator!.resetAssets(assets)
+
+    updateProject(stateSnapshot.projectId!, { assets: serializeAssets(assets) })
+  }
+
   return {
     isReady: !!stateSnapshot.creator,
     selectedAssetId: stateSnapshot.selectedAssetId,
+    undo: canUndo ? () => setHistoricSnapshot(stateSnapshot.historySnapshotIndex - 1) : null,
+    redo: canRedo ? () => setHistoricSnapshot(stateSnapshot.historySnapshotIndex + 1) : null,
     get creator() {
       if (stateSnapshot.creator === null) throw new Error('Creator is not initialized')
       return stateSnapshot.creator
@@ -50,22 +76,29 @@ function useCreator() {
 
       const creator = await initMagicRender(
         canvas,
-        project.assets,
         (assets) => {
-          updateProject(project.id, { assets })
+          if (creatorState.historySnapshotIndex < creatorState.historySnapshots.length - 1) {
+            creatorState.historySnapshots.splice(creatorState.historySnapshotIndex + 1)
+          }
+
+          creatorState.historySnapshots.push(ref(assets))
+          creatorState.historySnapshotIndex = creatorState.historySnapshots.length - 1
+
+          updateProject(project.id, { assets: serializeAssets(assets) })
         },
         (assetId) => {
           creatorState.selectedAssetId = assetId || null
-        }
+        },
+        () => {}
       )
-      // check if canvas is still used(user might already left the page)
-      // and destory cannot be called before creator is initialized
-      if (creatorState.initialAssets?.projectId === project.id) {
-        creatorState.initialAssets.assets.forEach((asset) => {
-          creator.addImage(asset)
-        })
-        creatorState.initialAssets = null
-      }
+
+      const initialAssets =
+        creatorState.initialAssets?.projectId === project.id
+          ? creatorState.initialAssets.assets.map((img) => ({ url: img.src }))
+          : project.assets
+
+      creator.resetAssets(initialAssets, true)
+      creatorState.initialAssets = null
 
       if (canvas.isConnected) {
         creatorState.creator = ref(creator)
@@ -80,6 +113,9 @@ function useCreator() {
         creatorState.creator?.destroy()
         creatorState.creator = null
         creatorState.projectId = null
+        creatorState.selectedAssetId = null
+        creatorState.historySnapshots = []
+        creatorState.historySnapshotIndex = 0
       }
     },
     setInitialAssets(projectId: string, assets: HTMLImageElement[]) {

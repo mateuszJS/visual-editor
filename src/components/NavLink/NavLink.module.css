@@ -26,3 +26,8 @@
   opacity: 1;
   font-weight: 500;
 }
+
+.navItem[disabled] {
+  cursor: not-allowed;
+  opacity: 0.3;
+}

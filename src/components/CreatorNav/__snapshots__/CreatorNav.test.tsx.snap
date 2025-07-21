@@ -3,7 +3,7 @@
 exports[`<CreatorNav /> should render navigation items 1`] = `
 <div>
   <nav
-    class="page navigation-bar"
+    class="root navigation-bar"
   >
     <a
       class="navItem active"
@@ -11,8 +11,22 @@ exports[`<CreatorNav /> should render navigation items 1`] = `
     >
       <svg />
     </a>
+    <button
+      class="navItem"
+      disabled=""
+    >
+      <svg />
+    </button>
+    <button
+      class="navItem"
+      disabled=""
+    >
+      <svg
+        transform="scale(-1, 1)"
+      />
+    </button>
     <a
-      class="navItem active"
+      class="navItem ml-auto active"
       href="/"
     >
       <svg />

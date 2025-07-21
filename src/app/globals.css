@@ -85,8 +85,12 @@ a {
   margin-block-start: 64px;
 }
 
-/* .ms-auto { margin-inline-start: auto; }
-.me-auto { margin-inline-end: auto; } */
+.ml-auto {
+  margin-inline-start: auto;
+}
+.mr-auto {
+  margin-inline-end: auto;
+}
 
 .mb-2 {
   margin-block-end: 2px;

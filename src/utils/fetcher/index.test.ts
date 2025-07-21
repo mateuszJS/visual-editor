@@ -59,11 +59,24 @@ describe('fetcher', () => {
     expect(spy.receivedRequest.headers.get('x-csrf-token')).toBe('test-csrf-token')
   })
 
-  // it('should redirect to /login on 401 status if withRedirect is true(default)', async () => {
-  //   mockUser.mockImplementationOnce(() => HttpResponse.json(null, { status: 401 }))
-  //   await expect(fetcher('/api/me')).rejects.toThrow('User is not autohrized.')
-  // })
-  // Testcase above is commented out on purpose, read the reasons in index.ts file of fetcher
+  it('should redirect to /login on 401 status if withRedirect is true(default)', async () => {
+    const { replace } = window.location
+
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: { ...window.location, replace: jest.fn() },
+    })
+
+    server.use(
+      http.get('/api/me', () => {
+        return HttpResponse.json(null, { status: 401 })
+      })
+    )
+    await expect(fetcher('/api/me')).rejects.toThrow('User is not autohrized.')
+    expect(window.location.replace).toHaveBeenCalledWith('/login')
+
+    window.location.replace = replace
+  })
 
   it('should not redirect on 401 status if disableAuth401Redirect is true', async () => {
     const requestPromise = fetcher('/api/me', { disableAuth401Redirect: true })

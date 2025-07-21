@@ -34,7 +34,7 @@ create table projects (
 );
 
 
-create table project_assets (
+create table project_textures (
   id uuid default gen_random_uuid() primary key,
   owner_id uuid references users not null
 );
@@ -42,7 +42,7 @@ create table project_assets (
 insert into storage.buckets
   (id, name, public)
 values
-  ('project-assets', 'project-assets', true);
+  ('project-textures', 'project-textures', true);
 
 create policy "public-storage-objects"
 on storage.objects

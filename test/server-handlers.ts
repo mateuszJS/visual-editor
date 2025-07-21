@@ -25,7 +25,7 @@ export default [
   http.patch('/api/projects/:id', () => {
     return new HttpResponse(null, { status: 204 })
   }),
-  http.post('/api/project-assets', () => {
+  http.post('/api/project-textures', () => {
     return HttpResponse.json({ succeeded: ['3'], failed: [] }, { status: 201 })
   }),
 ]

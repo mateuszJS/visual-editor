@@ -4,7 +4,7 @@ import PictureIcon from 'assets/picture-icon.svg'
 import NavButton from '@/components/NavButton/NavButton'
 import { useState } from 'react'
 import ActionSheets from '@/components/ActionSheets/ActionSheets'
-import UploadAssets from '@/components/UploadAssets/UploadAssets'
+import UploadTextures from '@/components/UploadTextures/UploadTextures'
 import useCreator from '@/hooks/useCreator/useCreator'
 import loadImagesFromAssetIds from '@/utils/loadImagesFromAssetIds'
 
@@ -12,8 +12,8 @@ export default function UploadAsset() {
   const [usUploadShown, setIsUploadShown] = useState(false)
   const { creator } = useCreator()
 
-  async function addAssetsToProject(assetIds: string[]) {
-    const images = await loadImagesFromAssetIds(assetIds)
+  async function addTextures(textureStorageIds: string[]) {
+    const images = await loadImagesFromAssetIds(textureStorageIds)
 
     images.forEach((img) => {
       creator.addImage(img.src)
@@ -33,7 +33,7 @@ export default function UploadAsset() {
         isOpen={usUploadShown}
         close={() => setIsUploadShown(false)}
       >
-        <UploadAssets onUpload={addAssetsToProject} />
+        <UploadTextures onUpload={addTextures} />
       </ActionSheets>
     </>
   )

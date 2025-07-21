@@ -4,7 +4,7 @@ import TikTokIcon from 'assets/tiktok-logo.svg'
 import InstagramIcon from 'assets/instagram-logo.svg'
 import YouTubeIcon from 'assets/youtube-logo.svg'
 import styles from './NewProjectModal.module.css'
-import UploadAssets from '@/components/UploadAssets/UploadAssets'
+import UploadTextures from '@/components/UploadTextures/UploadTextures'
 import loadImagesFromAssetIds from '@/utils/loadImagesFromAssetIds'
 import { useRouter } from 'next/navigation'
 import OverlayLoader from '../OverlayLoader/OverlayLoader'
@@ -55,7 +55,7 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   return (
     <ActionSheets isOpen={isOpen} close={close} title="Start new project">
       <OverlayLoader loading={loading} />
-      <UploadAssets onUpload={(assetIds) => createProjectFrom(0, 0, assetIds)} />
+      <UploadTextures onUpload={(assetIds) => createProjectFrom(0, 0, assetIds)} />
       <p className={styles.divider}>Or</p>
       <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with desired size</h3>
       <ul className={styles.blankCanvasList}>

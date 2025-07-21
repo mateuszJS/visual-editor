@@ -1,6 +1,6 @@
 'use client'
 
-import UploadAsset from './components/UploadAsset/UploadAsset'
+import UploadTexture from './components/UploadTexture/UploadTexture'
 import RemoveAsset from './components/RemoveAsset/RemoveAsset'
 import useCreator from '@/hooks/useCreator/useCreator'
 
@@ -15,7 +15,7 @@ export default function Toolbox() {
     <nav className="navigation-bar">
       {selectedAssetId === null ? (
         <>
-          <UploadAsset />
+          <UploadTexture />
         </>
       ) : (
         <>

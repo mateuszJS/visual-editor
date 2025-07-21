@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import cn from 'classnames'
 import { FileRejection, useDropzone } from 'react-dropzone'
-import styles from './UploadAssets.module.css'
+import styles from './UploadTextures.module.css'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
 import errorStore from '@/stores/error'
 
@@ -33,7 +33,7 @@ const getRejectionReason = (fileRejections: readonly FileRejection[]) => {
   return ['File rejected', 'Please try again with a valid files']
 }
 
-export default function UploadAsset({ onUpload }: Props) {
+export default function UploadTextures({ onUpload }: Props) {
   const { fetcher } = useFetcher<{
     succeeded: string[]
     failed: Array<{ file: string; error: string }>
@@ -53,7 +53,7 @@ export default function UploadAsset({ onUpload }: Props) {
       })
 
       fetcher(
-        '/api/project-assets',
+        '/api/project-textures',
         {
           method: 'POST',
           formData,

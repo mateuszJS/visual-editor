@@ -6,70 +6,47 @@ import { POST } from './route'
 jest.mock('@/app/api/supabaseClient')
 jest.mock('@/app/api/wrappers/session')
 
-const firstFile = new File(
-  [new Blob(['first-image-blob'], { type: 'image/png' })],
-  'first-image-blob.png'
-)
-const secondFile = new File(
-  [new Blob(['second-image-blob'], { type: 'image/png' })],
-  'second-image-blob.png'
-)
+const file = new File([new Blob(['image-blob'], { type: 'image/png' })], 'image-blob.png')
 
 const uploadAssetRequest = createMockNextRequest({
   formData: {
-    'files[]': [firstFile, secondFile],
+    file: [file],
   },
 })
 
 describe('uploadProjectAsset', () => {
   test('returns path if file was uploaded correctly', async () => {
     const response = await POST(uploadAssetRequest, mockNextContext())
-    const json = await response.json()
+    const json = await response.text()
 
-    expect(json).toEqual({
-      succeeded: ['4', '5'],
-      failed: [],
-    })
+    expect(json).toEqual('4')
 
     const expectedDB = __getCleanDBMock()
-    expectedDB.tables.project_textures.push(
-      {
-        id: '4',
-        owner_id: '1',
-      },
-      {
-        id: '5',
-        owner_id: '1',
-      }
-    )
-    expectedDB.storage['project-textures']['4'] = firstFile
-    expectedDB.storage['project-textures']['5'] = secondFile
+    expectedDB.tables.project_textures.push({
+      id: '4',
+      owner_id: '1',
+    })
+    expectedDB.storage['project-textures']['4'] = file
     expect(dbMock).toEqual(expectedDB)
   })
 
   test('returns success & error data if storage upload fails', async () => {
-    __setErrorQueue([null, new Error('Error during upload')])
+    __setErrorQueue([null, new Error('Error during upload.')])
     const response = await POST(uploadAssetRequest, mockNextContext())
     const json = await response.json()
 
     expect(json).toEqual({
-      succeeded: ['5'],
-      failed: [
-        {
-          file: 'first-image-blob.png',
-          error: 'Error during upload',
-        },
-      ],
+      error: 'Error during upload.',
     })
   })
 
   test('returns error if database insert fails', async () => {
-    __setErrorQueue([new Error('Error during upload')])
+    __setErrorQueue([new Error('Error during upload.')])
     const response = await POST(uploadAssetRequest, mockNextContext())
     const json = await response.json()
 
     expect(json).toEqual({
-      error: 'Error during upload',
+      error: 'Error during upload.',
     })
   })
 
@@ -78,7 +55,7 @@ describe('uploadProjectAsset', () => {
     const json = await response.json()
 
     expect(json).toEqual({
-      error: 'Files are missing.',
+      error: 'File is missing.',
     })
   })
 })

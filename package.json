@@ -13,7 +13,7 @@
     "dev-https": "next dev --turbopack --experimental-https"
   },
   "dependencies": {
-    "@mateuszjs/magic-render": "^0.1.0-next.12",
+    "@mateuszjs/magic-render": "^0.1.0-next.19",
     "@supabase/supabase-js": "^2.49.4",
     "@vercel/functions": "^2.0.0",
     "classnames": "^2.5.1",

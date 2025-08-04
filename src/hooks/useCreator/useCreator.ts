@@ -7,13 +7,14 @@ import initMagicRender, {
   SerializedOutputAsset,
 } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
+import onTextureUpload from './onTextureUpload'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 
 interface CreatorStore {
   creator: MagicRender | null
   projectId: string | null
-  initialAssets: { projectId: string; assets: HTMLImageElement[] } | null
+  initialAssets: { projectId: string; assetUrls: string[] } | null
   selectedAssetId: number | null
   historySnapshots: SerializedOutputAsset[][]
   historySnapshotIndex: number
@@ -79,6 +80,7 @@ function useCreator() {
 
       const creator = await initMagicRender(
         canvas,
+        onTextureUpload,
         (assets) => {
           if (creatorState.historySnapshotIndex < creatorState.historySnapshots.length - 1) {
             creatorState.historySnapshots.splice(creatorState.historySnapshotIndex + 1)
@@ -97,7 +99,7 @@ function useCreator() {
 
       const initialAssets =
         creatorState.initialAssets?.projectId === project.id
-          ? creatorState.initialAssets.assets.map((img) => ({ url: img.src }))
+          ? creatorState.initialAssets.assetUrls.map((url) => ({ url }))
           : project.assets
 
       creator.resetAssets(initialAssets as SerializedInputAsset[], true)
@@ -121,8 +123,8 @@ function useCreator() {
         creatorState.historySnapshotIndex = 0
       }
     },
-    setInitialAssets(projectId: string, assets: HTMLImageElement[]) {
-      creatorState.initialAssets = ref({ projectId, assets })
+    setInitialAssets(projectId: string, assetUrls: string[]) {
+      creatorState.initialAssets = ref({ projectId, assetUrls })
     },
   }
 }

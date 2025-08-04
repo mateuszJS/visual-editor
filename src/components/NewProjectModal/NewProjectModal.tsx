@@ -5,7 +5,6 @@ import InstagramIcon from 'assets/instagram-logo.svg'
 import YouTubeIcon from 'assets/youtube-logo.svg'
 import styles from './NewProjectModal.module.css'
 import UploadTextures from '@/components/UploadTextures/UploadTextures'
-import loadImagesFromAssetIds from '@/utils/loadImagesFromAssetIds'
 import { useRouter } from 'next/navigation'
 import OverlayLoader from '../OverlayLoader/OverlayLoader'
 import ActionSheets from '../ActionSheets/ActionSheets'
@@ -32,21 +31,19 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   const { createProject, loading } = useProject()
   const { setInitialAssets } = useCreator()
 
-  const createProjectFrom = async (width: number, height: number, assetIds: string[]) => {
-    const images = await loadImagesFromAssetIds(assetIds)
+  const createProjectFrom = async (width: number, height: number, textureUrls: string[]) => {
+    // const images = await loadImagesFromAssetIds(assetIds)
 
-    const projectSize = images.reduce(
-      (maxSize, img) => ({
-        width: Math.max(maxSize.width, img.width),
-        height: Math.max(maxSize.height, img.height),
-      }),
-      { width, height }
-    )
+    // const projectSize = images.reduce(
+    //   (maxSize, img) => ({
+    //     width: Math.max(maxSize.width, img.width),
+    //     height: Math.max(maxSize.height, img.height),
+    //   }),
+    //   { width, height }
+    // )
 
-    createProject(projectSize.width, projectSize.height, (project) => {
-      if (images.length > 0) {
-        setInitialAssets(project.id, images)
-      }
+    createProject(0, 0, (project) => {
+      setInitialAssets(project.id, textureUrls)
       close()
       router.push(`/project/${project.id}`)
     })
@@ -55,7 +52,7 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   return (
     <ActionSheets isOpen={isOpen} close={close} title="Start new project">
       <OverlayLoader loading={loading} />
-      <UploadTextures onUpload={(assetIds) => createProjectFrom(0, 0, assetIds)} />
+      <UploadTextures onUpload={(textureUrls) => createProjectFrom(0, 0, textureUrls)} />
       <p className={styles.divider}>Or</p>
       <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with desired size</h3>
       <ul className={styles.blankCanvasList}>

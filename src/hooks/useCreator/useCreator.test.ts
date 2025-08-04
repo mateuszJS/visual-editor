@@ -293,7 +293,7 @@ describe('useCreator', () => {
     it('with matching project id assets will be used right after creator initialization', async () => {
       const { result } = renderHook(useCreator)
 
-      const assets = [new Image(), new Image()]
+      const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets(project.id, assets)
 
@@ -313,7 +313,7 @@ describe('useCreator', () => {
     it('if different project id assets will be dismissed', async () => {
       const { result } = renderHook(useCreator)
 
-      const assets = [new Image(), new Image()]
+      const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets('2', assets)
 
@@ -329,7 +329,7 @@ describe('useCreator', () => {
     it('initial assets are used only once', async () => {
       const { result } = renderHook(useCreator)
 
-      const assets = [new Image(), new Image()]
+      const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets(project.id, assets)
 

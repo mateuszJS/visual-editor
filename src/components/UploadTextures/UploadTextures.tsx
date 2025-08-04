@@ -2,11 +2,9 @@ import { useEffect } from 'react'
 import cn from 'classnames'
 import { FileRejection, useDropzone } from 'react-dropzone'
 import styles from './UploadTextures.module.css'
-import useFetcher from '@/hooks/useFetcher/useFetcher'
-import errorStore from '@/stores/error'
 
 interface Props {
-  onUpload: (assetIds: string[]) => void
+  onUpload: (assetUrls: string[]) => void
 }
 
 const MAX_FILE_SIZE_MBs = 3
@@ -34,10 +32,6 @@ const getRejectionReason = (fileRejections: readonly FileRejection[]) => {
 }
 
 export default function UploadTextures({ onUpload }: Props) {
-  const { fetcher } = useFetcher<{
-    succeeded: string[]
-    failed: Array<{ file: string; error: string }>
-  }>()
   const { acceptedFiles, getRootProps, getInputProps, isDragAccept, isDragReject, fileRejections } =
     useDropzone({
       accept: { 'image/*': [] },
@@ -47,25 +41,7 @@ export default function UploadTextures({ onUpload }: Props) {
 
   useEffect(() => {
     if (acceptedFiles.length > 0) {
-      const formData = new FormData()
-      acceptedFiles.forEach((file) => {
-        formData.append('files[]', file)
-      })
-
-      fetcher(
-        '/api/project-textures',
-        {
-          method: 'POST',
-          formData,
-        },
-        ({ succeeded, failed }) => {
-          onUpload(succeeded)
-          if (failed.length > 0) {
-            const filesList = failed.map((f) => `${f.file} (${f.error})`).join(', ')
-            errorStore.message = `Failed to upload ${failed.length} files: ${filesList}`
-          }
-        }
-      )
+      onUpload(acceptedFiles.map((file) => URL.createObjectURL(file)))
     }
   }, [acceptedFiles])
 

@@ -6,17 +6,14 @@ import { useState } from 'react'
 import ActionSheets from '@/components/ActionSheets/ActionSheets'
 import UploadTextures from '@/components/UploadTextures/UploadTextures'
 import useCreator from '@/hooks/useCreator/useCreator'
-import loadImagesFromAssetIds from '@/utils/loadImagesFromAssetIds'
 
 export default function UploadAsset() {
   const [usUploadShown, setIsUploadShown] = useState(false)
   const { creator } = useCreator()
 
-  async function addTextures(textureStorageIds: string[]) {
-    const images = await loadImagesFromAssetIds(textureStorageIds)
-
-    images.forEach((img) => {
-      creator.addImage(img.src)
+  async function addTextures(textureUrls: string[]) {
+    textureUrls.forEach((url) => {
+      creator.addImage(url)
     })
 
     setIsUploadShown(false)

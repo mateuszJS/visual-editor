@@ -7,6 +7,7 @@ let onUpdateAssetsCallback: (assets: SerializedOutputAsset[]) => void
  * For WebGPU physical GPU is required, so far there is no way to simulate with CPU */
 export default function initMagicRenderMock(
   canvas: HTMLCanvasElement,
+  onUpdateTextures: (url: string, setNewUrl: (newUrl: string) => void) => void,
   onUpdateAssets: (assets: SerializedOutputAsset[]) => void,
   onSelectAsset: (assetId: number | null) => void
 ): Promise<CreatorAPI> {
@@ -26,6 +27,7 @@ export default function initMagicRenderMock(
     addImage: jest.fn(),
     removeAsset: jest.fn(),
     resetAssets: jest.fn(),
+    setTool: jest.fn(),
     destroy: () => {
       canvas.removeAttribute('data-magic-render-linked')
     },

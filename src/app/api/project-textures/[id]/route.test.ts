@@ -37,7 +37,7 @@ describe('downloadProjectAsset', () => {
   })
 
   test('returns error if there is an error from the database', async () => {
-    __setErrorQueue([new Error('Error during upload')])
+    __setErrorQueue([new Error('Error during upload.')])
     const response = await GET(
       createMockNextRequest({
         url: 'https://example.com/api/project-textures/1',
@@ -52,7 +52,7 @@ describe('downloadProjectAsset', () => {
   })
 
   test('propagates error from db to be returned in response', async () => {
-    __setErrorQueue([null, new Error('Error during upload')])
+    __setErrorQueue([null, new Error('Error during upload.')])
     const response = await GET(
       createMockNextRequest({
         url: 'https://example.com/api/project-textures/1',

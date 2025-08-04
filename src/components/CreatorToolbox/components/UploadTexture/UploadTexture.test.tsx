@@ -42,8 +42,8 @@ describe('UploadTexture', () => {
     })
     fireEvent.click(uploadBtn)
 
-    const blob = new Blob(['image-blob'], { type: 'image/png' })
-    const file = new File([blob], 'image-blob.png')
+    const file = new Blob(['image-blob'], { type: 'image/png' })
+    // not sure why in Jest DOM allows only blob for URL.createObjectURL and not files
 
     const fileInputTrigger = screen.getByLabelText(/Upload an image/i)
 

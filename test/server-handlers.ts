@@ -26,6 +26,6 @@ export default [
     return new HttpResponse(null, { status: 204 })
   }),
   http.post('/api/project-textures', () => {
-    return HttpResponse.json({ succeeded: ['3'], failed: [] }, { status: 201 })
+    return new HttpResponse('3', { status: 201 })
   }),
 ]

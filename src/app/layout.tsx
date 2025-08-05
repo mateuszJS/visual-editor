@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Outfit } from 'next/font/google'
 import './globals.css'
-import InitializeData from '@/components/InitializeData/InitializeData'
-import GlobalErrors from '@/components/GlobalErrors/GlobalErrors'
+import InitializeData from 'components/InitializeData/InitializeData'
+import GlobalErrors from 'components/GlobalErrors/GlobalErrors'
 
 const outfit = Outfit({
   variable: '--font-outfit',

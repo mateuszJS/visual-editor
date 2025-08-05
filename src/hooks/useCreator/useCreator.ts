@@ -8,6 +8,7 @@ import initMagicRender, {
 } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
 import onTextureUpload from './onTextureUpload'
+import uploadMiniature from './uploadMiniature'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 
@@ -94,7 +95,8 @@ function useCreator() {
         (assetId) => {
           creatorState.selectedAssetId = assetId || null
         },
-        () => {}
+        () => {},
+        (canvas) => uploadMiniature(canvas, project.id)
       )
 
       const initialAssets =

@@ -60,30 +60,33 @@ export type Database = {
       projects: {
         Row: {
           assets: Json[]
-          created_at: string | null
+          created_at: string
           height: number
           id: string
           last_updated: string
+          miniature_created_at: string | null
           name: string | null
           owner_id: string
           width: number
         }
         Insert: {
           assets?: Json[]
-          created_at?: string | null
+          created_at?: string
           height: number
           id?: string
           last_updated?: string
+          miniature_created_at?: string | null
           name?: string | null
           owner_id: string
           width: number
         }
         Update: {
           assets?: Json[]
-          created_at?: string | null
+          created_at?: string
           height?: number
           id?: string
           last_updated?: string
+          miniature_created_at?: string | null
           name?: string | null
           owner_id?: string
           width?: number
@@ -104,7 +107,7 @@ export type Database = {
           browser: string | null
           browser_engine: string | null
           country: string | null
-          created_at: string | null
+          created_at: string
           device_model: string | null
           device_type: string | null
           email: string
@@ -123,7 +126,7 @@ export type Database = {
           browser?: string | null
           browser_engine?: string | null
           country?: string | null
-          created_at?: string | null
+          created_at?: string
           device_model?: string | null
           device_type?: string | null
           email: string
@@ -142,7 +145,7 @@ export type Database = {
           browser?: string | null
           browser_engine?: string | null
           country?: string | null
-          created_at?: string | null
+          created_at?: string
           device_model?: string | null
           device_type?: string | null
           email?: string

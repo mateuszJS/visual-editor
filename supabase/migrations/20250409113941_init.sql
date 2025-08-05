@@ -4,7 +4,7 @@ create table users (
   avatar text,
   projects bigint array default '{}', -- would be a foregin key if array field supports foregin keys
   email text unique not null,
-  created_at timestamp default now(),
+  created_at timestamp default now() not null,
   language text,
   country text,
   browser text,
@@ -26,11 +26,12 @@ create table projects (
   id uuid default gen_random_uuid() primary key,
   name text,
   owner_id uuid references users not null,
-  created_at timestamp default now(),
+  created_at timestamp default now() not null,
   assets jsonb array default '{}' not null,
   last_updated timestamp default now() not null,
   width int not null,
-  height int not null
+  height int not null,
+  miniature_created_at timestamp
 );
 
 
@@ -44,8 +45,13 @@ insert into storage.buckets
 values
   ('project-textures', 'project-textures', true);
 
-create policy "public-storage-objects"
-on storage.objects
-for insert with check (
-  true
-);
+insert into storage.buckets
+  (id, name, public)
+values
+  ('project-miniatures', 'project-miniatures', true);
+
+-- create policy "public-storage-objects"
+-- on storage.objects
+-- for insert with check (
+--   true
+-- );

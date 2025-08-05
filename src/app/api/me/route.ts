@@ -13,7 +13,9 @@ async function getUser(session: SessionPayload) {
   }
 
   if (data?.length !== 1) {
-    return getResponseError('User not found.', 404)
+    const response = new NextResponse('User not found', { status: 404 })
+    response.cookies.delete('session')
+    return response
   }
 
   return NextResponse.json(sanitizeUserData(data[0]))

@@ -42,7 +42,7 @@ export default function NewProjectModal({ isOpen, close }: Props) {
     //   { width, height }
     // )
 
-    createProject(0, 0, (project) => {
+    createProject(500, 500, (project) => {
       setInitialAssets(project.id, textureUrls)
       close()
       router.push(`/project/${project.id}`)

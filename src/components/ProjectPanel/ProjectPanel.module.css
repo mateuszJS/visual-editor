@@ -6,4 +6,7 @@
   background: #555555;
   padding: 1rem;
   word-break: break-word;
+
+  background-size: cover;
+  background-position: center;
 }

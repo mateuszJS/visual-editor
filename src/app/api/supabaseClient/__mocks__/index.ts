@@ -81,6 +81,7 @@ export function __getCleanDBMock() {
       'project-textures': {
         '1': firstImage,
       } as Record<string, File>,
+      'project-miniatures': {} as Record<string, File>,
     },
   }
 }

@@ -52,7 +52,10 @@ async function patchProject(
 
   const { error } = await supabaseClient
     .from('projects')
-    .update(input)
+    .update({
+      ...input,
+      last_updated: new Date().toISOString(),
+    })
     .eq('id', id)
     .eq('owner_id', session.userId)
     .single()

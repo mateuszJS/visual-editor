@@ -21,6 +21,18 @@ exports[`CreatorToolbox by default displays general toolbox items 1`] = `
       <svg />
       Image
     </button>
+    <button
+      class="navItem"
+    >
+      <svg />
+      Shape
+    </button>
+    <button
+      class="navItem"
+    >
+      <svg />
+      Text
+    </button>
   </nav>
 </div>
 `;

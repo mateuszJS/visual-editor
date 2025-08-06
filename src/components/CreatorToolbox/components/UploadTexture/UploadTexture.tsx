@@ -7,7 +7,7 @@ import ActionSheets from '@/components/ActionSheets/ActionSheets'
 import UploadTextures from '@/components/UploadTextures/UploadTextures'
 import useCreator from '@/hooks/useCreator/useCreator'
 
-export default function UploadAsset() {
+export default function UploadTexture() {
   const [usUploadShown, setIsUploadShown] = useState(false)
   const { creator } = useCreator()
 

@@ -5,6 +5,17 @@ import styles from './styles.module.css'
 import ProjectPanel from '@/components/ProjectPanel/ProjectPanel'
 import Navigation from '@/components/Navigation/Navigation'
 
+const formatter = new Intl.DateTimeFormat(undefined, {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+})
+
+function formatDate(time: string) {
+  const date = new Date(time)
+  return formatter.format(date)
+}
+
 export default function MyProjects() {
   const { loading, error, projectsList } = useProjectsList()
 
@@ -17,10 +28,7 @@ export default function MyProjects() {
         <ul className={styles.list}>
           {[...projectsList.values()].map((project) => (
             <li key={project.id}>
-              <ProjectPanel
-                id={project.id}
-                text={project.name || `Last edited at: ${project.last_updated}`}
-              />
+              <ProjectPanel id={project.id} text={formatDate(project.last_updated)} />
             </li>
           ))}
         </ul>

@@ -6,7 +6,7 @@ import { toMatchImageSnapshot } from 'jest-image-snapshot'
 
 expect.extend({ toMatchImageSnapshot })
 
-/* to filter out unnecessayr console logs form visual regression tests */
+/* to filter out unnecessary console logs from visual regression tests */
 const knownTrashConsoleLogs = [
   '%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold',
   'Failed to load resource: the server responded with a status of 404 (Not Found)',
@@ -27,7 +27,7 @@ beforeAll(async () => {
  * Visual setup for Storybook stories
  * @param storyId - Storybook story ID takend from storbyook iframe URL
  */
-export default async function visualSetup(storyId: string, dirname: string) {
+export default async function visualSetup(storyId: string, dirname: string, colorThreshold = 0.1) {
   // Create screenshots directory
   const screenshotsDir = path.join(dirname, '__image_snapshots__')
   if (!fs.existsSync(screenshotsDir)) {
@@ -64,6 +64,9 @@ export default async function visualSetup(storyId: string, dirname: string) {
       updatePassedSnapshot: true /* change to true to force to update screenshots,
       even if it's under the thresold failure */,
       customSnapshotIdentifier: storyId,
+      customDiffConfig: {
+        threshold: colorThreshold,
+      },
     })
   } finally {
     // Clean up temporary file

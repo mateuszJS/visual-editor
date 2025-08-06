@@ -15,7 +15,7 @@ describe('UploadTexture', () => {
     })
   })
 
-  it('should upload image button', () => {
+  it('should render the image icon with label', () => {
     const { container } = render(<UploadTexture />)
     expect(container).toMatchSnapshot()
   })

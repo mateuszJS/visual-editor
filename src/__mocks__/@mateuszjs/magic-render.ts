@@ -21,9 +21,6 @@ export default function initMagicRenderMock(
   onUpdateAssetsCallback = onUpdateAssets
 
   return Promise.resolve({
-    /** We need to figure otu the wya how ot notify outside world about changes in creator canvas
-     * it will be also useful in the test
-     */
     addImage: jest.fn(),
     removeAsset: jest.fn(),
     resetAssets: jest.fn(),
@@ -40,4 +37,11 @@ export function __triggerSelectAsset(assetId: number | null) {
 
 export function __triggerUpdateAssets(assets: SerializedOutputAsset[]) {
   onUpdateAssetsCallback(assets)
+}
+
+// importing values from valtio works correctly, so it's on our side
+// we can play with esm exports from magic-render to fix it
+export enum CreatorTool {
+  None = 0,
+  DrawShape = 1,
 }

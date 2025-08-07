@@ -13,7 +13,7 @@
   color: var(--background);
 
   &:hover {
-    background: rgba(var(--primary-rgb), 0.9);
+    background: hsla(var(--primary-hsl), 0.9);
   }
 }
 

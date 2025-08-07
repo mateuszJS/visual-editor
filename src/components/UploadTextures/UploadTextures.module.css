@@ -4,7 +4,7 @@
   display: block;
   cursor: pointer;
   transition: background ease 0.2s;
-  background: rgba(var(--primary-rgb), 0.1);
+  background: hsla(var(--primary-hsl), 0.1);
   border-radius: var(--border-radius);
 }
 
@@ -17,7 +17,7 @@
   --dash-length: 6px;
   --gap-length: 18px;
 
-  stroke: rgba(var(--primary-rgb), 0.5);
+  stroke: hsla(var(--primary-hsl), 0.5);
   padding: calc(var(--border-width) / 2);
   overflow: visible;
 }
@@ -46,7 +46,7 @@
 }
 
 .dropZone:hover {
-  background: rgba(var(--primary-rgb), 0.15);
+  background: hsla(var(--primary-hsl), 0.15);
 }
 
 .borderRectActive {
@@ -65,5 +65,5 @@
 }
 
 .dropZone.reject {
-  background: rgba(255, 0, 0, 0.35);
+  background: hsla(0, 100%, 50%, 0.35);
 }

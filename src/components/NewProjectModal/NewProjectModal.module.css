@@ -66,7 +66,7 @@
   transition: background 0.2s ease;
 
   &:hover {
-    background: rgba(var(--primary-rgb), 0.1);
+    background: hsla(var(--primary-hsl), 0.1);
   }
 }
 
@@ -80,9 +80,9 @@
 
   background: linear-gradient(
     136deg,
-    rgba(var(--secondary-rgb), 0.25) 20%,
-    rgba(var(--secondary-rgb), 0.6) 65%,
-    rgba(var(--secondary-rgb), 0.25) 85%
+    hsla(var(--secondary-hsl), 0.25) 20%,
+    hsla(var(--secondary-hsl), 0.6) 65%,
+    hsla(var(--secondary-hsl), 0.25) 85%
   );
 
   & svg {

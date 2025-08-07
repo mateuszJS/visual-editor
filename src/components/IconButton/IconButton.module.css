@@ -13,6 +13,6 @@
   }
 
   &:hover {
-    background: rgba(var(--primary-rgb), 0.1);
+    background: hsla(var(--primary-hsl), 0.1);
   }
 }

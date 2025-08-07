@@ -1,6 +1,6 @@
 .base {
   --modal-space-inline: 1rem;
-  --modal-background: rgb(60, 60, 60);
+  --modal-background: hsl(0, 0%, 24%);
   align-self: flex-end;
   background: var(--modal-background);
   padding: 1rem var(--modal-space-inline) 2rem;

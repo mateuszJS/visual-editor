@@ -1,7 +1,7 @@
 .createButton {
   width: 2.5rem;
   height: 2.5rem;
-  background-color: #8731dc;
+  background-color: hsl(272, 67%, 52%);
   border-radius: 50%;
   color: white;
   display: flex;

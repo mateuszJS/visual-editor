@@ -3,10 +3,10 @@
   align-items: flex-end;
   aspect-ratio: 1;
   border-radius: 0.5rem;
-  background: #555555;
+  background: hsl(0, 0%, 33%);
   padding: 1rem;
   word-break: break-word;
-  text-shadow: 0 0 3px #000, 0 0 5px #000, 0 0 10px #000;
+  text-shadow: 0 0 3px hsl(0, 0%, 0%), 0 0 5px hsl(0, 0%, 0%), 0 0 10px hsl(0, 0%, 0%);
   background-size: cover;
   background-position: center;
 }

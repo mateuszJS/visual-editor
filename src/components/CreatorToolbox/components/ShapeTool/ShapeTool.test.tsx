@@ -21,7 +21,7 @@ describe('ShapeTool', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('uploads files and adds to the project', async () => {
+  it('should set tool to DrawShape when clicked', async () => {
     render(<ShapeTool />)
     const shapeToolBtn = screen.getByRole('button', {
       name: /shape/i,

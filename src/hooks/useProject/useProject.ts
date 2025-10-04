@@ -7,6 +7,8 @@ import nativeFetcher from '@/utils/fetcher'
 import { UpdateProjectPayload } from '@/app/api/utils/projectSchema'
 import { proxyMap } from 'valtio/utils'
 import { ref, useSnapshot } from 'valtio'
+import getFirebase from '@/utils/getFirebase'
+import { addDoc, collection, doc, serverTimestamp } from 'firebase/firestore'
 
 const projectsStore = proxyMap<string, SanitizedProject>()
 
@@ -46,26 +48,44 @@ export default function useProject(id?: string) {
     }
   }, [id])
 
-  function createProject(
+  async function createProject(
     width: number,
     height: number,
     successCallback: (project: SanitizedProject) => void
   ) {
-    fetcher(
-      '/api/projects',
-      {
-        method: 'POST',
-        json: {
-          width,
-          height,
-        },
-      },
-      (project) => {
-        projectsStore.set(project.id, ref(project))
-        newProjId.current = project.id
-        successCallback(project)
-      }
-    )
+    // setDoc(cityRef, { capital: true }, { merge: true });
+    // OR
+    // Set the "capital" field of the city 'DC'
+    // await updateDoc(washingtonRef, {
+    //   capital: true
+    // });
+    try {
+      const docRef = await addDoc(collection(getFirebase().firestore, 'projects'), {
+        width,
+        height,
+        // createdAt: serverTimestamp(),
+        // owner: getFirebase().auth.currentUser?.uid || null,
+      })
+      console.log(docRef)
+    } catch (err) {
+      console.log('Error adding document: ', err)
+    }
+
+    // fetcher(
+    //   '/api/projects',
+    //   {
+    //     method: 'POST',
+    //     json: {
+    //       width,
+    //       height,
+    //     },
+    //   },
+    //   (project) => {
+    //     projectsStore.set(project.id, ref(project))
+    //     newProjId.current = project.id
+    //     successCallback(project)
+    //   }
+    // )
   }
 
   const projectId = id || newProjId.current

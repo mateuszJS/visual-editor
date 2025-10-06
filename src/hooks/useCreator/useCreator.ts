@@ -9,6 +9,7 @@ import initMagicRender, {
 import { proxy, ref, useSnapshot } from 'valtio'
 import getOnTextureUpload from './getOnTextureUpload'
 import uploadMiniature from './uploadMiniature'
+import type { Json } from '@/app/api/supabaseClient/database.types'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 
@@ -35,8 +36,9 @@ const creatorState = proxy<CreatorStore>({
   Cannot accept any arguments because might be used in a very deep nested component inside creator view.
 */
 
-function serializeAssets(assets: SerializedOutputAsset[]) {
-  return assets.map(({ id, textureId, cache_texture_id, sdf_texture_id, ...rest }) => rest)
+function serializeAssets(assets: Record<string, unknown>[]) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return assets.map(({ id, texture_id, cache_texture_id, sdf_texture_id, ...rest }) => rest as Json)
 }
 
 function useCreator() {
@@ -53,7 +55,7 @@ function useCreator() {
     ] as SerializedOutputAsset[]
     creatorState.creator!.resetAssets(assets)
 
-    updateProject(stateSnapshot.projectId!, { assets })
+    updateProject(stateSnapshot.projectId!, { assets: serializeAssets(assets) })
   }
 
   return {

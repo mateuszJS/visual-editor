@@ -10,9 +10,6 @@ interface BucketItem {
   buffer: Buffer<ArrayBufferLike>
   metadata: {
     contentType: string
-    metadata: {
-      originalName: string
-    }
   }
 }
 

@@ -1,4 +1,3 @@
-import { __getCleanDBMock, __setErrorQueue } from '@/app/api/supabaseClient'
 import { bucketsMock, __mockBucketError, __getCleanBucketsMock } from '@google-cloud/storage'
 import createMockNextRequest from '@/app/api/test/mockNextRequest'
 import mockNextContext from '@/app/api/test/mockNextContext'
@@ -15,7 +14,7 @@ const file = new File([blob], 'image-blob.png', { type: blob.type })
 
 const uploadAssetRequest = createMockNextRequest({
   formData: {
-    file: [file], // TODO: array migt be unnecesary ere
+    file: [file], // TODO: array might be unnecessary here
   },
 })
 

@@ -7,7 +7,7 @@ jest.mock('@/app/api/supabaseClient')
 jest.mock('@/app/api/wrappers/session')
 
 describe('downloadProjectAsset', () => {
-  test('redirects if eveyrthing is right(project exists, user is the owner, signed url generted with no errors', async () => {
+  test('redirects if everything is right (project exists, user is the owner, signed url generated with no errors', async () => {
     const response = await GET(
       createMockNextRequest(),
       mockNextContext({ projectId: '1', id: '1' })

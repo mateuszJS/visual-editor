@@ -1,5 +1,8 @@
 import { http, HttpResponse } from 'msw'
 
+const blob = new Blob(['image-data'], { type: 'image/png' })
+const file = new File([blob], 'image-blob.png', { type: blob.type })
+
 export default [
   http.get('/api/me', () => {
     return HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
@@ -25,7 +28,10 @@ export default [
   http.patch('/api/projects/:id', () => {
     return new HttpResponse(null, { status: 204 })
   }),
-  http.post('/api/project-textures', () => {
+  http.post('/api/project-uploads/:projectId', () => {
     return new HttpResponse('3', { status: 201 })
+  }),
+  http.get('/api/project-uploads/:projectId/:id', () => {
+    return new HttpResponse(file, { status: 200 })
   }),
 ]

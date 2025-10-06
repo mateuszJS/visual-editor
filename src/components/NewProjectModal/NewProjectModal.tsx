@@ -32,16 +32,6 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   const { setInitialAssets } = useCreator()
 
   const createProjectFrom = async (width: number, height: number, textureUrls: string[]) => {
-    // const images = await loadImagesFromAssetIds(assetIds)
-
-    // const projectSize = images.reduce(
-    //   (maxSize, img) => ({
-    //     width: Math.max(maxSize.width, img.width),
-    //     height: Math.max(maxSize.height, img.height),
-    //   }),
-    //   { width, height }
-    // )
-
     createProject(500, 500, (project) => {
       setInitialAssets(project.id, textureUrls)
       close()

@@ -1,0 +1,5 @@
+We use GCP because of little costs and easy itnegration.
+
+Signed url can be created only per item, so we create them on demand.
+
+We do not create bucket per project because bucket creation is actually limited, max 1 bucket per 2 seconds. Google suggest to create all encessayr buckets ahead of time. Plus also buckets have to be globally unique and are shared across all the users of GCP Storage.

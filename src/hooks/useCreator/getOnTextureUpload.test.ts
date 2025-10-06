@@ -1,9 +1,10 @@
-import onTextureUpload from './onTextureUpload'
+import getOnTextureUpload from './getOnTextureUpload'
 import errorStore from '@/stores/error'
 import { server } from 'test/server'
 import { http, HttpResponse } from 'msw'
+const PROJECT_ID = '1'
 
-describe('onTextureUpload', () => {
+describe('getOnTextureUpload', () => {
   const mockSetNewUrl = jest.fn()
 
   beforeEach(() => {
@@ -14,7 +15,7 @@ describe('onTextureUpload', () => {
   it('should not call endpoint when URL does not start with "blob:"', async () => {
     const regularUrl = 'https://example.com/image.jpg'
 
-    await onTextureUpload(regularUrl, mockSetNewUrl)
+    await getOnTextureUpload(PROJECT_ID)(regularUrl, mockSetNewUrl)
 
     expect(mockSetNewUrl).not.toHaveBeenCalled()
     expect(errorStore.message).toBeNull()
@@ -30,7 +31,7 @@ describe('onTextureUpload', () => {
       })
     )
 
-    await onTextureUpload(blobUrl, mockSetNewUrl)
+    await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
 
     expect(mockSetNewUrl).not.toHaveBeenCalled()
     expect(errorStore.message).toBe('Failed to upload file.')
@@ -49,14 +50,14 @@ describe('onTextureUpload', () => {
       })
     )
     server.use(
-      http.post('/api/project-textures', () => {
-        return new HttpResponse('texture-id-123', { status: 201 })
+      http.post('/api/project-uploads/:projectId', () => {
+        return new HttpResponse('3', { status: 201 })
       })
     )
 
-    await onTextureUpload(blobUrl, mockSetNewUrl)
+    await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
 
-    expect(mockSetNewUrl).toHaveBeenCalledWith('/api/project-textures/texture-id-123')
+    expect(mockSetNewUrl).toHaveBeenCalledWith(`/api/project-uploads/${PROJECT_ID}/3`)
     expect(errorStore.message).toBeNull()
   })
 
@@ -75,7 +76,7 @@ describe('onTextureUpload', () => {
       })
     )
 
-    await onTextureUpload(blobUrl, mockSetNewUrl)
+    await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
 
     expect(mockSetNewUrl).not.toHaveBeenCalled()
     expect(errorStore.message).toBe('Failed to upload file.')
@@ -96,7 +97,7 @@ describe('onTextureUpload', () => {
       })
     )
 
-    await onTextureUpload(blobUrl, mockSetNewUrl)
+    await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
 
     expect(mockSetNewUrl).not.toHaveBeenCalled()
     expect(errorStore.message).toBe('Failed to upload file.')

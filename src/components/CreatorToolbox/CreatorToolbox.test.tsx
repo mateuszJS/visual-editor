@@ -31,7 +31,7 @@ describe('CreatorToolbox', () => {
   it('by default displays general toolbox items', async () => {
     const { container } = render(<CreatorToolbox />)
     await act(async () => {
-      __triggerSelectAsset(1)
+      __triggerSelectAsset([1, 0, 0, 0])
     })
 
     expect(container).toMatchSnapshot()

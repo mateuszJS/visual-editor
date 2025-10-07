@@ -1,6 +1,9 @@
 [
   {
-    "origin": ["http://localhost:3000"],
+    "origin": [
+      "http://localhost:3000",
+      "https://visual-editor-mateuszjs-mateusz-walendziks-projects.vercel.app"
+    ],
     "method": ["GET", "HEAD"],
     "maxAgeSeconds": 3600,
     "what is this file for?": "To set CORS from GCP bucket with user uploads to be able to download those files in browser. CORS update is not possible via GCP UI Console",

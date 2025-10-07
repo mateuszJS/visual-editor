@@ -61,6 +61,7 @@ export default async function visualSetup(storyId: string, dirname: string, colo
       customSnapshotsDir: screenshotsDir,
       failureThreshold: 0.023,
       failureThresholdType: 'percent',
+      allowSizeMismatch: true, // Elements which use fractions of rem/em units can have different size on different machines by 1-2px
       updatePassedSnapshot: true /* change to true to force to update screenshots,
       even if it's under the thresold failure */,
       customSnapshotIdentifier: storyId,

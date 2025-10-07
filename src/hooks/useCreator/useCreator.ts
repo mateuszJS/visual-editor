@@ -7,8 +7,9 @@ import initMagicRender, {
   SerializedOutputAsset,
 } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
-import onTextureUpload from './onTextureUpload'
+import getOnTextureUpload from './getOnTextureUpload'
 import uploadMiniature from './uploadMiniature'
+import type { Json } from '@/app/api/supabaseClient/database.types'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 
@@ -35,11 +36,9 @@ const creatorState = proxy<CreatorStore>({
   Cannot accept any arguments because might be used in a very deep nested component inside creator view.
 */
 
-function serializeAssets(assets: SerializedOutputAsset[]) {
-  return assets.map((asset) => ({
-    points: asset.points,
-    url: asset.url,
-  }))
+function serializeAssets(assets: Record<string, unknown>[]) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return assets.map(({ id, texture_id, cache_texture_id, sdf_texture_id, ...rest }) => rest as Json)
 }
 
 function useCreator() {
@@ -81,7 +80,7 @@ function useCreator() {
 
       const creator = await initMagicRender(
         canvas,
-        onTextureUpload,
+        getOnTextureUpload(project.id),
         (assets) => {
           if (creatorState.historySnapshotIndex < creatorState.historySnapshots.length - 1) {
             creatorState.historySnapshots.splice(creatorState.historySnapshotIndex + 1)
@@ -93,17 +92,20 @@ function useCreator() {
           updateProject(project.id, { assets: serializeAssets(assets) })
         },
         (assetId) => {
-          creatorState.selectedAssetId = assetId || null
+          console.log('assetId', assetId)
+          creatorState.selectedAssetId = assetId[0] || null
         },
         () => {},
-        (canvas) => uploadMiniature(canvas, project.id)
+        (canvas) => uploadMiniature(canvas, project.id),
+        (tool) => console.log('current tool', tool),
+        (bounds, props) => console.log('onExport', bounds, props)
       )
 
       const initialAssets =
         creatorState.initialAssets?.projectId === project.id
           ? creatorState.initialAssets.assetUrls.map((url) => ({ url }))
           : project.assets
-
+      console.log('initialAssets', initialAssets)
       creator.resetAssets(initialAssets as SerializedInputAsset[], true)
       creatorState.initialAssets = null
 

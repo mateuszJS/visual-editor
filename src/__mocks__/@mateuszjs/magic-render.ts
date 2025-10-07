@@ -1,6 +1,6 @@
 import type { SerializedOutputAsset, CreatorAPI } from '@mateuszjs/magic-render'
 
-let onSelectAssetCallback: (assetId: number | null) => void
+let onSelectAssetCallback: (assetId: [number, number, number, number]) => void
 let onUpdateAssetsCallback: (assets: SerializedOutputAsset[]) => void
 
 /** this mock is created since currently github actions do not support GPU.
@@ -9,7 +9,7 @@ export default function initMagicRenderMock(
   canvas: HTMLCanvasElement,
   onUpdateTextures: (url: string, setNewUrl: (newUrl: string) => void) => void,
   onUpdateAssets: (assets: SerializedOutputAsset[]) => void,
-  onSelectAsset: (assetId: number | null) => void
+  onSelectAsset: (assetId: [number, number, number, number]) => void
 ): Promise<CreatorAPI> {
   if (canvas.getAttribute('data-magic-render-linked') === 'true') {
     // on purpose we do not compare lastCanvas to canvas to do not introduce any more logic to this mock
@@ -28,10 +28,13 @@ export default function initMagicRenderMock(
     destroy: () => {
       canvas.removeAttribute('data-magic-render-linked')
     },
+    toggleSharedTextEffects: jest.fn(),
+    updateAssetProps: jest.fn(),
+    updateAssetBounds: jest.fn(),
   })
 }
 
-export function __triggerSelectAsset(assetId: number | null) {
+export function __triggerSelectAsset(assetId: [number, number, number, number]) {
   onSelectAssetCallback(assetId)
 }
 

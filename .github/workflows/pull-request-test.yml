@@ -5,10 +5,15 @@ on:
       - develop
 
 env:
-  NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-  SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-  PRIVATE_SUPABASE_ANON_KEY: ${{ secrets.PRIVATE_SUPABASE_ANON_KEY }}
-  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  # All below values are mandatory during the build, but real value need to be used while running
+  # so build can succedd with dummy values
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID: x
+  SESSION_SECRET: x
+  PRIVATE_SUPABASE_ANON_KEY: x
+  SUPABASE_URL: http://valid-url
+  GOOGLE_STORAGE_PROJECT_ID: x
+  GOOGLE_STORAGE_EMAIL: x
+  GOOGLE_STORAGE_PRIVATE_KEY: x
 
 permissions:
   contents: write

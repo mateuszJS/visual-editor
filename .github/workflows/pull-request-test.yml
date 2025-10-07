@@ -10,6 +10,7 @@ env:
   PRIVATE_SUPABASE_ANON_KEY: ${{ secrets.PRIVATE_SUPABASE_ANON_KEY }}
   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
 
+  # not used while testing, but lack of them triggers errors
   GOOGLE_STORAGE_PROJECT_ID: google-project-id
   GOOGLE_STORAGE_EMAIL: google-storage-email
   GOOGLE_STORAGE_PRIVATE_KEY: google-storage-private-key

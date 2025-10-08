@@ -10,10 +10,9 @@ if (process.env.NODE_ENV === 'test') {
   const testElement = document.createElement('div')
   testElement.id = 'non-modal-content'
   document.body.append(testElement)
-  Modal.setAppElement(testElement)
-} else {
-  Modal.setAppElement('#non-modal-content')
 }
+
+Modal.setAppElement('#non-modal-content')
 
 interface Props {
   isOpen: boolean

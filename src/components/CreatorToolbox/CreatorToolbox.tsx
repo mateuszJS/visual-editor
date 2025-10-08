@@ -8,7 +8,6 @@ import TextTool from './components/TextTool/TextTool'
 
 export default function Toolbox() {
   const { isReady, selectedAssetId } = useCreator()
-
   if (!isReady) {
     return <nav className="navigation-bar">Loading</nav>
   }

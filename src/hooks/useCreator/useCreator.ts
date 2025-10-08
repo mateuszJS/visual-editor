@@ -105,7 +105,7 @@ function useCreator() {
         creatorState.initialAssets?.projectId === project.id
           ? creatorState.initialAssets.assetUrls.map((url) => ({ url }))
           : project.assets
-      console.log('initialAssets', initialAssets)
+
       creator.resetAssets(initialAssets as SerializedInputAsset[], true)
       creatorState.initialAssets = null
 

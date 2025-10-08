@@ -1,6 +1,6 @@
-import type { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/nextjs'
 import HomeIcon from 'assets/home-icon.svg'
-import { fn } from '@storybook/test'
+import { fn } from 'storybook/test'
 import NavButton from './NavButton'
 
 const meta = {

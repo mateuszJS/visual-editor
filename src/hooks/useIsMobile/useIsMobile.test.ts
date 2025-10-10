@@ -15,7 +15,7 @@ describe('useIsMobile', () => {
   }
 
   beforeEach(() => {
-    setWindowWidth(400)
+    setWindowWidth(800)
     jest.useFakeTimers()
   })
 
@@ -31,30 +31,44 @@ describe('useIsMobile', () => {
   it('should update the isMobile when the window is resized and throttled time has passed', async () => {
     const { result } = renderHook(() => useIsMobile())
 
-    expect(result.current).toBe(true)
+    // 800 by default
+    expect(result.current).toBe(false)
 
-    // Simulate another resize event
-    act(() => {
-      setWindowWidth(800)
+    await act(async () => {
+      setWindowWidth(799)
     })
 
-    // still true until throttled time has passed
-    expect(result.current).toBe(true)
+    // throttled function is called on first useEffect,
+    // so the second should wait 300ms to be called again
+    expect(result.current).toBe(false)
 
+    // hook is called once on the beggining
+    await act(async () => {
+      jest.advanceTimersByTime(299)
+    })
+
+    // 299ms has passed, not 300 yet!
+    expect(result.current).toBe(false)
+
+    // and here we are, 300ms in total!
     await act(async () => {
       jest.advanceTimersByTime(1)
     })
 
-    expect(result.current).toBe(false)
+    // 299ms has passed, not 300 yet!
+    expect(result.current).toBe(true)
 
-    jest.runOnlyPendingTimers()
-
-    // Simulate a resize event
-    act(() => {
-      setWindowWidth(799)
+    // wait 300ms to reset throttled state
+    await act(async () => {
+      jest.advanceTimersByTime(300)
     })
 
-    expect(result.current).toBe(true)
+    await act(async () => {
+      setWindowWidth(800)
+    })
+
+    // should be updated with no waiting time, because last call was >= 300ms ago
+    expect(result.current).toBe(false)
   })
 
   it('should remove the event listener on unmount', () => {

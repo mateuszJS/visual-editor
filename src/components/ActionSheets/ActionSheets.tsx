@@ -33,7 +33,6 @@ const style = {
 }
 
 export default function ActionSheets({ isOpen, close, children, title }: Props) {
-  console.log('Rendering ActionSheets')
   return (
     <Modal
       isOpen={isOpen}

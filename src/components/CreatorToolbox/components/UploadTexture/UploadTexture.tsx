@@ -7,13 +7,12 @@ import useCreator from '@/hooks/useCreator/useCreator'
 import Tooltip from '@/components/Tooltip/Tooltip'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
 
-const ActionSheets = lazy(() => import('@/components/ActionSheets/ActionSheets'))
-const UploadTextures = lazy(() => import('@/components/UploadTextures/UploadTextures'))
+const UploadModal = lazy(() => import('./UploadModal'))
 
 const tooltipContent = <span>Upload Image</span>
 
 export default function UploadTexture() {
-  const [usUploadShown, setIsUploadShown] = useState(false)
+  const [isUploadShown, setIsUploadShown] = useState(false)
   const creatorApi = useCreator()
   const isMobile = useIsMobile()
 
@@ -27,29 +26,26 @@ export default function UploadTexture() {
 
   return (
     <>
-      <Suspense fallback={'LoOADINggG'}>
-        {/* <Tooltip tooltipContent={tooltipContent}>
-        {(props) => ( */}
-        <NavButton
-          onClick={() => {
-            ;(document.activeElement as HTMLElement).blur()
-            setIsUploadShown(true)
-          }}
-        >
-          <PictureIcon />
-          {isMobile && 'Image'}
-        </NavButton>
-        {/* )} */}
-        {/* </Tooltip> */}
-        <div>
-          <ActionSheets
-            title="Upload image"
-            isOpen={usUploadShown}
-            close={() => setIsUploadShown(false)}
+      <Tooltip tooltipContent={tooltipContent}>
+        {(props) => (
+          <NavButton
+            {...props}
+            onClick={() => {
+              ;(document.activeElement as HTMLElement).blur()
+              setIsUploadShown(true)
+            }}
           >
-            <UploadTextures onUpload={addTextures} />
-          </ActionSheets>
-        </div>
+            <PictureIcon />
+            {isMobile && 'Image'}
+          </NavButton>
+        )}
+      </Tooltip>
+      <Suspense>
+        <UploadModal
+          isOpen={isUploadShown}
+          close={() => setIsUploadShown(false)}
+          onUpload={addTextures}
+        />
       </Suspense>
     </>
   )

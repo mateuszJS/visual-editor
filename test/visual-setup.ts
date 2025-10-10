@@ -27,7 +27,17 @@ beforeAll(async () => {
  * Visual setup for Storybook stories
  * @param storyId - Storybook story ID takend from storbyook iframe URL
  */
-export default async function visualSetup(storyId: string, dirname: string, colorThreshold = 0.1) {
+export default async function visualSetup(
+  storyId: string,
+  dirname: string,
+  options: { colorThreshold?: number; failureThreshold?: number; width?: number } = {}
+) {
+  const { colorThreshold = 0.1, failureThreshold = 0.023 } = options
+
+  if (options.width) {
+    await page.setViewport({ width: options.width, height: 720 })
+  }
+
   // Create screenshots directory
   const screenshotsDir = path.join(dirname, '__image_snapshots__')
   if (!fs.existsSync(screenshotsDir)) {
@@ -57,14 +67,15 @@ export default async function visualSetup(storyId: string, dirname: string, colo
   // Compare with baseline
   try {
     // Compare with baseline
+    // console.log(expect.getState().currentTestName)
     expect(imageBuffer).toMatchImageSnapshot({
       customSnapshotsDir: screenshotsDir,
-      failureThreshold: 0.023,
+      failureThreshold,
       failureThresholdType: 'percent',
       allowSizeMismatch: true, // Elements which use fractions of rem/em units can have different size on different machines by 1-2px
       updatePassedSnapshot: true /* change to true to force to update screenshots,
       even if it's under the thresold failure */,
-      customSnapshotIdentifier: storyId,
+      customSnapshotIdentifier: expect.getState().currentTestName?.replace(/\//g, ''),
       customDiffConfig: {
         threshold: colorThreshold,
       },

@@ -36,10 +36,10 @@ describe('UploadTexture', () => {
   })
 
   it('uploads files and adds to the project', async () => {
-    render(<UploadTexture />)
-    const uploadBtn = screen.getByRole('button', {
-      name: /image/i,
+    await act(async () => {
+      render(<UploadTexture />)
     })
+    const uploadBtn = screen.getByRole('button', { description: 'Upload Image' })
     fireEvent.click(uploadBtn)
 
     const file = new Blob(['image-blob'], { type: 'image/png' })

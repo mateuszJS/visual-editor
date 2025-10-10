@@ -13,9 +13,14 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  args: {
+    initialized: false,
+  },
+  argTypes: { initialized: { control: 'boolean' } },
 } satisfies Meta<typeof CreatorToolbox>
 
 export default meta
+
 type Story = StoryObj<typeof meta>
 
 const project: SanitizedProject = {
@@ -30,20 +35,31 @@ const project: SanitizedProject = {
 
 const initMagicRenderMock = {
   resetAssets: () => {},
+  destroy: () => {},
 } as unknown as Awaited<ReturnType<typeof initMagicRender>>
 
-export const Loading: Story = {}
+const canvas = document.createElement('canvas')
 
 export const Default: Story = {
   decorators: [
-    (Story) => {
-      const { init } = useCreator()
+    (Story, { args }) => {
+      const initialized = (args as { initialized: boolean }).initialized // Storybook does not recognize type of cusotm args
+      const result = useCreator()
 
       useEffect(() => {
-        const canvas = document.createElement('canvas')
-        document.body.appendChild(canvas)
-        init(canvas, project)
-      }, [])
+        if (initialized) {
+          canvas.style.display = 'none'
+          document.body.appendChild(canvas)
+          result.init(canvas, project)
+
+          return () => {
+            if (canvas.isConnected) {
+              document.body.removeChild(canvas)
+              result.destroy(canvas)
+            }
+          }
+        }
+      }, [initialized])
 
       return <Story />
     },

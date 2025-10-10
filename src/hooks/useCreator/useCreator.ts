@@ -125,6 +125,7 @@ function useCreator() {
         creatorState.selectedAssetId = null
         creatorState.historySnapshots = []
         creatorState.historySnapshotIndex = 0
+        canvas.removeAttribute('data-connected')
       }
     },
     setInitialAssets(projectId: string, assetUrls: string[]) {

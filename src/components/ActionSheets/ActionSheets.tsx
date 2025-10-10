@@ -6,13 +6,12 @@ import styles from './ActionSheets.module.css'
 import classNamesOverlay from '@/components/shared/overlayStyles'
 import IconButton from '@/components/IconButton/IconButton'
 
-if (process.env.NODE_ENV === 'test') {
-  const testElement = document.createElement('div')
-  testElement.id = 'non-modal-content'
-  document.body.append(testElement)
+try {
+  Modal.setAppElement('#non-modal-content')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+} catch (err) {
+  throw Error('All ActionSheets should be lazy loaded!')
 }
-
-Modal.setAppElement('#non-modal-content')
 
 interface Props {
   isOpen: boolean
@@ -34,6 +33,7 @@ const style = {
 }
 
 export default function ActionSheets({ isOpen, close, children, title }: Props) {
+  console.log('Rendering ActionSheets')
   return (
     <Modal
       isOpen={isOpen}

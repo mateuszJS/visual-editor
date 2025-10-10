@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ShapeTool should render pen icon with label 1`] = `
+exports[`SelectAssetTool should render select object icon with label 1`] = `
 <div>
   <div
     class="root"
@@ -16,7 +16,7 @@ exports[`ShapeTool should render pen icon with label 1`] = `
       id="id-0"
     >
       <span>
-        Draw Shape
+        Select Object
       </span>
     </div>
   </div>

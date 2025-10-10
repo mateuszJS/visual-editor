@@ -24,6 +24,8 @@
   --global-padding: 15px;
 
   --danger: #f8504d;
+
+  --dekstop-breakpoint: 900px;
 }
 
 @media (prefers-color-scheme: dark) {

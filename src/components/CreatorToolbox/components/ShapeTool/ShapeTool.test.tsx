@@ -21,15 +21,12 @@ describe('ShapeTool', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('uploads files and adds to the project', async () => {
+  it('clicks causes creator to update the tool to DrawBezierCurve', async () => {
     render(<ShapeTool />)
-    const shapeToolBtn = screen.getByRole('button', {
-      name: /shape/i,
-    })
-    fireEvent.click(shapeToolBtn)
+    fireEvent.click(screen.getByRole('button'))
 
     const { result } = renderHook(useCreator)
 
-    expect(result.current.creator.setTool).toHaveBeenCalledWith(CreatorTool.DrawShape)
+    expect(result.current.creator.setTool).toHaveBeenCalledWith(CreatorTool.DrawBezierCurve)
   })
 })

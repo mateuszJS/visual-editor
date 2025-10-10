@@ -2,18 +2,24 @@
 
 import PictureIcon from 'assets/picture-icon.svg'
 import NavButton from '@/components/NavButton/NavButton'
-import { useState } from 'react'
-import ActionSheets from '@/components/ActionSheets/ActionSheets'
-import UploadTextures from '@/components/UploadTextures/UploadTextures'
+import { lazy, Suspense, useState } from 'react'
 import useCreator from '@/hooks/useCreator/useCreator'
+import Tooltip from '@/components/Tooltip/Tooltip'
+import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
+
+const ActionSheets = lazy(() => import('@/components/ActionSheets/ActionSheets'))
+const UploadTextures = lazy(() => import('@/components/UploadTextures/UploadTextures'))
+
+const tooltipContent = <span>Upload Image</span>
 
 export default function UploadTexture() {
   const [usUploadShown, setIsUploadShown] = useState(false)
-  const { creator } = useCreator()
+  const creatorApi = useCreator()
+  const isMobile = useIsMobile()
 
   async function addTextures(textureUrls: string[]) {
     textureUrls.forEach((url) => {
-      creator.addImage(url)
+      creatorApi.creator.addImage(url)
     })
 
     setIsUploadShown(false)
@@ -21,17 +27,30 @@ export default function UploadTexture() {
 
   return (
     <>
-      <NavButton onClick={() => setIsUploadShown(true)}>
-        <PictureIcon />
-        Image
-      </NavButton>
-      <ActionSheets
-        title="Upload image"
-        isOpen={usUploadShown}
-        close={() => setIsUploadShown(false)}
-      >
-        <UploadTextures onUpload={addTextures} />
-      </ActionSheets>
+      <Suspense fallback={'LoOADINggG'}>
+        {/* <Tooltip tooltipContent={tooltipContent}>
+        {(props) => ( */}
+        <NavButton
+          onClick={() => {
+            ;(document.activeElement as HTMLElement).blur()
+            setIsUploadShown(true)
+          }}
+        >
+          <PictureIcon />
+          {isMobile && 'Image'}
+        </NavButton>
+        {/* )} */}
+        {/* </Tooltip> */}
+        <div>
+          <ActionSheets
+            title="Upload image"
+            isOpen={usUploadShown}
+            close={() => setIsUploadShown(false)}
+          >
+            <UploadTextures onUpload={addTextures} />
+          </ActionSheets>
+        </div>
+      </Suspense>
     </>
   )
 }

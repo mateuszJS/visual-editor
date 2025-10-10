@@ -1,12 +1,12 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
-import TextTool from './TextTool'
+import SelectNodeTool from './SelectNodeTool'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 import { CreatorTool } from '@mateuszjs/magic-render'
+import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 
-describe('TextTool', () => {
+describe('SelectNodeTool', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
     await act(() => {
@@ -16,17 +16,18 @@ describe('TextTool', () => {
     })
   })
 
-  it('should render text icon with label', () => {
-    const { container } = render(<TextTool />)
+  it('should render select node icon with tooltip saying: Select Node', () => {
+    const { container } = render(<SelectNodeTool />)
     expect(container).toMatchSnapshot()
   })
 
-  it('clicks causes creator to update the tool to Text', async () => {
-    render(<TextTool />)
-    fireEvent.click(screen.getByRole('button'))
-
+  it('should call creator.setTool with SelectNode', () => {
     const { result } = renderHook(useCreator)
 
-    expect(result.current.creator.setTool).toHaveBeenCalledWith(CreatorTool.Text)
+    render(<SelectNodeTool />)
+
+    fireEvent.click(screen.getByRole('button'))
+
+    expect(result.current.creator.setTool).toHaveBeenCalledWith(CreatorTool.SelectNode)
   })
 })

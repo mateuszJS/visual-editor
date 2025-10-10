@@ -1,44 +1,44 @@
 'use client'
 
-import Modal from 'react-modal'
-import styles from './OverlayLoader.module.css'
-import classNamesOverlay from '@/components/shared/overlayStyles'
-
-if (process.env.NODE_ENV === 'test') {
-  const testElement = document.createElement('div')
-  testElement.id = 'non-modal-content'
-  document.body.append(testElement)
-}
-
-Modal.setAppElement('#non-modal-content')
+import classNamesOverlay from '@/components/shared/overlayStyles.module.css'
+import cn from 'classnames'
+import { useEffect, useState } from 'react'
 
 interface Props {
   loading: boolean
 }
 
-const classNamesModal = {
-  base: styles.loader,
-  afterOpen: styles.loaderOpen,
-  beforeClose: styles.loaderClosed,
-}
-
 const TRANSITION_TIME_MS = 300
 
 const style = {
-  overlay: { '--transition-time': `${TRANSITION_TIME_MS}ms` } as React.CSSProperties,
-}
+  '--transition-time': `${TRANSITION_TIME_MS}ms`,
+} as React.CSSProperties
 
 export default function OverlayLoader({ loading }: Props) {
+  const [isVisible, setIsVisible] = useState(loading)
+
+  useEffect(() => {
+    if (loading) {
+      setIsVisible(true)
+      return
+    }
+
+    const timeoutId = setTimeout(() => {
+      setIsVisible(false)
+    }, TRANSITION_TIME_MS)
+    return () => clearTimeout(timeoutId)
+  }, [loading])
+
+  if (!isVisible && !loading) return null
+
   return (
-    <Modal
-      isOpen={loading}
-      className={classNamesModal}
-      overlayClassName={classNamesOverlay}
-      shouldCloseOnOverlayClick={false}
+    <div
       style={style}
-      closeTimeoutMS={TRANSITION_TIME_MS}
+      className={cn(classNamesOverlay.overlay, {
+        [classNamesOverlay.overlayOpen]: loading,
+      })}
     >
-      LOADING
-    </Modal>
+      Loading...
+    </div>
   )
 }

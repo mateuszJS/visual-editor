@@ -13,13 +13,15 @@ const mobileButtons = ['Image', 'Shape', 'Text']
 const desktopButtons = ['Select Object', 'Select Node', 'Draw Shape', 'Add Text', 'Upload Image']
 
 describe('CreatorToolbox - creator not initialized yet', () => {
-  it('for desktop', () => {
+  it('for desktop', async () => {
     render(<CreatorToolbox />)
+    await act(async () => {}) /* wait for lazy components */
     expect(LoaderHarness.getLoader()).toBeInTheDocument()
   })
 
-  it('for mobile', () => {
+  it('for mobile', async () => {
     render(<CreatorToolbox />)
+    await act(async () => {}) /* wait for lazy components */
     expect(LoaderHarness.getLoader()).toBeInTheDocument()
   })
 })
@@ -36,9 +38,8 @@ describe('CreatorToolbox - desktop', () => {
   })
 
   it('default state of toolbox', async () => {
-    await act(async () => {
-      render(<CreatorToolbox />)
-    })
+    render(<CreatorToolbox />)
+    await act(async () => {}) /* wait for lazy components */
 
     expect(LoaderHarness.getLoader()).not.toBeInTheDocument()
 
@@ -50,8 +51,9 @@ describe('CreatorToolbox - desktop', () => {
   })
 
   it('toolbox states in default state despite the selected asset', async () => {
+    render(<CreatorToolbox />)
+    await act(async () => {}) /* wait for lazy components */
     await act(async () => {
-      render(<CreatorToolbox />)
       __triggerSelectAsset([1, 0, 0, 0])
     })
 
@@ -77,9 +79,8 @@ describe('CreatorToolbox - mobile', () => {
   })
 
   it('default state of toolbox', async () => {
-    await act(async () => {
-      render(<CreatorToolbox />)
-    })
+    render(<CreatorToolbox />)
+    await act(async () => {}) /* wait for lazy components */
 
     expect(LoaderHarness.getLoader()).not.toBeInTheDocument()
 
@@ -91,8 +92,9 @@ describe('CreatorToolbox - mobile', () => {
   })
 
   it('after selecting an asset', async () => {
+    render(<CreatorToolbox />)
+    await act(async () => {}) /* wait for lazy components */
     await act(async () => {
-      render(<CreatorToolbox />)
       __triggerSelectAsset([1, 0, 0, 0])
     })
 

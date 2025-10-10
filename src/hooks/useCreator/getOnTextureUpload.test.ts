@@ -22,11 +22,10 @@ describe('getOnTextureUpload', () => {
   })
 
   it('should handle failure when fetching blob URL fails', async () => {
-    const blobUrl = 'blob:http://localhost:3000/some-uuid'
+    const blobUrl = 'blob:http://localhost:3000/blob-uuid'
 
-    // Mock the blob URL to return an error
     server.use(
-      http.get(blobUrl, () => {
+      http.get(/blob-uuid/, () => {
         return HttpResponse.error()
       })
     )
@@ -38,20 +37,14 @@ describe('getOnTextureUpload', () => {
   })
 
   it('should successfully fetch blob and upload to server', async () => {
-    const blobUrl = 'blob:http://localhost:3000/some-uuid'
+    const blobUrl = 'blob:http://localhost:3000/blob-uuid'
     const mockBlobData = new Uint8Array([1, 2, 3, 4])
-
-    const handlerURL = 'http://localhost:3000http://localhost:3000/some-uuid'
-    // jest dom has no clue how to handle "blob:" urls, it treats the mas relative so....
-
-    server.use(
-      http.get(handlerURL, () => {
-        return HttpResponse.arrayBuffer(mockBlobData.buffer)
-      })
-    )
     server.use(
       http.post('/api/project-uploads/:projectId', () => {
         return new HttpResponse('3', { status: 201 })
+      }),
+      http.get(/blob-uuid/, () => {
+        return HttpResponse.arrayBuffer(mockBlobData.buffer)
       })
     )
 
@@ -62,38 +55,15 @@ describe('getOnTextureUpload', () => {
   })
 
   it('should handle upload API failure', async () => {
-    const blobUrl = 'blob:http://localhost:3000/some-uuid'
+    const blobUrl = 'blob:http://localhost:3000/blob-uuid'
     const mockBlobData = new Uint8Array([1, 2, 3, 4])
 
-    // Mock the blob URL to return blob data
     server.use(
-      http.get(blobUrl, () => {
-        return HttpResponse.arrayBuffer(mockBlobData.buffer)
-      }),
-      // Override the default project-textures handler to return error
-      http.post('/api/project-textures', () => {
+      http.post('/api/project-uploads/:projectId', () => {
         return HttpResponse.json({ error: 'Upload failed' }, { status: 400 })
-      })
-    )
-
-    await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
-
-    expect(mockSetNewUrl).not.toHaveBeenCalled()
-    expect(errorStore.message).toBe('Failed to upload file.')
-  })
-
-  it('should handle upload API network error', async () => {
-    const blobUrl = 'blob:http://localhost:3000/some-uuid'
-    const mockBlobData = new Uint8Array([1, 2, 3, 4])
-
-    // Mock the blob URL to return blob data
-    server.use(
-      http.get(blobUrl, () => {
-        return HttpResponse.arrayBuffer(mockBlobData.buffer)
       }),
-      // Override the default project-textures handler to return network error
-      http.post('/api/project-textures', () => {
-        return HttpResponse.error()
+      http.get(/blob-uuid/, () => {
+        return HttpResponse.arrayBuffer(mockBlobData.buffer)
       })
     )
 

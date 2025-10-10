@@ -92,7 +92,6 @@ function useCreator() {
           updateProject(project.id, { assets: serializeAssets(assets) })
         },
         (assetId) => {
-          console.log('assetId', assetId)
           creatorState.selectedAssetId = assetId[0] || null
         },
         () => {},

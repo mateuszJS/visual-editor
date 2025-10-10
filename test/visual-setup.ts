@@ -84,5 +84,9 @@ export default async function visualSetup(
     if (fs.existsSync(tempPath)) {
       fs.unlinkSync(tempPath)
     }
+
+    if (options.width) {
+      await page.setViewport({ width: 1280, height: 720 })
+    }
   }
 }

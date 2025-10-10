@@ -67,7 +67,6 @@ export default async function visualSetup(
   // Compare with baseline
   try {
     // Compare with baseline
-    // console.log(expect.getState().currentTestName)
     expect(imageBuffer).toMatchImageSnapshot({
       customSnapshotsDir: screenshotsDir,
       failureThreshold,

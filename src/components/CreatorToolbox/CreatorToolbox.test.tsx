@@ -20,6 +20,7 @@ describe('CreatorToolbox - creator not initialized yet', () => {
   })
 
   it('for mobile', async () => {
+    isMobile = true
     render(<CreatorToolbox />)
     await act(async () => {}) /* wait for lazy components */
     expect(LoaderHarness.getLoader()).toBeInTheDocument()

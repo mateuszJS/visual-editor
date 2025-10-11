@@ -38,8 +38,6 @@ const initMagicRenderMock = {
   destroy: () => {},
 } as unknown as Awaited<ReturnType<typeof initMagicRender>>
 
-const canvas = document.createElement('canvas')
-
 export const Default: Story = {
   decorators: [
     (Story, { args }) => {
@@ -48,6 +46,7 @@ export const Default: Story = {
 
       useEffect(() => {
         if (initialized) {
+          const canvas = document.createElement('canvas')
           canvas.style.display = 'none'
           document.body.appendChild(canvas)
           result.init(canvas, project)

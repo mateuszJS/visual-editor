@@ -30,9 +30,7 @@ describe('CreatorToolbox - desktop', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
     await act(async () => {
-      const canvas = document.createElement('canvas')
-      document.body.appendChild(canvas)
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
     })
     isMobile = false
   })
@@ -71,9 +69,7 @@ describe('CreatorToolbox - mobile', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
     await act(async () => {
-      const canvas = document.createElement('canvas')
-      document.body.appendChild(canvas)
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
     })
     isMobile = true
   })

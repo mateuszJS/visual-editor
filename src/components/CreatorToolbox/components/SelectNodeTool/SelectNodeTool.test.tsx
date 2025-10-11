@@ -10,9 +10,7 @@ describe('SelectNodeTool', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
     await act(() => {
-      const canvas = document.createElement('canvas')
-      document.body.appendChild(canvas)
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
     })
   })
 

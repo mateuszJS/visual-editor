@@ -11,11 +11,9 @@ beforeAll(() =>
 beforeEach(() => {
   _resetUniqueIdCounter()
 
-  if (!('non-modal-content' in window)) {
-    const testElement = document.createElement('div')
-    testElement.id = 'non-modal-content'
-    document.body.append(testElement)
-  }
+  const testElement = document.createElement('div')
+  testElement.id = 'non-modal-content'
+  document.body.append(testElement)
 
   // creator is used in almost half of all tests, because of that
   // we add canvas element before each test by default
@@ -26,7 +24,7 @@ beforeEach(() => {
 
 afterEach(() => {
   server.resetHandlers()
-  server.resetHandlers()
+  document.getElementById('non-modal-content')!.remove()
   window.creatorCanvas.remove()
 })
 

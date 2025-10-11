@@ -3,7 +3,7 @@ import styles from './Tooltip.module.css'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
 
 interface Props {
-  children: (props: { 'aria-describedby': string }) => React.ReactNode
+  children: (props: { 'aria-describedby'?: string }) => React.ReactNode
   tooltipContent: React.ReactNode
 }
 
@@ -13,7 +13,8 @@ export default function Tooltip({ children, tooltipContent }: Props) {
   const props = { 'aria-describedby': tooltipId }
 
   if (isMobile) {
-    return children(props)
+    // no tooltip on mobile, so no need for aria-describedby
+    return children({})
   }
 
   return (

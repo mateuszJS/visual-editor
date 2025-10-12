@@ -1,12 +1,12 @@
 .tooltip {
   position: absolute;
   left: 100%;
-  padding: 0.2em 0.4em;
-  font-size: 0.9rem;
+  padding: 3px 6px;
+  font-size: var(--14px);
   font-weight: 300;
   border: 1px solid var(--primary);
   white-space: nowrap;
-  border-radius: 0.4em;
+  border-radius: 6px;
   transition: visibility 0 linear;
   visibility: hidden;
 }

@@ -72,9 +72,11 @@ export default async function visualSetup(
       failureThreshold,
       failureThresholdType: 'percent',
       allowSizeMismatch: true, // Elements which use fractions of rem/em units can have different size on different machines by 1-2px
-      updatePassedSnapshot: true /* change to true to force to update screenshots,
-      even if it's under the thresold failure */,
-      customSnapshotIdentifier: expect.getState().currentTestName?.replace(/\//g, ''),
+      updatePassedSnapshot: true, // allows to update screenshots when -u flag is passed(flag ot update snapshots)
+      customSnapshotIdentifier: expect
+        .getState()
+        .currentTestName?.replace(/\//g, '')
+        .replace(/\s/g, '_'),
       customDiffConfig: {
         threshold: colorThreshold,
       },

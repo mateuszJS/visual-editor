@@ -6,7 +6,8 @@ exports[`<CreatorNav /> should render navigation items 1`] = `
     class="root navigation-bar"
   >
     <a
-      class="navItem active"
+      aria-current="page"
+      class="navItem"
       href="/"
     >
       <svg />
@@ -26,8 +27,8 @@ exports[`<CreatorNav /> should render navigation items 1`] = `
       />
     </button>
     <a
-      class="navItem ml-auto active"
-      href="/"
+      class="navItem ml-auto"
+      href="/questions"
     >
       <svg />
     </a>

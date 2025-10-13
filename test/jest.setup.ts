@@ -2,11 +2,20 @@ import '@testing-library/jest-dom'
 import { server } from './server'
 import { _resetUniqueIdCounter } from '@/hooks/useUniqueId/useUniqueId'
 
-beforeAll(() =>
+beforeAll(() => {
   server.listen({
     onUnhandledRequest: 'error',
   })
-)
+
+  global.Image = class {
+    // we have to mock new Image().onload to execute the callback
+    set onload(cb: VoidFunction) {
+      cb()
+    }
+  } as unknown as typeof Image
+
+  global.URL.createObjectURL = jest.fn(() => 'blob://image-blob') // jsdom does not support File as argument, only blob
+})
 
 beforeEach(() => {
   _resetUniqueIdCounter()

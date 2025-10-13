@@ -1,7 +1,7 @@
-import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
+import { act, render, renderHook, screen } from '@testing-library/react'
+import user from '@testing-library/user-event'
 import SelectNodeTool from './SelectNodeTool'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { CreatorTool } from '@mateuszjs/magic-render'
 import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 
 const project = getSanitizedProject()
@@ -19,13 +19,20 @@ describe('SelectNodeTool', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('should call creator.setTool with SelectNode', () => {
-    const { result } = renderHook(useCreator)
-
+  it('should call creator.setTool with SelectNode', async () => {
     render(<SelectNodeTool />)
 
-    fireEvent.click(screen.getByRole('button'))
+    user.click(
+      screen.getByRole('button', {
+        description: /select node/i,
+      })
+    )
 
-    expect(result.current.creator.setTool).toHaveBeenCalledWith(CreatorTool.SelectNode)
+    expect(
+      await screen.findByRole('button', {
+        description: /select node/i,
+        pressed: true,
+      })
+    ).toBeInTheDocument()
   })
 })

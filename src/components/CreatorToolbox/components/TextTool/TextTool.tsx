@@ -16,7 +16,11 @@ export default function TextTool() {
   return (
     <Tooltip tooltipContent={tooltipContent}>
       {(props) => (
-        <NavButton {...props} onClick={() => creatorApi.creator.setTool(CreatorTool.Text)}>
+        <NavButton
+          {...props}
+          onClick={() => creatorApi.creator.setTool(CreatorTool.Text)}
+          aria-pressed={creatorApi.tool === CreatorTool.Text}
+        >
           <TextIcon />
           {isMobile && 'Text'}
         </NavButton>

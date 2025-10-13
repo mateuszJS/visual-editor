@@ -23,7 +23,7 @@ export default function CreatorNav() {
       <NavButton onClick={redo || noop} disabled={!redo}>
         <ReverseIcon transform="scale(-1, 1)" />
       </NavButton>
-      <NavItem href="/" className="ml-auto">
+      <NavItem href="/questions" className="ml-auto">
         <QuestionMarkIcon />
       </NavItem>
     </nav>

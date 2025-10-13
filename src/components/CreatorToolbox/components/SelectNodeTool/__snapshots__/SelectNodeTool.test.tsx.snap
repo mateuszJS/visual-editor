@@ -7,6 +7,7 @@ exports[`SelectNodeTool should render select node icon with tooltip saying: Sele
   >
     <button
       aria-describedby="id-0"
+      aria-pressed="false"
       class="navItem"
     >
       <svg />

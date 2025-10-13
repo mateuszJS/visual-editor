@@ -4,7 +4,7 @@ import RemoveAsset from './components/RemoveAsset/RemoveAsset'
 import useCreator from '@/hooks/useCreator/useCreator'
 import SelectAssetTool from './components/SelectAssetTool/SelectAssetTool'
 import SelectNodeTool from './components/SelectNodeTool/SelectNodeTool'
-import UploadTexture from './components/UploadTexture/UploadTexture'
+import UploadTexture from './components/UploadImage/UploadTexture'
 import ShapeTool from './components/ShapeTool/ShapeTool'
 import TextTool from './components/TextTool/TextTool'
 import styles from './CreatorToolbox.module.css'
@@ -45,12 +45,8 @@ export default function CreatorToolbox() {
   const { isReady, selectedAssetId } = useCreator()
   const isMobile = useIsMobile()
 
-  const navClassName = cn('navigation-bar', styles.nav, {
-    [styles.desktop]: !isMobile,
-  })
-
   return (
-    <nav className={navClassName}>
+    <nav className={cn('navigation-bar', styles.nav)}>
       {isMobile ? getMobileItems(selectedAssetId) : getDesktopItems()}
       <OverlayLoader loading={!isReady} />
     </nav>

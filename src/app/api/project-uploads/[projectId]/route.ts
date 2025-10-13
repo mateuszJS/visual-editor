@@ -41,8 +41,6 @@ async function uploadProjectAsset(
     await gcpStorageClient.bucket(BUCKET_NAME).file(`${projectId}/${uploadId}`).save(buffer, {
       contentType: file.type,
     })
-
-    // console.log(`${destFileName} with contents ${file} uploaded to ${bucketName}.`)
   } catch (error) {
     return getResponseError(getErrorMessage(error))
   }

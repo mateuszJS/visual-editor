@@ -15,7 +15,8 @@ exports[`<Navigation> should render five standard links for unautenticated user 
       </span>
     </a>
     <a
-      class="navItem active"
+      aria-current="page"
+      class="navItem"
       href="/explore"
     >
       <svg />

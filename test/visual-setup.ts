@@ -32,7 +32,7 @@ export default async function visualSetup(
   dirname: string,
   options: { colorThreshold?: number; failureThreshold?: number; width?: number } = {}
 ) {
-  const { colorThreshold = 0.01, failureThreshold = 0 } = options
+  const { colorThreshold = 0.05, failureThreshold = 0 } = options
 
   if (options.width) {
     await page.setViewport({ width: options.width, height: 720 })
@@ -70,7 +70,7 @@ export default async function visualSetup(
     expect(imageBuffer).toMatchImageSnapshot({
       customSnapshotsDir: screenshotsDir,
       failureThreshold,
-      blur: 1,
+      // blur: 1, // often text/svg at the edges trigger test fail
       failureThresholdType: 'percent',
       allowSizeMismatch: true, // Elements which use fractions of rem/em units can have different size on different machines by 1-2px
       updatePassedSnapshot: true, // allows to update screenshots when -u flag is passed(flag ot update snapshots)

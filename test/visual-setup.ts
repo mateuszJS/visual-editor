@@ -70,6 +70,7 @@ export default async function visualSetup(
     expect(imageBuffer).toMatchImageSnapshot({
       customSnapshotsDir: screenshotsDir,
       failureThreshold,
+      blur: 1,
       failureThresholdType: 'percent',
       allowSizeMismatch: true, // Elements which use fractions of rem/em units can have different size on different machines by 1-2px
       updatePassedSnapshot: true, // allows to update screenshots when -u flag is passed(flag ot update snapshots)

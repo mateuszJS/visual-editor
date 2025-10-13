@@ -22,7 +22,7 @@ describe('ShapeTool', () => {
   it('clicks causes creator to update the tool to DrawBezierCurve', async () => {
     render(<ShapeTool />)
 
-    user.click(
+    await user.click(
       screen.getByRole('button', {
         description: /draw shape/i,
       })

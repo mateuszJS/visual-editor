@@ -24,13 +24,13 @@ describe('SelectAssetTool', () => {
     const { result } = renderHook(useCreator)
 
     await act(async () => {
-      // SelectAsset is default selection
+      // SelectAsset is default selection, so we have to switch to any other tool to test click action
       result.current.creator.setTool(CreatorTool.DrawBezierCurve)
     })
 
     render(<SelectAssetTool />)
 
-    user.click(
+    await user.click(
       screen.getByRole('button', {
         description: /select object/i,
       })

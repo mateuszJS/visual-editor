@@ -22,7 +22,7 @@ describe('SelectNodeTool', () => {
   it('should call creator.setTool with SelectNode', async () => {
     render(<SelectNodeTool />)
 
-    user.click(
+    await user.click(
       screen.getByRole('button', {
         description: /select node/i,
       })

@@ -22,7 +22,7 @@ describe('TextTool', () => {
   it('clicks causes creator to update the tool to Text', async () => {
     render(<TextTool />)
 
-    user.click(
+    await user.click(
       screen.getByRole('button', {
         description: /add text/i,
       })

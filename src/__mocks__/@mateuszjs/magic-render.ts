@@ -13,8 +13,8 @@ export default function initMagicRenderMock(
   onProcessingUpdate: (inProgress: boolean) => void,
   onPreviewUpdate: (canvas: HTMLCanvasElement) => void,
   onUpdateTool: (tool: CreatorTool) => void,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onUpdateProps: (bounds: unknown[] | null, props: Partial<unknown> | null) => void
-  // onUpdateProps: (bounds: PointUV[] | null, props: Partial<ShapeProps> | null) => void
 ): Promise<CreatorAPI> {
   if (canvas.getAttribute('data-magic-render-linked') === 'true') {
     // on purpose we do not compare lastCanvas to canvas to do not introduce any more logic to this mock

@@ -32,7 +32,7 @@ export default async function visualSetup(
   dirname: string,
   options: { colorThreshold?: number; failureThreshold?: number; width?: number } = {}
 ) {
-  const { colorThreshold = 0.1, failureThreshold = 0.023 } = options
+  const { colorThreshold = 0, failureThreshold = 0 } = options
 
   if (options.width) {
     await page.setViewport({ width: options.width, height: 720 })

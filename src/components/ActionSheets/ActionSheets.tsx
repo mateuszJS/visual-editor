@@ -6,13 +6,11 @@ import styles from './ActionSheets.module.css'
 import classNamesOverlay from '@/components/shared/overlayStyles'
 import IconButton from '@/components/IconButton/IconButton'
 
-if (process.env.NODE_ENV === 'test') {
-  const testElement = document.createElement('div')
-  testElement.id = 'non-modal-content'
-  document.body.append(testElement)
-  Modal.setAppElement(testElement)
-} else {
+try {
   Modal.setAppElement('#non-modal-content')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+} catch (err) {
+  throw Error('All ActionSheets should be lazy loaded!')
 }
 
 interface Props {

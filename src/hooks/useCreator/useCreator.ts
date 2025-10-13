@@ -92,7 +92,6 @@ function useCreator() {
           updateProject(project.id, { assets: serializeAssets(assets) })
         },
         (assetId) => {
-          console.log('assetId', assetId)
           creatorState.selectedAssetId = assetId[0] || null
         },
         () => {},
@@ -105,7 +104,7 @@ function useCreator() {
         creatorState.initialAssets?.projectId === project.id
           ? creatorState.initialAssets.assetUrls.map((url) => ({ url }))
           : project.assets
-      console.log('initialAssets', initialAssets)
+
       creator.resetAssets(initialAssets as SerializedInputAsset[], true)
       creatorState.initialAssets = null
 
@@ -125,6 +124,7 @@ function useCreator() {
         creatorState.selectedAssetId = null
         creatorState.historySnapshots = []
         creatorState.historySnapshotIndex = 0
+        canvas.removeAttribute('data-connected')
       }
     },
     setInitialAssets(projectId: string, assetUrls: string[]) {

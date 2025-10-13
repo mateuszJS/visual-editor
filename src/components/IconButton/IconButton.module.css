@@ -1,18 +1,17 @@
 .iconButton {
-  width: 2rem;
-  height: 2rem;
+  padding: var(--8px);
   background: transparent;
-  font-size: 0.8rem;
+  font-size: var(--13px);
   text-align: center;
   border-radius: 5px;
   transition: background 0.2s ease;
   flex-shrink: 0;
 
   & svg {
-    vertical-align: middle;
+    display: block; /* to avoid extra spacing from inline reserved for tails of g,q,y etc. */
   }
 
   &:hover {
-    background: rgba(var(--primary-rgb), 0.1);
+    background: rgba(var(--primary-rgb), 0.15);
   }
 }

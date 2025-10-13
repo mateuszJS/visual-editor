@@ -10,9 +10,7 @@ describe('ShapeTool', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
     await act(() => {
-      const canvas = document.createElement('canvas')
-      document.body.appendChild(canvas)
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
     })
   })
 
@@ -21,15 +19,12 @@ describe('ShapeTool', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('uploads files and adds to the project', async () => {
+  it('clicks causes creator to update the tool to DrawBezierCurve', async () => {
     render(<ShapeTool />)
-    const shapeToolBtn = screen.getByRole('button', {
-      name: /shape/i,
-    })
-    fireEvent.click(shapeToolBtn)
+    fireEvent.click(screen.getByRole('button'))
 
     const { result } = renderHook(useCreator)
 
-    expect(result.current.creator.setTool).toHaveBeenCalledWith(CreatorTool.DrawShape)
+    expect(result.current.creator.setTool).toHaveBeenCalledWith(CreatorTool.DrawBezierCurve)
   })
 })

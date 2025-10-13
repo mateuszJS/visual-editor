@@ -9,23 +9,23 @@ describe('UploadTexture', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
     await act(() => {
-      const canvas = document.createElement('canvas')
-      document.body.appendChild(canvas)
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
     })
   })
 
-  it('should render the image icon with label', () => {
+  it('should render the image icon with label', async () => {
     const { container } = render(<UploadTexture />)
+    await act(async () => {
+      /* wait for lazy loading */
+    })
     expect(container).toMatchSnapshot()
   })
 
   it('renders upload modal when clicked', async () => {
     render(<UploadTexture />)
+    await act(async () => {}) /* wait for lazy loading */
 
-    const uploadBtn = screen.getByRole('button', {
-      name: /image/i,
-    })
+    const uploadBtn = screen.getByRole('button', { description: 'Upload Image' })
     fireEvent.click(uploadBtn)
 
     expect(
@@ -37,9 +37,9 @@ describe('UploadTexture', () => {
 
   it('uploads files and adds to the project', async () => {
     render(<UploadTexture />)
-    const uploadBtn = screen.getByRole('button', {
-      name: /image/i,
-    })
+    await act(async () => {}) /* wait for lazy loading */
+
+    const uploadBtn = screen.getByRole('button', { description: 'Upload Image' })
     fireEvent.click(uploadBtn)
 
     const file = new Blob(['image-blob'], { type: 'image/png' })

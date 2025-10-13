@@ -1,16 +1,17 @@
 .navItem {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 0.3rem;
+  gap: 7px;
+  line-height: 1;
 
-  width: 3.9rem; /* absolute width, otherwise
-  font-weight changes(on hover) impacts the width of button and all elements start moving */
-  padding: 0 0.5rem;
+  width: calc(62rem / 16);
+  /* absolute width, otherwise font-weight changes(on hover)
+  impacts the width of button and all elements start moving */
+  padding: var(--8px);
   background: none;
 
-  font-size: 0.8rem;
+  font-size: var(--13px);
   font-weight: 300;
 
   transition: opacity 0.2s ease;
@@ -19,7 +20,7 @@
 }
 
 .navItem svg {
-  font-size: 1rem;
+  line-height: var(--20px);
 }
 
 .active {

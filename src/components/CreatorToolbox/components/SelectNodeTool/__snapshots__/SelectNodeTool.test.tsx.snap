@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SelectNodeTool should render select node icon with tooltip saying: Select Node 1`] = `
+<div>
+  <div
+    class="root"
+  >
+    <button
+      aria-describedby="id-0"
+      class="navItem"
+    >
+      <svg />
+    </button>
+    <div
+      class="tooltip"
+      id="id-0"
+    >
+      <span>
+        Select Node
+      </span>
+    </div>
+  </div>
+</div>
+`;

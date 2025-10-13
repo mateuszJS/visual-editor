@@ -2,11 +2,23 @@
 
 exports[`ShapeTool should render pen icon with label 1`] = `
 <div>
-  <button
-    class="navItem"
+  <div
+    class="root"
   >
-    <svg />
-    Shape
-  </button>
+    <button
+      aria-describedby="id-0"
+      class="navItem"
+    >
+      <svg />
+    </button>
+    <div
+      class="tooltip"
+      id="id-0"
+    >
+      <span>
+        Draw Shape
+      </span>
+    </div>
+  </div>
 </div>
 `;

@@ -1,31 +1,58 @@
 'use client'
 
-import UploadTexture from './components/UploadTexture/UploadTexture'
 import RemoveAsset from './components/RemoveAsset/RemoveAsset'
 import useCreator from '@/hooks/useCreator/useCreator'
+import SelectAssetTool from './components/SelectAssetTool/SelectAssetTool'
+import SelectNodeTool from './components/SelectNodeTool/SelectNodeTool'
+import UploadTexture from './components/UploadTexture/UploadTexture'
 import ShapeTool from './components/ShapeTool/ShapeTool'
 import TextTool from './components/TextTool/TextTool'
+import styles from './CreatorToolbox.module.css'
+import cn from 'classnames'
+import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
+import OverlayLoader from '../OverlayLoader/OverlayLoader'
 
-export default function Toolbox() {
-  const { isReady, selectedAssetId } = useCreator()
+function getDesktopItems() {
+  return (
+    <>
+      <SelectAssetTool />
+      <SelectNodeTool />
+      <UploadTexture />
+      <ShapeTool />
+      <TextTool />
+    </>
+  )
+}
 
-  if (!isReady) {
-    return <nav className="navigation-bar">Loading</nav>
+function getMobileItems(selectedAssetId: number | null) {
+  if (selectedAssetId) {
+    return (
+      <>
+        <RemoveAsset />
+      </>
+    )
   }
+  return (
+    <>
+      <UploadTexture />
+      <ShapeTool />
+      <TextTool />
+    </>
+  )
+}
+
+export default function CreatorToolbox() {
+  const { isReady, selectedAssetId } = useCreator()
+  const isMobile = useIsMobile()
+
+  const navClassName = cn('navigation-bar', styles.nav, {
+    [styles.desktop]: !isMobile,
+  })
 
   return (
-    <nav className="navigation-bar">
-      {selectedAssetId === null ? (
-        <>
-          <UploadTexture />
-          <ShapeTool />
-          <TextTool />
-        </>
-      ) : (
-        <>
-          <RemoveAsset />
-        </>
-      )}
+    <nav className={navClassName}>
+      {isMobile ? getMobileItems(selectedAssetId) : getDesktopItems()}
+      <OverlayLoader loading={!isReady} />
     </nav>
   )
 }

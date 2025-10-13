@@ -1,0 +1,16 @@
+.desktop {
+  flex-direction: column;
+  gap: 2px;
+
+  button {
+    width: auto;
+  }
+}
+
+.nav {
+  align-items: center;
+
+  button {
+    position: relative;
+  }
+}

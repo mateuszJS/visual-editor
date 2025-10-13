@@ -1,0 +1,21 @@
+.tooltip {
+  position: absolute;
+  left: 100%;
+  padding: 3px 6px;
+  font-size: var(--14px);
+  font-weight: 300;
+  border: 1px solid var(--primary);
+  white-space: nowrap;
+  border-radius: 6px;
+  transition: visibility 0 linear;
+  visibility: hidden;
+}
+
+.root {
+  position: relative;
+}
+
+.root:is(:focus, :hover) .tooltip {
+  visibility: visible;
+  transition-delay: 0.85s;
+}

@@ -19,6 +19,7 @@ export default function ShapeTool() {
         <NavButton
           {...props}
           onClick={() => creatorApi.creator.setTool(CreatorTool.DrawBezierCurve)}
+          aria-pressed={creatorApi.tool === CreatorTool.DrawBezierCurve}
         >
           <PenToolIcon />
           {isMobile && 'Shape'}

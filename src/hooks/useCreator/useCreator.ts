@@ -3,6 +3,7 @@
 import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 import useProject from '@/hooks/useProject/useProject'
 import initMagicRender, {
+  CreatorTool,
   SerializedInputAsset,
   SerializedOutputAsset,
 } from '@mateuszjs/magic-render'
@@ -20,6 +21,7 @@ interface CreatorStore {
   selectedAssetId: number | null
   historySnapshots: SerializedOutputAsset[][]
   historySnapshotIndex: number
+  tool: CreatorTool
 }
 
 const creatorState = proxy<CreatorStore>({
@@ -29,6 +31,7 @@ const creatorState = proxy<CreatorStore>({
   selectedAssetId: null,
   historySnapshots: [],
   historySnapshotIndex: 0,
+  tool: CreatorTool.SelectAsset,
 })
 
 /*
@@ -63,6 +66,7 @@ function useCreator() {
     selectedAssetId: stateSnapshot.selectedAssetId,
     undo: canUndo ? () => setHistoricSnapshot(stateSnapshot.historySnapshotIndex - 1) : null,
     redo: canRedo ? () => setHistoricSnapshot(stateSnapshot.historySnapshotIndex + 1) : null,
+    tool: stateSnapshot.tool,
     get creator() {
       if (stateSnapshot.creator === null) throw new Error('Creator is not initialized')
       return stateSnapshot.creator
@@ -96,7 +100,9 @@ function useCreator() {
         },
         () => {},
         (canvas) => uploadMiniature(canvas, project.id),
-        (tool) => console.log('current tool', tool),
+        (tool) => {
+          creatorState.tool = tool
+        },
         (bounds, props) => console.log('onExport', bounds, props)
       )
 

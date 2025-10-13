@@ -1,3 +1,4 @@
 .root {
-  padding-bottom: 11px;
+  padding-block: 5px;
+  grid-area: header;
 }

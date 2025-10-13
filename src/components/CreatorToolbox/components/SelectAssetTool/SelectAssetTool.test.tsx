@@ -1,4 +1,5 @@
-import { act, screen, fireEvent, render, renderHook } from '@testing-library/react'
+import { act, screen, render, renderHook } from '@testing-library/react'
+import user from '@testing-library/user-event'
 import SelectAssetTool from './SelectAssetTool'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
@@ -19,13 +20,27 @@ describe('SelectAssetTool', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('should call creator.setTool with SelectAsset', () => {
+  it('should call creator.setTool with SelectAsset', async () => {
     const { result } = renderHook(useCreator)
+
+    await act(async () => {
+      // SelectAsset is default selection, so we have to switch to any other tool to test click action
+      result.current.creator.setTool(CreatorTool.DrawBezierCurve)
+    })
 
     render(<SelectAssetTool />)
 
-    fireEvent.click(screen.getByRole('button'))
+    await user.click(
+      screen.getByRole('button', {
+        description: /select object/i,
+      })
+    )
 
-    expect(result.current.creator.setTool).toHaveBeenCalledWith(CreatorTool.SelectAsset)
+    expect(
+      await screen.findByRole('button', {
+        description: /select object/i,
+        pressed: true,
+      })
+    ).toBeInTheDocument()
   })
 })

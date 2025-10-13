@@ -7,9 +7,14 @@ let onUpdateAssetsCallback: (assets: SerializedOutputAsset[]) => void
  * For WebGPU physical GPU is required, so far there is no way to simulate with CPU */
 export default function initMagicRenderMock(
   canvas: HTMLCanvasElement,
-  onUpdateTextures: (url: string, setNewUrl: (newUrl: string) => void) => void,
-  onUpdateAssets: (assets: SerializedOutputAsset[]) => void,
-  onSelectAsset: (assetId: [number, number, number, number]) => void
+  uploadTexture: (url: string, onNewUrl: (newUrl: string) => void) => void,
+  onAssetsUpdate: (assets: SerializedOutputAsset[]) => void,
+  onAssetSelect: (assetId: [number, number, number, number]) => void,
+  onProcessingUpdate: (inProgress: boolean) => void,
+  onPreviewUpdate: (canvas: HTMLCanvasElement) => void,
+  onUpdateTool: (tool: CreatorTool) => void,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onUpdateProps: (bounds: unknown[] | null, props: Partial<unknown> | null) => void
 ): Promise<CreatorAPI> {
   if (canvas.getAttribute('data-magic-render-linked') === 'true') {
     // on purpose we do not compare lastCanvas to canvas to do not introduce any more logic to this mock
@@ -17,14 +22,16 @@ export default function initMagicRenderMock(
   }
 
   canvas.setAttribute('data-magic-render-linked', 'true')
-  onSelectAssetCallback = onSelectAsset
-  onUpdateAssetsCallback = onUpdateAssets
+  onSelectAssetCallback = onAssetSelect
+  onUpdateAssetsCallback = onAssetsUpdate
 
   return Promise.resolve({
     addImage: jest.fn(),
     removeAsset: jest.fn(),
     resetAssets: jest.fn(),
-    setTool: jest.fn(),
+    setTool: jest.fn((tool) => {
+      onUpdateTool(tool)
+    }),
     destroy: () => {
       canvas.removeAttribute('data-magic-render-linked')
     },

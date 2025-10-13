@@ -1,7 +1,6 @@
 import { http, HttpResponse } from 'msw'
 
-const blob = new Blob(['image-data'], { type: 'image/png' })
-const file = new File([blob], 'image-blob.png', { type: blob.type })
+const file = new File(['image-data'], 'image-blob.png', { type: 'image/png' })
 
 export default [
   http.get('/api/me', () => {

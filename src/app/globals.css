@@ -137,6 +137,7 @@ button {
   font: inherit;
   border: none;
   cursor: pointer;
+  background: none;
 }
 
 ul {

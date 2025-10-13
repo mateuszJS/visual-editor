@@ -1,4 +1,5 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
+import user from '@testing-library/user-event'
 import UploadTexture from './UploadTexture'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
@@ -37,30 +38,16 @@ describe('UploadTexture', () => {
 
   it('uploads files and adds to the project', async () => {
     render(<UploadTexture />)
-    await act(async () => {}) /* wait for lazy loading */
 
-    const uploadBtn = screen.getByRole('button', { description: 'Upload Image' })
-    fireEvent.click(uploadBtn)
+    await user.click(
+      await screen.findByRole('button', {
+        description: 'Upload Image',
+      })
+    )
 
-    const file = new Blob(['image-blob'], { type: 'image/png' })
-    // not sure why in Jest DOM allows only blob for URL.createObjectURL and not files
-
-    const fileInputTrigger = screen.getByLabelText(/Upload an image/i)
-
-    global.Image = class {
-      // we have to mock new Image().onload to execute the callback
-      set onload(cb: VoidFunction) {
-        cb()
-      }
-    } as unknown as typeof Image
-
-    fireEvent.change(fileInputTrigger, {
-      target: {
-        files: [file],
-      },
-    })
-
-    await act(async () => {})
+    const fileInputTrigger = await screen.findByLabelText(/Upload an image/i)
+    const files = [new File(['image'], 'image.png', { type: 'image/png' })]
+    await user.upload(fileInputTrigger, files)
 
     const { result } = renderHook(useCreator)
     expect(result.current.creator.addImage).toHaveBeenCalledTimes(1)

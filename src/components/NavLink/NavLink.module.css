@@ -9,26 +9,33 @@
   /* absolute width, otherwise font-weight changes(on hover)
   impacts the width of button and all elements start moving */
   padding: var(--8px);
-  background: none;
 
   font-size: var(--13px);
   font-weight: 300;
 
-  transition: opacity 0.2s ease;
-  opacity: 0.5;
+  transition: color 0.2s ease, background 0.2s ease;
+
+  color: rgba(var(--primary-rgb), 0.5);
   user-select: none;
+  border-radius: 5px;
+
+  @media (hover: hover) {
+    &:hover:not([disabled]) {
+      background: rgba(var(--primary-rgb), 0.2);
+    }
+  }
+
+  &:is([aria-current='page'], [aria-pressed='true']) {
+    color: rgba(var(--primary-rgb), 1);
+    font-weight: 500;
+  }
 }
 
 .navItem svg {
   line-height: var(--20px);
 }
 
-.active {
-  opacity: 1;
-  font-weight: 500;
-}
-
 .navItem[disabled] {
   cursor: not-allowed;
-  opacity: 0.3;
+  color: rgba(var(--primary-rgb), 0.3);
 }

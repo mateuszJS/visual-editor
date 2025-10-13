@@ -6,6 +6,7 @@ import { lazy, Suspense, useState } from 'react'
 import useCreator from '@/hooks/useCreator/useCreator'
 import Tooltip from '@/components/Tooltip/Tooltip'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
+import { CreatorTool } from '@mateuszjs/magic-render'
 
 const UploadModal = lazy(() => import('./UploadModal'))
 
@@ -31,7 +32,7 @@ export default function UploadTexture() {
           <NavButton
             {...props}
             onClick={() => {
-              ;(document.activeElement as HTMLElement).blur()
+              creatorApi.creator.setTool(CreatorTool.SelectAsset)
               setIsUploadShown(true)
             }}
           >

@@ -16,7 +16,7 @@ export default function CreateButton() {
       <button className={styles.createButton} onClick={() => setIsModal(true)} type="button">
         <PlusIcon />
       </button>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense>
         <NewProjectModal isOpen={isModal} close={() => setIsModal(false)} />
       </Suspense>
     </>

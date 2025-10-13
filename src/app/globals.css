@@ -34,8 +34,9 @@
   /* --17px: 1.0625rem; */
   --18px: 1.125rem;
   --19px: 1.1875rem;
-  /* --20px: 1.25rem; */
+  --20px: 1.25rem;
   /* --21px: 1.3125rem; */
+  --28px: 1.75rem;
   --40px: 2.5rem;
 }
 
@@ -166,5 +167,6 @@ ul {
 .navigation-bar {
   display: flex;
   justify-content: space-between;
-  padding: 11px calc(var(--global-padding) * 0.5) 19px;
+  align-items: center;
+  padding: 3px calc(var(--global-padding) * 0.5) 11px;
 }

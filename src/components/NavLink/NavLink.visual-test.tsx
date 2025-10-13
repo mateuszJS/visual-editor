@@ -1,6 +1,6 @@
 import visualSetup from 'test/visual-setup'
 
-const failureThreshold = 0.04
+const failureThreshold = 0.023
 // This component includes lots of fraction of em/rem units.
 // Because of that there are mismatches randomly popping out,
 // mainly because of height difference, 1-2px

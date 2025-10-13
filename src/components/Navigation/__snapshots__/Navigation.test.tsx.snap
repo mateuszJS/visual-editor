@@ -10,7 +10,9 @@ exports[`<Navigation> should render five standard links for unautenticated user 
       href="/"
     >
       <svg />
-      Home
+      <span>
+        Home
+      </span>
     </a>
     <a
       class="navItem active"

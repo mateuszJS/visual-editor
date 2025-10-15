@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   render: function Render(args) {
-    const [{}, updateArgs] = useArgs()
+    const [, updateArgs] = useArgs()
 
     const onChange = (value: number) => {
       args.onChange(value)

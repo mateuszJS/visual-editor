@@ -13,7 +13,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: function Render(args) {
+  render: function Render() {
     return (
       <div style={{ width: 300, padding: 50, background: '#444' }}>
         <BoundsPanel />

@@ -27,7 +27,7 @@ interface CreatorStore {
 }
 
 // we extract this part to a separate hook since not all components using useCreator need this data
-// and this data gonna be update quite frequently
+// and this data is going to be updated quite frequently
 
 interface AssetStore {
   bounds: PointUV[] | null

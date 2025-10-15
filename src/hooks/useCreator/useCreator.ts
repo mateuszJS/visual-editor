@@ -6,6 +6,8 @@ import initMagicRender, {
   CreatorTool,
   SerializedInputAsset,
   SerializedOutputAsset,
+  PointUV,
+  ShapeProps,
 } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
 import getOnTextureUpload from './getOnTextureUpload'
@@ -23,6 +25,18 @@ interface CreatorStore {
   historySnapshotIndex: number
   tool: CreatorTool
 }
+
+// we extract this part to a separate hook since not all components using useCreator need this data
+// and this data is going to be updated quite frequently
+
+interface AssetStore {
+  bounds: PointUV[] | null
+  props: Partial<ShapeProps> | null
+}
+export const assetState = proxy<AssetStore>({
+  bounds: null,
+  props: null,
+})
 
 const creatorState = proxy<CreatorStore>({
   creator: null,
@@ -103,7 +117,10 @@ function useCreator() {
         (tool) => {
           creatorState.tool = tool
         },
-        (bounds, props) => console.log('onExport', bounds, props)
+        (bounds, props) => {
+          assetState.bounds = bounds
+          assetState.props = props
+        }
       )
 
       const initialAssets =

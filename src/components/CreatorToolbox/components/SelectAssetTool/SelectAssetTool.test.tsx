@@ -1,5 +1,5 @@
 import { act, screen, render, renderHook } from '@testing-library/react'
-import user from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event'
 import SelectAssetTool from './SelectAssetTool'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
@@ -21,6 +21,7 @@ describe('SelectAssetTool', () => {
   })
 
   it('should call creator.setTool with SelectAsset', async () => {
+    const user = userEvent.setup()
     const { result } = renderHook(useCreator)
 
     await act(async () => {

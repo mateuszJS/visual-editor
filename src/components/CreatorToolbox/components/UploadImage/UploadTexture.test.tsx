@@ -1,5 +1,5 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
-import user from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event'
 import UploadTexture from './UploadTexture'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
@@ -37,6 +37,7 @@ describe('UploadTexture', () => {
   })
 
   it('uploads files and adds to the project', async () => {
+    const user = userEvent.setup()
     render(<UploadTexture />)
 
     await user.click(

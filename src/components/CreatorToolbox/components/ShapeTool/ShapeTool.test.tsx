@@ -1,5 +1,5 @@
 import { act, render, renderHook, screen } from '@testing-library/react'
-import user from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event'
 import ShapeTool from './ShapeTool'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
@@ -20,6 +20,7 @@ describe('ShapeTool', () => {
   })
 
   it('clicks causes creator to update the tool to DrawBezierCurve', async () => {
+    const user = userEvent.setup()
     render(<ShapeTool />)
 
     await user.click(

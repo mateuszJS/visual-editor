@@ -3,7 +3,9 @@ import throttle from 'lodash/throttle'
 import { DESKTOP_BREAKPOINT } from '@/consts'
 
 export default function useIsMobile() {
-  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < DESKTOP_BREAKPOINT)
+  const [isMobile, setIsMobile] = useState<boolean>(
+    typeof window !== 'undefined' ? window.innerWidth < DESKTOP_BREAKPOINT : false
+  )
 
   useEffect(() => {
     const handleResize = throttle(

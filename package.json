@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^7.17.1",
-    "@mateuszjs/magic-render": "^0.1.0-next.26",
+    "@mateuszjs/magic-render": "^0.1.0-next.28",
     "@supabase/supabase-js": "^2.49.4",
     "@vercel/functions": "^2.0.0",
     "classnames": "^2.5.1",

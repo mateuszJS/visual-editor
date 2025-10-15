@@ -16,7 +16,7 @@ export default function Navigation() {
     <nav className="navigation-bar">
       <NavItem href="/">
         <HomeIcon />
-        Home
+        <span>Home</span>
       </NavItem>
 
       <NavItem href="/explore">

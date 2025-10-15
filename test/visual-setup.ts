@@ -6,7 +6,7 @@ import { toMatchImageSnapshot } from 'jest-image-snapshot'
 
 expect.extend({ toMatchImageSnapshot })
 
-/* to filter out unnecessayr console logs form visual regression tests */
+/* to filter out unnecessary console logs from visual regression tests */
 const knownTrashConsoleLogs = [
   '%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold',
   'Failed to load resource: the server responded with a status of 404 (Not Found)',
@@ -27,7 +27,17 @@ beforeAll(async () => {
  * Visual setup for Storybook stories
  * @param storyId - Storybook story ID takend from storbyook iframe URL
  */
-export default async function visualSetup(storyId: string, dirname: string) {
+export default async function visualSetup(
+  storyId: string,
+  dirname: string,
+  options: { colorThreshold?: number; failureThreshold?: number; width?: number } = {}
+) {
+  const { colorThreshold = 0.1, failureThreshold = 0.013 } = options
+
+  if (options.width) {
+    await page.setViewport({ width: options.width, height: 720 })
+  }
+
   // Create screenshots directory
   const screenshotsDir = path.join(dirname, '__image_snapshots__')
   if (!fs.existsSync(screenshotsDir)) {
@@ -59,16 +69,26 @@ export default async function visualSetup(storyId: string, dirname: string) {
     // Compare with baseline
     expect(imageBuffer).toMatchImageSnapshot({
       customSnapshotsDir: screenshotsDir,
-      failureThreshold: 0.023,
+      failureThreshold,
       failureThresholdType: 'percent',
-      updatePassedSnapshot: true /* change to true to force to update screenshots,
-      even if it's under the thresold failure */,
-      customSnapshotIdentifier: storyId,
+      allowSizeMismatch: true, // Elements which use fractions of rem/em units can have different size on different machines by 1-2px
+      updatePassedSnapshot: true, // allows to update screenshots when -u flag is passed(flag ot update snapshots)
+      customSnapshotIdentifier: expect
+        .getState()
+        .currentTestName?.replace(/\//g, '')
+        .replace(/\s/g, '_'),
+      customDiffConfig: {
+        threshold: colorThreshold,
+      },
     })
   } finally {
     // Clean up temporary file
     if (fs.existsSync(tempPath)) {
       fs.unlinkSync(tempPath)
+    }
+
+    if (options.width) {
+      await page.setViewport({ width: 1280, height: 720 })
     }
   }
 }

@@ -1,8 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/nextjs'
 import ProjectPanel from './ProjectPanel'
 
 const meta = {
-  title: 'ProjectPanel',
   component: ProjectPanel,
   decorators: [
     (Story) => (

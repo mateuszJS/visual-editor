@@ -1,9 +1,9 @@
 .base {
-  --modal-space-inline: 1rem;
+  --modal-space-inline: 16px;
   --modal-background: rgb(60, 60, 60);
   align-self: flex-end;
   background: var(--modal-background);
-  padding: 1rem var(--modal-space-inline) 2rem;
+  padding: 16px var(--modal-space-inline) 32px;
   width: 100%;
   translate: 0 100%;
   transition: translate var(--transition-time) ease;
@@ -28,7 +28,7 @@
 .title {
   margin-inline: auto;
   color: var(--secondary);
-  font-size: 0.8rem;
+  font-size: var(--13px);
   font-weight: 300;
   text-transform: uppercase;
 }

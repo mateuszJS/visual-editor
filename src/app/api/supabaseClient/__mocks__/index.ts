@@ -1,8 +1,6 @@
 type FieldValue = string | number | null | boolean | object[]
 type Row = Record<string, FieldValue>
 
-const firstImage = new File([new Blob(['image-blob'], { type: 'image/png' })], 'image-blob.png')
-
 export function __getCleanDBMock() {
   return {
     tables: {
@@ -71,17 +69,6 @@ export function __getCleanDBMock() {
           assets: [],
         },
       ] as Row[],
-      project_textures: [
-        { id: '1', owner_id: '1' },
-        { id: '3', owner_id: '1' },
-        { id: '4', owner_id: '2' },
-      ] as Row[],
-    },
-    storage: {
-      'project-textures': {
-        '1': firstImage,
-      } as Record<string, File>,
-      'project-miniatures': {} as Record<string, File>,
     },
   }
 }
@@ -167,32 +154,6 @@ const supabaseClientMock = {
     return {
       error,
       select: () => supabaseClientMock.select(newRows, error),
-    }
-  },
-  storage: {
-    from: (bucketId: keyof typeof dbMock.storage) => {
-      const nextError = errorsQueue.shift() || null
-
-      return {
-        upload: supabaseClientMock.upload.bind(null, bucketId, nextError),
-        download: (path: string) => ({
-          error: nextError,
-          data: dbMock.storage[bucketId][path] || null,
-        }),
-      }
-    },
-  },
-  upload: (
-    bucketId: keyof typeof dbMock.storage,
-    error: Error | null = null,
-    filePath: string,
-    file: File
-  ) => {
-    dbMock.storage[bucketId][filePath] = file
-
-    return {
-      error,
-      data: { id: '1', path: filePath, fullPath: `${bucketId}/${filePath}` },
     }
   },
 }

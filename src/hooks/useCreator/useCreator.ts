@@ -3,12 +3,16 @@
 import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 import useProject from '@/hooks/useProject/useProject'
 import initMagicRender, {
+  CreatorTool,
   SerializedInputAsset,
   SerializedOutputAsset,
+  PointUV,
+  ShapeProps,
 } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
-import onTextureUpload from './onTextureUpload'
+import getOnTextureUpload from './getOnTextureUpload'
 import uploadMiniature from './uploadMiniature'
+import type { Json } from '@/app/api/supabaseClient/database.types'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 
@@ -19,7 +23,20 @@ interface CreatorStore {
   selectedAssetId: number | null
   historySnapshots: SerializedOutputAsset[][]
   historySnapshotIndex: number
+  tool: CreatorTool
 }
+
+// we extract this part to a separate hook since not all components using useCreator need this data
+// and this data is going to be updated quite frequently
+
+interface AssetStore {
+  bounds: PointUV[] | null
+  props: Partial<ShapeProps> | null
+}
+export const assetState = proxy<AssetStore>({
+  bounds: null,
+  props: null,
+})
 
 const creatorState = proxy<CreatorStore>({
   creator: null,
@@ -28,6 +45,7 @@ const creatorState = proxy<CreatorStore>({
   selectedAssetId: null,
   historySnapshots: [],
   historySnapshotIndex: 0,
+  tool: CreatorTool.SelectAsset,
 })
 
 /*
@@ -35,11 +53,9 @@ const creatorState = proxy<CreatorStore>({
   Cannot accept any arguments because might be used in a very deep nested component inside creator view.
 */
 
-function serializeAssets(assets: SerializedOutputAsset[]) {
-  return assets.map((asset) => ({
-    points: asset.points,
-    url: asset.url,
-  }))
+function serializeAssets(assets: Record<string, unknown>[]) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return assets.map(({ id, texture_id, cache_texture_id, sdf_texture_id, ...rest }) => rest as Json)
 }
 
 function useCreator() {
@@ -64,6 +80,7 @@ function useCreator() {
     selectedAssetId: stateSnapshot.selectedAssetId,
     undo: canUndo ? () => setHistoricSnapshot(stateSnapshot.historySnapshotIndex - 1) : null,
     redo: canRedo ? () => setHistoricSnapshot(stateSnapshot.historySnapshotIndex + 1) : null,
+    tool: stateSnapshot.tool,
     get creator() {
       if (stateSnapshot.creator === null) throw new Error('Creator is not initialized')
       return stateSnapshot.creator
@@ -81,7 +98,7 @@ function useCreator() {
 
       const creator = await initMagicRender(
         canvas,
-        onTextureUpload,
+        getOnTextureUpload(project.id),
         (assets) => {
           if (creatorState.historySnapshotIndex < creatorState.historySnapshots.length - 1) {
             creatorState.historySnapshots.splice(creatorState.historySnapshotIndex + 1)
@@ -93,10 +110,17 @@ function useCreator() {
           updateProject(project.id, { assets: serializeAssets(assets) })
         },
         (assetId) => {
-          creatorState.selectedAssetId = assetId || null
+          creatorState.selectedAssetId = assetId[0] || null
         },
         () => {},
-        (canvas) => uploadMiniature(canvas, project.id)
+        (canvas) => uploadMiniature(canvas, project.id),
+        (tool) => {
+          creatorState.tool = tool
+        },
+        (bounds, props) => {
+          assetState.bounds = bounds
+          assetState.props = props
+        }
       )
 
       const initialAssets =
@@ -123,6 +147,7 @@ function useCreator() {
         creatorState.selectedAssetId = null
         creatorState.historySnapshots = []
         creatorState.historySnapshotIndex = 0
+        canvas.removeAttribute('data-connected')
       }
     },
     setInitialAssets(projectId: string, assetUrls: string[]) {

@@ -14,9 +14,7 @@ describe('useCreator', () => {
     const { result } = renderHook(useCreator)
 
     await act(async () => {
-      const canvas = document.createElement('canvas')
-      window.document.body.appendChild(canvas)
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
       expect(result.current.isReady).toBe(false)
     })
 
@@ -37,14 +35,11 @@ describe('useCreator', () => {
   it('canvas is marked as conntected once initialized', async () => {
     const { result } = renderHook(useCreator)
 
-    const canvas = document.createElement('canvas')
-    window.document.body.appendChild(canvas)
-
     await act(async () => {
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
     })
 
-    expect(canvas.hasAttribute('data-connected')).toBe(true)
+    expect(window.creatorCanvas.hasAttribute('data-connected')).toBe(true)
   })
 
   it('reading creator before initialization throws error', async () => {
@@ -53,9 +48,7 @@ describe('useCreator', () => {
     expect(() => result.current.creator).toThrow('Creator is not initialized')
 
     await act(async () => {
-      const canvas = document.createElement('canvas')
-      window.document.body.appendChild(canvas)
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
     })
 
     expect(() => result.current.creator).not.toThrow('Creator is not initialized')
@@ -67,9 +60,7 @@ describe('useCreator', () => {
     expect(() => result.current.projectId).toThrow('Project id is not initialized')
 
     await act(async () => {
-      const canvas = document.createElement('canvas')
-      window.document.body.appendChild(canvas)
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
     })
 
     expect(result.current.projectId).toEqual('1')
@@ -78,16 +69,13 @@ describe('useCreator', () => {
   it("initializing creator with same canvas element twice doesn't produce a new creator", async () => {
     const { result } = renderHook(useCreator)
 
-    const canvas = document.createElement('canvas')
-    window.document.body.appendChild(canvas)
-
     await act(async () => {
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
     })
     const creatorFirstInit = result.current.creator
 
     await act(async () => {
-      result.current.init(canvas, project)
+      result.current.init(window.creatorCanvas, project)
     })
     const creatorSecondInit = result.current.creator
 
@@ -131,11 +119,9 @@ describe('useCreator', () => {
       })
 
       const { result: useCreatorRef } = renderHook(useCreator)
-      const canvas = document.createElement('canvas')
-      document.body.appendChild(canvas)
 
       await act(async () => {
-        useCreatorRef.current.init(canvas, project)
+        useCreatorRef.current.init(window.creatorCanvas, project)
       })
     })
 
@@ -250,7 +236,7 @@ describe('useCreator', () => {
 
   it('destroying destroys connection between creator and canvas even when destroy is called before initialization is done', async () => {
     // currently this test case tests the mock rather then real implementation,
-    // but once WebGPU is supproted in github acitons we can remvoe the mock and start testign real implementation
+    // but once WebGPU is supported in github actions we can remove the mock and start testing real implementation
 
     const { result } = renderHook(useCreator)
 
@@ -296,11 +282,7 @@ describe('useCreator', () => {
       const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets(project.id, assets)
-
-        const canvas = document.createElement('canvas')
-        window.document.body.appendChild(canvas)
-
-        result.current.init(canvas, project)
+        result.current.init(window.creatorCanvas, project)
       })
 
       expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(
@@ -316,11 +298,7 @@ describe('useCreator', () => {
       const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets('2', assets)
-
-        const canvas = document.createElement('canvas')
-        window.document.body.appendChild(canvas)
-
-        result.current.init(canvas, project)
+        result.current.init(window.creatorCanvas, project)
       })
 
       expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(1, [], true)
@@ -332,15 +310,11 @@ describe('useCreator', () => {
       const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets(project.id, assets)
-
-        const canvas = document.createElement('canvas')
-        window.document.body.appendChild(canvas)
-
-        result.current.init(canvas, project)
+        result.current.init(window.creatorCanvas, project)
       })
 
+      const canvas = document.createElement('canvas')
       await act(async () => {
-        const canvas = document.createElement('canvas')
         window.document.body.appendChild(canvas)
 
         result.current.init(canvas, project)
@@ -349,6 +323,7 @@ describe('useCreator', () => {
       // remember that with init(canvas, project) we return a new creator instance
       // with a new resetAssets jest spy function, so thats why it should be 0 called, not 2
       expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(1, [], true)
+      canvas.remove()
     })
   })
 })

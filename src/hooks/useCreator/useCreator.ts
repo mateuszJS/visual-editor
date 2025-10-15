@@ -118,7 +118,6 @@ function useCreator() {
           creatorState.tool = tool
         },
         (bounds, props) => {
-          console.log('setBounds', bounds && bounds[0].x)
           assetState.bounds = bounds
           assetState.props = props
         }

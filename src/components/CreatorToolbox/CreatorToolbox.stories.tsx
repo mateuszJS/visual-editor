@@ -7,7 +7,6 @@ import { mocked } from 'storybook/test'
 import initMagicRender from '@mateuszjs/magic-render'
 
 const meta = {
-  title: 'CreatorToolbox',
   component: CreatorToolbox,
   parameters: {
     layout: 'centered',

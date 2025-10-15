@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
 import { fn } from 'storybook/test'
 import NumberInput from './NumberInput'
-import { useArgs } from 'storybook/internal/preview-api'
+import { useArgs } from 'storybook/preview-api'
 
 const meta = {
   component: NumberInput,

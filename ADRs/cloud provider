@@ -2,12 +2,12 @@ Decision regarding cloud provider can be splitted into smaller sections:
 
 All 4 providers(GCP, AWS, Azure, CloudFlare) supports extensive free tier.
 
-Azur was ruled out because of long cold start. Azure functions can take up to 5 second to run!
+Azure was ruled out because of long cold start. Azure functions can take up to 5 second to run!
 https://mikhail.io/serverless/coldstarts/big3/
 
 AWS & Google
 Similar qualities, services & pricing. There is no any obstacles to use those providers.
-Biggest difference waswit functions. AWS offers 1M per month free, later $0.20 per 1M. GCP offers 2M for free but later it's $0.40
+Biggest difference was with functions. AWS offers 1M per month free, later $0.20 per 1M. GCP offers 2M for free but later it's $0.40
 
 Google downsides:
 
@@ -16,7 +16,7 @@ Google downsides:
 
 I haven't investigated AWS that well as GCP.
 
-CoudFlare offers way less services, but is focus more on common usecases like CDN, Storage, DB, hosting.
+CloudFlare offers way less services, but is focus more on common usecases like CDN, Storage, DB, hosting.
 
 Storage(instantly accessible item)
 S3 - $0.023 per GB

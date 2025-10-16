@@ -1,7 +1,7 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
 import RemoveAsset from './RemoveAsset'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
+import { getSanitizedProject } from '@/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 

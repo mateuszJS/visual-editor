@@ -2,7 +2,7 @@ import { act, render, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import TextTool from './TextTool'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
+import { getSanitizedProject } from '@/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 

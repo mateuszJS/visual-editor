@@ -1,4 +1,4 @@
-import { SanitizedProject } from '../utils/sanitizeProjectData'
+import { SanitizedProject } from '../_deprecated_api/utils/sanitizeProjectData'
 
 export const getSanitizedProject = (): SanitizedProject => ({
   id: '1', // so it's compatible with server-handlers.ts create project endpoint with id 1

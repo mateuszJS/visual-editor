@@ -2,8 +2,8 @@ import { act, render, renderHook, screen } from '@testing-library/react'
 import CreatorToolbox from './CreatorToolbox'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { __triggerSelectAsset } from '@mateuszjs/magic-render'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 import * as LoaderHarness from '@/components/OverlayLoader/harness'
+import { getSanitizedProject } from '@/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 

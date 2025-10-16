@@ -3,8 +3,8 @@
 import userStore from '@/hooks/userStore/userStore'
 import Button from '@/components/Button/Button'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
-import { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
+import { SanitizedUser } from '@/types'
 
 interface Props {
   onSuccess: VoidFunction

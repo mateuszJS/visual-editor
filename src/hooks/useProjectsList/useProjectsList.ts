@@ -1,10 +1,8 @@
-'use client'
-
-import type { SanitizedProjectMeta } from '@/app/api/utils/sanitizeProjectMetaData'
 import { useEffect } from 'react'
 import useFetcher from '../useFetcher/useFetcher'
 import { proxyMap } from 'valtio/utils'
 import { useSnapshot } from 'valtio'
+import { SanitizedProjectMeta } from '@/types'
 
 const projectsListStore = proxyMap<string, SanitizedProjectMeta>()
 

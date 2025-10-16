@@ -22,7 +22,8 @@ export default async (): Promise<Config> => {
     displayName: 'Frontend',
     testEnvironment: 'jest-fixed-jsdom',
     setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
-    testPathIgnorePatterns: ['/src/app/api/.*test\\.ts$'],
+    testPathIgnorePatterns: ['/_deprecated_api/.*test\\.ts$'],
+    // testPathIgnorePatterns: ['/src/app/api/.*test\\.ts$'],
     moduleNameMapper,
   })
 

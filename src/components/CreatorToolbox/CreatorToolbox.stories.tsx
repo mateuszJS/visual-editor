@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/nextjs'
 import CreatorToolbox from './CreatorToolbox'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { useEffect } from 'react'
-import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 import { mocked } from 'storybook/test'
 import initMagicRender from '@mateuszjs/magic-render'
+import { SanitizedProject } from '@/types'
 
 const meta = {
   component: CreatorToolbox,

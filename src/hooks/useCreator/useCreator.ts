@@ -1,6 +1,5 @@
 'use client'
 
-import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 import useProject from '@/hooks/useProject/useProject'
 import initMagicRender, {
   CreatorTool,
@@ -8,11 +7,14 @@ import initMagicRender, {
   SerializedOutputAsset,
   PointUV,
   ShapeProps,
+  SerializedOutputImage,
+  SerializedOutputShape,
+  SerializedOutputText,
 } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
 import getOnTextureUpload from './getOnTextureUpload'
 import uploadMiniature from './uploadMiniature'
-import type { Json } from '@/app/api/supabaseClient/database.types'
+import { SanitizedAsset, SanitizedProject } from '@/types'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 
@@ -48,16 +50,21 @@ const creatorState = proxy<CreatorStore>({
   tool: CreatorTool.SelectAsset,
 })
 
+type SerializedOutputAssetMerged = SerializedOutputImage &
+  SerializedOutputShape &
+  SerializedOutputText // this type only exist to allow fields removal that might not exist on all variants of the union
+
+function serializeAssets(assets: SerializedOutputAssetMerged[]) {
+  return assets.map<SanitizedAsset>( // due to the nature of TypeScript, we cannot deny properties while doing spread operator
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ({ id, texture_id, cache_texture_id, sdf_texture_id, ...rest }) => rest
+  )
+}
+
 /*
   Hook to be used whenever reference to the creator is needed, like in many Tollbox components.
   Cannot accept any arguments because might be used in a very deep nested component inside creator view.
 */
-
-function serializeAssets(assets: Record<string, unknown>[]) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return assets.map(({ id, texture_id, cache_texture_id, sdf_texture_id, ...rest }) => rest as Json)
-}
-
 function useCreator() {
   const stateSnapshot = useSnapshot(creatorState)
   const { updateProject } = useProject()
@@ -69,7 +76,7 @@ function useCreator() {
     creatorState.historySnapshotIndex = snapshotIndex
     const assets = stateSnapshot.historySnapshots[
       creatorState.historySnapshotIndex
-    ] as SerializedOutputAsset[]
+    ] as SerializedOutputAssetMerged[]
     creatorState.creator!.resetAssets(assets)
 
     updateProject(stateSnapshot.projectId!, { assets: serializeAssets(assets) })
@@ -107,7 +114,9 @@ function useCreator() {
           creatorState.historySnapshots.push(ref(assets))
           creatorState.historySnapshotIndex = creatorState.historySnapshots.length - 1
 
-          updateProject(project.id, { assets: serializeAssets(assets) })
+          updateProject(project.id, {
+            assets: serializeAssets(assets as SerializedOutputAssetMerged[]),
+          })
         },
         (assetId) => {
           creatorState.selectedAssetId = assetId[0] || null

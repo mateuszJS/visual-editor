@@ -7,8 +7,8 @@ import Button from '@/components/Button/Button'
 import GoogleIcon from 'assets/google-logo.svg'
 import styles from './GoogleLogin.module.css'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
-import { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
+import { SanitizedUser } from '@/types'
 
 interface Props {
   onSuccess: VoidFunction

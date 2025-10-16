@@ -1,11 +1,11 @@
 import { act, renderHook } from '@testing-library/react'
 import useCreator from './useCreator'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 import { __triggerUpdateAssets } from '@mateuszjs/magic-render'
 import useProject from '@/hooks/useProject/useProject'
 import { server } from 'test/server'
 import { http, HttpResponse } from 'msw'
-import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
+import { getSanitizedProject } from '@/test/getSanitizedProject'
+import { SanitizedProject } from '@/types'
 
 const project = getSanitizedProject()
 

@@ -2,8 +2,8 @@ import { act, screen, render, renderHook } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import SelectAssetTool from './SelectAssetTool'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 import { CreatorTool } from '@mateuszjs/magic-render'
+import { getSanitizedProject } from '@/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 

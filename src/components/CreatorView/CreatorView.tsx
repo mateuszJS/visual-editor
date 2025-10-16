@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import cn from 'classnames'
 import styles from './CreatorView.module.css'
 import useCreator from '@/hooks/useCreator/useCreator'
-import type { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
+import { SanitizedProject } from '@/types'
 
 interface Props {
   project: SanitizedProject

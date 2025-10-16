@@ -1,7 +1,7 @@
 'use client'
 
-import type { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
 import errorStore from '@/stores/error'
+import { SanitizedUser } from '@/types'
 import fetcher from '@/utils/fetcher'
 import { getErrorMessage } from '@/utils/fetcher/getErrorMessage'
 import { proxy } from 'valtio'

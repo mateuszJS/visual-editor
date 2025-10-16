@@ -3,6 +3,7 @@ import webpackConfig from './webpack.config'
 import { ip } from 'address'
 
 const nextConfig: NextConfig = {
+  output: 'export',
   webpack: webpackConfig,
   turbopack: {
     rules: {

@@ -30,6 +30,7 @@
 
   /* font sizes to avoid fighting with rem */
   --8px: 0.5rem;
+  --11px: 0.6875rem;
   --12px: 0.75rem;
   --13px: 0.8125rem;
   --14px: 0.875rem;

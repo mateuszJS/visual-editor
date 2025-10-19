@@ -22,7 +22,6 @@ export default function getOnTextureUpload(projectId: string) {
 
       const id = (await response.text()) as string
       setNewUrl(`/api/project-uploads/${projectId}/${id}`)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       errorStore.message = 'Failed to upload file.'
     }

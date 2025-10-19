@@ -10,6 +10,7 @@ import { SanitizedProject, UpdateProjectPayload } from '@/types'
 const projectsStore = proxyMap<string, SanitizedProject>()
 
 async function updateProject(id: string, project: UpdateProjectPayload) {
+  console.log('Updating project with id:', id, project, projectsStore)
   if (!projectsStore.has(id)) {
     throw Error(`Project with id ${id} does not exist in the store`)
   }
@@ -40,6 +41,7 @@ export default function useProject(id?: string) {
   useEffect(() => {
     if (id && !projectsStore.has(id)) {
       fetcher(`/api/projects/${id}`, (project) => {
+        console.log('Fetched project:', id, project)
         projectsStore.set(id, ref(project))
       })
     }

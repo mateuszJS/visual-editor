@@ -1,0 +1,34 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "visual-editor",
+  "compatibility_date": "2025-10-11",
+  "compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"],
+  "pages_build_output_dir": "out",
+  "observability": {
+    "enabled": true
+  },
+  // preview & local env
+  "d1_databases": [
+    {
+      "binding": "db",
+      "database_name": "preview",
+      "database_id": "efa65b41-8d07-46ac-824c-e525641545af"
+    }
+  ],
+  "env": {
+    "production": {
+      // production env
+      "d1_databases": [
+        {
+          "binding": "db",
+          "database_name": "production",
+          "database_id": "a0e211cf-8461-4fd3-8cd7-df009d934e5c"
+        }
+      ]
+    }
+  }
+}

@@ -5,6 +5,14 @@ import { ip } from 'address'
 const nextConfig: NextConfig = {
   output: 'export',
   webpack: webpackConfig,
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://localhost:8788/api/:path*',
+      },
+    ]
+  },
   turbopack: {
     rules: {
       '*.svg': {

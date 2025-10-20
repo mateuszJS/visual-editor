@@ -1,4 +1,6 @@
-export type Project = {
+import { Asset } from './asset'
+
+export type DB = {
   id: number
   width: number
   height: number
@@ -10,6 +12,98 @@ export type Project = {
   assets: string
 }
 
-export type ProjectMeta = Pick<Project, 'id' | 'name' | 'created_at' | 'last_updated'>
+export type MetaData = {
+  id: string
+  name: string
+  created_at: string
+  last_updated: string
+}
 
-export type ProjectAssets = Pick<Project, 'id' | 'assets'>
+export type AssetsData = {
+  id: string
+  assets: Asset[]
+}
+export function sanitizeAssetsData(data: Pick<DB, 'id' | 'assets'>): AssetsData | string {
+  const assets = (() => {
+    try {
+      return JSON.parse(data.assets) as Asset[]
+    } catch (err) {
+      console.error(err)
+    }
+  })()
+
+  if (!assets || !Array.isArray(assets)) {
+    return 'An issue with assets has occured.'
+  }
+
+  return { id: data.id.toString(), assets }
+}
+
+export function sanitizeMetaData(
+  data: Pick<DB, 'id' | 'name' | 'created_at' | 'last_updated'>
+): MetaData {
+  return {
+    id: data.id.toString(),
+    name: data.name,
+    created_at: data.created_at,
+    last_updated: data.last_updated,
+  }
+}
+
+export type ChangesRaw = {
+  width?: number
+  height?: number
+  assets?: Asset[]
+}
+
+export type ChangesSanitizedDB = {
+  width: number
+  height: number
+  assets: string
+}
+
+// throws in case of invalid data
+export function sanitizeProjectPayload<R extends boolean>(
+  payload: ChangesRaw,
+  required: R
+): R extends true ? ChangesSanitizedDB : Partial<ChangesSanitizedDB>
+export function sanitizeProjectPayload(
+  payload: ChangesRaw,
+  required: boolean
+): ChangesSanitizedDB | Partial<ChangesSanitizedDB> {
+  const changes: Partial<ChangesSanitizedDB> = {}
+
+  if (typeof payload.width === 'number') {
+    if (payload.width < 1 || payload.width > 3000) {
+      throw Error('Width of the project has to be between 1 and 3000 pixels')
+    }
+    changes.width = payload.width
+  } else if (required) {
+    throw Error('Width is required')
+  }
+
+  if (typeof payload.height === 'number') {
+    if (payload.height < 1 || payload.height > 3000) {
+      throw Error('Height of the project has to be between 1 and 3000 pixels')
+    }
+    changes.height = payload.height
+  } else if (required) {
+    throw Error('Height is required')
+  }
+
+  if (Array.isArray(payload.assets)) {
+    try {
+      changes.assets = JSON.stringify(payload.assets)
+    } catch (err) {
+      throw Error('Failed to parse assets')
+    }
+  } else if (required) {
+    throw Error('Assets are required')
+  }
+
+  if (Object.keys(changes).length === 0) {
+    throw Error('No valid fields to update')
+  }
+
+  return changes
+}

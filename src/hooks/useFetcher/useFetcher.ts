@@ -54,7 +54,6 @@ export default function useFetcher<T = never>() {
         setError(json?.error || DEFAULT_ERROR_MESSAGE)
       } else {
         if (json) {
-          console.log('useFetcher successful response:', json)
           setSuccess({ json } as Success<T>)
           successCallback?.(json as FetcherReturn<T>)
           return undefined

@@ -65,7 +65,7 @@ to test:
 
 For local development add SSL certificate(you will get issue in the browser regarding insecure connection):
 `sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" certificates/localhost.pem`
-Certificate should be geenrated after in `./certificates` directory after first run on `npm run dev` - wrangler dev with https flag
+Certificate should be generated after in `./certificates` directory after first run on `npm run dev` - wrangler dev with https flag
 You might need to close the browser application and reopen to refresh ssl certificates.
 
 ##CF R2

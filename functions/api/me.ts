@@ -1,25 +1,21 @@
 import { getAuthErrorResponse, removeSessionCookie, withSession } from '../wrappers/session'
-import { UserDB } from '../types/user'
+import * as User from '../types/user'
+import withError from '../utils/error'
 
 export const onRequestGet = withSession(async (ctx, session) => {
-  try {
+  const [user, err] = await withError(async () => {
     const user = await ctx.env.db
       .prepare('SELECT id, email, name, photo FROM users WHERE id = ?')
       .bind(session.userId)
-      .first<Pick<UserDB, 'id' | 'email' | 'name' | 'photo'>>()
+      .first<Pick<User.DB, 'id' | 'email' | 'name' | 'photo'>>()
+    return User.sanitizeBasicInfo(user)
+  })
 
-    if (user) {
-      return Response.json(
-        {
-          ...user,
-          id: user.id.toString(),
-        },
-        { status: 200 }
-      )
-    }
-  } catch (err: unknown) {}
+  if (err) {
+    const response = getAuthErrorResponse()
+    removeSessionCookie(response)
+    return response
+  }
 
-  const response = getAuthErrorResponse()
-  removeSessionCookie(response)
-  return response
+  return Response.json(user, { status: 200 })
 })

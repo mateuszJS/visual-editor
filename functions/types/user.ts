@@ -1,4 +1,4 @@
-export type UserDB = {
+export type DB = {
   id: number
   name: string | null
   photo: string | null
@@ -17,16 +17,14 @@ export type UserDB = {
   last_login: string
 }
 
-export type UserBasicInfo = {
+export type BasicInfo = {
   id: string
   email: string
   name: string | null
   photo: string | null
 }
 
-export function sanitizeBasicInfo(
-  data: Pick<UserDB, 'id' | 'email' | 'name' | 'photo'>
-): UserBasicInfo {
+export function sanitizeBasicInfo(data: Pick<DB, 'id' | 'email' | 'name' | 'photo'>): BasicInfo {
   return {
     id: data.id.toString(),
     email: data.email,

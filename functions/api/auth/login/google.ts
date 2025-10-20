@@ -3,15 +3,16 @@ import { attachSessionCookie } from '../../../wrappers/session'
 import getResponseError from '../../../utils/getResponseError'
 import { withCSRFProtection } from '../../../wrappers/csrf'
 import getUserData from '../../../utils/getUserData'
+import withError from '../../../utils/error'
 
 let client: OAuth2Client | null = null
 
 export const onRequestPost = withCSRFProtection(async (ctx) => {
-  try {
+  const [userData, err] = await withError(async () => {
     const { idToken } = (await ctx.request.json()) as { idToken: string }
 
     if (!idToken) {
-      return getResponseError('idToken is required')
+      throw Error('idToken is required')
     }
 
     let payload: TokenPayload | undefined = undefined
@@ -35,18 +36,20 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
 
       payload = ticket.getPayload()
       if (!payload) {
-        return getResponseError('Invalid token payload')
+        throw Error('Invalid token payload')
       }
     }
 
     const userData = await getUserData(ctx.env.db, payload)
-    const response = Response.json(userData, { status: 200 })
+    return userData
+  })
 
-    await attachSessionCookie(response, userData.id)
-
-    return response
-  } catch (err: unknown) {
+  if (err) {
     console.error(err)
     return getResponseError('Authentication failed')
   }
+
+  const response = Response.json(userData, { status: 200 })
+  await attachSessionCookie(response, userData.id)
+  return response
 })

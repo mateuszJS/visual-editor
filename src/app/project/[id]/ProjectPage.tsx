@@ -13,7 +13,11 @@ import { usePathname } from 'next/navigation'
 export default function Project() {
   const isMobile = useIsMobile()
   const pathname = usePathname()
-  const id = pathname.split('/').pop() as string // it's not possible to have no param on this route
+  const id = pathname.split('/').pop()
+  if (!id) {
+    // it should be not possible to have no param on this route
+    throw Error('Project id is missing in the URL')
+  }
   const { loading, project } = useProject(id)
 
   return (

@@ -50,7 +50,7 @@ export default function useFetcher<T = never>() {
       const contentType = response.headers.get('Content-Type')
       const json = contentType === 'application/json' ? await response.json() : null
 
-      if (response.status < 200 || response.status >= 300) {
+      if (!response.ok) {
         setError(json?.error || DEFAULT_ERROR_MESSAGE)
       } else {
         if (json) {

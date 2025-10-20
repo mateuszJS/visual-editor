@@ -6,7 +6,7 @@ import { env } from 'node:process'
 let encodedKey: Uint8Array<ArrayBufferLike> | null = null
 function getEncodedKey() {
   if (!encodedKey) {
-    // session is used quite frerquently, due to that we encode the key once when worker is spawned
+    // session is used quite frequently, due to that we encode the key once when worker is spawned
     const secretKey = env.SESSION_SECRET // generated with: openssl rand -base64 32
 
     if (!secretKey) {

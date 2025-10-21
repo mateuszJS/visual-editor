@@ -11,6 +11,11 @@ import { OAuth2Client } from 'google-auth-library/build/src/auth/oauth2client'
 
 let client: OAuth2Client | null = null
 
+const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_IDD
+if (!clientId) {
+  throw Error('Server misconfiguration: GOOGLE_CLIENT_ID is missing')
+}
+
 export const onRequestPost = withCSRFProtection(async (ctx) => {
   const [userData, err] = await withError(async () => {
     const { idToken } = (await ctx.request.json()) as { idToken: string }

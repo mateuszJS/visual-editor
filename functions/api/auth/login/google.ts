@@ -18,7 +18,7 @@ if (!env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
 
 export const onRequestPost = withCSRFProtection(async (ctx) => {
   const [userData, err] = await withError(async () => {
-    const { idToken } = (await ctx.request.json()) as { idToken: string }
+    const { idToken } = await ctx.request.json<{ idToken: string }>()
 
     if (!idToken) {
       throw Error('idToken is required')

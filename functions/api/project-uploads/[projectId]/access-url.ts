@@ -10,18 +10,18 @@ import getResponseError from '../../../utils/getResponseError'
 const MAX_FILE_SIZE = 3 * 1024 * 1024 // 3MB
 
 export const onRequestPost = withSession<'projectId'>(async (ctx, session) => {
-  // R2/S3 have no way to validate content type, so it's not enforced, so no reason to pass it
-  const { contentLength } = await ctx.request.json<{
-    contentLength: number
-  }>()
-
-  if (typeof contentLength !== 'number' || contentLength <= 0 || contentLength > MAX_FILE_SIZE) {
-    return getResponseError('Invalid content length.')
-  }
-
   const uploadId = uuid()
 
   const [url, err] = await withError(async () => {
+    // R2/S3 have no way to validate content type, so it's not enforced, so no reason to pass it
+    const { contentLength } = await ctx.request.json<{
+      contentLength: number
+    }>()
+
+    if (typeof contentLength !== 'number' || contentLength <= 0 || contentLength > MAX_FILE_SIZE) {
+      throw Error('Invalid content length.')
+    }
+
     const project = await ctx.env.db
       .prepare(
         `SELECT id
@@ -51,7 +51,7 @@ export const onRequestPost = withSession<'projectId'>(async (ctx, session) => {
   })
 
   if (err) {
-    return new Response('Failed to generate signed URL.', { status: 401 })
+    return getResponseError('Failed to generate signed URL.', 403)
   }
 
   return Response.json({ url, uploadId }, { status: 200 })

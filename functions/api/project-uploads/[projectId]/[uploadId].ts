@@ -8,8 +8,8 @@ import getS3Client from '../../../clients/s3'
 const urlLifetimeSeconds = 60 * 60 * 24 * 7 // 7d, in seconds
 
 export const onRequestGet = withSession<'projectId' | 'uploadId'>(async (ctx, session) => {
-  const [url, err] = await withError(() => {
-    const project = ctx.env.db
+  const [url, err] = await withError(async () => {
+    const project = await ctx.env.db
       .prepare(
         `SELECT id
         FROM projects
@@ -20,7 +20,7 @@ export const onRequestGet = withSession<'projectId' | 'uploadId'>(async (ctx, se
 
     if (!project) {
       throw Error(
-        `user ${session.userId} tries to upload assets to project ${ctx.params.projectId} but is not the project owner`
+        `user ${session.userId} tries to access asset from project ${ctx.params.projectId} but is not the project owner`
       )
     }
 

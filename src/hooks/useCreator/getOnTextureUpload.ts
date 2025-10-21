@@ -16,7 +16,7 @@ export default function getOnTextureUpload(projectId: string) {
 
       if (!uploadUrlJson.url || !uploadUrlJson.uploadId) {
         throw Error(
-          `Failed as generating upload url. url: ${uploadUrlJson.url}, uploadId: ${uploadUrlJson.uploadId}`
+          `Failed to generate upload url. url: ${uploadUrlJson.url}, uploadId: ${uploadUrlJson.uploadId}`
         )
       }
 

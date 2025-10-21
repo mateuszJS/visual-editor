@@ -21,8 +21,8 @@ export const onRequestPost = withSession<'projectId'>(async (ctx, session) => {
 
   const uploadId = uuid()
 
-  const [url, err] = await withError(() => {
-    const project = ctx.env.db
+  const [url, err] = await withError(async () => {
+    const project = await ctx.env.db
       .prepare(
         `SELECT id
         FROM projects

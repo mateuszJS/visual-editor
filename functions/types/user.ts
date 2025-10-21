@@ -2,7 +2,7 @@ export type DB = {
   id: number
   name: string | null
   photo: string | null
-  email: string
+  email: string | null
   created_at: string
   language: string | null
   country: string | null
@@ -19,7 +19,7 @@ export type DB = {
 
 export type BasicInfo = {
   id: string
-  email: string
+  email: string | null
   name: string | null
   photo: string | null
 }

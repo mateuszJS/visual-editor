@@ -58,6 +58,9 @@ npx wrangler d1 migrations apply preview --local
 npx wrangler d1 migrations apply preview --remote
 npx wrangler d1 migrations apply production --remote --env=production`
 
+To preview current schema: `SELECT name, sql FROM sqlite_master`
+`npx wrangler d1 execute preview --local --command="SELECT name, sql FROM sqlite_master"`
+
 Preview is used by everything except your local env and prod, so develop and all other branches.
 
 to test:

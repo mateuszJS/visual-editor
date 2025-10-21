@@ -54,6 +54,7 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
   })
 
   if (err) {
+    console.log('Google login error:', err)
     console.error(err)
     return getResponseError('Authentication failed')
   }

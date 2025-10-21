@@ -1,4 +1,5 @@
-import { OAuth2Client, TokenPayload } from 'google-auth-library'
+import { OAuth2Client } from 'google-auth-library/build/src/auth/oauth2client'
+import type { TokenPayload } from 'google-auth-library'
 import { attachSessionCookie } from '../../../wrappers/session'
 import getResponseError from '../../../utils/getResponseError'
 import { withCSRFProtection } from '../../../wrappers/csrf'

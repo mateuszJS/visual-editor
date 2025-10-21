@@ -1,5 +1,5 @@
 import { S3Client } from '@aws-sdk/client-s3'
-import { env } from 'node:process'
+import { env } from 'cloudflare:workers'
 
 let client: S3Client | null = null
 

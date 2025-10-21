@@ -4,7 +4,7 @@ import getResponseError from '../../../utils/getResponseError'
 import { withCSRFProtection } from '../../../wrappers/csrf'
 import getUserData from '../../../utils/getUserData'
 import withError from '../../../utils/error'
-import { env } from 'node:process'
+import { env } from 'cloudflare:workers'
 
 // avoid import from google-auth-library. One of the exports(gcp-metadata -> google-logging-utils)
 // causes claudflare deployments to fail with JS error(Uncaught TypeError: Cannot convert object to primitive value)

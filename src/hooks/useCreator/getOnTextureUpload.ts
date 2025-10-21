@@ -7,12 +7,24 @@ export default function getOnTextureUpload(projectId: string) {
 
     try {
       const file = await fetcher(url).then((res) => res.blob())
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await fetcher(`/api/project-uploads/${projectId}`, {
+      const uploadUrlRes = await fetcher(`/api/project-uploads/${projectId}/access-url`, {
         method: 'POST',
-        formData,
+        json: { contentLength: file.size },
+      })
+
+      const uploadUrlJson = await uploadUrlRes.json()
+
+      if (!uploadUrlJson.url || !uploadUrlJson.uploadId) {
+        throw Error(
+          `Failed as generating upload url. url: ${uploadUrlJson.url}, uploadId: ${uploadUrlJson.uploadId}`
+        )
+      }
+
+      // eslint-disable-next-line no-restricted-syntax
+      const response = await fetch(uploadUrlJson.url, {
+        // this is not our service API, so we don't use fetcher
+        method: 'PUT',
+        body: file,
       })
 
       if (!response.ok) {
@@ -20,8 +32,7 @@ export default function getOnTextureUpload(projectId: string) {
         return
       }
 
-      const id = (await response.text()) as string
-      setNewUrl(`/api/project-uploads/${projectId}/${id}`)
+      setNewUrl(`/api/project-uploads/${projectId}/${uploadUrlJson.uploadId}`)
     } catch (err) {
       errorStore.message = 'Failed to upload file.'
     }

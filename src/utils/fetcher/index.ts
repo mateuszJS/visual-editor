@@ -1,5 +1,5 @@
 export interface FetcherOptions {
-  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT'
   json?: object | null
   options?: RequestInit
   disableAuth401Redirect?: boolean

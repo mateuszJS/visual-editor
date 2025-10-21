@@ -4,6 +4,7 @@ import getResponseError from '../../../utils/getResponseError'
 import { withCSRFProtection } from '../../../wrappers/csrf'
 import getUserData from '../../../utils/getUserData'
 import withError from '../../../utils/error'
+import { env } from 'node:process'
 
 // avoid import from google-auth-library. One of the exports(gcp-metadata -> google-logging-utils)
 // causes claudflare deployments to fail with JS error(Uncaught TypeError: Cannot convert object to primitive value)
@@ -11,8 +12,7 @@ import { OAuth2Client } from 'google-auth-library/build/src/auth/oauth2client'
 
 let client: OAuth2Client | null = null
 
-const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
-if (!clientId) {
+if (!env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
   throw Error('Env var NEXT_PUBLIC_GOOGLE_CLIENT_ID is missing!')
 }
 
@@ -40,7 +40,7 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
       }
       const ticket = await client.verifyIdToken({
         idToken: idToken,
-        audience: ctx.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+        audience: env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
       })
 
       payload = ticket.getPayload()

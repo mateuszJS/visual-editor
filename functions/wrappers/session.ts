@@ -3,20 +3,12 @@ import getResponseError from '../utils/getResponseError'
 import { parse } from 'cookie'
 import { env } from 'node:process'
 
-let encodedKey: Uint8Array<ArrayBufferLike> | null = null
-function getEncodedKey() {
-  if (!encodedKey) {
-    // session is used quite frequently, due to that we encode the key once when worker is spawned
-    const secretKey = env.SESSION_SECRET // generated with: openssl rand -base64 32
-
-    if (!secretKey) {
-      throw new Error('SESSION_SECRET is not defined in environment variables.')
-    }
-
-    encodedKey = new TextEncoder().encode(secretKey)
-  }
-  return encodedKey
+if (!env.SESSION_SECRET) {
+  // generated with: openssl rand -base64 32
+  throw new Error('SESSION_SECRET is not defined in environment variables.')
 }
+
+const encodedKey = new TextEncoder().encode(env.SESSION_SECRET)
 
 type RawSessionPayload = {
   userId: string
@@ -45,14 +37,14 @@ export async function encrypt(payload: RawSessionPayload) {
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(SESSION_LIFETIME_DAYS + 'd')
-    .sign(getEncodedKey())
+    .sign(encodedKey)
 }
 
 async function decrypt(session = ''): Promise<SessionPayload | undefined | { error: string }> {
   if (!session) return undefined
 
   try {
-    const { payload } = await jwtVerify<RawSessionPayload>(session, getEncodedKey(), {
+    const { payload } = await jwtVerify<RawSessionPayload>(session, encodedKey, {
       algorithms: ['HS256'],
     })
 

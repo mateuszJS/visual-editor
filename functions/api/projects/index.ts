@@ -13,7 +13,7 @@ export const onRequestPost = withSession(async (ctx, session) => {
     return getResponseError(serialErr.message)
   }
 
-  const [project, err] = await withError(async (): Promise<Project.MetaData> => {
+  const [project, err] = await withError(async () => {
     const { meta } = await ctx.env.db
       .prepare(
         `INSERT INTO projects (width, height, assets, owner_id)

@@ -24,7 +24,13 @@ export type BasicInfo = {
   photo: string | null
 }
 
-export function sanitizeBasicInfo(data: Pick<DB, 'id' | 'email' | 'name' | 'photo'>): BasicInfo {
+export function sanitizeBasicInfo(
+  data: Pick<DB, 'id' | 'email' | 'name' | 'photo'> | null
+): BasicInfo {
+  if (!data) {
+    throw new Error('No data was found.')
+  }
+
   return {
     id: data.id.toString(),
     email: data.email,

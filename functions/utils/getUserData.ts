@@ -1,19 +1,19 @@
 import { TokenPayload } from 'google-auth-library'
 // import { geolocation } from '@vercel/functions'
-import { sanitizeBasicInfo, UserBasicInfo, UserDB } from '../types/user'
+import * as User from '../types/user'
 
 // This function can throw!
 export default async function getUserData(
   db: D1Database,
   payload: TokenPayload
-): Promise<UserBasicInfo> {
+): Promise<User.BasicInfo> {
   const existingUser = await db
     .prepare('SELECT id, email, name, photo FROM users WHERE oidc_google_id = ?')
     .bind(payload.sub)
-    .first<Pick<UserDB, 'id' | 'email' | 'name' | 'photo'>>()
+    .first<Pick<User.DB, 'id' | 'email' | 'name' | 'photo'>>()
 
   if (existingUser) {
-    return sanitizeBasicInfo(existingUser)
+    return User.sanitizeBasicInfo(existingUser)
   }
 
   // const language = req.headers.get('accept-language')?.split(',')[0]
@@ -35,11 +35,7 @@ export default async function getUserData(
   const createdUser = await db
     .prepare('SELECT id, email, name, photo FROM users WHERE id = ?')
     .bind(meta.last_row_id)
-    .first<Pick<UserDB, 'id' | 'email' | 'name' | 'photo'>>()
+    .first<Pick<User.DB, 'id' | 'email' | 'name' | 'photo'>>()
 
-  if (!createdUser) {
-    throw Error('Failed to retrieve newly created user.')
-  }
-
-  return sanitizeBasicInfo(createdUser)
+  return User.sanitizeBasicInfo(createdUser)
 }

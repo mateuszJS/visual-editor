@@ -14,7 +14,7 @@ export type DB = {
 
 export type MetaData = {
   id: string
-  name: string
+  name: string | null
   created_at: string
   last_updated: string
 }
@@ -23,7 +23,11 @@ export type AssetsData = {
   id: string
   assets: Asset[]
 }
-export function sanitizeAssetsData(data: Pick<DB, 'id' | 'assets'>): AssetsData | string {
+export function sanitizeAssetsData(data: Pick<DB, 'id' | 'assets'> | null): AssetsData {
+  if (!data) {
+    throw new Error('No data was found.')
+  }
+
   const assets = (() => {
     try {
       return JSON.parse(data.assets) as Asset[]
@@ -33,15 +37,19 @@ export function sanitizeAssetsData(data: Pick<DB, 'id' | 'assets'>): AssetsData 
   })()
 
   if (!assets || !Array.isArray(assets)) {
-    return 'An issue with assets has occured.'
+    throw Error('An issue with assets has occured.')
   }
 
   return { id: data.id.toString(), assets }
 }
 
 export function sanitizeMetaData(
-  data: Pick<DB, 'id' | 'name' | 'created_at' | 'last_updated'>
+  data: Pick<DB, 'id' | 'name' | 'created_at' | 'last_updated'> | null
 ): MetaData {
+  if (!data) {
+    throw new Error('No data was found.')
+  }
+
   return {
     id: data.id.toString(),
     name: data.name,

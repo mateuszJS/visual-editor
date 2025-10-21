@@ -19,6 +19,9 @@
       "database_id": "efa65b41-8d07-46ac-824c-e525641545af"
     }
   ],
+  "vars": {
+    "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "145503046459-m2ibp14nc5ngbuiabbbsal0elmig37ui.apps.googleusercontent.com"
+  },
   "env": {
     "production": {
       // production env
@@ -28,7 +31,10 @@
           "database_name": "production",
           "database_id": "a0e211cf-8461-4fd3-8cd7-df009d934e5c"
         }
-      ]
+      ],
+      "vars": {
+        "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "145503046459-m2ibp14nc5ngbuiabbbsal0elmig37ui.apps.googleusercontent.com"
+      }
     }
   }
 }

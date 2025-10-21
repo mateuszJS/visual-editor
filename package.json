@@ -11,10 +11,12 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "jest",
-    "dev-https": "next dev --turbopack --experimental-https"
+    "dev-https": "next dev --turbopack --experimental-https",
+    "cf-dev": "wrangler pages dev --local-protocol=https --https-key-path=./certificates/localhost-key.pem --https-cert-path=./certificates/localhost.pem out",
+    "cf-test": "vitest",
+    "cf-typegen": "wrangler types './functions/types.d.ts'"
   },
   "dependencies": {
-    "@google-cloud/storage": "^7.17.1",
     "@mateuszjs/magic-render": "^0.1.0-next.28",
     "@supabase/supabase-js": "^2.49.4",
     "@vercel/functions": "^2.0.0",
@@ -45,7 +47,7 @@
     "@types/jest": "^29.5.14",
     "@types/jest-image-snapshot": "^6.4.0",
     "@types/lodash": "^4.17.20",
-    "@types/node": "^20",
+    "@types/node": "^20.19.22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-modal": "^3.16.3",
@@ -66,7 +68,8 @@
     "storybook": "^9.1.10",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.43.0"
   },
   "eslintConfig": {
     "extends": [

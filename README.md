@@ -50,3 +50,39 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ```
 
 ```
+
+D1
+
+`npx wrangler d1 migrations apply <DATABASE_NAME> [OPTIONS]
+npx wrangler d1 migrations apply preview --local
+npx wrangler d1 migrations apply preview --remote
+npx wrangler d1 migrations apply production --remote --env=production`
+
+To preview current schema: `SELECT name, sql FROM sqlite_master`
+`npx wrangler d1 execute preview --local --command="SELECT name, sql FROM sqlite_master"`
+
+Preview is used by everything except your local env and prod, so develop and all other branches.
+
+to test:
+`npx wrangler d1 execute production --local --command="SELECT * FROM users"`
+
+For local development add SSL certificate(you will get issue in the browser regarding insecure connection):
+`sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" certificates/localhost.pem`
+Certificate should be generated after in `./certificates` directory after first run on `npm run dev` - wrangler dev with https flag
+You might need to close the browser application and reopen to refresh ssl certificates.
+
+##CF R2
+`wrangler r2 bucket create your-bucket-name`
+
+Connet bucke to a custom domain that is already managed by cloudflare:
+https://developers.cloudflare.com/r2/buckets/public-buckets/#connect-a-bucket-to-a-custom-domain
+
+Expose the contents of this R2 bucket to the internet through a Cloudflare-managed r2.dev subdomain. This endpoint is intended for non-production traffic.
+
+Public access through r2.dev subdomains are rate limited and should only be used for development purposes.
+
+Enabling public deployment url:
+https://developers.cloudflare.com/r2/buckets/public-buckets/#enable-public-development-url
+
+Presigned URL
+https://developers.cloudflare.com/r2/buckets/cors/#create-a-presigned-url

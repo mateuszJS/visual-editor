@@ -1,7 +1,6 @@
 'use client'
 
 import useProject from '@/hooks/useProject/useProject'
-import { useParams } from 'next/navigation'
 import OverlayLoader from '@/components/OverlayLoader/OverlayLoader'
 import styles from './styles.module.css'
 import CreatorView from '@/components/CreatorView/CreatorView'
@@ -9,11 +8,17 @@ import CreatorNav from '@/components/CreatorNav/CreatorNav'
 import CreatorToolbox from '@/components/CreatorToolbox/CreatorToolbox'
 import BoundsPanel from '@/components/BoundsPanel/BoundsPanel'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
+import { usePathname } from 'next/navigation'
 
 export default function Project() {
   const isMobile = useIsMobile()
-  const params = useParams<{ id: string }>()
-  const { loading, project } = useProject(params.id)
+  const pathname = usePathname()
+  const id = pathname.split('/').pop()
+  if (!id) {
+    // it should be not possible to have no param on this route
+    throw Error('Project id is missing in the URL')
+  }
+  const { loading, project } = useProject(id)
 
   return (
     <main className={styles.page}>

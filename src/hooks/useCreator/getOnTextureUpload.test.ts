@@ -2,6 +2,7 @@ import getOnTextureUpload from './getOnTextureUpload'
 import errorStore from '@/stores/error'
 import { server } from 'test/server'
 import { http, HttpResponse } from 'msw'
+
 const PROJECT_ID = '1'
 
 describe('getOnTextureUpload', () => {
@@ -17,6 +18,15 @@ describe('getOnTextureUpload', () => {
 
     await getOnTextureUpload(PROJECT_ID)(regularUrl, mockSetNewUrl)
 
+    let apiWasCalled = false
+    server.use(
+      http.post(`/api/project-uploads/:projectId/access-url`, () => {
+        apiWasCalled = true
+        return new HttpResponse(null, { status: 201 })
+      })
+    )
+
+    expect(apiWasCalled).toBe(false)
     expect(mockSetNewUrl).not.toHaveBeenCalled()
     expect(errorStore.message).toBeNull()
   })
@@ -38,32 +48,34 @@ describe('getOnTextureUpload', () => {
 
   it('should successfully fetch blob and upload to server', async () => {
     const blobUrl = 'blob:http://localhost:3000/blob-uuid'
-    const mockBlobData = new Uint8Array([1, 2, 3, 4])
+
+    await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
+
+    expect(mockSetNewUrl).toHaveBeenCalledWith(`/api/project-uploads/${PROJECT_ID}/new-upload-id`)
+    expect(errorStore.message).toBeNull()
+  })
+
+  it('should handle the failure of signed url generation', async () => {
+    const blobUrl = 'blob:http://localhost:3000/blob-uuid'
+
     server.use(
-      http.post('/api/project-uploads/:projectId', () => {
-        return new HttpResponse('3', { status: 201 })
-      }),
-      http.get(/blob-uuid/, () => {
-        return HttpResponse.arrayBuffer(mockBlobData.buffer)
+      http.post('/api/project-uploads/:projectId/access-url', () => {
+        return HttpResponse.json({ error: 'Upload failed' }, { status: 400 })
       })
     )
 
     await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
 
-    expect(mockSetNewUrl).toHaveBeenCalledWith(`/api/project-uploads/${PROJECT_ID}/3`)
-    expect(errorStore.message).toBeNull()
+    expect(mockSetNewUrl).not.toHaveBeenCalled()
+    expect(errorStore.message).toBe('Failed to upload file.')
   })
 
-  it('should handle upload API failure', async () => {
+  it('should handle failure of external API while uploading', async () => {
     const blobUrl = 'blob:http://localhost:3000/blob-uuid'
-    const mockBlobData = new Uint8Array([1, 2, 3, 4])
 
     server.use(
-      http.post('/api/project-uploads/:projectId', () => {
-        return HttpResponse.json({ error: 'Upload failed' }, { status: 400 })
-      }),
-      http.get(/blob-uuid/, () => {
-        return HttpResponse.arrayBuffer(mockBlobData.buffer)
+      http.put('http://storage-provider.com/signed-url-to-bucket', () => {
+        return new HttpResponse(null, { status: 500 })
       })
     )
 

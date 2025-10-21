@@ -19,11 +19,6 @@ export default async function getUserData(
   // const language = req.headers.get('accept-language')?.split(',')[0]
   // const { isBot, browser, device, engine, os } = userAgent(req)
 
-  if (!payload.email) {
-    // this case at least for google should never happen
-    throw Error('Email to sign in was not provided.')
-  }
-
   const { meta } = await db
     .prepare(
       `INSERT INTO users (email, name, photo, is_bot, login_method, oidc_google_id)

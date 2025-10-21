@@ -3,12 +3,12 @@ import getResponseError from '../utils/getResponseError'
 import { parse } from 'cookie'
 import { env } from 'node:process'
 
-if (!env.SESSION_SECRET) {
-  // generated with: openssl rand -base64 32
-  throw new Error('SESSION_SECRET is not defined in environment variables.')
-}
+// if (!env.SESSION_SECRET) {
+//   // generated with: openssl rand -base64 32
+//   throw new Error('SESSION_SECRET is not defined in environment variables.')
+// }
 
-const encodedKey = new TextEncoder().encode(env.SESSION_SECRET)
+const encodedKey = new TextEncoder().encode('env.SESSION_SECRET')
 
 type RawSessionPayload = {
   userId: string

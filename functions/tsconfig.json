@@ -5,6 +5,7 @@
     "module": "esnext",
     "lib": ["esnext"],
     "types": ["./types.d.ts", "./handlers.d.ts", "node"],
-    "strict": true
+    "strict": true,
+    "skipLibCheck": true
   }
 }

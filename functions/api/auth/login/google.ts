@@ -42,38 +42,42 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
       if (!client) {
         client = new OAuth2Client()
 
-        NodeCrypto.prototype.decodeBase64StringUtf8 = function decodeBase64StringUtf8CfPolyfill(
-          base64: string
-        ) {
-          console.log(';decodeBase64StringUtf8', base64)
-          // @ts-expect-error: Private property
-          const uint8array = toByteArray(BrowserCrypto.padBase64(base64))
-          const result = new TextDecoder().decode(uint8array)
-          console.log('decoded string:', result)
-          return result
+        self.window = {
+          crypto: self.crypto,
         }
 
-        NodeCrypto.prototype.verify = async function verifyCfPolyfill(pubkey, data, signature) {
-          console.log('polyfill works!!!!', pubkey, data, signature)
-          const algo = {
-            name: 'RSASSA-PKCS1-v1_5',
-            hash: { name: 'SHA-256' },
-          }
-          const dataArray = new TextEncoder().encode(data as string)
-          // @ts-expect-error: Private property
-          const signatureArray = toByteArray(BrowserCrypto.padBase64(signature))
-          const cryptoKey = await crypto.subtle.importKey(
-            'jwk',
-            pubkey as unknown as ArrayBuffer,
-            algo,
-            true,
-            ['verify']
-          )
-          // SubtleCrypto's verify method is async so we must make
-          // this method async as well.
-          const result = await crypto.subtle.verify(algo, cryptoKey, signatureArray, dataArray)
-          return result
-        }
+        // NodeCrypto.prototype.decodeBase64StringUtf8 = function decodeBase64StringUtf8CfPolyfill(
+        //   base64: string
+        // ) {
+        //   console.log(';decodeBase64StringUtf8', base64)
+        //   // @ts-expect-error: Private property
+        //   const uint8array = toByteArray(BrowserCrypto.padBase64(base64))
+        //   const result = new TextDecoder().decode(uint8array)
+        //   console.log('decoded string:', result)
+        //   return result
+        // }
+
+        // NodeCrypto.prototype.verify = async function verifyCfPolyfill(pubkey, data, signature) {
+        //   console.log('polyfill works!!!!', pubkey, data, signature)
+        //   const algo = {
+        //     name: 'RSASSA-PKCS1-v1_5',
+        //     hash: { name: 'SHA-256' },
+        //   }
+        //   const dataArray = new TextEncoder().encode(data as string)
+        //   // @ts-expect-error: Private property
+        //   const signatureArray = toByteArray(BrowserCrypto.padBase64(signature))
+        //   const cryptoKey = await crypto.subtle.importKey(
+        //     'jwk',
+        //     pubkey as unknown as ArrayBuffer,
+        //     algo,
+        //     true,
+        //     ['verify']
+        //   )
+        //   // SubtleCrypto's verify method is async so we must make
+        //   // this method async as well.
+        //   const result = await crypto.subtle.verify(algo, cryptoKey, signatureArray, dataArray)
+        //   return result
+        // }
       }
 
       // const response = await this.getFederatedSignonCertsAsync();

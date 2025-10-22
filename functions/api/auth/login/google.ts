@@ -6,6 +6,9 @@ import getUserData from '../../../utils/getUserData'
 import withError from '../../../utils/error'
 import { env } from 'cloudflare:workers'
 import { createVerify } from 'node:crypto'
+import { NodeCrypto } from 'google-auth-library/build/src/crypto/node/crypto'
+import { BrowserCrypto } from 'google-auth-library/build/src/crypto/browser/crypto'
+import { toByteArray } from 'base64-js'
 
 // avoid import from google-auth-library. One of the exports(gcp-metadata -> google-logging-utils)
 // causes claudflare deployments to fail with JS error(Uncaught TypeError: Cannot convert object to primitive value)
@@ -38,6 +41,28 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
     } else {
       if (!client) {
         client = new OAuth2Client()
+
+        NodeCrypto.prototype.verify = async function verifyCfPolyfill(pubkey, data, signature) {
+          console.log('polyfill works!!!!')
+          const algo = {
+            name: 'RSASSA-PKCS1-v1_5',
+            hash: { name: 'SHA-256' },
+          }
+          const dataArray = new TextEncoder().encode(data as string)
+          // @ts-expect-error: Private property
+          const signatureArray = toByteArray(BrowserCrypto.padBase64(signature))
+          const cryptoKey = await crypto.subtle.importKey(
+            'jwk',
+            pubkey as unknown as ArrayBuffer,
+            algo,
+            true,
+            ['verify']
+          )
+          // SubtleCrypto's verify method is async so we must make
+          // this method async as well.
+          const result = await crypto.subtle.verify(algo, cryptoKey, signatureArray, dataArray)
+          return result
+        }
       }
 
       // const response = await this.getFederatedSignonCertsAsync();

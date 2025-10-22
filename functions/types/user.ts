@@ -11,10 +11,12 @@ export type DB = {
   device_model: string | null
   browser_engine: string | null
   os: string | null
-  is_bot: 0 | 1
   login_method: string
   oidc_google_id: string | null
   last_login: string
+  region: string | null
+  device_vendor: string | null
+  os_version: string | null
 }
 
 export type BasicInfo = {

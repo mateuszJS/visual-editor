@@ -67,9 +67,28 @@ to test:
 `npx wrangler d1 execute production --local --command="SELECT * FROM users"`
 
 For local development add SSL certificate(you will get issue in the browser regarding insecure connection):
-`sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" certificates/localhost.pem`
-Certificate should be generated after in `./certificates` directory after first run on `npm run dev` - wrangler dev with https flag
+`sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" certificates/localhost.crt`
+
+To generate certificate on MacOS run
+
+```
+openssl req -x509 -out localhost.crt -keyout localhost.key \
+ -newkey rsa:2048 -nodes -sha256 \
+ -subj '/CN=localhost' -extensions EXT -config <( \
+ printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+
+```
+
+and move output files to `certificates` folder.
 You might need to close the browser application and reopen to refresh ssl certificates.
+
+##Migrations
+to start: `npx wrangler d1 migrations create preview <migration brief description>`
+
+to apply:
+`npx wrangler d1 migrations apply preview --local`
+`npx wrangler d1 migrations apply preview --remote`
+`npx wrangler d1 migrations apply production --remote --env=production`
 
 ##CF R2
 `wrangler r2 bucket create your-bucket-name`
@@ -86,3 +105,7 @@ https://developers.cloudflare.com/r2/buckets/public-buckets/#enable-public-devel
 
 Presigned URL
 https://developers.cloudflare.com/r2/buckets/cors/#create-a-presigned-url
+
+```
+
+```

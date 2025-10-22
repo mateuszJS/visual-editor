@@ -9,6 +9,7 @@ import styles from './GoogleLogin.module.css'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
 import { SanitizedUser } from '@/types'
+import getUserAgent from '@/utils/getUserAgent'
 
 interface Props {
   onSuccess: VoidFunction
@@ -37,7 +38,7 @@ export default function GoogleLogin({ onSuccess }: Props) {
           {
             method: 'POST',
             csrfToken,
-            json: { idToken: credential },
+            json: { idToken: credential, userAgent: getUserAgent() },
           },
           (user) => {
             userStore.user = user

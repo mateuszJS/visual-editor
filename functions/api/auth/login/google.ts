@@ -5,6 +5,7 @@ import { withCSRFProtection } from '../../../wrappers/csrf'
 import getUserData from '../../../utils/getUserData'
 import withError from '../../../utils/error'
 import { env } from 'cloudflare:workers'
+import type { UserAgentInfo } from '../../../../src/utils/getUserAgent'
 
 // avoid import from google-auth-library. One of the exports(gcp-metadata -> google-logging-utils)
 // causes claudflare deployments to fail with JS error(Uncaught TypeError: Cannot convert object to primitive value)
@@ -18,7 +19,10 @@ if (!env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
 
 export const onRequestPost = withCSRFProtection(async (ctx) => {
   const [userData, err] = await withError(async () => {
-    const { idToken } = await ctx.request.json<{ idToken: string }>()
+    const { idToken, userAgent } = await ctx.request.json<{
+      idToken: string
+      userAgent: UserAgentInfo
+    }>()
 
     if (!idToken) {
       throw Error('idToken is required')
@@ -64,7 +68,13 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
       }
     }
 
-    const userData = await getUserData(ctx.env.db, payload)
+    const userData = await getUserData(
+      ctx.env.db,
+      payload,
+      ctx.request.cf,
+      userAgent,
+      ctx.request.headers.get('accept-language')?.split(',')[0]
+    )
     return userData
   })
 

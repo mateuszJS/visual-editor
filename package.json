@@ -12,7 +12,7 @@
     "build-storybook": "storybook build",
     "test": "jest",
     "dev-https": "next dev --turbopack --experimental-https",
-    "cf-dev": "wrangler pages dev --local-protocol=https --https-key-path=./certificates/localhost-key.pem --https-cert-path=./certificates/localhost.pem out",
+    "cf-dev": "wrangler pages dev --local-protocol=https --https-key-path=./certificates/localhost.key --https-cert-path=./certificates/localhost.crt",
     "cf-test": "vitest",
     "cf-typegen": "wrangler types './functions/types.d.ts'"
   },
@@ -33,6 +33,7 @@
     "react-dropzone": "^14.3.8",
     "react-modal": "^3.16.3",
     "server-only": "^0.0.1",
+    "ua-parser-js": "^2.0.6",
     "uuid": "^13.0.0",
     "valtio": "^2.1.5"
   },

@@ -35,15 +35,30 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
         exp: 4859740800,
       }
     } else {
+      // Workers use unenv to polyfill node environemnt
+      // unenv doesn't implement crypto.createVerify at this moment: https://github.com/unjs/unenv/blob/v1/src/runtime/node/crypto/node.ts#L120
+      // which is used if google-auth-library detects current env as Node.
+      // That's why for a brief moment we pretend window & window.crypto exists so google auth chooses flow for web env
+      // cloudflare crypto & window.crypto have similar API
+      // @ts-expect-error: window is not defined in workers
+      self.window = {
+        crypto: self.crypto,
+      }
+
       if (!client) {
         client = new OAuth2Client()
       }
+
       const ticket = await client.verifyIdToken({
         idToken: idToken,
         audience: env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
       })
 
       payload = ticket.getPayload()
+
+      // @ts-expect-error: window is not defined in workers
+      delete self.window
+
       if (!payload) {
         throw Error('Invalid token payload')
       }

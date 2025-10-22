@@ -5,6 +5,7 @@ import { withCSRFProtection } from '../../../wrappers/csrf'
 import getUserData from '../../../utils/getUserData'
 import withError from '../../../utils/error'
 import { env } from 'cloudflare:workers'
+import { createVerify } from 'node:crypto'
 
 // avoid import from google-auth-library. One of the exports(gcp-metadata -> google-logging-utils)
 // causes claudflare deployments to fail with JS error(Uncaught TypeError: Cannot convert object to primitive value)
@@ -38,6 +39,13 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
       if (!client) {
         client = new OAuth2Client()
       }
+
+      // const response = await this.getFederatedSignonCertsAsync();
+      // const login = await this.verifySignedJwtWithCertsAsync(options.idToken, response.certs, options.audience, this.issuers, options.maxExpiry);
+      // return login;
+      const verifier = createVerify('RSA-SHA256')
+      console.log('Verifying idToken:', verifier)
+
       const ticket = await client.verifyIdToken({
         idToken: idToken,
         audience: env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,

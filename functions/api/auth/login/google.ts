@@ -45,15 +45,16 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
         NodeCrypto.prototype.decodeBase64StringUtf8 = function decodeBase64StringUtf8CfPolyfill(
           base64: string
         ) {
-          console.log(';decodeBase64StringUtf8')
+          console.log(';decodeBase64StringUtf8', base64)
           // @ts-expect-error: Private property
           const uint8array = toByteArray(BrowserCrypto.padBase64(base64))
           const result = new TextDecoder().decode(uint8array)
+          console.log('decoded string:', result)
           return result
         }
 
         NodeCrypto.prototype.verify = async function verifyCfPolyfill(pubkey, data, signature) {
-          console.log('polyfill works!!!!')
+          console.log('polyfill works!!!!', pubkey, data, signature)
           const algo = {
             name: 'RSASSA-PKCS1-v1_5',
             hash: { name: 'SHA-256' },

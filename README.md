@@ -82,6 +82,14 @@ openssl req -x509 -out localhost.crt -keyout localhost.key \
 and move output files to `certificates` folder.
 You might need to close the browser application and reopen to refresh ssl certificates.
 
+##Migrations
+to start: `npx wrangler d1 migrations create preview <migration brief description>`
+
+to apply:
+`npx wrangler d1 migrations apply preview --local`
+`npx wrangler d1 migrations apply preview --remote`
+`npx wrangler d1 migrations apply production --remote --env=production`
+
 ##CF R2
 `wrangler r2 bucket create your-bucket-name`
 

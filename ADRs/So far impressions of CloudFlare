@@ -1,36 +1,35 @@
 Pros:
+R2 seems to be at least 3x faster than Google Storage for downloading assets. Entity Tags are also supported out of the box.
 
-- R2 seems to work at least 3x faster than Google Storage in terms of downloading assets. Also Entity Tags are supported out of the box.
+Cloudflare & R2 Performance:
 
-CF & R2: Upload(Reuqest sent: 14.29ms, waiting for server response: 464.54ms, content download: 6.11ms)
-Download(Request sent: 0.13ms, waiting for server response: 380ms, content download: 58.27ms)
-Download with Etag With 304 redirect (Request sent: 83 μs, waiting for server res: 188.60 ms, 4.15ms content download)
+Upload: Request sent: 14.29ms, Waiting for server response: 464.54ms, Content download: 6.11ms
+Download: Request sent: 0.13ms, Waiting for server response: 380ms, Content download: 58.27ms
+Download with ETag (304 Not Modified): Request sent: 83µs, Waiting for server response: 188.60ms, Content download: 4.15ms
+Google Cloud Storage Performance (for comparison):
 
-Vercel deployment has failed because of Supabase integration(again),
-so I just request with direct link to Google Bucket(what suppose to be even faster than signed url)
-381.72ms waiting time, 793.90ms content download
-No etags returned to test, but it's unnecessary, the winner in obvious.
+Note: The Vercel deployment failed due to a Supabase integration issue, so I requested a direct link to the Google Bucket, which is supposed to be even faster than a signed URL.
+Waiting time: 381.72ms, Content download: 793.90ms
+No ETags were returned to test, but the winner is obvious.
+Static Asset Delivery:
 
-Static:
-CloudFlare(Global)
-/login.html => waiting: 70ms, receiving 0ms
-biggest JS file(174.78kB) => waiting: 44ms, receiving 0ms
+Cloudflare (Global):
+/login.html: Waiting: 70ms, Receiving: 0ms
+Largest JS file (174.78kB): Waiting: 44ms, Receiving: 0ms
+Vercel:
+/login.html: Waiting: 24ms, Receiving: 171ms
+Largest JS file (174.78kB): Waiting: 455ms, Receiving: 5ms
+API Endpoint Performance:
 
-Vercel
-/login.html => waiting 24ms, receiving 171ms
-biggest JS file(174.78kB) => waiting: 455ms, receiving: 5ms
+Cloudflare:
+/me (401): 19ms
+/csrf: 25ms
+Vercel:
+Failed to deploy Vercel Functions calling Supabase (the project is not paused, despite the error message).
+Build and deploy processes seem noticeably faster than on Vercel.
 
-Endpoints:
-Cloudflare
-/me(401) => 19ms
-/csrf => 25ms
-
-Vercel -> failed to deploy Vercel Functions cailimg Supabse project in paused(is not).
-
-- Build & deploy seem to happen visibly faster than on Vercel
-- CloudFlare automatically integrates and comments on my PR when preview deployment is released
+Cloudflare automatically integrates with GitHub and comments on my pull requests when a preview deployment is ready.
 
 Cons:
-
-- functions do NOT run in node env. Itts like node env, polyfilled by unenv(Universal Node Environment). Because of that not all the node.js api is supported. I had to already polyfill crypto for google-auth-library
-- D1 uses SQLite, so it inherits all quirks of SQLite like if you want to edit type of column, you have to recreate whole table, create a new one, move data to new one, remove precious table, rename new table to previous table's name
+Functions do not run in a standard Node.js environment. It's a Node.js-like environment, polyfilled by unenv (Universal Node Environment). Because of this, not all Node.js APIs are supported. For example, I had to polyfill the crypto module for google-auth-library.
+D1 uses SQLite, so it inherits all the quirks of SQLite. For instance, if you want to change a column's type, you have to create a new table, move the data to it, remove the previous table, and then rename the new table to the original table's name.

@@ -6,7 +6,7 @@ CREATE TABLE new_users (
   id INTEGER PRIMARY KEY,
   name TEXT,
   photo TEXT,
-  email TEXT UNIQUE, -- changed to optional
+  email TEXT UNIQUE,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
   language TEXT,
   country TEXT,

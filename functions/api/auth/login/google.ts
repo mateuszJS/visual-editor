@@ -42,6 +42,16 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
       if (!client) {
         client = new OAuth2Client()
 
+        NodeCrypto.prototype.decodeBase64StringUtf8 = function decodeBase64StringUtf8CfPolyfill(
+          base64: string
+        ) {
+          console.log(';decodeBase64StringUtf8')
+          // @ts-expect-error: Private property
+          const uint8array = toByteArray(BrowserCrypto.padBase64(base64))
+          const result = new TextDecoder().decode(uint8array)
+          return result
+        }
+
         NodeCrypto.prototype.verify = async function verifyCfPolyfill(pubkey, data, signature) {
           console.log('polyfill works!!!!')
           const algo = {

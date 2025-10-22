@@ -7,17 +7,6 @@ import { serialize } from 'cookie'
 export const onRequestGet: Handler = () => {
   const csrfToken = randomBytes(32).toString('hex')
 
-  self.window = {
-    crypto: self.crypto,
-  }
-
-  console.log(typeof window)
-  // console.log('Verifying idToken:', crypto.subtle)
-  // console.log('Verifying idToken:', crypto.subtle.importKey)
-  // console.log('Verifying idToken:', crypto.subtle.verify)
-
-  // const verifier = createVerify('RSA-SHA256')
-  // console.log('Verifying idToken:', verifier)
   const res = Response.json({ csrfToken }, { status: 200 })
 
   const cookie = serialize('csrf-token', csrfToken, {

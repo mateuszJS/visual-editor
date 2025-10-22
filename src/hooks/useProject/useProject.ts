@@ -57,7 +57,7 @@ export default function useProject(id?: string) {
         json: {
           width,
           height,
-          asset: [],
+          assets: [],
         },
       },
       (project) => {

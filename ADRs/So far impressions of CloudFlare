@@ -1,0 +1,10 @@
+Pros:
+
+- R2 seems to work at least 3x faster than Google Storage in terms of downloading assets. Also Entity Tags are supported out of the box.
+- Build seems to happen faster than opon Vercel
+- CloudFlare automatically integrates and comments on my PR when preview deployment is released
+
+Cons:
+
+- functions do NOT run in node env. Itts like node env, polyfilled by unenv(Universal Node Environment). Because of that not all the node.js api is supported. I had to already polyfill crypto for google-auth-library
+- D1 uses SQLite, so it inherits all quirks of SQLite like if you want to edit type of column, you have to recreate whole table, create a new one, move data to new one, remove precious table, rename new table to previous table's name

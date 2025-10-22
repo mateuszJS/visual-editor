@@ -1,4 +1,4 @@
-import { randomBytes, createVerify } from 'node:crypto'
+import { randomBytes } from 'node:crypto'
 import { serialize } from 'cookie'
 // Currently we only use CSRF for vulnerable endpoints which does not require user's session cookie
 // like login. The benefits of that is when user open the mobile app,
@@ -6,8 +6,14 @@ import { serialize } from 'cookie'
 
 export const onRequestGet: Handler = () => {
   const csrfToken = randomBytes(32).toString('hex')
-  const verifier = createVerify('RSA-SHA256')
-  console.log('Verifying idToken:', verifier)
+
+  console.log(typeof window)
+  console.log('Verifying idToken:', crypto.subtle)
+  console.log('Verifying idToken:', crypto.subtle.importKey)
+  console.log('Verifying idToken:', crypto.subtle.verify)
+
+  // const verifier = createVerify('RSA-SHA256')
+  // console.log('Verifying idToken:', verifier)
   const res = Response.json({ csrfToken }, { status: 200 })
 
   const cookie = serialize('csrf-token', csrfToken, {

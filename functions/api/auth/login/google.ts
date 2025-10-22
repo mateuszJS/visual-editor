@@ -44,10 +44,6 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
       // const login = await this.verifySignedJwtWithCertsAsync(options.idToken, response.certs, options.audience, this.issuers, options.maxExpiry);
       // return login;
       // const verifier = createVerify('RSA-SHA256')
-      console.log(typeof window)
-      console.log('Verifying idToken:', crypto.subtle)
-      console.log('Verifying idToken:', crypto.subtle.importKey)
-      console.log('Verifying idToken:', crypto.subtle.verify)
 
       const ticket = await client.verifyIdToken({
         idToken: idToken,

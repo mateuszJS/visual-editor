@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
+    /* Allow 'import x from y' when a module doesn't have a default export. */
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     // "moduleResolution": "bundler",
     "target": "esnext",
     "module": "esnext",
     "lib": ["esnext"],
-    "types": ["./types.d.ts", "./handlers.d.ts", "node"],
+    "types": ["@cloudflare/vitest-pool-workers", "@types/node"],
     "strict": true
-  }
+  },
+  "include": ["./**/*.ts"]
 }

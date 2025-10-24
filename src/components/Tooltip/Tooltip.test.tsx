@@ -1,6 +1,7 @@
-import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
 import Tooltip from './Tooltip'
+import { describe, expect } from 'vitest'
+import it from 'test/browser-extend'
 
 describe('<Tooltip>', () => {
   it('should render trigger and tooltip(is hidden in CSS)', () => {

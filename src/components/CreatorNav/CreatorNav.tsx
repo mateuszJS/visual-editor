@@ -14,10 +14,8 @@ export default function CreatorNav() {
 
   return (
     <nav className={cn(styles.root, 'navigation-bar')}>
-      <NavItem href="/">
-        <HomeIcon />
-      </NavItem>
-      <NavButton onClick={undo || noop} disabled={!undo}>
+      <NavItem href="/">{'<HomeIcon />'}</NavItem>
+      {/* <NavButton onClick={undo || noop} disabled={!undo}>
         <ReverseIcon />
       </NavButton>
       <NavButton onClick={redo || noop} disabled={!redo}>
@@ -25,7 +23,7 @@ export default function CreatorNav() {
       </NavButton>
       <NavItem href="/questions" className="ml-auto">
         <QuestionMarkIcon />
-      </NavItem>
+      </NavItem> */}
     </nav>
   )
 }

@@ -3,7 +3,7 @@ import useAuthOnly from './useAuthOnly'
 import { initUserStore } from '../userStore/userStore'
 import { http, HttpResponse } from 'msw'
 import mockRouter from 'next-router-mock'
-import { server } from 'test/server'
+import { server } from 'test/msw-worker'
 
 describe('useAuthOnly', () => {
   beforeEach(() => {

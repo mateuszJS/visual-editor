@@ -1,25 +1,23 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TextTool should render text icon with label 1`] = `
+exports[`TextTool > should render text icon with label 1`] = `
 <div>
-  <div
-    class="root"
+  <button
+    aria-pressed="false"
+    class="_navItem_l7sgg_1"
   >
-    <button
-      aria-describedby="id-0"
-      aria-pressed="false"
-      class="navItem"
+    <svg
+      fill="currentColor"
+      height="1em"
+      viewBox="0 0 417 417"
+      width="1em"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <svg />
-    </button>
-    <div
-      class="tooltip"
-      id="id-0"
-    >
-      <span>
-        Add Text
-      </span>
-    </div>
-  </div>
+      <path
+        d="M177.083,56.91l-91.552,-0l-2.666,25.59c-1.429,13.724 -13.732,23.705 -27.455,22.275c-13.724,-1.429 -23.705,-13.732 -22.276,-27.455l5,-48c1.327,-12.736 12.062,-22.41 24.866,-22.41l290.667,-0c12.804,-0 23.539,9.674 24.865,22.41l5,48c1.43,13.723 -8.552,26.026 -22.275,27.455c-13.724,1.43 -26.026,-8.551 -27.456,-22.275l-2.665,-25.59l-91.553,-0l0,307.744l34.51,0c13.798,0 25,11.202 25,25c0,13.798 -11.202,25 -25,25l-131.52,0c-13.798,0 -25,-11.202 -25,-25c0,-13.798 11.202,-25 25,-25l34.51,0l0,-307.744Z"
+      />
+    </svg>
+    Text
+  </button>
 </div>
 `;

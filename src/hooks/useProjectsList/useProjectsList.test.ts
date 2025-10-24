@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
 import { delay, http, HttpResponse } from 'msw'
 import useProjectsList from './useProjectsList'
-import { server } from 'test/server'
+import { server } from 'test/msw-worker'
 
 describe('useProjectsList', () => {
   it('return list of projects', async () => {

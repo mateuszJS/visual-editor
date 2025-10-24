@@ -1,0 +1,15 @@
+For now we stick with Jest because is well integrated with:
+
+- react testing library
+- screenshot testing by amex
+- puppeteer
+- vitest does NOT support SSR/SSG and doesn't have any integration with nextJS. So for example <Link> component will not work(has to be rendered/geenrated because uses process.env), global styles and other provider has to be provided in a custom way.
+
+Benefits of vitest:
+
+- From the other hand cloudflare drops support for Jest and encourages to move to vitest.
+  Although its for workers, for page functions they do not have much docs & examples.
+- Tests are clearer, runs in browser so behaviour is closer to production
+
+For now we stick with jest, there is no visible obstacle before moving vitest.
+Once cloudflare provides dedicated config for pages(and it will be good) then we can consider move to vitest again.

@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react'
 import userStore, { initUserStore } from './userStore'
 import { http, HttpResponse } from 'msw'
-import { server } from 'test/server'
+import { server } from 'test/msw-worker'
 import { useSnapshot } from 'valtio'
 
 describe('userStore', () => {

@@ -3,14 +3,16 @@ import userEvent from '@testing-library/user-event'
 import SelectNodeTool from './SelectNodeTool'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
+import { describe, expect } from 'vitest'
+import it from 'test/browser-extend'
 
 const project = getSanitizedProject()
 
 describe('SelectNodeTool', () => {
-  beforeEach(async () => {
+  it.beforeEach(async ({ creatorCanvas }) => {
     const { result } = renderHook(useCreator)
     await act(() => {
-      result.current.init(window.creatorCanvas, project)
+      result.current.init(creatorCanvas, project)
     })
   })
 
@@ -29,11 +31,11 @@ describe('SelectNodeTool', () => {
       })
     )
 
-    expect(
-      await screen.findByRole('button', {
-        description: /select node/i,
-        pressed: true,
-      })
-    ).toBeInTheDocument()
+    const e = await screen.findByRole('button', {
+      description: /select node/i,
+      pressed: true,
+    })
+
+    expect.element(e).toBeInTheDocument()
   })
 })

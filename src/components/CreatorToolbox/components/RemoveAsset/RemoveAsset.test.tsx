@@ -2,14 +2,16 @@ import { act, fireEvent, render, renderHook, screen } from '@testing-library/rea
 import RemoveAsset from './RemoveAsset'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
+import { describe, expect } from 'vitest'
+import it from 'test/browser-extend'
 
 const project = getSanitizedProject()
 
 describe('RemoveAsset', () => {
-  beforeEach(async () => {
+  it.beforeEach(async ({ creatorCanvas }) => {
     const { result } = renderHook(useCreator)
-    await act(() => {
-      result.current.init(window.creatorCanvas, project)
+    await act(async () => {
+      await result.current.init(creatorCanvas, project)
     })
   })
 

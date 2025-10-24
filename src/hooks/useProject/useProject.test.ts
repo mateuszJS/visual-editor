@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
 import { delay, http, HttpResponse } from 'msw'
 import useProject from './useProject'
-import { server } from 'test/server'
+import { server } from 'test/msw-worker'
 
 describe('useProject', () => {
   describe('fetching project', () => {

@@ -1,6 +1,6 @@
-import '@testing-library/jest-dom'
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import ErrorToast from './ErrorToast'
+import { describe, it, expect, vi } from 'vitest'
 
 describe('<ErrorToast>', () => {
   it('should render icon and text and close button', () => {
@@ -9,7 +9,7 @@ describe('<ErrorToast>', () => {
   })
 
   it('close callback should be called on click on close icon', async () => {
-    const close = jest.fn()
+    const close = vi.fn()
 
     render(<ErrorToast error="An error occurred" close={close} />)
 

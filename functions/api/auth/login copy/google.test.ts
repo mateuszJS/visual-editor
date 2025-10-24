@@ -1,4 +1,6 @@
+import { describe, expect, it, vi } from 'vitest'
 import { onRequestPost } from './google'
+import { env } from 'process'
 
 const IncomingRequest = Request<unknown, IncomingRequestCfProperties>
 
@@ -28,9 +30,9 @@ function getCtx(
     request,
     env: getEnv(),
     functionPath: '/api/auth/login/google',
-    waitUntil: jest.fn(),
-    passThroughOnException: jest.fn(),
-    next: jest.fn(),
+    waitUntil: vi.fn(),
+    passThroughOnException: vi.fn(),
+    next: vi.fn(),
     params: {},
     data: undefined as never,
   } satisfies EventContext<Env, never, never>

@@ -1,4 +1,5 @@
 import type { SerializedOutputAsset, CreatorAPI } from '@mateuszjs/magic-render'
+import { vi } from 'vitest'
 
 let onSelectAssetCallback: (assetId: [number, number, number, number]) => void
 let onUpdateAssetsCallback: (assets: SerializedOutputAsset[]) => void
@@ -26,18 +27,18 @@ export default function initMagicRenderMock(
   onUpdateAssetsCallback = onAssetsUpdate
 
   return Promise.resolve({
-    addImage: jest.fn(),
-    removeAsset: jest.fn(),
-    resetAssets: jest.fn(),
-    setTool: jest.fn((tool) => {
+    addImage: vi.fn(),
+    removeAsset: vi.fn(),
+    resetAssets: vi.fn(),
+    setTool: vi.fn((tool) => {
       onUpdateTool(tool)
     }),
     destroy: () => {
       canvas.removeAttribute('data-magic-render-linked')
     },
-    toggleSharedTextEffects: jest.fn(),
-    updateAssetProps: jest.fn(),
-    updateAssetBounds: jest.fn(),
+    toggleSharedTextEffects: vi.fn(),
+    updateAssetProps: vi.fn(),
+    updateAssetBounds: vi.fn(),
   })
 }
 

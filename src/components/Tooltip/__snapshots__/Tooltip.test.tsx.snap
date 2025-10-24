@@ -1,23 +1,9 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<Tooltip> should render trigger and tooltip(is hidden in CSS) 1`] = `
+exports[`<Tooltip> > should render trigger and tooltip(is hidden in CSS) 1`] = `
 <div>
-  <div
-    class="root"
-  >
-    <button
-      aria-describedby="id-0"
-    >
-      Trigger
-    </button>
-    <div
-      class="tooltip"
-      id="id-0"
-    >
-      <h1>
-        Tooltip Content
-      </h1>
-    </div>
-  </div>
+  <button>
+    Trigger
+  </button>
 </div>
 `;

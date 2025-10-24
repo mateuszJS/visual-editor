@@ -1,6 +1,6 @@
-import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
 import ProjectPanel from './ProjectPanel'
+import { describe, it, expect } from 'vitest'
 
 describe('<ProjectPanel>', () => {
   it('should render a project details link with provided text', () => {

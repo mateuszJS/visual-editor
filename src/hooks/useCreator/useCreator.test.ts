@@ -2,19 +2,20 @@ import { act, renderHook } from '@testing-library/react'
 import useCreator from './useCreator'
 import { __triggerUpdateAssets } from '@mateuszjs/magic-render'
 import useProject from '@/hooks/useProject/useProject'
-import { server } from 'test/server'
 import { http, HttpResponse } from 'msw'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
 import { SanitizedProject } from '@/types'
+import { describe, expect } from 'vitest'
+import it from 'test/browser-extend'
 
 const project = getSanitizedProject()
 
 describe('useCreator', () => {
-  it('creator is ready only after initialization', async () => {
+  it('creator is ready only after initialization', async ({ creatorCanvas }) => {
     const { result } = renderHook(useCreator)
 
     await act(async () => {
-      result.current.init(window.creatorCanvas, project)
+      result.current.init(creatorCanvas, project)
       expect(result.current.isReady).toBe(false)
     })
 
@@ -32,50 +33,52 @@ describe('useCreator', () => {
     expect(result.current.isReady).toBe(false)
   })
 
-  it('canvas is marked as conntected once initialized', async () => {
+  it('canvas is marked as conntected once initialized', async ({ creatorCanvas }) => {
     const { result } = renderHook(useCreator)
 
     await act(async () => {
-      result.current.init(window.creatorCanvas, project)
+      result.current.init(creatorCanvas, project)
     })
 
-    expect(window.creatorCanvas.hasAttribute('data-connected')).toBe(true)
+    expect(creatorCanvas.hasAttribute('data-connected')).toBe(true)
   })
 
-  it('reading creator before initialization throws error', async () => {
+  it('reading creator before initialization throws error', async ({ creatorCanvas }) => {
     const { result } = renderHook(useCreator)
 
     expect(() => result.current.creator).toThrow('Creator is not initialized')
 
     await act(async () => {
-      result.current.init(window.creatorCanvas, project)
+      result.current.init(creatorCanvas, project)
     })
 
     expect(() => result.current.creator).not.toThrow('Creator is not initialized')
   })
 
-  it('reading project id before initialization throws error', async () => {
+  it('reading project id before initialization throws error', async ({ creatorCanvas }) => {
     const { result } = renderHook(useCreator)
 
     expect(() => result.current.projectId).toThrow('Project id is not initialized')
 
     await act(async () => {
-      result.current.init(window.creatorCanvas, project)
+      result.current.init(creatorCanvas, project)
     })
 
     expect(result.current.projectId).toEqual('1')
   })
 
-  it("initializing creator with same canvas element twice doesn't produce a new creator", async () => {
+  it("initializing creator with same canvas element twice doesn't produce a new creator", async ({
+    creatorCanvas,
+  }) => {
     const { result } = renderHook(useCreator)
 
     await act(async () => {
-      result.current.init(window.creatorCanvas, project)
+      result.current.init(creatorCanvas, project)
     })
     const creatorFirstInit = result.current.creator
 
     await act(async () => {
-      result.current.init(window.creatorCanvas, project)
+      result.current.init(creatorCanvas, project)
     })
     const creatorSecondInit = result.current.creator
 
@@ -111,7 +114,7 @@ describe('useCreator', () => {
   })
 
   describe('undo/redo', () => {
-    beforeEach(async () => {
+    it.beforeEach(async ({ creatorCanvas }) => {
       const { result: useProjectRef } = renderHook(useProject)
 
       await act(async () => {
@@ -121,7 +124,7 @@ describe('useCreator', () => {
       const { result: useCreatorRef } = renderHook(useCreator)
 
       await act(async () => {
-        useCreatorRef.current.init(window.creatorCanvas, project)
+        useCreatorRef.current.init(creatorCanvas, project)
       })
     })
 
@@ -174,7 +177,9 @@ describe('useCreator', () => {
       expect(result.current.redo).toBeNull()
     })
 
-    it('breaking chain of undos(by any new snapshot) correctly cuts the history', async () => {
+    it('breaking chain of undos(by any new snapshot) correctly cuts the history', async ({
+      worker,
+    }) => {
       const { result } = renderHook(useCreator)
 
       expect(result.current.redo).toBeNull()
@@ -190,7 +195,7 @@ describe('useCreator', () => {
       })
 
       let receivedPayload = null
-      server.use(
+      worker.use(
         http.patch('/api/projects/:id', async ({ request }) => {
           const data = (await request.json()) as SanitizedProject
           receivedPayload = data?.assets
@@ -208,7 +213,7 @@ describe('useCreator', () => {
         result.current.undo?.()
       })
 
-      server.use(
+      worker.use(
         http.patch('/api/projects/:id', async ({ request }) => {
           const data = (await request.json()) as SanitizedProject
           receivedPayload = data?.assets
@@ -222,7 +227,7 @@ describe('useCreator', () => {
         result.current.undo?.()
       })
 
-      server.use(
+      worker.use(
         http.patch('/api/projects/:id', async ({ request }) => {
           const data = (await request.json()) as SanitizedProject
           receivedPayload = data?.assets
@@ -276,13 +281,15 @@ describe('useCreator', () => {
   })
 
   describe('providing initial assets to creator', () => {
-    it('with matching project id assets will be used right after creator initialization', async () => {
+    it('with matching project id assets will be used right after creator initialization', async ({
+      creatorCanvas,
+    }) => {
       const { result } = renderHook(useCreator)
 
       const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets(project.id, assets)
-        result.current.init(window.creatorCanvas, project)
+        result.current.init(creatorCanvas, project)
       })
 
       expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(
@@ -292,25 +299,25 @@ describe('useCreator', () => {
       )
     })
 
-    it('if different project id assets will be dismissed', async () => {
+    it('if different project id assets will be dismissed', async ({ creatorCanvas }) => {
       const { result } = renderHook(useCreator)
 
       const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets('2', assets)
-        result.current.init(window.creatorCanvas, project)
+        result.current.init(creatorCanvas, project)
       })
 
       expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(1, [], true)
     })
 
-    it('initial assets are used only once', async () => {
+    it('initial assets are used only once', async ({ creatorCanvas }) => {
       const { result } = renderHook(useCreator)
 
       const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets(project.id, assets)
-        result.current.init(window.creatorCanvas, project)
+        result.current.init(creatorCanvas, project)
       })
 
       const canvas = document.createElement('canvas')

@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
 import useCSRF from './useCSRF'
 import { http, HttpResponse } from 'msw'
-import { server } from 'test/server'
+import { server } from 'test/msw-worker'
 
 describe('useCSRF', () => {
   it('fetches and returns the CSRF token', async () => {

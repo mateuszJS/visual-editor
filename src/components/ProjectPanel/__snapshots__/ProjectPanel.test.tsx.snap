@@ -1,12 +1,12 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<ProjectPanel> should render a project details link with provided text 1`] = `
+exports[`<ProjectPanel> > should render a project details link with provided text 1`] = `
 <div>
   <a
     aria-label="Go to project name project details"
-    class="projectPanel"
+    class="_projectPanel_1l2xb_1"
     href="/project/0"
-    style="background-image: url(/api/projects/0/miniature);"
+    style="background-image: url("/api/projects/0/miniature");"
   >
     <p>
       project name

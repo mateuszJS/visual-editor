@@ -1,25 +1,22 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SelectAssetTool should render select object icon with label 1`] = `
+exports[`SelectAssetTool > should render select object icon with label 1`] = `
 <div>
-  <div
-    class="root"
+  <button
+    aria-pressed="true"
+    class="_navItem_l7sgg_1"
   >
-    <button
-      aria-describedby="id-0"
-      aria-pressed="true"
-      class="navItem"
+    <svg
+      fill="currentColor"
+      height="1em"
+      viewBox="0 0 417 417"
+      width="1em"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <svg />
-    </button>
-    <div
-      class="tooltip"
-      id="id-0"
-    >
-      <span>
-        Select Object
-      </span>
-    </div>
-  </div>
+      <path
+        d="M110.737,5.442l219.865,217.319c3.893,3.849 5.087,9.664 3.023,14.735c-2.064,5.071 -6.978,8.401 -12.453,8.437l-86.881,0.579l59.246,132.61c1.508,3.375 1.57,7.22 0.173,10.643c-1.398,3.422 -4.134,6.125 -7.574,7.48l-42.333,16.678c-6.71,2.643 -14.314,-0.436 -17.295,-7.003l-59.746,-131.637l-57.709,58.441c-3.87,3.918 -9.727,5.103 -14.815,2.997c-5.088,-2.106 -8.394,-7.084 -8.362,-12.591l1.8,-309.136c0.032,-5.449 3.326,-10.347 8.36,-12.432c5.033,-2.085 10.826,-0.951 14.701,2.88Z"
+      />
+    </svg>
+  </button>
 </div>
 `;

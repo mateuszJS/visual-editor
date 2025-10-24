@@ -1,10 +1,11 @@
-import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
 import HomeIcon from 'assets/home-icon.svg'
 import NavButton from './NavButton'
+import { describe, expect, vi } from 'vitest'
+import it from 'test/browser-extend'
 
 describe('<NavButton>', () => {
-  it('should render icon and text', () => {
+  it('should render icon and text', async () => {
     const { container } = render(
       <NavButton onClick={() => {}}>
         <>
@@ -16,8 +17,8 @@ describe('<NavButton>', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('should trigger onClick callbakc when clicked', () => {
-    const onClick = jest.fn()
+  it('should trigger onClick callback when clicked', async () => {
+    const onClick = vi.fn()
 
     render(
       <NavButton onClick={onClick}>
@@ -28,7 +29,7 @@ describe('<NavButton>', () => {
       </NavButton>
     )
 
-    fireEvent.click(screen.getByText(/Content/i))
+    fireEvent.click(screen.getByText(/content/i))
 
     expect(onClick).toHaveBeenCalledTimes(1)
   })

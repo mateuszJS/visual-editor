@@ -1,11 +1,11 @@
-import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
 import HomeIcon from 'assets/home-icon.svg'
 import NavLink from './NavLink'
+import { describe, expect, it, vi } from 'vitest'
 
-const mockUsePathname = jest.fn(() => '/')
+const mockUsePathname = vi.fn(() => '/')
 
-jest.mock('next/navigation', () => ({
+vi.mock('next/navigation', () => ({
   usePathname: () => mockUsePathname(),
 }))
 

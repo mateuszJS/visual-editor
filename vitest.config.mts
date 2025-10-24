@@ -1,30 +1,46 @@
-import { defineWorkersConfig, readD1Migrations } from '@cloudflare/vitest-pool-workers/config'
-import path from 'node:path'
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import tsconfigPaths from 'vite-tsconfig-paths'
+import { playwright } from '@vitest/browser-playwright'
+import svgr from 'vite-plugin-svgr'
 
-export default defineWorkersConfig(async () => {
-  // Read all migrations in the `migrations` directory
-  const migrationsPath = path.join(__dirname, 'migrations')
-  const migrations = await readD1Migrations(migrationsPath)
+/*
+If you need to run some tests using Node-based runner, you can define a projects option
+https://vitest.dev/guide/browser/
+*/
+export default defineConfig({
+  define: {
+    'process.env': {},
+  },
+  test: {
+    projects: [
+      {
+        define: {
+          'process.env': {},
+        },
+        plugins: [
+          tsconfigPaths(),
+          react(),
+          svgr({
+            include: '**/*.svg',
+            svgrOptions: { icon: true },
+            // svgrOptions: { plugins: ['@svgr/plugin-jsx'] },
+          }),
+        ],
+        test: {
+          // environment: 'jsdom',
 
-  return {
-    test: {
-      env: {
-        SESSION_SECRET: 'test-session-secret',
-        PUBLIC_GOOGLE_CLIENT_ID: 'test-google-client-id',
-      },
-      setupFiles: ['./setup.ts'],
-      poolOptions: {
-        workers: {
-          singleWorker: true,
-          wrangler: {
-            configPath: '../wrangler.jsonc',
-            environment: 'production',
+          name: { label: 'components', color: 'magenta' },
+          include: ['src/**/*.test.tsx'],
+          browser: {
+            enabled: true,
+            provider: playwright(),
+            // at least one instance is required
+            instances: [{ browser: 'chromium' }],
           },
-          miniflare: {
-            bindings: { TEST_MIGRATIONS: migrations },
-          },
+          setupFiles: ['setup.ts'],
         },
       },
-    },
-  }
+    ],
+  },
 })

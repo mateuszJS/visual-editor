@@ -1,87 +1,37 @@
 {
   "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig.json to read more about this file */
-
-    /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    "target": "es2021",
-    /* Specify a set of bundled library declaration files that describe the target runtime environment. */
-    "lib": ["es2021"],
-    /* Specify what JSX code is generated. */
-    "jsx": "react-jsx",
-
-    /* Specify what module code is generated. */
-    "module": "es2022",
-    /* Specify how TypeScript looks up a file from a given module specifier. */
-    "moduleResolution": "Bundler",
-    /* Enable importing .json files */
-    "resolveJsonModule": true,
-
-    /* Allow JavaScript files to be a part of your program. Use the `checkJS` option to get errors from these files. */
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    /* Enable error reporting in type-checked JavaScript files. */
-    "checkJs": false,
-
-    /* Disable emitting files from a compilation. */
-    "noEmit": true,
-
-    /* Ensure that each file can be safely transpiled without relying on other imports. */
-    "isolatedModules": true,
-    /* Allow 'import x from y' when a module doesn't have a default export. */
-    "allowSyntheticDefaultImports": true,
-    /* Ensure that casing is correct in imports. */
-    "forceConsistentCasingInFileNames": true,
-
-    /* Enable all strict type-checking options. */
-    "strict": true,
-
-    /* Skip type checking all .d.ts files. */
     "skipLibCheck": true,
-    "types": ["@types/node"]
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": "./src", // not "src" because we want to acces "public" folder by alias, which is outside of "src"
+    "paths": {
+      "@/*": ["./*"],
+      "assets/*": ["../public/*"],
+      "test/*": ["../test/*"]
+    }
   },
   "include": [
     "svgr.d.ts",
-    // "next-env.d.ts",
+    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    // ".next/types/**/*.ts",
+    ".next/types/**/*.ts",
     "functions/types.d.ts"
   ],
-  "exclude": ["functions"]
+  "exclude": ["node_modules"]
 }
-// {
-//   "compilerOptions": {
-//     "target": "ES2017",
-//     "lib": ["dom", "dom.iterable", "esnext"],
-//     "allowJs": true,
-//     "skipLibCheck": true,
-//     "strict": true,
-//     "noEmit": true,
-//     "esModuleInterop": true,
-//     "module": "esnext",
-//     "moduleResolution": "bundler",
-//     "resolveJsonModule": true,
-//     "isolatedModules": true,
-//     "jsx": "preserve",
-//     "incremental": true,
-//     "plugins": [
-//       {
-//         "name": "next"
-//       }
-//     ],
-//     "baseUrl": "./src", // not "src" because we want to acces "public" folder by alias, which is outside of "src"
-//     "paths": {
-//       "@/*": ["./*"],
-//       "assets/*": ["../public/*"],
-//       "test/*": ["../test/*"]
-//     }
-//   },
-//   "include": [
-//     "svgr.d.ts",
-//     "next-env.d.ts",
-//     "**/*.ts",
-//     "**/*.tsx",
-//     ".next/types/**/*.ts",
-//     "functions/types.d.ts"
-//   ],
-//   "exclude": ["node_modules"]
-// }

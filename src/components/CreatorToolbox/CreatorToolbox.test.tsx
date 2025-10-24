@@ -4,11 +4,15 @@ import useCreator from '@/hooks/useCreator/useCreator'
 import { __triggerSelectAsset } from '@mateuszjs/magic-render'
 import * as LoaderHarness from '@/components/OverlayLoader/harness'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
+import { describe, expect, vi } from 'vitest'
+import it from 'test/browser-extend'
 
 const project = getSanitizedProject()
 
 let isMobile = false
-jest.mock('@/hooks/useIsMobile/useIsMobile', () => () => isMobile)
+vi.mock('@/hooks/useIsMobile/useIsMobile', () => ({
+  default: () => isMobile,
+}))
 const mobileButtons = ['Image', 'Shape', 'Text']
 const desktopButtons = ['Select Object', 'Select Node', 'Draw Shape', 'Add Text', 'Upload Image']
 
@@ -28,10 +32,10 @@ describe('CreatorToolbox - creator not initialized yet', () => {
 })
 
 describe('CreatorToolbox - desktop', () => {
-  beforeEach(async () => {
+  it.beforeEach(async ({ creatorCanvas }) => {
     const { result } = renderHook(useCreator)
     await act(async () => {
-      result.current.init(window.creatorCanvas, project)
+      result.current.init(creatorCanvas, project)
     })
     isMobile = false
   })
@@ -67,10 +71,10 @@ describe('CreatorToolbox - desktop', () => {
 })
 
 describe('CreatorToolbox - mobile', () => {
-  beforeEach(async () => {
+  it.beforeEach(async ({ creatorCanvas }) => {
     const { result } = renderHook(useCreator)
     await act(async () => {
-      result.current.init(window.creatorCanvas, project)
+      result.current.init(creatorCanvas, project)
     })
     isMobile = true
   })

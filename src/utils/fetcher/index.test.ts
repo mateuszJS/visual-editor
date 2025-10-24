@@ -1,6 +1,7 @@
 import { HttpResponse, http } from 'msw'
 import fetcher from './index'
-import { server } from 'test/server'
+import { server } from 'test/msw-worker'
+import { describe, it, expect, vi } from 'vitest'
 
 function spyRequest(method: 'get' | 'post') {
   const output = {
@@ -64,7 +65,7 @@ describe('fetcher', () => {
 
     Object.defineProperty(window, 'location', {
       writable: true,
-      value: { ...window.location, replace: jest.fn() },
+      value: { ...window.location, replace: vi.fn() },
     })
 
     server.use(

@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
 import useFetcher from './useFetcher'
 import { delay, http, HttpResponse } from 'msw'
-import { server } from 'test/server'
+import { server } from 'test/msw-worker'
 
 describe('useFetcher', () => {
   it('no error, loading or success by default', async () => {

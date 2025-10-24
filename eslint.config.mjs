@@ -17,6 +17,14 @@ const eslintConfig = [
       'no-restricted-imports': [
         'error',
         {
+          paths: [
+            {
+              name: 'vitest',
+              importNames: ['it', 'test'],
+              message:
+                "Avoid using it/test from vitest, use import it from 'test/browser-extend' instead.",
+            },
+          ],
           patterns: [
             {
               group: ['**/__mocks__/**'],

@@ -1,15 +1,16 @@
 import getOnTextureUpload from './getOnTextureUpload'
 import errorStore from '@/stores/error'
-import { server } from 'test/server'
+import { server } from 'test/msw-worker'
 import { http, HttpResponse } from 'msw'
+import { describe, beforeEach, it, expect, vi } from 'vitest'
 
 const PROJECT_ID = '1'
 
 describe('getOnTextureUpload', () => {
-  const mockSetNewUrl = jest.fn()
+  const mockSetNewUrl = vi.fn()
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     errorStore.message = null
   })
 

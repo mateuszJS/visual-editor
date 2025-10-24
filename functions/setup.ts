@@ -1,8 +1,8 @@
 import { beforeAll, vi } from 'vitest'
 import { TokenPayload } from 'google-auth-library'
 import { applyD1Migrations, env } from 'cloudflare:test'
-
-await applyD1Migrations(env.production, env.TEST_MIGRATIONS)
+console.log('Applying migrations...', env)
+await applyD1Migrations(env.db, env.TEST_MIGRATIONS)
 
 beforeAll(async () => {
   vi.useFakeTimers()

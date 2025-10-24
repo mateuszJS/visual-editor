@@ -13,7 +13,7 @@
     "test": "jest",
     "dev-https": "next dev --turbopack --experimental-https",
     "cf-dev": "wrangler pages dev --local-protocol=https --https-key-path=./certificates/localhost-key.pem --https-cert-path=./certificates/localhost.pem out",
-    "cf-test": "vitest",
+    "cf-test": "vitest -r functions",
     "cf-typegen": "wrangler types './functions/types.d.ts'"
   },
   "dependencies": {

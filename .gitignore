@@ -48,3 +48,5 @@ storybook-static
 certificates
 
 .wrangler/
+
+functions/node_modules

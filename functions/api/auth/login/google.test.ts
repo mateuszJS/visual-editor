@@ -1,40 +1,9 @@
+import { env, createExecutionContext } from 'cloudflare:test'
+import { describe, it, expect } from 'vitest'
+// import worker from '../src/index'
 import { onRequestPost } from './google'
 
 const IncomingRequest = Request<unknown, IncomingRequestCfProperties>
-
-type CloudflareEnv = Env & {
-  ASSETS: {
-    fetch: typeof fetch
-  }
-}
-function getEnv(): CloudflareEnv {
-  return {
-    NEXT_PUBLIC_GOOGLE_CLIENT_ID: 'google-client-id',
-    CF_ACCOUNT_ID: 'e2a944561db9909ec049a1772b2e1a39',
-    SESSION_SECRET: 'session-secret',
-    CF_ACCESS_KEY_ID: 'cloudflare-access-key-id',
-    CF_R2_SECRET_ACCESS_KEY: 'cloudflare-r2-secret-access-key',
-    db: new DBMock(),
-    ASSETS: {
-      fetch: jest.fn(),
-    },
-  }
-}
-
-function getCtx(
-  request: EventContext<Env, never, never>['request']
-): EventContext<Env, never, never> {
-  return {
-    request,
-    env: getEnv(),
-    functionPath: '/api/auth/login/google',
-    waitUntil: jest.fn(),
-    passThroughOnException: jest.fn(),
-    next: jest.fn(),
-    params: {},
-    data: undefined as never,
-  } satisfies EventContext<Env, never, never>
-}
 
 describe('GET /auth/login/google', () => {
   it('creates a new user in D1 and returns the user + sets cookie session', async () => {
@@ -47,7 +16,7 @@ describe('GET /auth/login/google', () => {
       },
     })
 
-    const response = await onRequestPost(getCtx(request))
+    const response = await onRequestPost({ request, env, ...createExecutionContext() })
 
     expect(await response.json()).toEqual({
       id: 3,

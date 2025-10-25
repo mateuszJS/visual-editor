@@ -1,6 +1,6 @@
-import { getAuthErrorResponse, removeSessionCookie, withSession } from '../wrappers/session'
-import * as User from '../types/user'
-import withError from '../utils/error'
+import { getAuthErrorResponse, removeSessionCookie, withSession } from '../../wrappers/session'
+import * as User from '../../types/user'
+import withError from '@/utils/error'
 
 export const onRequestGet = withSession(async (ctx, session) => {
   const [user, err] = await withError(async () => {

@@ -1,9 +1,9 @@
-import { withSession } from '../../../wrappers/session'
-import * as Project from '../../../types/project'
-import getResponseError from '../../../utils/getResponseError'
-import withError from '../../../utils/error'
+import { withSession } from '@/wrappers/session'
+import * as Project from '@/types/project'
+import getResponseError from '@/utils/getResponseError'
+import withError from '@/utils/error'
 
-export const onRequestGet: SessionHandler<'id'> = withSession(async (ctx, session) => {
+export const onRequestGet: Handler<'id'> = withSession(async (ctx, session) => {
   const [project, err] = await withError(async () => {
     const project = await ctx.env.db
       .prepare(
@@ -18,33 +18,48 @@ export const onRequestGet: SessionHandler<'id'> = withSession(async (ctx, sessio
   })
 
   if (err) {
-    return getResponseError('Failed to fetch project. ' + err.message)
+    return getResponseError('Failed to fetch project.', 404)
   }
 
   return Response.json(project, { status: 200 })
 })
 
-export const onRequestPatch: SessionHandler<'id'> = withSession(async (ctx, session) => {
-  const payload = await ctx.request.json<Project.ChangesRaw>()
+export const onRequestPatch: Handler<'id'> = withSession(async (ctx, session) => {
+  const [payload, jsonError] = await withError(() => ctx.request.json<Project.ChangesRaw>())
 
-  const [, err] = await withError(async () => {
-    const changes = await Project.sanitizeProjectPayload(payload, false)
+  if (jsonError) {
+    return getResponseError('Invalid JSON payload.')
+  }
+
+  const [changes, changesErr] = await withError(async () =>
+    Project.sanitizeProjectPayload(payload, false)
+  )
+  if (changesErr) {
+    return getResponseError(changesErr.message)
+  }
+
+  const [updatedRow, err] = await withError(async () => {
     const columnsToUpdate = Object.keys(changes)
       .map((key) => `${key} = ?`)
       .join(', ')
 
-    await ctx.env.db
+    return await ctx.env.db
       .prepare(
         `UPDATE projects
           SET ${columnsToUpdate}
-          WHERE id = ? AND owner_id = ?`
+          WHERE id = ? AND owner_id = ?
+          RETURNING id`
       )
       .bind(...Object.values(changes), ctx.params.id, session.userId)
-      .run()
+      .first<{ id: string }>()
   })
 
+  if (!updatedRow) {
+    return getResponseError('Project does not exist.', 404)
+  }
+
   if (err) {
-    return getResponseError('Failed to update project. ' + err.message)
+    return getResponseError('An error has occurred while updating project.', 500)
   }
 
   return new Response(null, { status: 204 })

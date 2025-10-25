@@ -1,15 +1,15 @@
 import type { TokenPayload } from 'google-auth-library'
-import { attachSessionCookie } from '../../../wrappers/session'
-import getResponseError from '../../../utils/getResponseError'
-import { withCSRFProtection } from '../../../wrappers/csrf'
-import getUserData from '../../../utils/getUserData'
-import withError from '../../../utils/error'
+import { attachSessionCookie } from '@/wrappers/session'
+import getResponseError from '@/utils/getResponseError'
+import { withCSRFProtection } from '@/wrappers/csrf'
+import getUserData from '@/utils/getUserData'
+import withError from '@/utils/error'
 import { env } from 'cloudflare:workers'
-import type { UserAgentInfo } from '../../../../src/utils/getUserAgent'
 
 // avoid import from google-auth-library. One of the exports(gcp-metadata -> google-logging-utils)
 // causes claudflare deployments to fail with JS error(Uncaught TypeError: Cannot convert object to primitive value)
 import { OAuth2Client } from 'google-auth-library/build/src/auth/oauth2client'
+import type { UserAgentInfo } from '../../../../../src/utils/getUserAgent'
 
 let client: OAuth2Client | null = null
 
@@ -19,9 +19,9 @@ if (!env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
 
 export const onRequestPost = withCSRFProtection(async (ctx) => {
   const [userData, err] = await withError(async () => {
-    const { idToken, userAgent } = await ctx.request.json<{
-      idToken: string
-      userAgent: UserAgentInfo
+    const { idToken, userAgent = {} } = await ctx.request.json<{
+      idToken?: string
+      userAgent?: Partial<UserAgentInfo>
     }>()
 
     if (!idToken) {
@@ -79,7 +79,7 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
   })
 
   if (err) {
-    console.error(err)
+    // console.error(err) capture this log in the future
     return getResponseError('Authentication failed')
   }
 

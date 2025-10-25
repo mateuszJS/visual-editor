@@ -32,7 +32,7 @@ export function sanitizeAssetsData(data: Pick<DB, 'id' | 'assets'> | null): Asse
     try {
       return JSON.parse(data.assets) as Asset[]
     } catch (err) {
-      console.error(err)
+      // console.error(err) capture this log in the future
     }
   })()
 
@@ -99,7 +99,10 @@ export function sanitizeProjectPayload(
     throw Error('Height is required')
   }
 
-  if (Array.isArray(payload.assets)) {
+  if (payload.assets) {
+    if (!Array.isArray(payload.assets)) {
+      throw Error('Assets are has to be an array')
+    }
     try {
       changes.assets = JSON.stringify(payload.assets)
     } catch (err) {

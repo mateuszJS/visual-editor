@@ -77,7 +77,7 @@ export function withSession<Params extends string = never, Data = never>(
     const session = await decrypt(cookie.session)
 
     if (session && 'error' in session) {
-      console.error(session.error)
+      // console.error(session.error) capture this log in the future
     }
 
     if (!session || 'error' in session || !session?.userId) {

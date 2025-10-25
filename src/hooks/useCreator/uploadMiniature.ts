@@ -11,7 +11,7 @@ export default function uploadMiniature(canvas: HTMLCanvasElement, projectId: st
         formData,
       })
     } catch (err) {
-      console.error('Failed to upload miniature:', err)
+      // console.error('Failed to upload miniature:', err) capture this log in the future
     }
   })
 }

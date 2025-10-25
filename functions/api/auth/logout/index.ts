@@ -1,4 +1,4 @@
-import { removeSessionCookie, withSession } from '../../wrappers/session'
+import { removeSessionCookie, withSession } from '@/wrappers/session'
 
 export const onRequestDelete = withSession(() => {
   const response = new Response(null, { status: 204 })

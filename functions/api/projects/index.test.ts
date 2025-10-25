@@ -4,7 +4,7 @@ import getContext from '@/test/getContext'
 import { aliceSessionToken, bobSessionToken, nonExistingUserSessionToken } from '@/setup'
 
 describe('POST /api/projects', () => {
-  it('returns url & uploadId if signed url was created successfully', async () => {
+  it('returns project if created successfully', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',

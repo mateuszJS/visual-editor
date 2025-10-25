@@ -69,7 +69,7 @@ beforeAll(async () => {
               return `https://storage-provider.com/signed-url?bucket=${command.input.Bucket}&key=${command.input.Key}&expiredsIn=${options.expiresIn}&contentLength=${command.input.ContentLength}`
             }
 
-            // this is not REAL signed url, we just use it to verify is all information were passedd correctly to signed url
+            // this is not REAL signed url, we just use it to verify if all the information was passed correctly to signed url generator
             return `https://storage-provider.com/signed-url?bucket=${command.input.Bucket}&key=${command.input.Key}&expiredsIn=${options.expiresIn}`
           }
         ),
@@ -79,6 +79,14 @@ beforeAll(async () => {
   vi.mock('uuid', async () => {
     return {
       v4: () => 'uuid-generated-id',
+    }
+  })
+
+  vi.mock('node:crypto', () => {
+    return {
+      randomBytes: () => ({
+        toString: () => 'node-crypto-random-bytes',
+      }),
     }
   })
 

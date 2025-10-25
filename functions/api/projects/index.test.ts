@@ -22,7 +22,7 @@ describe('POST /api/projects', () => {
     })
   })
 
-  it('returns error is width is missing', async () => {
+  it('returns error if width is missing', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
@@ -35,7 +35,7 @@ describe('POST /api/projects', () => {
     expect(json).toEqual({ error: 'Width is required' })
   })
 
-  it('returns error is width is equal or below 0', async () => {
+  it('returns error if width is equal or below 0', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
@@ -48,7 +48,7 @@ describe('POST /api/projects', () => {
     expect(json).toEqual({ error: 'Width of the project has to be between 1 and 3000 pixels' })
   })
 
-  it('returns error is width is above 3000', async () => {
+  it('returns error if width is above 3000', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
@@ -61,7 +61,7 @@ describe('POST /api/projects', () => {
     expect(json).toEqual({ error: 'Width of the project has to be between 1 and 3000 pixels' })
   })
 
-  it('returns error is height is missing', async () => {
+  it('returns error if height is missing', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
@@ -74,7 +74,7 @@ describe('POST /api/projects', () => {
     expect(json).toEqual({ error: 'Height is required' })
   })
 
-  it('returns error is height is equal or below 0', async () => {
+  it('returns error if height is equal or below 0', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
@@ -87,7 +87,7 @@ describe('POST /api/projects', () => {
     expect(json).toEqual({ error: 'Height of the project has to be between 1 and 3000 pixels' })
   })
 
-  it('returns error is height is above 3000', async () => {
+  it('returns error if height is above 3000', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
@@ -100,7 +100,7 @@ describe('POST /api/projects', () => {
     expect(json).toEqual({ error: 'Height of the project has to be between 1 and 3000 pixels' })
   })
 
-  it('returns error is assets are missing', async () => {
+  it('returns error if assets are missing', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
@@ -113,7 +113,7 @@ describe('POST /api/projects', () => {
     expect(json).toEqual({ error: 'Assets are required' })
   })
 
-  it('returns error is assets are not an array', async () => {
+  it('returns error if assets are not an array', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
@@ -123,10 +123,10 @@ describe('POST /api/projects', () => {
 
     expect(response.status).toBe(400)
     const json = await response.json()
-    expect(json).toEqual({ error: 'Assets are has to be an array' })
+    expect(json).toEqual({ error: 'Assets must be an array' })
   })
 
-  it('returns error is assets cannot be serialized', async () => {
+  it('returns error if assets cannot be serialized', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',

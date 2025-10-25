@@ -8,6 +8,7 @@ import path from 'node:path'
 
 export default defineWorkersConfig(async () => {
   // Read all migrations in the `migrations` directory
+  const __dirname = import.meta.dirname
   const migrationsPath = path.join(__dirname, './migrations')
   const migrations = await readD1Migrations(migrationsPath)
   const assetsPath = path.join(__dirname, './out')

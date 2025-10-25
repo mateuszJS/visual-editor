@@ -66,7 +66,7 @@ describe('POST /api/project-uploads/[projectId]/access-url', () => {
     })
   })
 
-  it('returns error if contentLength is below or equal 0', async () => {
+  it('returns error if contentLength is below or equal to 0', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
@@ -94,9 +94,7 @@ describe('POST /api/project-uploads/[projectId]/access-url', () => {
   })
 
   it('returns error if user is not signed in', async () => {
-    const response = await onRequestPost(
-      getContext(new Request('x:'), { projectId: '1', uploadId: '1' })
-    )
+    const response = await onRequestPost(getContext(new Request('x:'), { projectId: '1' }))
 
     expect(response.status).toBe(401)
     const json = await response.json()

@@ -4,7 +4,7 @@ import getContext from '@/test/getContext'
 import { aliceSessionToken, bobSessionToken, nonExistingUserSessionToken } from '@/setup'
 
 describe('GET /api/projects/[id]', () => {
-  it('returns project if user user is the owner and project exists', async () => {
+  it('returns project if the user is the owner and project exists', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
     })
@@ -25,7 +25,7 @@ describe('GET /api/projects/[id]', () => {
 
     expect(response.status).toBe(404)
     expect(await response.json()).toEqual({
-      error: 'Failed to fetch project.',
+      error: 'Project does not exist.',
     })
   })
 
@@ -37,21 +37,18 @@ describe('GET /api/projects/[id]', () => {
 
     expect(response.status).toBe(404)
     expect(await response.json()).toEqual({
-      error: 'Failed to fetch project.',
+      error: 'Project does not exist.',
     })
   })
 
   it('returns error if user does not exist', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${nonExistingUserSessionToken}` },
-      method: 'PATCH',
-      body: JSON.stringify({ width: 600, height: 400, assets: [] }),
     })
     const response = await onRequestGet(getContext(request, { id: '1' }))
 
     expect(response.status).toBe(404)
-    const json = await response.json()
-    expect(json).toEqual({ error: 'Failed to fetch project.' })
+    expect(await response.json()).toEqual({ error: 'Project does not exist.' })
   })
 })
 
@@ -123,7 +120,7 @@ describe('PATCH /api/projects/[id]', () => {
     expect(json).toEqual({ error: 'Project does not exist.' })
   })
 
-  it('returns error is width is equal or below 0', async () => {
+  it('returns error if width is equal or below 0', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
@@ -136,7 +133,7 @@ describe('PATCH /api/projects/[id]', () => {
     expect(json).toEqual({ error: 'Width of the project has to be between 1 and 3000 pixels' })
   })
 
-  it('returns error is width is above 3000', async () => {
+  it('returns error if width is above 3000', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
@@ -149,7 +146,7 @@ describe('PATCH /api/projects/[id]', () => {
     expect(json).toEqual({ error: 'Width of the project has to be between 1 and 3000 pixels' })
   })
 
-  it('returns error is height is equal or below 0', async () => {
+  it('returns error if height is equal or below 0', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
@@ -162,7 +159,7 @@ describe('PATCH /api/projects/[id]', () => {
     expect(json).toEqual({ error: 'Height of the project has to be between 1 and 3000 pixels' })
   })
 
-  it('returns error is height is above 3000', async () => {
+  it('returns error if height is above 3000', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
@@ -175,7 +172,7 @@ describe('PATCH /api/projects/[id]', () => {
     expect(json).toEqual({ error: 'Height of the project has to be between 1 and 3000 pixels' })
   })
 
-  it('returns error is assets are not an array', async () => {
+  it('returns error if assets are not an array', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
@@ -185,10 +182,10 @@ describe('PATCH /api/projects/[id]', () => {
 
     expect(response.status).toBe(400)
     const json = await response.json()
-    expect(json).toEqual({ error: 'Assets are has to be an array' })
+    expect(json).toEqual({ error: 'Assets must be an array' })
   })
 
-  it('returns error is assets cannot be serialized', async () => {
+  it('returns error if assets cannot be serialized', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
@@ -199,5 +196,17 @@ describe('PATCH /api/projects/[id]', () => {
     expect(response.status).toBe(400)
     const json = await response.json()
     expect(json).toEqual({ error: 'Invalid JSON payload.' })
+  })
+
+  it('returns project if update is empty', async () => {
+    const request = new Request('x:', {
+      headers: { Cookie: `session=${aliceSessionToken}` },
+      method: 'PATCH',
+      body: JSON.stringify({}),
+    })
+    const response = await onRequestPatch(getContext(request, { id: '1' }))
+
+    expect(response.status).toBe(400)
+    expect(await response.json()).toEqual({ error: 'No valid fields to update' })
   })
 })

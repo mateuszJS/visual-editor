@@ -37,7 +37,7 @@ describe('GET /me', () => {
     expect(await response.json()).toEqual({ error: 'Unauthorized' })
   })
 
-  it('returns 401 if no session cookie is not present', async () => {
+  it('returns 401 if session cookie is not present', async () => {
     const request = new Request('x:', {
       method: 'GET',
       headers: {},

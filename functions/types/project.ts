@@ -101,7 +101,7 @@ export function sanitizeProjectPayload(
 
   if (payload.assets) {
     if (!Array.isArray(payload.assets)) {
-      throw Error('Assets are has to be an array')
+      throw Error('Assets must be an array')
     }
     try {
       changes.assets = JSON.stringify(payload.assets)

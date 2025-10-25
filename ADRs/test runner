@@ -5,7 +5,7 @@ For now we stick with Jest because is well integrated with:
 - react testing library
 - screenshot testing by amex
 - puppeteer
-- vitest does NOT support SSR/SSG and doesn't have any integration with nextJS. So for example <Link> component will not work(has to be rendered/geenrated because uses process.env), global styles and other provider has to be provided in a custom way.
+- vitest does NOT support SSR/SSG and doesn't have any integration with nextJS. So for example <Link> component will not work(has to be rendered/generated because uses process.env), global styles and other provider has to be provided in a custom way.
 
 Benefits of vitest:
 

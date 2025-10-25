@@ -5,7 +5,7 @@ import { aliceSessionToken } from '@/setup'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 describe('GET /api/project-uploads/[projectId]/[uploadId]', () => {
-  it('redirects if everything is right (project exists, user is the owner, signed url generated with no errors', async () => {
+  it('redirects if everything is correct (project exists, user is the owner, signed url generated with no errors)', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
     })
@@ -30,7 +30,7 @@ describe('GET /api/project-uploads/[projectId]/[uploadId]', () => {
     })
   })
 
-  it('returns error if there is user is not the owner of the project', async () => {
+  it('returns error if the user is not the owner of the project', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
     })

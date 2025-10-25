@@ -18,7 +18,7 @@ export const onRequestGet: Handler<'id'> = withSession(async (ctx, session) => {
   })
 
   if (err) {
-    return getResponseError('Failed to fetch project.', 404)
+    return getResponseError('Project does not exist.', 404)
   }
 
   return Response.json(project, { status: 200 })
@@ -54,12 +54,12 @@ export const onRequestPatch: Handler<'id'> = withSession(async (ctx, session) =>
       .first<{ id: string }>()
   })
 
-  if (!updatedRow) {
-    return getResponseError('Project does not exist.', 404)
-  }
-
   if (err) {
     return getResponseError('An error has occurred while updating project.', 500)
+  }
+
+  if (!updatedRow) {
+    return getResponseError('Project does not exist.', 404)
   }
 
   return new Response(null, { status: 204 })

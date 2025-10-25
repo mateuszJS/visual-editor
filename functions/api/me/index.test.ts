@@ -23,7 +23,7 @@ describe('GET /me', () => {
     expect(response.status).toBe(200)
   })
 
-  it('returns 401 if no session cookie is invalid', async () => {
+  it('returns 401 if session cookie is invalid', async () => {
     const request = new Request('x:', {
       method: 'GET',
       headers: {

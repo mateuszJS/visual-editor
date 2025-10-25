@@ -63,7 +63,7 @@ jobs:
       - run: npm run build
       - run: npm audit signatures
       - name: Run unit tests for Frontend, Backend and Visual Regression
-        run: npm test
+        run: npm test && npm run cf-test
       - name: Visual Regression tests - Upload diff images to branch
         if: always()
         run: |

@@ -21,21 +21,9 @@ export default async (): Promise<Config> => {
   const frontendConfig = await buildConfig({
     displayName: 'Frontend',
     testEnvironment: 'jest-fixed-jsdom',
+    testMatch: ['<rootDir>/src/**/*.test.ts'],
     setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
-    testPathIgnorePatterns: ['/_deprecated_api/.*test\\.ts$'],
-    // testPathIgnorePatterns: ['/src/app/api/.*test\\.ts$'],
     moduleNameMapper,
-  })
-
-  const backendConfig = await buildConfig({
-    displayName: 'Backend',
-    testEnvironment: 'node',
-    testMatch: ['<rootDir>/src/app/api/**/*.test.ts'],
-    moduleNameMapper,
-    fakeTimers: {
-      enableGlobally: true,
-      now: new Date('2024-01-01').getTime(),
-    },
   })
 
   const visualRegressionConfig: Config = {
@@ -60,7 +48,7 @@ export default async (): Promise<Config> => {
     collectCoverage: true,
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',
-    projects: [frontendConfig, backendConfig, visualRegressionConfig],
+    projects: [frontendConfig, visualRegressionConfig],
   }
 
   return config

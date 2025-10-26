@@ -4,7 +4,12 @@ import getResponseError from '../../utils/getResponseError'
 import { withSession } from '../../wrappers/session'
 
 export const onRequestPost = withSession(async (ctx, session) => {
-  const payload = await ctx.request.json<Project.ChangesRaw>()
+  const [payload, jsonErr] = await withError(() => ctx.request.json<Project.ChangesRaw>())
+
+  if (jsonErr) {
+    return getResponseError('Invalid JSON payload.')
+  }
+
   const [sanitizedChanges, serialErr] = await withError(() =>
     Project.sanitizeProjectPayload(payload, true)
   )
@@ -14,10 +19,11 @@ export const onRequestPost = withSession(async (ctx, session) => {
   }
 
   const [project, err] = await withError(async () => {
-    const { meta } = await ctx.env.db
+    const project = await ctx.env.db
       .prepare(
         `INSERT INTO projects (width, height, assets, owner_id)
-         VALUES (?, ?, ?, ?)`
+         VALUES (?, ?, ?, ?)
+         RETURNING id, name, created_at, last_updated`
       )
       .bind(
         sanitizedChanges.width,
@@ -25,24 +31,20 @@ export const onRequestPost = withSession(async (ctx, session) => {
         sanitizedChanges.assets,
         session.userId
       )
-      .run()
-
-    const project = await ctx.env.db
-      .prepare('SELECT id, name, created_at, last_updated FROM projects WHERE id = ?')
-      .bind(meta.last_row_id)
       .first<Pick<Project.DB, 'id' | 'name' | 'created_at' | 'last_updated'>>()
 
     return Project.sanitizeMetaData(project)
   })
 
   if (err) {
-    return getResponseError('Failed to create a project. ' + err.message)
+    // console.error(err)
+    return getResponseError('Failed to create a project.')
   }
 
   return Response.json(project, { status: 201 })
 })
 
-export const onRequestGet: SessionHandler = withSession(async (ctx, session) => {
+export const onRequestGet: Handler = withSession(async (ctx, session) => {
   const [projects, err] = await withError(async () => {
     const { results } = await ctx.env.db
       .prepare('SELECT id, name, created_at, last_updated FROM projects WHERE owner_id = ?')

@@ -24,7 +24,6 @@ export async function attachSessionCookie(res: Response, userId: string): Promis
   const tokenLifetime = Date.now() + SESSION_LIFETIME_DAYS * 24 * 60 * 60 * 1000
   const expiresAt = new Date(tokenLifetime)
   const session = await encrypt({ userId })
-
   res.headers.append('Set-Cookie', getCookie(session, expiresAt))
 }
 
@@ -77,7 +76,7 @@ export function withSession<Params extends string = never, Data = never>(
     const session = await decrypt(cookie.session)
 
     if (session && 'error' in session) {
-      console.error(session.error)
+      // console.error(session.error) capture this log in the future
     }
 
     if (!session || 'error' in session || !session?.userId) {

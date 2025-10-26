@@ -1,11 +1,11 @@
-import { withSession } from '../../../wrappers/session'
+import { withSession } from '../../../../wrappers/session'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import withError from '../../../utils/error'
-import * as Project from '../../../types/project'
+import withError from '../../../../utils/error'
+import * as Project from '../../../../types/project'
 import { v4 as uuid } from 'uuid'
-import getS3Client from '../../../clients/s3'
-import getResponseError from '../../../utils/getResponseError'
+import getS3Client from '../../../../clients/s3'
+import getResponseError from '../../../../utils/getResponseError'
 
 const MAX_FILE_SIZE = 3 * 1024 * 1024 // 3MB
 

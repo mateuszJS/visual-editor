@@ -14,7 +14,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  args: { id: '2', text: 'Loremus impsomemus YEAH!' },
+  args: { id: '2', text: 'Project Name' },
 } satisfies Meta<typeof ProjectPanel>
 
 export default meta

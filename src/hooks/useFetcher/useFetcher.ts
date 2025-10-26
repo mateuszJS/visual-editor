@@ -1,6 +1,6 @@
 import errorStore from '@/stores/error'
-import nativeFetcher, { FetcherOptions } from '@/utils/fetcher'
-import { getErrorMessage } from '@/utils/fetcher/getErrorMessage'
+import nativeFetcher, { FetcherOptions } from '@/utils/nativeFetcher'
+import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
 import { useEffect, useRef, useState } from 'react'
 
 type Success<T> = [T] extends [never] ? Record<string, never> : { json: T }
@@ -14,8 +14,8 @@ const DEFAULT_ERROR_MESSAGE =
 /**
  * Custom hook to fetch data with enhanced error handling and loading state management.
  * Returned response body can be retrived in two ways:
- * 1. read "success" property from the hhook - best if not future actions needed expect rerendering
- * 2. pass a callback as the last argument to the fetcher function - best if you need to do something on success only, and leaves error handling for the hook
+ * 1. read "success" property from the hook - best if not future actions needed expect rerendering
+ * 2. pass a callback as the last argument to the fetcher function - best if you need to perform an action(redirect, call function) on success only, and leaves error handling for the hook
  * fetcher() doesn't return data with response body in promise on purpose, callbacks are preferred since those won't need error handing(Promise.reject needs a catch block)
  */
 export default function useFetcher<T = never>() {

@@ -1,4 +1,4 @@
-import fetcher from '@/utils/fetcher'
+import nativeFetcher from '@/utils/nativeFetcher'
 
 export default function uploadMiniature(canvas: HTMLCanvasElement, projectId: string) {
   canvas.toBlob((blob) => {
@@ -6,7 +6,7 @@ export default function uploadMiniature(canvas: HTMLCanvasElement, projectId: st
       const formData = new FormData()
       formData.append('file', blob!)
 
-      fetcher(`/api/projects/${projectId}/miniature`, {
+      nativeFetcher(`/api/projects/${projectId}/miniature`, {
         method: 'POST',
         formData,
       })

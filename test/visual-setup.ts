@@ -30,10 +30,9 @@ beforeAll(async () => {
 export default async function visualSetup(
   storyId: string,
   dirname: string,
-  options: { colorThreshold?: number; failureThreshold?: number; width?: number } = {}
+  failureThreshold: number,
+  options: { width?: number } = {}
 ) {
-  const { colorThreshold = 0.1, failureThreshold = 0 } = options
-
   if (options.width) {
     await page.setViewport({ width: options.width, height: 720 })
   }
@@ -79,7 +78,7 @@ export default async function visualSetup(
         .currentTestName?.replace(/\//g, '')
         .replace(/\s/g, '_'),
       customDiffConfig: {
-        threshold: colorThreshold,
+        threshold: 0.1,
       },
     })
   } finally {

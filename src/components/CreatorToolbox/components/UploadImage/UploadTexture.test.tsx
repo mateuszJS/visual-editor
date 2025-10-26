@@ -14,6 +14,9 @@ describe('UploadTexture', () => {
 
   it('should render the image icon with label', async () => {
     const { container } = render(<UploadTexture />)
+    await act(async () => {
+      /* wait for suspense */
+    })
     expect(container).toMatchSnapshot()
   })
 

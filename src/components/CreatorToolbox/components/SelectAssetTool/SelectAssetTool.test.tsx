@@ -13,7 +13,7 @@ describe('SelectAssetTool', () => {
     await act(() => result.current.init(window.creatorCanvas, project))
   })
 
-  it('should render select object icon with label', () => {
+  it('should render select object icon with label', async () => {
     const { container } = render(<SelectAssetTool />)
     expect(container).toMatchSnapshot()
   })
@@ -22,10 +22,10 @@ describe('SelectAssetTool', () => {
     const user = userEvent.setup()
     const { result } = renderHook(useCreator)
 
-    await act(() =>
+    await act(async () => {
       // SelectAsset is default selection, so we have to switch to any other tool to test click action
       result.current.creator.setTool(CreatorTool.DrawBezierCurve)
-    )
+    })
 
     render(<SelectAssetTool />)
 

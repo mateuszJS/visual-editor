@@ -32,7 +32,7 @@ export default async function visualSetup(
   dirname: string,
   options: { colorThreshold?: number; failureThreshold?: number; width?: number } = {}
 ) {
-  const { colorThreshold = 0.1, failureThreshold = 0.013 } = options
+  const { colorThreshold = 0.1, failureThreshold = 0 } = options
 
   if (options.width) {
     await page.setViewport({ width: options.width, height: 720 })
@@ -59,18 +59,19 @@ export default async function visualSetup(
   if (!storyRoot) {
     throw new Error('Element with class #storybook-root not found')
   }
+
   await storyRoot.screenshot({ path: tempPath })
-  // storybook-root
-  // await page.screenshot({ path: tempPath });
   const imageBuffer = fs.readFileSync(tempPath)
 
   // Compare with baseline
   try {
     // Compare with baseline
     expect(imageBuffer).toMatchImageSnapshot({
+      // DO NOT CHANGE STRATEGY
+      // ssim is passing to many failures, similar as percentage
+      failureThresholdType: 'pixel',
       customSnapshotsDir: screenshotsDir,
       failureThreshold,
-      failureThresholdType: 'percent',
       allowSizeMismatch: true, // Elements which use fractions of rem/em units can have different size on different machines by 1-2px
       updatePassedSnapshot: true, // allows to update screenshots when -u flag is passed(flag ot update snapshots)
       customSnapshotIdentifier: expect

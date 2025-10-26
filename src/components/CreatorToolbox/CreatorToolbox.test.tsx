@@ -15,12 +15,18 @@ const desktopButtons = ['Select Object', 'Select Node', 'Draw Shape', 'Add Text'
 describe('CreatorToolbox - creator not initialized yet', () => {
   it('for desktop', async () => {
     render(<CreatorToolbox />)
+    await act(async () => {
+      /* wait for suspense */
+    })
     expect(LoaderHarness.getLoader()).toBeInTheDocument()
   })
 
   it('for mobile', async () => {
     isMobile = true
     render(<CreatorToolbox />)
+    await act(async () => {
+      /* wait for suspense */
+    })
     expect(LoaderHarness.getLoader()).toBeInTheDocument()
   })
 })
@@ -34,6 +40,10 @@ describe('CreatorToolbox - desktop', () => {
 
   it('default state of toolbox', async () => {
     render(<CreatorToolbox />)
+
+    await act(async () => {
+      /* wait for suspense */
+    })
 
     expect(LoaderHarness.getLoader()).not.toBeInTheDocument()
 
@@ -71,7 +81,9 @@ describe('CreatorToolbox - mobile', () => {
 
   it('default state of toolbox', async () => {
     render(<CreatorToolbox />)
-
+    await act(async () => {
+      /* wait for suspense */
+    })
     expect(LoaderHarness.getLoader()).not.toBeInTheDocument()
 
     mobileButtons.forEach((name) => {

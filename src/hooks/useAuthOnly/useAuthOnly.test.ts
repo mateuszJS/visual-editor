@@ -17,9 +17,7 @@ describe('useAuthOnly', () => {
 
     server.use(http.get('/api/me', () => HttpResponse.json(null, { status: 401 })))
 
-    await act(async () => {
-      initUserStore()
-    })
+    await act(() => initUserStore())
 
     expect(mockRouter.asPath).toBe('/')
   })
@@ -30,9 +28,7 @@ describe('useAuthOnly', () => {
 
       expect(mockRouter.asPath).toBe('/profile')
 
-      await act(async () => {
-        initUserStore()
-      })
+      await act(() => initUserStore())
 
       expect(mockRouter.asPath).toBe('/profile')
     })

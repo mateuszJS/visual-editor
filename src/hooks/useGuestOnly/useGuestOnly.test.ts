@@ -15,9 +15,7 @@ describe('useGuestOnly', () => {
 
     expect(mockRouter.asPath).toBe('/login')
 
-    await act(async () => {
-      initUserStore()
-    })
+    await act(() => initUserStore())
 
     expect(mockRouter.asPath).toBe('/profile')
   })
@@ -30,7 +28,7 @@ describe('useGuestOnly', () => {
 
       await act(async () => {
         server.use(http.get('/api/me', () => HttpResponse.json(null, { status: 401 })))
-        initUserStore()
+        await initUserStore()
       })
 
       expect(mockRouter.asPath).toBe('/login')

@@ -10,12 +10,10 @@ const project = getSanitizedProject()
 describe('SelectAssetTool', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(() => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
   })
 
-  it('should render select object icon with label', () => {
+  it('should render select object icon with label', async () => {
     const { container } = render(<SelectAssetTool />)
     expect(container).toMatchSnapshot()
   })

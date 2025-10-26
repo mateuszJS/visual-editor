@@ -15,17 +15,14 @@ describe('useIsMobile', () => {
   }
 
   beforeEach(() => {
-    setWindowWidth(800)
     jest.useFakeTimers()
-  })
-
-  afterEach(() => {
-    jest.useRealTimers()
+    setWindowWidth(800)
   })
 
   // Restore original window width after all tests
   afterAll(() => {
     setWindowWidth(originalInnerWidth)
+    jest.useRealTimers()
   })
 
   it('should update the isMobile when the window is resized and throttled time has passed', async () => {

@@ -8,7 +8,7 @@ describe('useProjectsList', () => {
     const { result } = renderHook(() => useProjectsList())
 
     await act(() => {
-      // allow the micro-tasks / timers to run
+      // allow the micro-tasks
     })
 
     expect(result.current).toMatchObject({
@@ -47,7 +47,9 @@ describe('useProjectsList', () => {
 
     const { result } = renderHook(() => useProjectsList())
 
-    await act(() => {})
+    await act(() => {
+      // allow the micro-tasks
+    })
 
     expect(result.current).toMatchObject({
       loading: false,

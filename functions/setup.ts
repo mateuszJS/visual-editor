@@ -10,7 +10,7 @@ await applyD1Migrations(env.db, env.TEST_MIGRATIONS)
 
 beforeAll(async () => {
   vi.useFakeTimers()
-  const date = new Date(2000, 0)
+  const date = Date.UTC(2000, 0)
   vi.setSystemTime(date)
 
   vi.mock('google-auth-library/build/src/auth/oauth2client', () => {
@@ -113,15 +113,20 @@ beforeAll(async () => {
     .run()
 })
 
+// to receive those session value just call await encrypt({ userId: '23891542398' }) in session.ts
+
+// id 2
 export const aliceSessionToken =
-  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIyIiwiaWF0Ijo5NDY2ODEyMDAsImV4cCI6OTQ3Mjg2MDAwfQ.jYtsRJtRljicKqM00YLA30ApNiHtag-8WwiafCLCM3k'
+  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIyIiwiaWF0Ijo5NDY2ODQ4MDAsImV4cCI6OTQ3Mjg5NjAwfQ.NyxfB3Mgm8pV0RzapXAef0ykdsMSsZ_BlHjEv7B6Erw'
 
+// id 3
 export const bobSessionToken =
-  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIzIiwiaWF0Ijo5NDY2ODEyMDAsImV4cCI6OTQ3Mjg2MDAwfQ.Wg2bKvri4wlVeXCsoA7s4Uyhgsu8OSMAHhxhpHvaxEI'
+  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIzIiwiaWF0Ijo5NDY2ODQ4MDAsImV4cCI6OTQ3Mjg5NjAwfQ.twc4OheHNODBz0ayq5CX46uXjHBEssPK7YyYdmgENG8'
 
+// id 4
 export const nextUserSessionToken =
-  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI0IiwiaWF0Ijo5NDY2ODEyMDAsImV4cCI6OTQ3Mjg2MDAwfQ.jrKc7gSObohaPXbWC3EC-nnS3FcTrWRIFMDiX9jeInA'
+  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI0IiwiaWF0Ijo5NDY2ODQ4MDAsImV4cCI6OTQ3Mjg5NjAwfQ.UlYpmMlXP1pw6Fc9BQZBPe8C2-yoENkAmJMl3m0I_jE'
 
 // id 23891542398
 export const nonExistingUserSessionToken =
-  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIyMzg5MTU0MjM5OCIsImlhdCI6OTQ2NjgxMjAwLCJleHAiOjk0NzI4NjAwMH0.qp4yXwD9K1CqhD2QagBLidzO0yiaEPP2mWjCaOlg0qA'
+  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIyMzg5MTU0MjM5OCIsImlhdCI6OTQ2Njg0ODAwLCJleHAiOjk0NzI4OTYwMH0.dmW-Hmr6dBD8kEuAr3zuAM5iCYRodZ_NpSVZSkDVJnc'

@@ -24,7 +24,7 @@ describe('GET /auth/login/google', () => {
     })
     expect(response.status).toBe(200)
     expect(response.headers.get('Set-Cookie')).toBe(
-      `session=${nextUserSessionToken}; HttpOnly; Secure; SameSite=Strict; Expires=Fri, 07 Jan 2000 23:00:00 GMT; Path=/api/`
+      `session=${nextUserSessionToken}; HttpOnly; Secure; SameSite=Strict; Expires=Sat, 08 Jan 2000 00:00:00 GMT; Path=/api/`
     )
   })
 
@@ -48,7 +48,7 @@ describe('GET /auth/login/google', () => {
     })
     expect(response.status).toBe(200)
     expect(response.headers.get('Set-Cookie')).toBe(
-      `session=${aliceSessionToken}; HttpOnly; Secure; SameSite=Strict; Expires=Fri, 07 Jan 2000 23:00:00 GMT; Path=/api/`
+      `session=${aliceSessionToken}; HttpOnly; Secure; SameSite=Strict; Expires=Sat, 08 Jan 2000 00:00:00 GMT; Path=/api/`
     )
   })
 

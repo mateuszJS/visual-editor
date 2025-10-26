@@ -24,9 +24,6 @@ export async function attachSessionCookie(res: Response, userId: string): Promis
   const tokenLifetime = Date.now() + SESSION_LIFETIME_DAYS * 24 * 60 * 60 * 1000
   const expiresAt = new Date(tokenLifetime)
   const session = await encrypt({ userId })
-  console.log('something boring', env.SESSION_SECRET)
-  console.log('expiresAt', expiresAt)
-  console.log('session', getCookie(session, expiresAt))
   res.headers.append('Set-Cookie', getCookie(session, expiresAt))
 }
 

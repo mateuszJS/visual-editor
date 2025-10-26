@@ -1,0 +1,89 @@
+name: Storybook Vercel Preview
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - develop
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  # All below values are mandatory during the build, but real value need to be used while running
+  # so build can succedd with dummy values
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID: x
+  SESSION_SECRET: x
+  PRIVATE_SUPABASE_ANON_KEY: x
+  SUPABASE_URL: http://valid-url
+  GOOGLE_STORAGE_PROJECT_ID: x
+  GOOGLE_STORAGE_EMAIL: x
+  GOOGLE_STORAGE_PRIVATE_KEY: x
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  Deploy-Storybook-Preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+      
+      - name: Install dependencies
+        run: PUPPETEER_SKIP_DOWNLOAD=true npm ci
+      
+      - name: Build Storybook
+        run: npm run build-storybook
+      
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      
+      - name: Deploy Storybook to Vercel
+        id: deploy
+        run: |
+          # Deploy storybook-static directory to Vercel
+          DEPLOYMENT_URL=$(vercel deploy storybook-static --token=${{ secrets.VERCEL_TOKEN }} --yes)
+          echo "deployment_url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "Deployed Storybook to: $DEPLOYMENT_URL"
+      
+      - name: Comment on PR with Storybook preview link
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { repo, owner } = context.repo;
+            const prNumber = context.issue.number;
+            const deployUrl = '${{ steps.deploy.outputs.deployment_url }}';
+            const commentTitle = '📚 Storybook Preview Deployed!';
+
+            // Delete previous Storybook comments
+            const comments = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number: prNumber
+            });
+
+            for (const comment of comments.data) {
+              if (comment.body.includes(commentTitle)) {
+                await github.rest.issues.deleteComment({
+                  owner,
+                  repo,
+                  comment_id: comment.id
+                });
+              }
+            }
+
+            // Add new comment with Storybook preview link
+            const body = `## ${commentTitle}
+            Your Storybook has been deployed to a preview environment:
+            [${deployUrl}](${deployUrl})`;
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: body
+            });

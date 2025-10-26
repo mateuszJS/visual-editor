@@ -67,7 +67,7 @@ export default async function visualSetup(
     // Compare with baseline
     expect(imageBuffer).toMatchImageSnapshot({
       // DO NOT CHANGE STRATEGY
-      // ssim is passing to many failures, similar as percentage
+      // ssim is allowing too many failures, similar to percentage
       failureThresholdType: 'pixel',
       customSnapshotsDir: screenshotsDir,
       failureThreshold,

@@ -15,16 +15,17 @@ describe('useIsMobile', () => {
   }
 
   beforeEach(() => {
+    jest.useFakeTimers()
     setWindowWidth(800)
   })
 
   // Restore original window width after all tests
   afterAll(() => {
     setWindowWidth(originalInnerWidth)
+    jest.useRealTimers()
   })
 
   it('should update the isMobile when the window is resized and throttled time has passed', async () => {
-    jest.useFakeTimers()
     const { result } = renderHook(() => useIsMobile())
 
     // 800 by default
@@ -65,7 +66,6 @@ describe('useIsMobile', () => {
 
     // should be updated with no waiting time, because last call was >= 300ms ago
     expect(result.current).toBe(false)
-    jest.useRealTimers()
   })
 
   it('should remove the event listener on unmount', () => {

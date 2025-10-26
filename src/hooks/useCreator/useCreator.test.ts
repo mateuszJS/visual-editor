@@ -31,7 +31,7 @@ describe('useCreator', () => {
     expect(result.current.isReady).toBe(false)
   })
 
-  it('canvas is marked as conntected once initialized', async () => {
+  it('canvas is marked as connected once initialized', async () => {
     const { result } = renderHook(useCreator)
 
     await act(async () => result.current.init(window.creatorCanvas, project))

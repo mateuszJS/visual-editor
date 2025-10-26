@@ -211,7 +211,7 @@ describe('useFetcher', () => {
     })
   })
 
-  describe('returns output related to the latest fetcher(ignores previous calles of fetcher)', () => {
+  describe('returns output related to the latest fetcher(ignores previous calls of fetcher)', () => {
     it('if previous request completed with success', async () => {
       const { result } = renderHook(() => useFetcher())
       const { fetcher } = result.current
@@ -294,6 +294,14 @@ describe('useFetcher', () => {
     })
 
     describe("if previous request hasn't completed yet but will complete", () => {
+      beforeAll(() => {
+        jest.useFakeTimers()
+      })
+
+      afterAll(() => {
+        jest.useRealTimers()
+      })
+
       it('before current one completes', async () => {
         /*
           1. fetcher('api/me')
@@ -301,7 +309,6 @@ describe('useFetcher', () => {
           3. Receives response for api/me (should ignore)
           4. Receives response for api/projects/1
         */
-        jest.useFakeTimers()
         server.use(
           http.get('/api/me', async () => {
             await delay(1)
@@ -352,8 +359,6 @@ describe('useFetcher', () => {
           success: { json: { projects: true } },
           fetcher: expect.any(Function),
         })
-
-        jest.useRealTimers()
       })
 
       it('after current one completes', async () => {
@@ -363,8 +368,6 @@ describe('useFetcher', () => {
           3. Receives response for api/projects/1
           4. Receives response for api/me
         */
-        jest.useFakeTimers()
-
         server.use(
           http.get('/api/projects/1', async () => {
             await delay(1)
@@ -416,8 +419,6 @@ describe('useFetcher', () => {
           success: { json: { projects: true } },
           fetcher: expect.any(Function),
         })
-
-        jest.useRealTimers()
       })
     })
   })

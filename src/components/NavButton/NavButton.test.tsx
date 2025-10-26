@@ -16,7 +16,7 @@ describe('<NavButton>', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('should trigger onClick callbakc when clicked', async () => {
+  it('should trigger onClick callback when clicked', async () => {
     const user = userEvent.setup()
     const onClick = jest.fn()
 

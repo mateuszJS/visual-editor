@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import Navigation from './Navigation'
 import { initUserStore } from '@/hooks/userStore/userStore'
 
@@ -10,10 +10,10 @@ jest.mock('next/navigation', () => ({
 }))
 
 describe('<Navigation>', () => {
-  it('should render five standard links for unautenticated user', async () => {
+  it('should render five standard links for unauthenticated user', async () => {
     const { container } = render(<Navigation />)
 
-    expect(container).toMatchSnapshot()
+    await waitFor(() => expect(container).toMatchSnapshot())
   })
 
   it('should replace "Login" link with "Profile" if user is signed in', async () => {

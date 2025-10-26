@@ -21,7 +21,7 @@ export default async (): Promise<Config> => {
   const frontendConfig = await buildConfig({
     displayName: 'Frontend',
     testEnvironment: 'jest-fixed-jsdom',
-    testMatch: ['<rootDir>/src/**/*.test.ts'],
+    testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}'],
     setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
     moduleNameMapper,
   })

@@ -13,8 +13,6 @@ describe('<Navigation>', () => {
   it('should render five standard links for unautenticated user', async () => {
     const { container } = render(<Navigation />)
 
-    await act(() => {}) // wait for lazy loaded components
-
     expect(container).toMatchSnapshot()
   })
 
@@ -24,9 +22,7 @@ describe('<Navigation>', () => {
     const loginLink = screen.getByText('Login')
     expect(loginLink).toBeInTheDocument()
 
-    await act(async () => {
-      initUserStore()
-    })
+    await act(() => initUserStore())
 
     const profileLink = screen.getByText('Profile')
     expect(profileLink).toBeInTheDocument()

@@ -9,9 +9,7 @@ const project = getSanitizedProject()
 describe('RemoveAsset', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(() => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
   })
 
   it('should upload image button', () => {

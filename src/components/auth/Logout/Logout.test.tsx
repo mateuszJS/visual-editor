@@ -1,4 +1,4 @@
-import { render, screen, act } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import Logout from './Logout'
 import userStore from '@/hooks/userStore/userStore'
 import { server } from 'test/server'
@@ -28,14 +28,10 @@ describe('Logout component', () => {
     )
 
     render(<Logout />)
-
     const logoutButton = screen.getByRole('button', { name: /logout/i })
     await user.click(logoutButton)
 
-    await act(async () => {})
-
     expect(userStore.user).toBeNull()
-
     expect(window.location.reload).toHaveBeenCalled()
   })
 })

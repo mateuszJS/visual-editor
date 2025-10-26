@@ -14,8 +14,6 @@ describe('useCSRF', () => {
     server.use(http.get('/api/csrf', () => HttpResponse.error()))
     const { result } = renderHook(() => useCSRF())
 
-    await act(() => {}) // wait for current request/renders to complete
-
     server.use(
       http.get('/api/csrf', () => HttpResponse.json({ csrfToken: 'csrf-token' }, { status: 200 }))
     )

@@ -9,23 +9,17 @@ const project = getSanitizedProject()
 describe('UploadTexture', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(() => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
   })
 
   it('should render the image icon with label', async () => {
     const { container } = render(<UploadTexture />)
-    await act(async () => {
-      /* wait for lazy loading */
-    })
     expect(container).toMatchSnapshot()
   })
 
   it('renders upload modal when clicked', async () => {
     const user = userEvent.setup()
     render(<UploadTexture />)
-    await act(async () => {}) /* wait for lazy loading */
 
     const uploadBtn = screen.getByRole('button', { description: 'Upload Image' })
     await user.click(uploadBtn)

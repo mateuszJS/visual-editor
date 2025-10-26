@@ -10,9 +10,7 @@ const project = getSanitizedProject()
 describe('SelectAssetTool', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(() => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
   })
 
   it('should render select object icon with label', () => {
@@ -24,10 +22,10 @@ describe('SelectAssetTool', () => {
     const user = userEvent.setup()
     const { result } = renderHook(useCreator)
 
-    await act(async () => {
+    await act(() =>
       // SelectAsset is default selection, so we have to switch to any other tool to test click action
       result.current.creator.setTool(CreatorTool.DrawBezierCurve)
-    })
+    )
 
     render(<SelectAssetTool />)
 

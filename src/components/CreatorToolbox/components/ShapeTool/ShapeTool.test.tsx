@@ -9,9 +9,7 @@ const project = getSanitizedProject()
 describe('ShapeTool', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(() => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
   })
 
   it('should render pen icon with label', () => {

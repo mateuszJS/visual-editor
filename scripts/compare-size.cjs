@@ -17,11 +17,13 @@ const path = require('path');
  * Format bytes to human readable format
  */
 function formatBytes(bytes) {
-  if (bytes === 0) return '0 B';
+  const absBytes = Math.abs(bytes);
+  if (absBytes === 0) return '0 B';
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  const i = Math.floor(Math.log(absBytes) / Math.log(k));
+  const formatted = parseFloat((absBytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return bytes < 0 ? '-' + formatted : formatted;
 }
 
 /**
@@ -40,12 +42,13 @@ function formatDiff(diff, percentage) {
 function normalizeFileName(fileName) {
   // Remove hash patterns from Next.js build files
   // Examples:
-  //   _next/static/chunks/123-abc123def.js -> _next/static/chunks/123.js
+  //   _next/static/chunks/123-abc123def.js -> _next/static/chunks/123-[hash].js
   //   _next/static/css/abc123.css -> _next/static/css/[hash].css
   
-  // For files in _next/static/chunks or _next/static/css, remove the hash
+  // For files in _next/static/chunks or _next/static/css, remove the hash part
   if (fileName.includes('_next/static/chunks/') || fileName.includes('_next/static/css/')) {
-    return fileName.replace(/[-_][a-f0-9]{8,}/gi, '[hash]');
+    // Match common Next.js hash patterns: -abc123def, _abc123, etc.
+    return fileName.replace(/[-_][a-zA-Z0-9]{6,}/g, '-[hash]');
   }
   
   return fileName;

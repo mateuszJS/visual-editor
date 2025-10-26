@@ -90,6 +90,43 @@ to apply:
 `npx wrangler d1 migrations apply preview --remote`
 `npx wrangler d1 migrations apply production --remote --env=production`
 
+## Build Size Analysis
+
+This project includes tools to analyze and compare build output sizes:
+
+### Analyze Build Size
+
+To analyze the size of the build output:
+
+```bash
+npm run build    # Build the project first
+npm run size     # Analyze build output
+```
+
+This will display a detailed breakdown of file sizes by type and show the top 20 largest files. The analysis is also saved to `build-size-analysis.json` for programmatic use.
+
+### Bundle Analyzer
+
+For an interactive visualization of your webpack bundles:
+
+```bash
+npm run analyze
+```
+
+This opens an interactive bundle analyzer in your browser, showing the size of each module and how they contribute to the overall bundle size.
+
+### Size Comparison (CI)
+
+On pull requests to the `develop` branch, a GitHub Action automatically compares the build size of your changes against the base branch and posts a comment on the PR with:
+- Overall size change
+- List of files that changed in size
+- New and removed files
+- Warning if build size increased by more than 5%
+
+See `.github/workflows/build-size-analysis.yml` for details.
+
+For more information about these tools, see `scripts/README.md`.
+
 ##CF R2
 `wrangler r2 bucket create your-bucket-name`
 

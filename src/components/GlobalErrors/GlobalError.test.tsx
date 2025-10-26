@@ -1,9 +1,11 @@
-import { act, fireEvent, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { act, render, screen, fireEvent } from '@testing-library/react'
 import GlobalErrors from './GlobalErrors'
 import errorStore from '@/stores/error'
 
 describe('<GlobalError />', () => {
   it('should render error message when there is one', async () => {
+    const user = userEvent.setup()
     const { container } = render(<GlobalErrors />)
     // no error message initially
     expect(container).toBeEmptyDOMElement()
@@ -14,7 +16,7 @@ describe('<GlobalError />', () => {
     })
 
     expect(container).toMatchSnapshot()
-    fireEvent.click(screen.getByRole('button', { name: /close/i }))
+    await user.click(screen.getByRole('button', { name: /close/i }))
 
     const transitionEvent = new Event('transitionend', { bubbles: true })
     Object.defineProperty(transitionEvent, 'propertyName', {

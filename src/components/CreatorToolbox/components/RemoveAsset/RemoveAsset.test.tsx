@@ -1,7 +1,8 @@
-import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
+import { act, render, renderHook, screen } from '@testing-library/react'
 import RemoveAsset from './RemoveAsset'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
+import userEvent from '@testing-library/user-event'
 
 const project = getSanitizedProject()
 
@@ -19,12 +20,13 @@ describe('RemoveAsset', () => {
   })
 
   it('calls removeAsset from creator when clicked', async () => {
+    const user = userEvent.setup()
     render(<RemoveAsset />)
 
     const removeBtn = screen.getByRole('button', {
       name: /remove/i,
     })
-    fireEvent.click(removeBtn)
+    await user.click(removeBtn)
 
     const { result } = renderHook(useCreator)
     expect(result.current.creator.removeAsset).toHaveBeenCalledTimes(1)

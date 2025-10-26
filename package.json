@@ -14,7 +14,9 @@
     "dev-https": "next dev --turbopack --experimental-https",
     "cf-dev": "wrangler pages dev --local-protocol=https --https-key-path=./certificates/localhost.key --https-cert-path=./certificates/localhost.crt out",
     "cf-test": "vitest",
-    "cf-typegen": "wrangler types './functions/types.d.ts'"
+    "cf-typegen": "wrangler types './functions/types.d.ts'",
+    "analyze": "ANALYZE=true next build",
+    "size": "node scripts/analyze-size.cjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.913.0",
@@ -41,6 +43,7 @@
     "@cloudflare/vitest-pool-workers": "^0.8.49",
     "@eslint/eslintrc": "^3",
     "@mdx-js/react": "^3.1.0",
+    "@next/bundle-analyzer": "^16.0.0",
     "@storybook/addon-docs": "^9.1.10",
     "@storybook/nextjs": "^9.1.10",
     "@svgr/webpack": "^8.1.0",

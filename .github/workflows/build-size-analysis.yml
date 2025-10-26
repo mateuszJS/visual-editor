@@ -1,0 +1,137 @@
+name: Build Size Analysis
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+env:
+  # Build environment variables (same as in pull-request-test.yml)
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID: x
+  SESSION_SECRET: x
+  PRIVATE_SUPABASE_ANON_KEY: x
+  SUPABASE_URL: http://valid-url
+  GOOGLE_STORAGE_PROJECT_ID: x
+  GOOGLE_STORAGE_EMAIL: x
+  GOOGLE_STORAGE_PRIVATE_KEY: x
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  analyze-size:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build current branch
+        run: npm run build
+
+      - name: Analyze current build size
+        run: npm run size
+
+      - name: Save current analysis
+        run: cp build-size-analysis.json current-size-analysis.json
+
+      - name: Checkout base branch
+        run: |
+          git fetch origin develop
+          git checkout origin/develop
+
+      - name: Install dependencies for base
+        run: npm ci
+
+      - name: Build base branch
+        run: npm run build
+
+      - name: Analyze base build size
+        run: npm run size
+
+      - name: Save base analysis
+        run: cp build-size-analysis.json base-size-analysis.json
+
+      - name: Compare sizes
+        id: compare
+        run: |
+          # Capture comparison output
+          node scripts/compare-size.cjs base-size-analysis.json current-size-analysis.json > size-comparison.txt 2>&1 || true
+          
+          # Save output as multiline string for GitHub Actions
+          echo "COMPARISON_OUTPUT<<EOF" >> $GITHUB_ENV
+          cat size-comparison.txt >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Comment PR with size comparison
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const { repo, owner } = context.repo;
+            const issue_number = context.issue.number;
+            
+            // Read the comparison output
+            const comparison = process.env.COMPARISON_OUTPUT;
+            
+            // Create comment body with collapsible details
+            const commentBody = `## 📊 Build Size Analysis
+
+\`\`\`
+${comparison}
+\`\`\`
+
+<details>
+<summary>ℹ️ How to interpret this report</summary>
+
+This report compares the build output size of this PR against the \`develop\` branch.
+
+- **Overall Size Change**: Shows the total size difference of the entire build
+- **File Changes**: Lists individual files that changed in size
+  - 🆕 NEW: Files added in this PR
+  - ❌ REMOVED: Files removed in this PR  
+  - 📈 GREW: Files that increased in size
+  - 📉 SHRUNK: Files that decreased in size
+
+Files are normalized to handle hash changes in Next.js output files.
+
+</details>
+`;
+
+            // Find and delete previous size analysis comments
+            const comments = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number
+            });
+
+            const botComments = comments.data.filter(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('Build Size Analysis')
+            );
+
+            for (const comment of botComments) {
+              await github.rest.issues.deleteComment({
+                owner,
+                repo,
+                comment_id: comment.id
+              });
+            }
+
+            // Post new comment
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: commentBody
+            });

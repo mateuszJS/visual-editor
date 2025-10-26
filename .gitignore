@@ -48,3 +48,9 @@ storybook-static
 certificates
 
 .wrangler/
+
+# build size analysis
+build-size-analysis.json
+base-size-analysis.json
+current-size-analysis.json
+size-comparison.txt

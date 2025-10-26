@@ -46,7 +46,7 @@ jobs:
         id: deploy
         run: |
           # Deploy storybook-static directory to Vercel
-          DEPLOYMENT_URL=$(vercel deploy storybook-static --token=${{ secrets.VERCEL_TOKEN }} --yes)
+          DEPLOYMENT_URL=$(vercel deploy storybook-static --token=${{ secrets.VERCEL_TOKEN }} --yes --target=preview)
           echo "deployment_url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
           echo "Deployed Storybook to: $DEPLOYMENT_URL"
 

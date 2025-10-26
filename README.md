@@ -82,7 +82,7 @@ openssl req -x509 -out localhost.crt -keyout localhost.key \
 and move output files to `certificates` folder.
 You might need to close the browser application and reopen to refresh ssl certificates.
 
-##Migrations
+## Migrations
 to start: `npx wrangler d1 migrations create preview <migration brief description>`
 
 to apply:
@@ -127,7 +127,7 @@ See `.github/workflows/build-size-analysis.yml` for details.
 
 For more information about these tools, see `scripts/README.md`.
 
-##CF R2
+## CF R2
 `wrangler r2 bucket create your-bucket-name`
 
 Connet bucke to a custom domain that is already managed by cloudflare:

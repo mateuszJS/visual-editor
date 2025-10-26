@@ -42,8 +42,9 @@ function formatDiff(diff, percentage) {
 function normalizeFileName(fileName) {
   // Remove hash patterns from Next.js build files
   // Examples:
-  //   _next/static/chunks/123-abc123def.js -> _next/static/chunks/123-[hash].js
-  //   _next/static/css/abc123.css -> _next/static/css/[hash].css
+  //   _next/static/chunks/framework-abc123.js -> _next/static/chunks/framework-[hash].js
+  //   _next/static/css/app-def456.css -> _next/static/css/app-[hash].css
+  //   _next/static/chunks/123-abc-def.js -> _next/static/chunks/123-[hash]-[hash].js
   
   // For files in _next/static/chunks or _next/static/css, remove the hash part
   if (fileName.includes('_next/static/chunks/') || fileName.includes('_next/static/css/')) {

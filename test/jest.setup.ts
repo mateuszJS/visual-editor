@@ -37,4 +37,6 @@ afterEach(() => {
   window.creatorCanvas.remove()
 })
 
-afterAll(() => server.close())
+afterAll(() => {
+  server.close()
+})

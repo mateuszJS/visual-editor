@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import useFetcher from '../useFetcher/useFetcher'
-import nativeFetcher from '@/utils/fetcher'
+import nativeFetcher from '@/utils/nativeFetcher'
 import { proxyMap } from 'valtio/utils'
 import { ref, useSnapshot } from 'valtio'
 import { SanitizedProject, UpdateProjectPayload } from '@/types'
@@ -15,10 +15,15 @@ async function updateProject(id: string, project: UpdateProjectPayload) {
   }
 
   try {
-    await nativeFetcher(`/api/projects/${id}`, {
+    const res = await nativeFetcher(`/api/projects/${id}`, {
       method: 'PATCH',
       json: project,
     })
+
+    if (!res.ok) {
+      throw Error('Failed to update project.')
+    }
+
     projectsStore.set(
       id,
       ref({

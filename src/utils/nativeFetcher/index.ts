@@ -7,11 +7,26 @@ export interface FetcherOptions {
   formData?: FormData
 }
 
+type EnrichedResponse<Json, Error> = Omit<Response, 'json'> &
+  (
+    | {
+        ok: false
+        json: () => Promise<Error>
+      }
+    | {
+        ok: true
+        json: () => Promise<Json>
+      }
+  )
+
 /**
- * A simple fetch wrapper that imrpoves developer experience
+ * A simple fetch wrapper that improves developer experience
  * Can throw errors in case of network error or unauthorized user 401
  */
-export default async function fetcher(
+export default async function nativeFetcher<
+  Json extends Record<string, unknown> | Array<unknown> = never,
+  Error = { error: string }
+>(
   url: string,
   {
     method = 'GET',
@@ -21,7 +36,7 @@ export default async function fetcher(
     csrfToken,
     formData = undefined,
   }: FetcherOptions = {}
-): Promise<Response> {
+): Promise<EnrichedResponse<Json, Error>> {
   try {
     // This should be the only one place in the codebase where we use native fetch!
     // eslint-disable-next-line no-restricted-syntax

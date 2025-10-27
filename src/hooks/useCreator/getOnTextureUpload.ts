@@ -1,24 +1,31 @@
 import errorStore from '@/stores/error'
-import fetcher from '@/utils/fetcher'
+import nativeFetcher from '@/utils/nativeFetcher'
 
 export default function getOnTextureUpload(projectId: string) {
   return async (url: string, setNewUrl: (newUrl: string) => void) => {
     if (!url.startsWith('blob:')) return
 
     try {
-      const file = await fetcher(url).then((res) => res.blob())
-      const uploadUrlRes = await fetcher(`/api/project-uploads/${projectId}/access-url`, {
+      const fileRes = await nativeFetcher(url)
+
+      if (!fileRes.ok) {
+        errorStore.message = 'Failed to fetch file.'
+        return
+      }
+
+      const file = await fileRes.blob()
+
+      const uploadUrlRes = await nativeFetcher(`/api/project-uploads/${projectId}/access-url`, {
         method: 'POST',
         json: { contentLength: file.size },
       })
 
-      const uploadUrlJson = await uploadUrlRes.json()
-
-      if (!uploadUrlJson.url || !uploadUrlJson.uploadId) {
-        throw Error(
-          `Failed to generate upload url. url: ${uploadUrlJson.url}, uploadId: ${uploadUrlJson.uploadId}`
-        )
+      if (!uploadUrlRes.ok) {
+        errorStore.message = 'Failed to upload file.'
+        return
       }
+
+      const uploadUrlJson = (await uploadUrlRes.json()) as { url: string; uploadId: string }
 
       // eslint-disable-next-line no-restricted-syntax
       const response = await fetch(uploadUrlJson.url, {

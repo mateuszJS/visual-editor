@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
 import HomeIcon from 'assets/home-icon.svg'
 import NavLink from './NavLink'

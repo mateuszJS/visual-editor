@@ -132,7 +132,7 @@ describe('useProject', () => {
 
       await act(() => {
         result.current.createProject(100, 100, (project) => {
-          expect(project).toMatchObject({ id: '1' })
+          expect(project).toEqual({ id: '1' })
         })
       })
 
@@ -194,6 +194,7 @@ describe('useProject', () => {
         loading: false,
         error: null,
         project: { id: '1', width: 200 },
+        // our msw handler returns only id, that's why we don't compare height here
       })
     })
   })

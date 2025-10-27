@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom'
 import { act, fireEvent, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import ErrorToast from './ErrorToast'
 
 describe('<ErrorToast>', () => {
@@ -8,12 +8,13 @@ describe('<ErrorToast>', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('close callback should be called on click on close icon', async () => {
+  it('close callback should be called on click on close icon & wait until transition ends', async () => {
+    const user = userEvent.setup()
     const close = jest.fn()
 
     render(<ErrorToast error="An error occurred" close={close} />)
 
-    fireEvent.click(screen.getByRole('button', { name: /close/i }))
+    await user.click(screen.getByRole('button', { name: /close/i }))
 
     const transitionEvent = new Event('transitionend', { bubbles: true })
     Object.defineProperty(transitionEvent, 'propertyName', {

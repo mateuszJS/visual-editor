@@ -5,7 +5,7 @@ import Button from '@/components/Button/Button'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
 
 export default function Logout() {
-  const { fetcher } = useFetcher<void>()
+  const { fetcher } = useFetcher()
   const onClick = () => {
     fetcher(
       '/api/auth/logout',

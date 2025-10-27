@@ -6,7 +6,15 @@ export default function getOnTextureUpload(projectId: string) {
     if (!url.startsWith('blob:')) return
 
     try {
-      const file = await nativeFetcher(url).then((res) => res.blob())
+      const fileRes = await nativeFetcher(url)
+
+      if (!fileRes.ok) {
+        errorStore.message = 'Failed to fetch file.'
+        return
+      }
+
+      const file = await fileRes.blob()
+
       const uploadUrlRes = await nativeFetcher(`/api/project-uploads/${projectId}/access-url`, {
         method: 'POST',
         json: { contentLength: file.size },

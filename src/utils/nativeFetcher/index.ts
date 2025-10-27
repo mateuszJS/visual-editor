@@ -20,7 +20,7 @@ type EnrichedResponse<Json, Error> = Omit<Response, 'json'> &
   )
 
 /**
- * A simple fetch wrapper that imrpoves developer experience
+ * A simple fetch wrapper that improves developer experience
  * Can throw errors in case of network error or unauthorized user 401
  */
 export default async function nativeFetcher<

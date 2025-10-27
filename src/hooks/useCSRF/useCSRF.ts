@@ -12,14 +12,16 @@ async function getCSRFToken() {
 
     if (!response.ok) {
       const { error } = await response.json()
-      errorStore.message = 'Error fetching CSRF token' + error
+      console.error('Error fetching CSRF token', error)
+      errorStore.message = 'Something went wrong. Please enter this view again.'
       return
     }
 
     const { csrfToken } = await response.json()
     token = csrfToken
   } catch (error) {
-    errorStore.message = 'Error fetching CSRF token' + getErrorMessage(error)
+    console.error('Error fetching CSRF token' + getErrorMessage(error))
+    errorStore.message = 'Something went wrong. Please enter this view again.'
   } finally {
     tokenPromise = null
   }

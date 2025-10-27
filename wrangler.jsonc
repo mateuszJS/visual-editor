@@ -19,13 +19,19 @@
       "database_id": "efa65b41-8d07-46ac-824c-e525641545af"
     }
   ],
-  "browser": {
-    "binding": "browser"
-  },
   "vars": {
     "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "145503046459-m2ibp14nc5ngbuiabbbsal0elmig37ui.apps.googleusercontent.com",
     "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39"
   },
+  "browser": {
+    "binding": "browser"
+  },
+  "r2_buckets": [
+    {
+      "binding": "userUploads",
+      "bucket_name": "user-uploads"
+    }
+  ],
   "env": {
     "production": {
       // production env
@@ -42,7 +48,13 @@
       },
       "browser": {
         "binding": "browser"
-      }
+      },
+      "r2_buckets": [
+        {
+          "binding": "userUploads",
+          "bucket_name": "user-uploads"
+        }
+      ]
     }
   }
 }

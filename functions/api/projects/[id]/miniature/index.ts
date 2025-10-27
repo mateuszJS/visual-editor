@@ -22,14 +22,50 @@ export const onRequestGet: Handler<'id'> = withSession(async (ctx, session) => {
     return getResponseError('Project does not exist.', 404)
   }
 
+  const uploadsList = project.assets
+    .map((asset) => {
+      if ('url' in asset && typeof asset.url === 'string') {
+        // /api/project-uploads/1/f37825dd-c3f0-4d97-b444-1d524ccec678
+        return asset.url
+      }
+    })
+    .filter(Boolean)
+    .map(async (assetUrl) => {
+      console.log('start - asset.url', assetUrl)
+      const objKey = assetUrl.replace('/api/project-uploads/', '')
+      const object = await ctx.env.userUploads.get(objKey)
+      console.log('end - assetUrl', assetUrl)
+      if (!object) return undefined
+      // /api/project-uploads/1/f37825dd-c3f0-4d97-b444-1d524ccec678
+      return [assetUrl, object]
+    })
+
+  const results = await Promise.allSettled(uploadsList)
+  const resolvedUploads = results.filter((res) => res.status === 'fulfilled')
+
+  const newUrl = new URL(ctx.request.url)
+  newUrl.pathname = `explore`
+
+  console.log('ctx.request', newUrl.toString())
+  const assetResponse = await ctx.env.ASSETS.fetch(new Request(newUrl.toString(), ctx.request))
+  const document = await assetResponse.text()
+
   const browser = await puppeteer.launch(ctx.env.browser)
   const page = await browser.newPage()
-  const url = 'https://magic-render.space/'
-  await page.goto(url)
+
+  await page.setRequestInterception(true)
+  page.on('request', (interceptedRequest) => {
+    if (interceptedRequest.url().endsWith('.png') || interceptedRequest.url().endsWith('.jpg'))
+      interceptedRequest.abort()
+    else interceptedRequest.continue()
+  })
+
+  await page.setContent(document)
+
+  // const url = 'https://magic-render.space/'
+  // await page.goto(url)
   const img = await page.screenshot()
-  // await ctx.env.BROWSER_KV_DEMO.put(url, img, {
-  //   expirationTtl: 60 * 60 * 24,
-  // });
+
   await browser.close()
 
   return new Response(img as BodyInit, {

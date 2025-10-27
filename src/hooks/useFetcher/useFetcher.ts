@@ -18,7 +18,7 @@ const DEFAULT_ERROR_MESSAGE =
  * 2. pass a callback as the last argument to the fetcher function - best if you need to perform an action(redirect, call function) on success only, and leaves error handling for the hook
  * fetcher() doesn't return data with response body in promise on purpose, callbacks are preferred since those won't need error handing(Promise.reject needs a catch block)
  */
-export default function useFetcher<T extends Record<string, unknown> = never>() {
+export default function useFetcher<T extends Record<string, unknown> | Array<unknown> = never>() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<Success<T> | null>(null)

@@ -24,7 +24,7 @@ type EnrichedResponse<Json, Error> = Omit<Response, 'json'> &
  * Can throw errors in case of network error or unauthorized user 401
  */
 export default async function nativeFetcher<
-  Json extends Record<string, unknown> = never,
+  Json extends Record<string, unknown> | Array<unknown> = never,
   Error = { error: string }
 >(
   url: string,

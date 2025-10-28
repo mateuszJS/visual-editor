@@ -8,8 +8,13 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        source: '/project/:id',
+        destination: '/project/[-id]',
+      },
+      {
         source: '/api/:path*',
-        destination: 'https://localhost:8788/api/:path*',
+        destination: 'http://localhost:8788/api/:path*', // Nextjs doesn't support self-signed HTTPS certificate
+        // so we stick with http
       },
     ]
   },

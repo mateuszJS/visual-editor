@@ -28,7 +28,7 @@ export const onRequestGet = withSession<'projectId' | 'uploadId'>(async (ctx, se
     return getSignedUrl(
       getS3Client(),
       new GetObjectCommand({
-        Bucket: 'user-uploads',
+        Bucket: ctx.env.USER_UPLOADS_BUCKET,
         Key: `${ctx.params.projectId}/${ctx.params.uploadId}`,
       }),
       {

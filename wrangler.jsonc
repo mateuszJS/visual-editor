@@ -21,15 +21,25 @@
   ],
   "vars": {
     "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "145503046459-m2ibp14nc5ngbuiabbbsal0elmig37ui.apps.googleusercontent.com",
-    "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39"
+    "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39",
+    "USER_UPLOADS_BUCKET": "user-uploads-preview" // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
   },
   "browser": {
-    "binding": "browser"
+    "binding": "browser",
+    "remote": true // no local simulation for browser rendering,
+    // although remote doesn't work for pages anyway
   },
   "r2_buckets": [
     {
       "binding": "userUploads",
-      "bucket_name": "user-uploads"
+      "bucket_name": "user-uploads-preview",
+      "preview_bucket_name": "user-uploads-preview",
+      "remote": true // not supported currently for pages.
+      // In this case we have to test generating miniatures in preview env because:
+      // - cannot use local R2 because AWS signed urls don't work locally
+      // - cannot use remote setup for local because again, r2 remote doesnt work for pages
+      // Locally we can partially test, by filling bucket manually
+      // npx wrangler r2 object put user-uploads-preview/5/img-sample --file="IMG_7265.jpg"
     }
   ],
   "env": {
@@ -44,7 +54,8 @@
       ],
       "vars": {
         "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "145503046459-m2ibp14nc5ngbuiabbbsal0elmig37ui.apps.googleusercontent.com",
-        "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39"
+        "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39",
+        "USER_UPLOADS_BUCKET": "user-uploads" // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
       },
       "browser": {
         "binding": "browser"

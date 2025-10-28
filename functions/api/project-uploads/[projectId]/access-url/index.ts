@@ -40,7 +40,7 @@ export const onRequestPost = withSession<'projectId'>(async (ctx, session) => {
     return getSignedUrl(
       getS3Client(),
       new PutObjectCommand({
-        Bucket: 'user-uploads',
+        Bucket: ctx.env.USER_UPLOADS_BUCKET,
         Key: `${ctx.params.projectId}/${uploadId}`,
         ContentLength: contentLength,
       }),

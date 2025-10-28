@@ -1,3 +1,4 @@
+import '@total-typescript/ts-reset'
 import { beforeAll, vi } from 'vitest'
 import { TokenPayload } from 'google-auth-library'
 import { applyD1Migrations, env } from 'cloudflare:test'

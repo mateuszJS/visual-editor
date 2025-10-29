@@ -62,17 +62,19 @@ export const onRequestGet: Handler<'id'> = withSession(async (ctx, session) => {
           WHERE id = ? AND owner_id = ?
           RETURNING id, assets`
       )
-      .bind(ctx.params.id, session.userId)
+      .bind(null, ctx.params.id, session.userId)
       .first<Pick<Project.DB, 'id' | 'assets'>>()
     return Project.sanitizeAssetsData(project)
   })
 
   if (err) {
+    console.log(err)
     return getResponseError('Project does not exist.', 404)
   }
 
-  const [miniature, miniatureErr] = await withError(() => renderProject(project.assets, ctx))
+  const [miniature, miniatureErr] = await withError(() => renderProject(project, ctx))
   if (miniatureErr) {
+    console.error(miniatureErr)
     return getResponseError("I'm just a 🫖 teapot 🎀, leave me alone!", 418)
   }
 

@@ -18,7 +18,7 @@ export type SanitizedProject = {
   owner_id: string
   name: string
   assets: SanitizedAsset[]
-  last_updated: string
+  updated_at: string
   height: number | null
   width: number | null
 }

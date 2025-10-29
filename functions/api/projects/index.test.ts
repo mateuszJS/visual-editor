@@ -17,7 +17,7 @@ describe('POST /api/projects', () => {
     expect(json).toEqual({
       created_at: expect.any(String),
       id: '2',
-      last_updated: expect.any(String),
+      updated_at: expect.any(String),
       name: null,
     })
   })
@@ -166,7 +166,7 @@ describe('GET /api/projects', () => {
       {
         created_at: expect.any(String),
         id: '1',
-        last_updated: expect.any(String),
+        updated_at: expect.any(String),
         name: null,
       },
     ])

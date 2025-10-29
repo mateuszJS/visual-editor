@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body,
+    html,
+    canvas {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: gray;
+    }
+  </style>
+  <script src="index.mjs" type="module"></script>
+</head>
+
+<body>
+  <canvas id="canvas" />
+  <script type="module">
+    console.log('BEGIN');
+    import initMagicRender from "./index.mjs";
+    console.log('BEFORE FETCH');
+
+    fetch('project.json')
+      .then(res => res.json())
+      .then(project => {
+        initMagicRender(
+          window.canvas,
+          () => { },
+          () => { },
+          () => { },
+          () => { },
+          () => { },
+          () => { },
+          () => { }
+        ).then(creator => {
+          creator.resetAssets([], true)
+        })
+      })
+  </script>
+
+</body>
+
+</html>

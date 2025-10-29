@@ -7,5 +7,5 @@ export const getSanitizedProject = (): SanitizedProject => ({
   height: 100,
   width: 100,
   owner_id: '0',
-  last_updated: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
 })

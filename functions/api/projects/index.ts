@@ -23,7 +23,7 @@ export const onRequestPost = withSession(async (ctx, session) => {
       .prepare(
         `INSERT INTO projects (width, height, assets, owner_id)
          VALUES (?, ?, ?, ?)
-         RETURNING id, name, created_at, last_updated`
+         RETURNING id, name, created_at, updated_at`
       )
       .bind(
         sanitizedChanges.width,
@@ -31,7 +31,7 @@ export const onRequestPost = withSession(async (ctx, session) => {
         sanitizedChanges.assets,
         session.userId
       )
-      .first<Pick<Project.DB, 'id' | 'name' | 'created_at' | 'last_updated'>>()
+      .first<Pick<Project.DB, 'id' | 'name' | 'created_at' | 'updated_at'>>()
 
     return Project.sanitizeMetaData(project)
   })
@@ -47,9 +47,9 @@ export const onRequestPost = withSession(async (ctx, session) => {
 export const onRequestGet: Handler = withSession(async (ctx, session) => {
   const [projects, err] = await withError(async () => {
     const { results } = await ctx.env.db
-      .prepare('SELECT id, name, created_at, last_updated FROM projects WHERE owner_id = ?')
+      .prepare('SELECT id, name, created_at, updated_at FROM projects WHERE owner_id = ?')
       .bind(session.userId)
-      .run<Pick<Project.DB, 'id' | 'name' | 'created_at' | 'last_updated'>>()
+      .run<Pick<Project.DB, 'id' | 'name' | 'created_at' | 'updated_at'>>()
 
     return results.map(Project.sanitizeMetaData)
   })

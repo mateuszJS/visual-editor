@@ -29,7 +29,7 @@ const project: SanitizedProject = {
   assets: [],
   name: '',
   owner_id: '',
-  last_updated: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
 }
 
 const initMagicRenderMock = {

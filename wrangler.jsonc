@@ -26,8 +26,8 @@
   },
   "browser": {
     "binding": "browser",
-    "remote": true // no local simulation for browser rendering,
-    // although remote doesn't work for pages anyway
+    "remote": true // it works only locally
+    // even though docs says otherwise(maybe for pages it's only local)
   },
   "r2_buckets": [
     {

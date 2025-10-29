@@ -110,7 +110,7 @@ beforeAll(async () => {
       `INSERT INTO projects (id, width, height, assets, owner_id)
 			 VALUES (?, ?, ?, ?, ?)`
     )
-    .bind(1, 100, 200, '[]', '2')
+    .bind(aliceProjectId, 100, 200, '[]', '2')
     .run()
 })
 
@@ -131,3 +131,5 @@ export const nextUserSessionToken =
 // id 23891542398
 export const nonExistingUserSessionToken =
   'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIyMzg5MTU0MjM5OCIsImlhdCI6OTQ2Njg0ODAwLCJleHAiOjk0NzI4OTYwMH0.dmW-Hmr6dBD8kEuAr3zuAM5iCYRodZ_NpSVZSkDVJnc'
+
+export const aliceProjectId = '1'

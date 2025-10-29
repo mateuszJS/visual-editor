@@ -1,20 +1,69 @@
-import puppeteer from '@cloudflare/puppeteer'
 import withError from '@/utils/error'
 import { withSession } from '@/wrappers/session'
 import * as Project from '@/types/project'
 import getResponseError from '@/utils/getResponseError'
+import { waitUntil } from 'cloudflare:workers'
+import renderProject from './renderProject'
+
+const MINIATURE_VALID_FOR = 24 * 60 * 60 * 1000
 
 export const onRequestGet: Handler<'id'> = withSession(async (ctx, session) => {
-  const [project, err] = await withError(async () => {
-    const project = await ctx.env.db
+  /* 1. Obtain last date of miniature update */
+  const [metaData, metaDataErr] = await withError(() =>
+    ctx.env.db
       .prepare(
-        `SELECT id, assets
+        `SELECT miniature_updated_at, updated_at
           FROM projects
           WHERE id = ? AND owner_id = ?`
       )
       .bind(ctx.params.id, session.userId)
-      .first<Pick<Project.DB, 'id' | 'assets'>>()
+      .first<Pick<Project.DB, 'miniature_updated_at' | 'updated_at'>>()
+  )
 
+  if (!metaData || metaDataErr) {
+    return getResponseError('Project does not exist.', 404)
+  }
+
+  /* 2. Verify if cached in R2 miniature is still valid,
+  it's true one of the following is true:
+   - there was no update after last miniature
+   - last miniature was generated not more than 24h ago
+   */
+  const miniatureValidThreshold = new Date(Date.now() - MINIATURE_VALID_FOR).toISOString()
+  const isValidMiniature =
+    !!metaData.miniature_updated_at &&
+    (metaData.miniature_updated_at >= metaData?.updated_at ||
+      metaData.miniature_updated_at >= miniatureValidThreshold)
+
+  /* 3. Is cached miniature is still valid, return it */
+  if (isValidMiniature) {
+    const obj = await ctx.env.userUploads.get(`${ctx.params.id}/miniature`)
+
+    if (obj) {
+      return new Response(obj.body, {
+        headers: {
+          'content-type': 'image/jpeg',
+        },
+      })
+    }
+  }
+
+  /* 4. if miniature was not valid or not found in R2, then generate one */
+
+  /* 5. update the miniature_updated_at to prevent multiple simultaneous requests,
+  this particualr endpint is relatively expensive(browser rendering, gettign R2 object)
+  + additional we use this SQL query to get project details necessary for rendering
+  */
+  const [project, err] = await withError(async () => {
+    const project = await ctx.env.db
+      .prepare(
+        `UPDATE projects
+          SET miniature_updated_at = ?
+          WHERE id = ? AND owner_id = ?
+          RETURNING id, assets`
+      )
+      .bind(ctx.params.id, session.userId)
+      .first<Pick<Project.DB, 'id' | 'assets'>>()
     return Project.sanitizeAssetsData(project)
   })
 
@@ -22,71 +71,14 @@ export const onRequestGet: Handler<'id'> = withSession(async (ctx, session) => {
     return getResponseError('Project does not exist.', 404)
   }
 
-  console.log('get list of promises')
-  const uploadsList = project.assets
-    .map((asset) => {
-      if ('url' in asset && typeof asset.url === 'string') {
-        // /api/project-uploads/1/f37825dd-c3f0-4d97-b444-1d524ccec678
-        return '5/img-sample' // asset.url
-      }
-    })
-    .filter(Boolean)
-    .map(async (assetUrl) => {
-      const objKey = assetUrl.replace('/api/project-uploads/', '')
-      console.log('START obtain object for url', objKey)
-      const object = await ctx.env.userUploads.get(objKey)
-      if (!object) return Promise.reject('Object not found')
-      const stream = await object.arrayBuffer()
-      console.log('END obtain object for url', objKey)
-      console.log('object', object)
-      console.log('object.httpMetadata', object.httpMetadata)
-      return [objKey, stream] as const
-    })
-  console.log('Request promises')
-  const results = await Promise.allSettled(uploadsList)
-  const resolvedUploads = results
-    .filter((res) => res.status === 'fulfilled')
-    .map((res) => res.value)
-  console.log('promises arrived')
-  const newUrl = new URL(ctx.request.url)
-  newUrl.pathname = `explore`
+  const [miniature, miniatureErr] = await withError(() => renderProject(project.assets, ctx))
+  if (miniatureErr) {
+    return getResponseError("I'm just a 🫖 teapot 🎀, leave me alone!", 418)
+  }
 
-  const assetResponse = await ctx.env.ASSETS.fetch(new Request(newUrl.toString(), ctx.request))
-  const document = await assetResponse.text()
+  waitUntil(ctx.env.userUploads.put(`${ctx.params.id}/miniature`, miniature))
 
-  const browser = await puppeteer.launch(ctx.env.browser)
-  const page = await browser.newPage()
-
-  await page.setRequestInterception(true)
-  page.on('request', (interceptedRequest) => {
-    const url = interceptedRequest.url()
-    const match = resolvedUploads.find(([pathname]) => url.endsWith(pathname))
-
-    if (!match) {
-      interceptedRequest.continue()
-      return
-    }
-
-    const [matchObject, buffer] = match
-
-    if (matchObject) {
-      interceptedRequest.respond({
-        status: 200,
-        contentType: 'image/png',
-        body: new Uint8Array(buffer), // stream, // matchObject.body,
-      })
-    } else {
-      interceptedRequest.continue()
-    }
-  })
-
-  await page.setContent(document)
-
-  const img = await page.screenshot()
-
-  await browser.close()
-
-  return new Response(img as BodyInit, {
+  return new Response(miniature as BodyInit, {
     headers: {
       'content-type': 'image/jpeg',
     },

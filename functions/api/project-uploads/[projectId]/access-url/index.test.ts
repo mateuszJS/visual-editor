@@ -17,7 +17,7 @@ describe('POST /api/project-uploads/[projectId]/access-url', () => {
     const json = await response.json()
     expect(json).toEqual({
       uploadId: 'uuid-generated-id',
-      url: 'https://storage-provider.com/signed-url?bucket=user-uploads&key=1/uuid-generated-id&expiredsIn=600&contentLength=1024',
+      url: 'https://storage-provider.com/signed-url?bucket=user-uploads-preview&key=1/uuid-generated-id&expiredsIn=600&contentLength=1024',
     })
   })
 

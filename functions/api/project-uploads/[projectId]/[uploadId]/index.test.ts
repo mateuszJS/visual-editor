@@ -13,7 +13,7 @@ describe('GET /api/project-uploads/[projectId]/[uploadId]', () => {
 
     expect(response.status).toBe(307)
     expect(response.headers.get('Location')).toBe(
-      'https://storage-provider.com/signed-url?bucket=user-uploads&key=1/1&expiredsIn=604800'
+      'https://storage-provider.com/signed-url?bucket=user-uploads-preview&key=1/1&expiredsIn=604800'
     )
   })
 

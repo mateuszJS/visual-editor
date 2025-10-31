@@ -9,8 +9,7 @@ export default function InitializeData() {
     // Initialize user data on the client side
     initUserStore()
 
-    const registerServiceWorker = async (...args: unknown[]) => {
-      console.log(args)
+    const registerServiceWorker = async () => {
       try {
         const registration = await navigator.serviceWorker.register('/sw.js')
 

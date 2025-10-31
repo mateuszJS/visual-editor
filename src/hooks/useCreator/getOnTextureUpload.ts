@@ -23,25 +23,13 @@ export default function getOnTextureUpload(projectId: string) {
         }
       )
 
+      const { pathname } = new URL(response.url)
+      const uploadId = pathname.split('/')[2]
+
       if (!response.ok) {
         errorStore.message = 'Failed to upload file.'
         return
       }
-
-      // const uploadUrlJson = await uploadUrlRes.json()
-
-      // const response = await fetch(uploadUrlJson.url, {
-      //   // this is not our service API, so we don't use fetcher
-      //   method: 'PUT',
-      //   body: file,
-      // })
-
-      // if (!response.ok) {
-      //   errorStore.message = 'Failed to upload file.'
-      //   return
-      // }
-
-      const uploadId = response.headers.get('x-upload-id')
 
       if (uploadId) {
         setNewUrl(`/api/project-uploads/${projectId}/${uploadId}`)

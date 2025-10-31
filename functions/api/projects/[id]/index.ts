@@ -12,7 +12,7 @@ export const onRequestGet: Handler<'id'> = withSession(async (ctx, session) => {
           WHERE id = ? AND owner_id = ?`
       )
       .bind(ctx.params.id, session.userId)
-      .first<Pick<Project.DB, 'id' | 'assets'>>()
+      .first<Pick<Project.DB, 'id' | 'assets' | 'updated_at'>>()
 
     return Project.sanitizeAssetsData(project)
   })
@@ -46,7 +46,7 @@ export const onRequestPatch: Handler<'id'> = withSession(async (ctx, session) =>
     return await ctx.env.db
       .prepare(
         `UPDATE projects
-          SET ${columnsToUpdate}
+          SET ${columnsToUpdate}, updated_at = CURRENT_TIMESTAMP
           WHERE id = ? AND owner_id = ?
           RETURNING id`
       )

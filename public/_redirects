@@ -1,1 +1,2 @@
+/project/:projectId.txt  /project/[-id].txt  200
 /project/*  /project/[-id]  200

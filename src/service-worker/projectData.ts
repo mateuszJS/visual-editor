@@ -1,0 +1,92 @@
+/* eslint-disable no-restricted-syntax */
+import type { ProjectDB } from '.'
+import { getDB } from './db'
+
+async function getProject(db: IDBDatabase, projectId: string): Promise<ProjectDB | null> {
+  const dbReq = db.transaction(['projects'], 'readonly').objectStore('projects').get(projectId)
+
+  return new Promise((resolve) => {
+    dbReq.onsuccess = () => resolve(dbReq.result)
+    dbReq.onerror = () => resolve(null)
+  })
+}
+
+export async function projectRoute(
+  request: Request,
+  projectId: string,
+  event: FetchEvent
+): Promise<Response> {
+  const db = await getDB()
+
+  if (request.method === 'GET') {
+    // verify if we have a more recent version in IndexedDB
+    // it's rare because normally once a browser/page/tab is closed, the update is sent to server
+    // if we detect that local change is more recent, we send it to server in the background and return it to client
+    const [networkRes, localRes] = await Promise.all([
+      fetch(event.request).then((res) => res.json()) as Promise<ProjectDB>,
+      getProject(db, projectId),
+    ])
+
+    if (localRes) {
+      db.transaction(['projects'], 'readwrite').objectStore('projects').delete(projectId)
+
+      if (localRes.updated_at > networkRes.updated_at) {
+        const updateServerRequest = new Request(`/api/projects/${projectId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(localRes),
+        })
+        fetch(updateServerRequest)
+        return Response.json(localRes, { status: 200 })
+      }
+    }
+
+    return Response.json(networkRes, { status: 200 })
+  }
+
+  if (request.method === 'PATCH') {
+    const json = (await request.json()) as object
+    db.transaction(['projects'], 'readwrite')
+      .objectStore('projects')
+      .put({
+        id: projectId,
+        updated_at: new Date().toISOString(),
+        ...json,
+      })
+
+    return new Response(null, { status: 204 })
+  }
+
+  return fetch(event.request)
+}
+
+function getAllKeys(db: IDBDatabase): Promise<string[]> {
+  const dbReq = db.transaction(['projects'], 'readonly').objectStore('projects').getAllKeys()
+
+  return new Promise((resolve) => {
+    dbReq.onsuccess = () => resolve(dbReq.result as string[])
+    dbReq.onerror = () => resolve([])
+  })
+}
+
+export async function syncProjectData() {
+  const db = await getDB()
+  const keys = await getAllKeys(db)
+
+  keys.forEach(async (key) => {
+    const project = await getProject(db, key)
+    if (project) {
+      // Sync the project with the server
+      const res = await fetch(`/api/projects/${project.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(project),
+      })
+
+      if (res.ok || res.status === 403 || res.status === 404) {
+        // in any other case we are not sure what happen, so better to do not remove local copy
+        db.transaction(['projects'], 'readwrite').objectStore('projects').delete(key)
+      }
+    }
+  })
+}

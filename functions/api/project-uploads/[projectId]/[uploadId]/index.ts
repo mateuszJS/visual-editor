@@ -1,10 +1,11 @@
-import { withSession } from '../../../../wrappers/session'
+import { withSession } from '@/wrappers/session'
 import { GetObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import withError from '../../../../utils/error'
-import * as Project from '../../../../types/project'
-import getS3Client from '../../../../clients/s3'
+import withError from '@/utils/error'
+import * as Project from '@/types/project'
+import getS3Client from '@/clients/s3'
 import getResponseError from '@/utils/getResponseError'
+import getUploadUrl from '../getUploadUrl'
 
 const urlLifetimeSeconds = 60 * 60 * 24 * 7 // 7d, in seconds
 
@@ -49,3 +50,28 @@ export const onRequestGet = withSession<'projectId' | 'uploadId'>(async (ctx, se
     },
   })
 })
+
+export const onRequestPut = withSession<'projectId' | 'uploadId'>(async (ctx, session) => {
+  const { searchParams } = new URL(ctx.request.url)
+  const contentLength = Number(searchParams.get('contentLength'))
+
+  const [url, err] = await withError(async () =>
+    getUploadUrl(
+      ctx,
+      ctx.params.projectId as string,
+      ctx.params.uploadId as string,
+      contentLength,
+      session.userId
+    )
+  )
+
+  if (err) {
+    console.error(err)
+    return getResponseError('Failed to generate signed URL.', 403)
+  }
+
+  return Response.redirect(url, 308)
+})
+
+// url to test upload:
+// curl --request PUT "<URL>" --header "Content-Type: text/plain" --header "Content-Length: 10" --data "nagvsudXgvakgabdgdkfaxsuieg"

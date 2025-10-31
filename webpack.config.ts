@@ -1,4 +1,5 @@
 import type { Configuration, RuleSetRule } from 'webpack'
+import { InjectManifest } from 'workbox-webpack-plugin'
 
 /* tis config is shared between next.config.ts and .storybook/main.ts */
 export default function webpackConfig(config: Configuration) {
@@ -32,6 +33,14 @@ export default function webpackConfig(config: Configuration) {
       }, // exclude if *.svg?url
       use: ['@svgr/webpack'],
     }
+  )
+
+  config.plugins!.push(
+    new InjectManifest({
+      swSrc: './src/service-worker/index.ts',
+      swDest: '../public/sw.js',
+      include: ['__nothing__'],
+    })
   )
 
   return config

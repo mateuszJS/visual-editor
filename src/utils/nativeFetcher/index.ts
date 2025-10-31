@@ -4,7 +4,7 @@ export interface FetcherOptions {
   options?: RequestInit
   disableAuth401Redirect?: boolean
   csrfToken?: string
-  formData?: FormData
+  body?: FormData | Blob | File
 }
 
 type EnrichedResponse<Json, Error> = Omit<Response, 'json'> &
@@ -34,7 +34,7 @@ export default async function nativeFetcher<
     options,
     disableAuth401Redirect = false,
     csrfToken,
-    formData = undefined,
+    body,
   }: FetcherOptions = {}
 ): Promise<EnrichedResponse<Json, Error>> {
   try {
@@ -48,7 +48,7 @@ export default async function nativeFetcher<
         ...(csrfToken ? { 'x-csrf-token': csrfToken } : {}),
         ...options?.headers,
       },
-      body: json ? JSON.stringify(json) : formData,
+      body: json ? JSON.stringify(json) : body,
     })
 
     if (!disableAuth401Redirect && response.status === 401) {

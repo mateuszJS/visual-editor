@@ -22,8 +22,11 @@ export type MetaData = {
 export type AssetsData = {
   id: string
   assets: Asset[]
+  updated_at: string
 }
-export function sanitizeAssetsData(data: Pick<DB, 'id' | 'assets'> | null): AssetsData {
+export function sanitizeAssetsData(
+  data: Pick<DB, 'id' | 'assets' | 'updated_at'> | null
+): AssetsData {
   if (!data) {
     throw new Error('No data was found.')
   }
@@ -40,7 +43,11 @@ export function sanitizeAssetsData(data: Pick<DB, 'id' | 'assets'> | null): Asse
     throw Error('An issue with assets has occured.')
   }
 
-  return { id: data.id.toString(), assets }
+  return {
+    id: data.id.toString(),
+    assets,
+    updated_at: data.updated_at,
+  }
 }
 
 export function sanitizeMetaData(

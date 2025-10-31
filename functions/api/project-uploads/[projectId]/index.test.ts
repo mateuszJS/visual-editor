@@ -5,7 +5,7 @@ import { aliceSessionToken } from '@/setup'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 describe('POST /api/project-uploads/[projectId]/access-url', () => {
-  it('returns url & uploadId if signed url was created successfully', async () => {
+  it('returns url & uploadId(from uuid) if signed url was created successfully', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
@@ -112,5 +112,21 @@ describe('POST /api/project-uploads/[projectId]/access-url', () => {
 
     expect(response.status).toBe(403)
     expect(await response.json()).toEqual({ error: 'Failed to generate signed URL.' })
+  })
+
+  it('returns url & uploadId predefined in query params', async () => {
+    const request = new Request('x:?uploadId=custom-upload-id', {
+      headers: { Cookie: `session=${aliceSessionToken}` },
+      method: 'POST',
+      body: JSON.stringify({ contentLength: 1024 }),
+    })
+    const response = await onRequestPost(getContext(request, { projectId: '1' }))
+
+    expect(response.status).toBe(200)
+    const json = await response.json()
+    expect(json).toEqual({
+      uploadId: 'custom-upload-id',
+      url: 'https://storage-provider.com/signed-url?bucket=user-uploads-preview&key=1/custom-upload-id&expiredsIn=600&contentLength=1024',
+    })
   })
 })

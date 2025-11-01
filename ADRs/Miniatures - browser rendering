@@ -1,0 +1,5 @@
+Cloudflare pages currently do not support running JS in puppetieer.
+
+Also free plan has only 10 free minutes per day of browser rendring, what might be not enough in case of larger nubmer of projects.
+
+One more con is fact that rendering project counts into R2 quota as well.

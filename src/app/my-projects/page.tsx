@@ -28,7 +28,7 @@ export default function MyProjects() {
         <ul className={styles.list}>
           {[...projectsList.values()].map((project) => (
             <li key={project.id}>
-              <ProjectPanel id={project.id} text={formatDate(project.last_updated)} />
+              <ProjectPanel id={project.id} text={formatDate(project.updated_at)} />
             </li>
           ))}
         </ul>

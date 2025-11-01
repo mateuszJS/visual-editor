@@ -8,6 +8,31 @@ export default function InitializeData() {
   useEffect(() => {
     // Initialize user data on the client side
     initUserStore()
+
+    const registerServiceWorker = async () => {
+      try {
+        const registration = await navigator.serviceWorker.register('/sw.js')
+
+        window.addEventListener('pagehide', () => {
+          registration.active?.postMessage('CLIENT_CLOSED')
+        })
+
+        // Check if the service worker is active
+        if (registration.installing) {
+          console.log('Service worker installing')
+        } else if (registration.waiting) {
+          console.log('Service worker installed')
+        } else if (registration.active) {
+          console.log('Service worker active')
+        }
+      } catch (error) {
+        console.error(`Registration failed with ${error}`)
+      }
+    }
+
+    if ('serviceWorker' in navigator) {
+      registerServiceWorker()
+    }
   }, [])
 
   // This component doesn't render anything

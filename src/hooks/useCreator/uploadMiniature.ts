@@ -1,15 +1,17 @@
 import nativeFetcher from '@/utils/nativeFetcher'
 
 export default function uploadMiniature(canvas: HTMLCanvasElement, projectId: string) {
-  canvas.toBlob((blob) => {
-    try {
-      const formData = new FormData()
-      formData.append('file', blob!)
+  canvas.toBlob(async (blob) => {
+    if (!blob) return
 
-      nativeFetcher(`/api/projects/${projectId}/miniature`, {
-        method: 'POST',
-        formData,
-      })
+    try {
+      await nativeFetcher(
+        `/api/project-uploads/${projectId}/miniature?contentLength=${blob.size}`,
+        {
+          method: 'PUT',
+          body: blob,
+        }
+      )
     } catch (err) {
       // console.error('Failed to upload miniature:', err) capture this log in the future
     }

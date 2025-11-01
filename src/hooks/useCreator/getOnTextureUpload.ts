@@ -13,33 +13,29 @@ export default function getOnTextureUpload(projectId: string) {
         return
       }
 
-      const file = await fileRes.blob()
+      const file = await fileRes.blob() // do we need this? Maybewe can just pass body
 
-      const uploadUrlRes = await nativeFetcher(`/api/project-uploads/${projectId}/access-url`, {
-        method: 'POST',
-        json: { contentLength: file.size },
-      })
-
-      if (!uploadUrlRes.ok) {
-        errorStore.message = 'Failed to upload file.'
-        return
-      }
-
-      const uploadUrlJson = (await uploadUrlRes.json()) as { url: string; uploadId: string }
-
-      // eslint-disable-next-line no-restricted-syntax
-      const response = await fetch(uploadUrlJson.url, {
-        // this is not our service API, so we don't use fetcher
-        method: 'PUT',
-        body: file,
-      })
+      const response = await nativeFetcher(
+        `/api/project-uploads/${projectId}?contentLength=${file.size}`,
+        {
+          method: 'PUT',
+          body: file,
+        }
+      )
 
       if (!response.ok) {
         errorStore.message = 'Failed to upload file.'
         return
       }
 
-      setNewUrl(`/api/project-uploads/${projectId}/${uploadUrlJson.uploadId}`)
+      const { pathname } = new URL(response.url)
+      const uploadId = pathname.split('/')[2]
+
+      if (uploadId) {
+        setNewUrl(`/api/project-uploads/${projectId}/${uploadId}`)
+      } else {
+        console.error('Upload ID is missing in the response headers.')
+      }
     } catch (err) {
       errorStore.message = 'Failed to upload file.'
     }

@@ -13,7 +13,7 @@ export type DB = {
   os: string | null
   login_method: string
   oidc_google_id: string | null
-  last_login: string
+  last_login_at: string
   region: string | null
   device_vendor: string | null
   os_version: string | null

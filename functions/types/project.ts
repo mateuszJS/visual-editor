@@ -6,9 +6,9 @@ export type DB = {
   height: number
   owner_id: number
   name: string | null
-  miniature_created_at: string | null
+  miniature_updated_at: string | null
   created_at: string
-  last_updated: string
+  updated_at: string
   assets: string
 }
 
@@ -16,14 +16,17 @@ export type MetaData = {
   id: string
   name: string | null
   created_at: string
-  last_updated: string
+  updated_at: string
 }
 
 export type AssetsData = {
   id: string
   assets: Asset[]
+  updated_at: string
 }
-export function sanitizeAssetsData(data: Pick<DB, 'id' | 'assets'> | null): AssetsData {
+export function sanitizeAssetsData(
+  data: Pick<DB, 'id' | 'assets' | 'updated_at'> | null
+): AssetsData {
   if (!data) {
     throw new Error('No data was found.')
   }
@@ -40,11 +43,15 @@ export function sanitizeAssetsData(data: Pick<DB, 'id' | 'assets'> | null): Asse
     throw Error('An issue with assets has occured.')
   }
 
-  return { id: data.id.toString(), assets }
+  return {
+    id: data.id.toString(),
+    assets,
+    updated_at: data.updated_at,
+  }
 }
 
 export function sanitizeMetaData(
-  data: Pick<DB, 'id' | 'name' | 'created_at' | 'last_updated'> | null
+  data: Pick<DB, 'id' | 'name' | 'created_at' | 'updated_at'> | null
 ): MetaData {
   if (!data) {
     throw new Error('No data was found.')
@@ -54,7 +61,7 @@ export function sanitizeMetaData(
     id: data.id.toString(),
     name: data.name,
     created_at: data.created_at,
-    last_updated: data.last_updated,
+    updated_at: data.updated_at,
   }
 }
 

@@ -46,7 +46,7 @@ describe('getOnTextureUpload', () => {
     expect(errorStore.message).toBe('Failed to upload file.')
   })
 
-  it('should successfully fetch blob and upload to server', async () => {
+  it('should successfully obtain blob and upload to server', async () => {
     const blobUrl = 'blob:http://localhost:3000/blob-uuid'
 
     await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
@@ -59,23 +59,8 @@ describe('getOnTextureUpload', () => {
     const blobUrl = 'blob:http://localhost:3000/blob-uuid'
 
     server.use(
-      http.post('/api/project-uploads/:projectId/access-url', () => {
+      http.put('/api/project-uploads/:projectId', () => {
         return HttpResponse.json({ error: 'Upload failed' }, { status: 400 })
-      })
-    )
-
-    await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
-
-    expect(mockSetNewUrl).not.toHaveBeenCalled()
-    expect(errorStore.message).toBe('Failed to upload file.')
-  })
-
-  it('should handle failure of external API while uploading', async () => {
-    const blobUrl = 'blob:http://localhost:3000/blob-uuid'
-
-    server.use(
-      http.put('http://storage-provider.com/signed-url-to-bucket', () => {
-        return new HttpResponse(null, { status: 500 })
       })
     )
 

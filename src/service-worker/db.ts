@@ -1,4 +1,3 @@
-const db: IDBDatabase | null = null
 let dbPromise: Promise<IDBDatabase> | null = null
 
 function initDB(onSuccess: (db: IDBDatabase) => void) {
@@ -19,10 +18,6 @@ function initDB(onSuccess: (db: IDBDatabase) => void) {
 }
 
 export function getDB(): Promise<IDBDatabase> {
-  if (db) {
-    return Promise.resolve(db)
-  }
-
   if (dbPromise) {
     return dbPromise
   }

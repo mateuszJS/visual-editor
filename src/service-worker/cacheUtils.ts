@@ -25,7 +25,8 @@ export const cacheFirst = async (cacheKey: Request, event: FetchEvent) => {
 
   try {
     const responseFromNetwork = await fetch(request)
-    event.waitUntil(putInCache(cacheKey, responseFromNetwork.clone()))
+    // for now not caching network responses needed
+    // event.waitUntil(putInCache(cacheKey, responseFromNetwork.clone()))
     return responseFromNetwork
   } catch (error) {
     return new Response('Network error happened', {

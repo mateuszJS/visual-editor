@@ -25,7 +25,7 @@ self.addEventListener('message', async (event) => {
   console.log(`Message received: ${event.data}`)
 
   if (event.data === 'CLIENT_CLOSED') {
-    event.waitUntil(syncProjectMiniatures(event))
+    event.waitUntil(syncProjectMiniatures())
     event.waitUntil(syncProjectData())
   }
 })

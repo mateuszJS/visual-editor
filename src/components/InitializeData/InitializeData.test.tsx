@@ -14,8 +14,8 @@ describe('<InitializeData />', () => {
 
     window.dispatchEvent(new Event('pagehide'))
 
-    const registration = await global.navigator.serviceWorker.register('')
-    expect(registration.active?.postMessage).toHaveBeenCalledWith('CLIENT_CLOSED')
+    const registrationMock = await global.navigator.serviceWorker.register('')
+    expect(registrationMock.active?.postMessage).toHaveBeenCalledWith('CLIENT_CLOSED')
   })
 
   it('should initialize user store on mount', async () => {

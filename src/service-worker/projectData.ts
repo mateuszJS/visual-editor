@@ -36,7 +36,7 @@ export async function projectRoute(
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(localRes),
         })
-        fetch(updateServerRequest)
+        event.waitUntil(fetch(updateServerRequest))
         return Response.json(localRes, { status: 200 })
       }
     }
@@ -73,7 +73,7 @@ export async function syncProjectData() {
   const db = await getDB()
   const keys = await getAllKeys(db)
 
-  keys.forEach(async (key) => {
+  const tasks = keys.map(async (key) => {
     const project = await getProject(db, key)
     if (project) {
       // Sync the project with the server
@@ -89,4 +89,6 @@ export async function syncProjectData() {
       }
     }
   })
+
+  return Promise.allSettled(tasks)
 }

@@ -15,7 +15,7 @@ export default function getOnTextureUpload(projectId: string) {
 
       const file = await fileRes.blob() // do we need this? Maybewe can just pass body
 
-      const response = await nativeFetcher<{ url: string; uploadId: string }>(
+      const response = await nativeFetcher(
         `/api/project-uploads/${projectId}?contentLength=${file.size}`,
         {
           method: 'PUT',
@@ -23,13 +23,13 @@ export default function getOnTextureUpload(projectId: string) {
         }
       )
 
-      const { pathname } = new URL(response.url)
-      const uploadId = pathname.split('/')[2]
-
       if (!response.ok) {
         errorStore.message = 'Failed to upload file.'
         return
       }
+
+      const { pathname } = new URL(response.url)
+      const uploadId = pathname.split('/')[2]
 
       if (uploadId) {
         setNewUrl(`/api/project-uploads/${projectId}/${uploadId}`)

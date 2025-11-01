@@ -23,7 +23,12 @@ export async function projectRoute(
     // it's rare because normally once a browser/page/tab is closed, the update is sent to server
     // if we detect that local change is more recent, we send it to server in the background and return it to client
     const [networkRes, localRes] = await Promise.all([
-      fetch(event.request).then((res) => res.json()) as Promise<ProjectDB>,
+      fetch(event.request).then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch project from server')
+        }
+        return res.json() as Promise<ProjectDB>
+      }),
       getProject(db, projectId),
     ])
 

@@ -15,7 +15,7 @@ describe('PUT /api/project-uploads/[projectId]', () => {
     })
     const response = await onRequestPut(getContext(request, { projectId: '1' }))
 
-    expect(response.status).toBe(308)
+    expect(response.status).toBe(307)
     const locationHeader = response.headers.get('Location')
     expect(locationHeader).toEqual(
       'https://storage-provider.com/signed-url?bucket=user-uploads-preview&key=1/uuid-generated-id&expiredsIn=300&contentLength=1024'
@@ -111,7 +111,7 @@ describe('PUT /api/project-uploads/[projectId]', () => {
     })
     const response = await onRequestPut(getContext(request, { projectId: '1' }))
 
-    expect(response.status).toBe(308)
+    expect(response.status).toBe(307)
     const locationHeader = response.headers.get('Location')
     expect(locationHeader).toEqual(
       'https://storage-provider.com/signed-url?bucket=user-uploads-preview&key=1/custom-upload-id&expiredsIn=300&contentLength=1024'

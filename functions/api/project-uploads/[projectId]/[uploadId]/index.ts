@@ -52,8 +52,8 @@ export const onRequestGet = withSession<'projectId' | 'uploadId'>(async (ctx, se
 })
 
 export const onRequestPut = withSession<'projectId' | 'uploadId'>(async (ctx, session) => {
-  const { searchParams } = new URL(ctx.request.url)
-  const contentLength = Number(searchParams.get('contentLength'))
+  const generatedAt = ctx.request.headers.get('x-amz-meta-updated-at')
+  const contentLength = Number(ctx.request.headers.get('Content-Length'))
 
   const [url, err] = await withError(async () =>
     getUploadUrl(
@@ -61,7 +61,8 @@ export const onRequestPut = withSession<'projectId' | 'uploadId'>(async (ctx, se
       ctx.params.projectId as string,
       ctx.params.uploadId as string,
       contentLength,
-      session.userId
+      session.userId,
+      generatedAt
     )
   )
 
@@ -70,7 +71,7 @@ export const onRequestPut = withSession<'projectId' | 'uploadId'>(async (ctx, se
     return getResponseError('Failed to generate signed URL.', 403)
   }
 
-  return Response.redirect(url, 308)
+  return Response.redirect(url, 307)
 })
 
 // url to test upload:

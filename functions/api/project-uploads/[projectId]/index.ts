@@ -5,12 +5,10 @@ import getResponseError from '@/utils/getResponseError'
 import getUploadUrl from './getUploadUrl'
 
 export const onRequestPut = withSession<'projectId'>(async (ctx, session) => {
-  const { searchParams } = new URL(ctx.request.url)
-  const uploadId = searchParams.get('uploadId') || uuid()
-  const contentLength = Number(searchParams.get('contentLength'))
+  const contentLength = Number(ctx.request.headers.get('Content-Length'))
 
   const [url, err] = await withError(async () =>
-    getUploadUrl(ctx, ctx.params.projectId as string, uploadId, contentLength, session.userId)
+    getUploadUrl(ctx, ctx.params.projectId as string, uuid(), contentLength, session.userId, null)
   )
 
   if (err) {
@@ -18,7 +16,7 @@ export const onRequestPut = withSession<'projectId'>(async (ctx, session) => {
     return getResponseError('Failed to generate signed URL.', 403)
   }
 
-  return Response.redirect(url, 308)
+  return Response.redirect(url, 307)
 })
 
 // url to test upload:

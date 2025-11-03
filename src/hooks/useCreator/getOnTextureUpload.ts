@@ -15,13 +15,10 @@ export default function getOnTextureUpload(projectId: string) {
 
       const file = await fileRes.blob() // do we need this? Maybewe can just pass body
 
-      const response = await nativeFetcher(
-        `/api/project-uploads/${projectId}?contentLength=${file.size}`,
-        {
-          method: 'PUT',
-          body: file,
-        }
-      )
+      const response = await nativeFetcher(`/api/project-uploads/${projectId}`, {
+        method: 'PUT',
+        body: file,
+      })
 
       if (!response.ok) {
         errorStore.message = 'Failed to upload file.'

@@ -10,20 +10,20 @@ declare const self: ServiceWorkerGlobalScope
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const resources = self.__WB_MANIFEST // this is just to satisfy workbox
 
+const version = 22
+
 self.addEventListener('install', () => {
-  console.log('================INSTALL V8=====================')
+  console.log(`================INSTALL V${version}=====================`)
   self.skipWaiting()
 })
 
 self.addEventListener('activate', (event) => {
-  console.log('====================V8=====================', self.clients.claim)
+  console.log(`====================ACTIVE V${version}=====================`)
   event.waitUntil(self.registration?.navigationPreload.enable())
   event.waitUntil(self.clients.claim())
 })
 
 self.addEventListener('message', async (event) => {
-  console.log(`Message received: ${event.data}`)
-
   if (event.data === 'CLIENT_CLOSED') {
     event.waitUntil(syncProjectMiniatures())
     event.waitUntil(syncProjectData())
@@ -44,7 +44,7 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
   const { pathname } = new URL(request.url)
 
   if (pathname.startsWith('/api/project-uploads/') && pathname.endsWith('/miniature')) {
-    return projectMiniatureRoute(request, pathname, event)
+    return projectMiniatureRoute(request, event)
   }
 
   // The purpose of below logic is to avoid spamming server with PATCH project requests
@@ -61,6 +61,3 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
 // you can bypass the service worker altogether and fetch resources immediately.
 // The InstallEvent.addRoutes() method can be used to implement this use case
 // and more.
-
-// to start service wokrer on alreayd open pages
-// you can call clients.claim().

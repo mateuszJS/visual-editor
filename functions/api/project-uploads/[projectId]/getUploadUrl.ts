@@ -25,7 +25,7 @@ export default async function getUploadUrl(
     // ensure object is more recent than the one being currently used/uploaded
     const objMetadata = await ctx.env.userUploads.head(objKey)
     const uploadedAt = objMetadata?.customMetadata?.uploadedAt
-    console.log('customMetadata:', objMetadata)
+    console.log('customMetadata:', objMetadata?.customMetadata)
     console.log('uploadedAt:', uploadedAt)
 
     if (uploadedAt && uploadedAt >= generatedAt) {

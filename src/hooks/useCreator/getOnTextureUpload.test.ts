@@ -16,8 +16,6 @@ describe('getOnTextureUpload', () => {
   it('should not call endpoint when URL does not start with "blob:"', async () => {
     const regularUrl = 'https://example.com/image.jpg'
 
-    await getOnTextureUpload(PROJECT_ID)(regularUrl, mockSetNewUrl)
-
     let apiWasCalled = false
     server.use(
       http.post(`/api/project-uploads/:projectId/access-url`, () => {
@@ -25,6 +23,8 @@ describe('getOnTextureUpload', () => {
         return new HttpResponse(null, { status: 201 })
       })
     )
+
+    await getOnTextureUpload(PROJECT_ID)(regularUrl, mockSetNewUrl)
 
     expect(apiWasCalled).toBe(false)
     expect(mockSetNewUrl).not.toHaveBeenCalled()

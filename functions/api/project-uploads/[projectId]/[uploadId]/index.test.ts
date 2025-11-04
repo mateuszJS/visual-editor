@@ -3,7 +3,6 @@ import { onRequestGet, onRequestPut } from '.'
 import getContext from '@/test/getContext'
 import { aliceSessionToken } from '@/setup'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import { env } from 'cloudflare:test'
 
 describe('GET /api/project-uploads/[projectId]/[uploadId]', () => {
   it('redirects if everything is correct (project exists, user is the owner, signed url generated with no errors)', async () => {
@@ -71,8 +70,11 @@ const file = new File(['image-data'], 'image-blob.png', { type: 'image/png' })
 
 describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
   it('if everything is correct redirects to cloud provider url', async () => {
-    const request = new Request('x:?contentLength=1024', {
-      headers: { Cookie: `session=${aliceSessionToken}` },
+    const request = new Request('x:', {
+      headers: {
+        Cookie: `session=${aliceSessionToken}`,
+        'Content-Length': '1024',
+      },
       method: 'PUT',
       body: file,
     })
@@ -106,8 +108,11 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
 
   it('returns error if there is an error thrown in S3 lib', async () => {
     vi.mocked(getSignedUrl).mockRejectedValueOnce(new Error('S3 utility has failed'))
-    const request = new Request('x:?contentLength=1024', {
-      headers: { Cookie: `session=${aliceSessionToken}` },
+    const request = new Request('x:', {
+      headers: {
+        Cookie: `session=${aliceSessionToken}`,
+        'Content-Length': '1024',
+      },
       method: 'PUT',
       body: file,
     })
@@ -180,9 +185,13 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
     expect(json).toEqual({ error: 'Unauthorized' })
   })
 
-  it('redirects if createdAt is passed but miniature_updated_at does not exist', async () => {
-    const request = new Request('x:?contentLength=1024&createdAt=2020-01-01T00:00:00.000Z', {
-      headers: { Cookie: `session=${aliceSessionToken}` },
+  it('redirects if request header x-amz-meta-updated-at is provided but R2 object does not have updated-at as custom metadata', async () => {
+    const request = new Request('x:', {
+      headers: {
+        Cookie: `session=${aliceSessionToken}`,
+        'Content-Length': '1024',
+        'x-amz-meta-updated-at': '2020-01-01T00:00:00.000Z',
+      },
       method: 'PUT',
       body: file,
     })
@@ -197,16 +206,18 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
     )
   })
 
-  it('returns error if createdAt is older than project miniature_updated_at', async () => {
-    await env.userUploads.put('1/upload-id', new Uint8Array([1, 2, 3]))
-
-    const request = new Request('x:?contentLength=1024&createdAt=2024-01-01T00:00:00.000Z', {
-      headers: { Cookie: `session=${aliceSessionToken}` },
+  it('returns error if provided request header x-amz-meta-updated-at contains older date than R2 object metadata updated-at', async () => {
+    const request = new Request('x:', {
+      headers: {
+        Cookie: `session=${aliceSessionToken}`,
+        'Content-Length': '1024',
+        'x-amz-meta-updated-at': '2020-01-01T00:00:00.000Z',
+      },
       method: 'PUT',
       body: file,
     })
     const response = await onRequestPut(
-      getContext(request, { projectId: '1', uploadId: 'upload-id' })
+      getContext(request, { projectId: '1', uploadId: 'miniature' })
     )
 
     expect(response.status).toBe(403)

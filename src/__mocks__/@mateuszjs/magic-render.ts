@@ -2,6 +2,7 @@ import type { SerializedOutputAsset, CreatorAPI } from '@mateuszjs/magic-render'
 
 let onSelectAssetCallback: (assetId: [number, number, number, number]) => void
 let onUpdateAssetsCallback: (assets: SerializedOutputAsset[]) => void
+let onPreviewUpdateCallback: (canvas: HTMLCanvasElement) => void
 
 /** this mock is created since currently github actions do not support GPU.
  * For WebGPU physical GPU is required, so far there is no way to simulate with CPU */
@@ -24,6 +25,7 @@ export default function initMagicRenderMock(
   canvas.setAttribute('data-magic-render-linked', 'true')
   onSelectAssetCallback = onAssetSelect
   onUpdateAssetsCallback = onAssetsUpdate
+  onPreviewUpdateCallback = onPreviewUpdate
 
   return Promise.resolve({
     addImage: jest.fn(),
@@ -47,6 +49,10 @@ export function __triggerSelectAsset(assetId: [number, number, number, number]) 
 
 export function __triggerUpdateAssets(assets: SerializedOutputAsset[]) {
   onUpdateAssetsCallback(assets)
+}
+
+export function __triggerPreviewUpdate(canvas: HTMLCanvasElement) {
+  onPreviewUpdateCallback(canvas)
 }
 
 // we could import actual exports from magic-render package

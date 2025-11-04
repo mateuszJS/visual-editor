@@ -19,13 +19,11 @@ export default async function getUploadUrl(
   }
 
   const objKey = `${projectId}/${uploadId}`
-  console.log('ObjKey:', objKey)
-  console.log('GeneratedAt:', generatedAt)
+
   if (generatedAt) {
     // ensure object is more recent than the one being currently used/uploaded
     const objMetadata = await ctx.env.userUploads.head(objKey)
     const uploadedAt = objMetadata?.customMetadata?.['updated-at']
-    console.log('uploadedAt:', uploadedAt)
 
     if (uploadedAt && uploadedAt >= generatedAt) {
       throw Error('Provided version is outdated.')

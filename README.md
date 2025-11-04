@@ -92,3 +92,5 @@ to apply:
 
 ##CF R2
 `wrangler r2 bucket create your-bucket-name`
+url to test upload:
+`curl --request PUT "<URL>" --header "Content-Type: text/plain" --header "Content-Length: 10" --data "nagvsudXgvakgabdgdkfaxsuieg"`

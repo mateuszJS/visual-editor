@@ -70,8 +70,11 @@ const file = new File(['image-data'], 'image-blob.png', { type: 'image/png' })
 
 describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
   it('if everything is correct redirects to cloud provider url', async () => {
-    const request = new Request('x:?contentLength=1024', {
-      headers: { Cookie: `session=${aliceSessionToken}` },
+    const request = new Request('x:', {
+      headers: {
+        Cookie: `session=${aliceSessionToken}`,
+        'Content-Length': '1024',
+      },
       method: 'PUT',
       body: file,
     })
@@ -79,7 +82,7 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
       getContext(request, { projectId: '1', uploadId: 'upload-id' })
     )
 
-    expect(response.status).toBe(308)
+    expect(response.status).toBe(307)
     const locationHeader = response.headers.get('Location')
     expect(locationHeader).toEqual(
       'https://storage-provider.com/signed-url?bucket=user-uploads-preview&key=1/upload-id&expiredsIn=300&contentLength=1024'
@@ -105,8 +108,11 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
 
   it('returns error if there is an error thrown in S3 lib', async () => {
     vi.mocked(getSignedUrl).mockRejectedValueOnce(new Error('S3 utility has failed'))
-    const request = new Request('x:?contentLength=1024', {
-      headers: { Cookie: `session=${aliceSessionToken}` },
+    const request = new Request('x:', {
+      headers: {
+        Cookie: `session=${aliceSessionToken}`,
+        'Content-Length': '1024',
+      },
       method: 'PUT',
       body: file,
     })
@@ -177,5 +183,44 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
     expect(response.status).toBe(401)
     const json = await response.json()
     expect(json).toEqual({ error: 'Unauthorized' })
+  })
+
+  it('redirects if request header x-amz-meta-updated-at is provided but R2 object does not have updated-at as custom metadata', async () => {
+    const request = new Request('x:', {
+      headers: {
+        Cookie: `session=${aliceSessionToken}`,
+        'Content-Length': '1024',
+        'x-amz-meta-updated-at': '2020-01-01T00:00:00.000Z',
+      },
+      method: 'PUT',
+      body: file,
+    })
+    const response = await onRequestPut(
+      getContext(request, { projectId: '1', uploadId: 'upload-id' })
+    )
+
+    expect(response.status).toBe(307)
+    const locationHeader = response.headers.get('Location')
+    expect(locationHeader).toEqual(
+      'https://storage-provider.com/signed-url?bucket=user-uploads-preview&key=1/upload-id&expiredsIn=300&contentLength=1024'
+    )
+  })
+
+  it('returns error if provided request header x-amz-meta-updated-at contains older date than R2 object metadata updated-at', async () => {
+    const request = new Request('x:', {
+      headers: {
+        Cookie: `session=${aliceSessionToken}`,
+        'Content-Length': '1024',
+        'x-amz-meta-updated-at': '2020-01-01T00:00:00.000Z',
+      },
+      method: 'PUT',
+      body: file,
+    })
+    const response = await onRequestPut(
+      getContext(request, { projectId: '1', uploadId: 'miniature' })
+    )
+
+    expect(response.status).toBe(403)
+    expect(await response.json()).toEqual({ error: 'Failed to generate signed URL.' })
   })
 })

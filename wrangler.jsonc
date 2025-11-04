@@ -28,8 +28,8 @@
     {
       "binding": "userUploads",
       "bucket_name": "user-uploads-preview",
-      "preview_bucket_name": "user-uploads-preview",
-      "remote": true // not supported currently for pages.
+      "preview_bucket_name": "user-uploads-preview"
+      // "remote": true // not supported currently for pages.
       // In this case we have to test generating miniatures in preview env because:
       // - cannot use local R2 because AWS signed urls don't work locally
       // - cannot use remote setup for local because again, r2 remote doesnt work for pages

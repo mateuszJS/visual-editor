@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import useCreator from './useCreator'
-import { __triggerUpdateAssets } from '@mateuszjs/magic-render'
+import { __triggerUpdateAssets, __triggerPreviewUpdate } from '@mateuszjs/magic-render'
 import useProject from '@/hooks/useProject/useProject'
 import { server } from 'test/server'
 import { http, HttpResponse } from 'msw'
@@ -314,5 +314,32 @@ describe('useCreator', () => {
       expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(1, [], true)
       canvas.remove()
     })
+  })
+
+  it('request with miniature is sent on miniature update', async () => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'))
+
+    const { result } = renderHook(useCreator)
+    await act(async () => result.current.init(window.creatorCanvas, project))
+    let receivedRequest = new Request('x:')
+    server.use(
+      http.put('/api/project-uploads/1/miniature', async ({ request }) => {
+        receivedRequest = request
+        return new HttpResponse(null, { status: 204 })
+      })
+    )
+
+    await act(async () => {
+      __triggerPreviewUpdate({
+        toBlob: (cb: (blob: Blob | null) => void) => {
+          cb(new Blob(['canvas-blob'], { type: 'image/png' }))
+        },
+      })
+    })
+
+    expect(receivedRequest.headers.get('x-sw-generated-at')).toBe('2020-01-01T00:00:00.000Z')
+    expect(await receivedRequest.blob()).toEqual(new Blob(['canvas-blob'], { type: 'image/png' }))
+
+    jest.useRealTimers()
   })
 })

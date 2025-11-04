@@ -37,7 +37,7 @@ export default function webpackConfig(config: Configuration) {
 
   config.plugins!.push(
     new InjectManifest({
-      swSrc: './src/service-worker/index.ts',
+      swSrc: './src/service-worker/sw.ts',
       swDest: '../public/sw.js',
       include: ['__nothing__'],
     })

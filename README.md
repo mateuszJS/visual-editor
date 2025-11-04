@@ -92,20 +92,5 @@ to apply:
 
 ##CF R2
 `wrangler r2 bucket create your-bucket-name`
-
-Connet bucke to a custom domain that is already managed by cloudflare:
-https://developers.cloudflare.com/r2/buckets/public-buckets/#connect-a-bucket-to-a-custom-domain
-
-Expose the contents of this R2 bucket to the internet through a Cloudflare-managed r2.dev subdomain. This endpoint is intended for non-production traffic.
-
-Public access through r2.dev subdomains are rate limited and should only be used for development purposes.
-
-Enabling public deployment url:
-https://developers.cloudflare.com/r2/buckets/public-buckets/#enable-public-development-url
-
-Presigned URL
-https://developers.cloudflare.com/r2/buckets/cors/#create-a-presigned-url
-
-```
-
-```
+url to test upload:
+`curl --request PUT "<URL>" --header "Content-Type: text/plain" --header "Content-Length: 10" --data "nagvsudXgvakgabdgdkfaxsuieg"`

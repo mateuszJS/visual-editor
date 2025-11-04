@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import type { ProjectDB } from '.'
+import type { ProjectDB } from './sw'
 import { getDB } from './db'
 
 async function getProject(db: IDBDatabase, projectId: string): Promise<ProjectDB | null> {

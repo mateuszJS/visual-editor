@@ -5,20 +5,33 @@ export const getCachedKeys = async () => {
   return cache.keys()
 }
 
-export const putInCache = async (request: Request, response: Response) => {
-  const cache = await caches.open('v0')
-  await cache.put(request, response)
+// Puts request/response in cache by pathname!
+// Removes any other existing entries with same pathname!!!
+export const putUniqueInCache = async (request: Request, response: Response) => {
+  try {
+    const cache = await caches.open('v0')
+    await cache.delete(request, {
+      ignoreSearch: true,
+    })
+    await cache.put(request, response)
+  } catch (error) {
+    console.error('Error while putting in cache: ', error)
+  }
 }
 
 export const deleteCachedItem = async (key: Request) => {
   const cache = await caches.open('v0')
-  await cache.delete(key)
+  await cache.delete(key, {
+    ignoreSearch: true,
+  })
 }
 
 export const cacheFirst = async (cacheKey: Request, event: FetchEvent) => {
   const request = event.request
   // First try to get the resource from the cache
-  const responseFromCache = await caches.match(cacheKey)
+  const responseFromCache = await caches.match(cacheKey, {
+    ignoreSearch: true,
+  })
   if (responseFromCache) {
     return responseFromCache
   }

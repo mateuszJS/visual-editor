@@ -5,13 +5,15 @@ export default function uploadMiniature(canvas: HTMLCanvasElement, projectId: st
     if (!blob) return
 
     try {
-      await nativeFetcher(
-        `/api/project-uploads/${projectId}/miniature?contentLength=${blob.size}`,
-        {
-          method: 'PUT',
-          body: blob,
-        }
-      )
+      await nativeFetcher(`/api/project-uploads/${projectId}/miniature`, {
+        method: 'PUT',
+        body: blob,
+        options: {
+          headers: {
+            'x-sw-generated-at': new Date().toISOString(),
+          },
+        },
+      })
     } catch (err) {
       // console.error('Failed to upload miniature:', err) capture this log in the future
     }

@@ -112,6 +112,16 @@ beforeAll(async () => {
     )
     .bind(aliceProjectId, 100, 200, '[]', '2')
     .run()
+
+  // put an object with updated-at metadata
+  await env.userUploads.put('1/miniature', new Uint8Array([1, 2, 3]), {
+    customMetadata: {
+      'updated-at': '2025-01-01T00:00:00.000Z',
+    },
+  })
+
+  // object representing just a user's upload
+  await env.userUploads.put('1/upload-id', new Uint8Array([1, 2, 3]))
 })
 
 // to receive those session value just call await encrypt({ userId: '23891542398' }) in session.ts

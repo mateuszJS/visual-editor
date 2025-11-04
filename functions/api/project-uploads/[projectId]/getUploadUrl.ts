@@ -43,7 +43,7 @@ export default async function getUploadUrl(
     throw Error(`User ${userId} cannot upload this asset to project ${projectId}.`)
   }
 
-  const metaData = generatedAt ? { 'Updated-at': generatedAt } : undefined
+  const metaData = generatedAt ? { 'updated-at': generatedAt } : undefined
 
   const url = await getSignedUrl(
     getS3Client(),

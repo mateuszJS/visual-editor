@@ -9,7 +9,6 @@ export async function syncProjectMiniatures() {
       const { pathname } = new URL(req.url)
 
       if (pathname.startsWith('/api/project-uploads/') && pathname.includes('/miniature')) {
-        console.log('start sync: ', req.url)
         const cachedRes = await caches.match(req)
         if (!cachedRes) throw new Error('No cached response found')
 
@@ -26,7 +25,6 @@ export async function syncProjectMiniatures() {
             'x-amz-meta-updated-at': generatedAt,
           },
         })
-        console.log('sync response: ', res)
 
         if (res.ok || res.status === 403 || res.status === 404) {
           // in any other case we are not sure what happen,

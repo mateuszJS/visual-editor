@@ -73,6 +73,3 @@ export const onRequestPut = withSession<'projectId' | 'uploadId'>(async (ctx, se
 
   return Response.redirect(url, 307)
 })
-
-// url to test upload:
-// curl --request PUT "<URL>" --header "Content-Type: text/plain" --header "Content-Length: 10" --data "nagvsudXgvakgabdgdkfaxsuieg"

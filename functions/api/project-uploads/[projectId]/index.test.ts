@@ -8,8 +8,11 @@ const file = new File(['image-data'], 'image-blob.png', { type: 'image/png' })
 
 describe('PUT /api/project-uploads/[projectId]', () => {
   it('if everything is correct redirects to cloud provider url', async () => {
-    const request = new Request('x:?contentLength=1024', {
-      headers: { Cookie: `session=${aliceSessionToken}` },
+    const request = new Request('x:', {
+      headers: {
+        Cookie: `session=${aliceSessionToken}`,
+        'Content-Length': '1024',
+      },
       method: 'PUT',
       body: file,
     })
@@ -101,20 +104,5 @@ describe('PUT /api/project-uploads/[projectId]', () => {
     expect(response.status).toBe(401)
     const json = await response.json()
     expect(json).toEqual({ error: 'Unauthorized' })
-  })
-
-  it('redirects to cloud provider url with predefined uploadId from query params', async () => {
-    const request = new Request('x:?uploadId=custom-upload-id&contentLength=1024', {
-      headers: { Cookie: `session=${aliceSessionToken}` },
-      method: 'PUT',
-      body: file,
-    })
-    const response = await onRequestPut(getContext(request, { projectId: '1' }))
-
-    expect(response.status).toBe(307)
-    const locationHeader = response.headers.get('Location')
-    expect(locationHeader).toEqual(
-      'https://storage-provider.com/signed-url?bucket=user-uploads-preview&key=1/custom-upload-id&expiredsIn=300&contentLength=1024'
-    )
   })
 })

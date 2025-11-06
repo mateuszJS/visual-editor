@@ -17,6 +17,7 @@
     "./handlers.d.ts",
     "./types.d.ts",
     "../vitest.config.mts",
-    "../src/utils/getUserAgent.ts"
+    "../src/utils/getUserAgent.ts",
+    "../apiTypes.ts"
   ]
 }

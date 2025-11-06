@@ -14,7 +14,7 @@ import initMagicRender, {
 import { proxy, ref, useSnapshot } from 'valtio'
 import getOnTextureUpload from './getOnTextureUpload'
 import uploadMiniature from './uploadMiniature'
-import { SanitizedAsset, SanitizedProject } from '@/types'
+import { ApiAsset, ApiProjectAssetsData } from '../../../apiTypes'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 
@@ -55,9 +55,10 @@ type SerializedOutputAssetMerged = SerializedOutputImage &
   SerializedOutputText // this type only exist to allow fields removal that might not exist on all variants of the union
 
 function serializeAssets(assets: SerializedOutputAssetMerged[]) {
-  return assets.map<SanitizedAsset>( // due to the nature of TypeScript, we cannot deny properties while doing spread operator
+  return assets.map(
+    // due to the nature of TypeScript, we cannot deny properties while doing spread operator
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ({ id, texture_id, cache_texture_id, sdf_texture_id, ...rest }) => rest
+    ({ id, texture_id, cache_texture_id, sdf_texture_id, ...rest }) => rest as unknown as ApiAsset
   )
 }
 
@@ -79,7 +80,10 @@ function useCreator() {
     ] as SerializedOutputAssetMerged[]
     creatorState.creator!.resetAssets(assets)
 
-    updateProject(stateSnapshot.projectId!, { assets: serializeAssets(assets) })
+    updateProject(stateSnapshot.projectId!, {
+      assets: serializeAssets(assets),
+      updatedAt: new Date().toISOString(),
+    })
   }
 
   return {
@@ -96,7 +100,7 @@ function useCreator() {
       if (stateSnapshot.projectId === null) throw new Error('Project id is not initialized')
       return stateSnapshot.projectId
     },
-    async init(canvas: HTMLCanvasElement, project: SanitizedProject) {
+    async init(canvas: HTMLCanvasElement, project: ApiProjectAssetsData) {
       if (canvas.hasAttribute('data-connected')) return
       // is already connected to the creator
       // and we assume that canvas is mounted to DOM
@@ -116,6 +120,7 @@ function useCreator() {
 
           updateProject(project.id, {
             assets: serializeAssets(assets as SerializedOutputAssetMerged[]),
+            updatedAt: new Date().toISOString(),
           })
         },
         (assetId) => {

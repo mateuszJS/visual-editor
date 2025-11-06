@@ -8,7 +8,7 @@ export const onRequestGet = withSession(async (ctx, session) => {
       .prepare('SELECT id, email, name, photo FROM users WHERE id = ?')
       .bind(session.userId)
       .first<Pick<User.DB, 'id' | 'email' | 'name' | 'photo'>>()
-    return User.sanitizeBasicInfo(user)
+    return User.sanitizeBasic(user)
   })
 
   if (err) {

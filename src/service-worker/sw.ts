@@ -10,8 +10,8 @@ declare const self: ServiceWorkerGlobalScope
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const resources = self.__WB_MANIFEST // this is just to satisfy workbox
 
-const version = 22
-
+const version = 24
+console.log(`Service Worker: Version ${version} loaded`)
 self.addEventListener('install', () => {
   console.log(`================INSTALL V${version}=====================`)
   self.skipWaiting()
@@ -23,10 +23,18 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim())
 })
 
-self.addEventListener('message', async (event) => {
-  if (event.data === 'CLIENT_CLOSED') {
-    event.waitUntil(syncProjectMiniatures())
-    event.waitUntil(syncProjectData())
+const broadcast = new BroadcastChannel('sync-data')
+
+broadcast.addEventListener('message', async (event) => {
+  if (event.data === 'SYNC_DATA_START') {
+    try {
+      await syncProjectMiniatures()
+      await syncProjectData()
+    } catch (error) {
+      console.error('Error while syncing project miniatures: ', error)
+    } finally {
+      broadcast.postMessage('SYNC_DATA_END')
+    }
   }
 })
 
@@ -34,14 +42,10 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(handleFetch(event))
 })
 
-export type ProjectDB = {
-  id: string
-  updated_at: string
-}
-
 async function handleFetch(event: FetchEvent): Promise<Response> {
   const { request } = event
   const { pathname } = new URL(request.url)
+  // console.log('Fetching ', pathname)
 
   if (pathname.startsWith('/api/project-uploads/') && pathname.endsWith('/miniature')) {
     return projectMiniatureRoute(request, event)
@@ -53,7 +57,6 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
     const projectId = pathname.split('/')[3]
     return projectRoute(request, projectId, event)
   }
-
   return fetch(event.request)
 }
 

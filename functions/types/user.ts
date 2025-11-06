@@ -1,3 +1,5 @@
+import { ApiUserBasic } from '../../apiTypes'
+
 export type DB = {
   id: number
   name: string | null
@@ -19,16 +21,9 @@ export type DB = {
   os_version: string | null
 }
 
-export type BasicInfo = {
-  id: string
-  email: string | null
-  name: string | null
-  photo: string | null
-}
-
-export function sanitizeBasicInfo(
+export function sanitizeBasic(
   data: Pick<DB, 'id' | 'email' | 'name' | 'photo'> | null
-): BasicInfo {
+): ApiUserBasic {
   if (!data) {
     throw new Error('No data was found.')
   }

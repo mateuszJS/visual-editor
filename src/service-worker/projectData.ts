@@ -1,8 +1,11 @@
 /* eslint-disable no-restricted-syntax */
-import type { ProjectDB } from './sw'
+import type { ApiProjectAssetsData } from '../../apiTypes'
 import { getDB } from './db'
 
-async function getProject(db: IDBDatabase, projectId: string): Promise<ProjectDB | null> {
+async function getProject(
+  db: IDBDatabase,
+  projectId: string
+): Promise<ApiProjectAssetsData | null> {
   const dbReq = db.transaction(['projects'], 'readonly').objectStore('projects').get(projectId)
 
   return new Promise((resolve) => {
@@ -27,15 +30,14 @@ export async function projectRoute(
         if (!res.ok) {
           throw new Error('Failed to fetch project from server')
         }
-        return res.json() as Promise<ProjectDB>
+        return res.json() as Promise<ApiProjectAssetsData>
       }),
       getProject(db, projectId),
     ])
 
     if (localRes) {
       db.transaction(['projects'], 'readwrite').objectStore('projects').delete(projectId)
-
-      if (localRes.updated_at > networkRes.updated_at) {
+      if (localRes.updatedAt > networkRes.updatedAt) {
         const updateServerRequest = new Request(`/api/projects/${projectId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },

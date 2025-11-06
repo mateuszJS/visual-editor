@@ -2,42 +2,35 @@
 import { cacheFirst, deleteCachedItem, getCachedKeys, putUniqueInCache } from './cacheUtils'
 
 export async function syncProjectMiniatures() {
-  try {
-    const cachedKeys = await getCachedKeys()
+  const cachedKeys = await getCachedKeys()
 
-    const tasks = cachedKeys.map(async (req) => {
-      const { pathname } = new URL(req.url)
+  const tasks = cachedKeys.map(async (req) => {
+    const { pathname } = new URL(req.url)
 
-      if (pathname.startsWith('/api/project-uploads/') && pathname.includes('/miniature')) {
-        const cachedRes = await caches.match(req)
-        if (!cachedRes) throw new Error('No cached response found')
+    if (pathname.startsWith('/api/project-uploads/') && pathname.includes('/miniature')) {
+      const cachedRes = await caches.match(req)
+      if (!cachedRes) throw new Error('No cached response found')
 
-        const generatedAt = cachedRes.headers.get('x-sw-generated-at')
-        if (!generatedAt) throw new Error('No x-sw-generated-at header found in cached response')
+      const generatedAt = cachedRes.headers.get('x-sw-generated-at')
+      if (!generatedAt) throw new Error('No x-sw-generated-at header found in cached response')
 
-        const body = await cachedRes.blob()
+      const body = await cachedRes.blob()
 
-        const res = await fetch(req.url, {
-          method: 'PUT',
-          body,
-          headers: {
-            'Content-Type': cachedRes.headers.get('Content-Type') || 'image/png',
-            'x-amz-meta-updated-at': generatedAt,
-          },
-        })
+      await fetch(req.url, {
+        method: 'PUT',
+        body,
+        headers: {
+          'Content-Type': cachedRes.headers.get('Content-Type') || 'image/png',
+          'x-amz-meta-updated-at': generatedAt,
+        },
+      })
 
-        if (res.ok || res.status === 403 || res.status === 404) {
-          // in any other case we are not sure what happen,
-          // so better to do not remove local copy
-          await deleteCachedItem(req)
-        }
-      }
-    })
+      // fetch above might fail(because of network for example), then data will not be removed
+      await deleteCachedItem(req)
+    }
+  })
 
-    return Promise.allSettled(tasks)
-  } catch (error) {
-    console.error('Error while syncing project miniatures: ', error)
-  }
+  return Promise.allSettled(tasks)
 }
 
 export function projectMiniatureRoute(request: Request, event: FetchEvent) {

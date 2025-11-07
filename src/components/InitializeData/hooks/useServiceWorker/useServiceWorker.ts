@@ -6,7 +6,8 @@ const setupServiceWorker = async () => {
     await registerServiceWorker()
     window.addEventListener('pagehide', () => {
       const broadcast = new BroadcastChannel('sync-data')
-      broadcast.postMessage('SYNC_DATA_START')
+      broadcast.postMessage('SYNC_PROJECT_DATA_START')
+      broadcast.postMessage('SYNC_PROJECT_MINIATURE_START')
     })
   } catch (error) {
     console.error(`Registration failed with ${error}`)

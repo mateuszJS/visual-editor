@@ -99,3 +99,8 @@ export async function syncProjectData() {
 
   return Promise.allSettled(tasks)
 }
+
+export async function clearProjectData() {
+  const db = await getDB()
+  db.transaction(['projects'], 'readwrite').objectStore('projects').clear()
+}

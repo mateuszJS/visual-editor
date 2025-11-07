@@ -30,7 +30,7 @@ export function sanitizeAssetsData(
   if (!assets || !Array.isArray(assets)) {
     throw Error('An issue with assets has occured.')
   }
-  console.log('sanitizeAssetsData ------------ : ', data)
+
   return {
     id: data.id.toString(),
     assets,

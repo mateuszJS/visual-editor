@@ -14,6 +14,7 @@ describe('GET /api/projects/[id]', () => {
     expect(await response.json()).toEqual({
       id: '1',
       assets: [],
+      updatedAt: expect.any(String),
     })
   })
 

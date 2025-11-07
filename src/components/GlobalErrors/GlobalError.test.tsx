@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { act, render, screen, fireEvent } from '@testing-library/react'
+import { act, render, screen, fireEvent, waitFor } from '@testing-library/react'
 import GlobalErrors from './GlobalErrors'
 import errorStore from '@/stores/error'
 
@@ -22,10 +22,30 @@ describe('<GlobalError />', () => {
     Object.defineProperty(transitionEvent, 'propertyName', {
       value: 'opacity',
     })
+
     await act(async () => {
       fireEvent(screen.getByRole('alert'), transitionEvent)
     })
 
     expect(container).toBeEmptyDOMElement()
+  })
+
+  it('renders error when SW reports one', async () => {
+    const { container } = render(<GlobalErrors />)
+
+    expect(container).toBeEmptyDOMElement()
+
+    const broadcast = new BroadcastChannel('sync-data')
+    await act(async () => {
+      broadcast.postMessage({
+        type: 'SYNC_PROJECT_DATA_ERROR',
+      })
+    })
+
+    await waitFor(() =>
+      expect(errorStore.message).toBe(
+        'An error occurred while syncing project data. Check your internet connection.'
+      )
+    )
   })
 })

@@ -140,9 +140,13 @@ function useCreator() {
       const initialAssets =
         creatorState.initialAssets?.projectId === project.id
           ? creatorState.initialAssets.assetUrls.map((url) => ({ url }))
-          : project.assets
+          : null
 
-      creator.resetAssets(initialAssets as SerializedInputAsset[], true)
+      creator.resetAssets(
+        (initialAssets || project.assets) as SerializedInputAsset[],
+        !!initialAssets // triggers update only when there are initial assets
+        // not need to trigger update when project is just opened and no changes were made
+      )
       creatorState.initialAssets = null
 
       if (canvas.isConnected) {

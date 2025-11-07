@@ -1,6 +1,7 @@
 import { HttpResponse, http } from 'msw'
 import nativeFetcher from './index'
 import { server } from 'test/server'
+import { act } from '@testing-library/react'
 
 function spyRequest(method: 'get' | 'post') {
   const output = {
@@ -59,12 +60,21 @@ describe('nativeFetcher', () => {
     expect(spy.receivedRequest.headers.get('x-csrf-token')).toBe('test-csrf-token')
   })
 
-  it('should redirect to /login on 401 status if withRedirect is true(default)', async () => {
+  it('should send CLEAR_PROJECT message and redirect to /login on 401 status if withRedirect is true(default)', async () => {
     const { replace } = window.location
 
     Object.defineProperty(window, 'location', {
       writable: true,
       value: { ...window.location, replace: jest.fn() },
+    })
+
+    const broadcast = new BroadcastChannel('sync-data')
+    const messagesReceivedPromise = new Promise<void>((resolve) => {
+      broadcast.onmessage = (event) => {
+        if (event.data === 'CLEAR_PROJECT') {
+          resolve()
+        }
+      }
     })
 
     server.use(
@@ -73,6 +83,9 @@ describe('nativeFetcher', () => {
       })
     )
     await expect(nativeFetcher('/api/me')).rejects.toThrow('User is not authorized.')
+
+    await act(() => messagesReceivedPromise)
+
     expect(window.location.replace).toHaveBeenCalledWith('/login')
 
     window.location.replace = replace

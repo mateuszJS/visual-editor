@@ -63,6 +63,7 @@ export default function useProject(id?: string) {
           width,
           height,
           assets: [],
+          updatedAt: new Date().toISOString(),
         },
       },
       (project) => {

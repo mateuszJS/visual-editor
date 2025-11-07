@@ -52,6 +52,8 @@ export default async function nativeFetcher<
     })
 
     if (!disableAuth401Redirect && response.status === 401) {
+      const broadcast = new BroadcastChannel('sync-data')
+      broadcast.postMessage('CLEAR_PROJECT')
       window.location.replace('/login')
       /* app reload is used to clear all JS memory data, hide all modals(like new project modal) */
       throw new Error('User is not authorized.')

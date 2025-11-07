@@ -9,6 +9,9 @@ import CreatorToolbox from '@/components/CreatorToolbox/CreatorToolbox'
 import BoundsPanel from '@/components/BoundsPanel/BoundsPanel'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
 import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
+
+const broadcast = new BroadcastChannel('sync-data')
 
 export default function Project() {
   const isMobile = useIsMobile()
@@ -19,6 +22,18 @@ export default function Project() {
     throw Error('Project id is missing in the URL')
   }
   const { loading, project } = useProject(id)
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      broadcast.postMessage('SYNC_PROJECT_DATA_START')
+    }, 2 * 60 * 1000) // every 2 minutes
+
+    return () => {
+      clearInterval(intervalId)
+      broadcast.postMessage('SYNC_PROJECT_DATA_START')
+      broadcast.postMessage('SYNC_PROJECT_MINIATURE_START')
+    }
+  }, [])
 
   return (
     <main className={styles.page}>

@@ -1,6 +1,7 @@
 import { TokenPayload } from 'google-auth-library'
 import * as User from '../types/user'
 import type { UserAgentInfo } from '../../src/utils/getUserAgent'
+import { ApiUserBasic } from '../../apiTypes'
 
 // This function can throw!
 export default async function getUserData(
@@ -9,14 +10,14 @@ export default async function getUserData(
   cf: Request['cf'] = {},
   userAgent: Partial<UserAgentInfo>,
   language?: string
-): Promise<User.BasicInfo> {
+): Promise<ApiUserBasic> {
   const existingUser = await db
     .prepare('SELECT id, email, name, photo FROM users WHERE oidc_google_id = ?')
     .bind(payload.sub)
     .first<Pick<User.DB, 'id' | 'email' | 'name' | 'photo'>>()
 
   if (existingUser) {
-    return User.sanitizeBasicInfo(existingUser)
+    return User.sanitizeBasic(existingUser)
   }
 
   // const language = req.headers.get('accept-language')?.split(',')[0]
@@ -46,5 +47,5 @@ export default async function getUserData(
     )
     .first<Pick<User.DB, 'id' | 'email' | 'name' | 'photo'>>()
 
-  return User.sanitizeBasicInfo(createdUser)
+  return User.sanitizeBasic(createdUser)
 }

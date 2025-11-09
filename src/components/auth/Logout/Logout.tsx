@@ -6,7 +6,8 @@ import useFetcher from '@/hooks/useFetcher/useFetcher'
 
 export default function Logout() {
   const { fetcher } = useFetcher()
-  const onClick = () => {
+
+  const onClick = async () => {
     fetcher(
       '/api/auth/logout',
       {

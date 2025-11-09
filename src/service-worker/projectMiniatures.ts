@@ -1,43 +1,47 @@
 /* eslint-disable no-restricted-syntax */
 import { cacheFirst, deleteCachedItem, getCachedKeys, putUniqueInCache } from './cacheUtils'
 
+async function getMiniatureCachedKeys() {
+  const cachedKeys = await getCachedKeys()
+  return cachedKeys.filter((req) => {
+    const { pathname } = new URL(req.url)
+    return pathname.startsWith('/api/project-uploads/') && pathname.includes('/miniature')
+  })
+}
+
+export async function clearProjectMiniatures() {
+  const miniaturesCachedKeys = await getMiniatureCachedKeys()
+  const tasks = miniaturesCachedKeys.map((req) => deleteCachedItem(req))
+  return Promise.allSettled(tasks)
+}
+
 export async function syncProjectMiniatures() {
-  try {
-    const cachedKeys = await getCachedKeys()
+  const miniaturesCachedKeys = await getMiniatureCachedKeys()
 
-    const tasks = cachedKeys.map(async (req) => {
-      const { pathname } = new URL(req.url)
+  const tasks = miniaturesCachedKeys.map(async (req) => {
+    const cachedRes = await caches.match(req)
+    if (!cachedRes) throw new Error('No cached response found')
 
-      if (pathname.startsWith('/api/project-uploads/') && pathname.includes('/miniature')) {
-        const cachedRes = await caches.match(req)
-        if (!cachedRes) throw new Error('No cached response found')
+    const updatedAtHeader = cachedRes.headers.get('x-amz-meta-updated-at')
+    if (!updatedAtHeader)
+      throw new Error('No x-amz-meta-updated-at header found in cached response')
 
-        const generatedAt = cachedRes.headers.get('x-sw-generated-at')
-        if (!generatedAt) throw new Error('No x-sw-generated-at header found in cached response')
+    const body = await cachedRes.blob()
 
-        const body = await cachedRes.blob()
-
-        const res = await fetch(req.url, {
-          method: 'PUT',
-          body,
-          headers: {
-            'Content-Type': cachedRes.headers.get('Content-Type') || 'image/png',
-            'x-amz-meta-updated-at': generatedAt,
-          },
-        })
-
-        if (res.ok || res.status === 403 || res.status === 404) {
-          // in any other case we are not sure what happen,
-          // so better to do not remove local copy
-          await deleteCachedItem(req)
-        }
-      }
+    await fetch(req.url, {
+      method: 'PUT',
+      body,
+      headers: {
+        'Content-Type': cachedRes.headers.get('Content-Type') || 'image/png',
+        'x-amz-meta-updated-at': updatedAtHeader,
+      },
     })
 
-    return Promise.allSettled(tasks)
-  } catch (error) {
-    console.error('Error while syncing project miniatures: ', error)
-  }
+    // fetch above might throw error (because of network for example), then data will not be removed
+    await deleteCachedItem(req)
+  })
+
+  return Promise.allSettled(tasks)
 }
 
 export function projectMiniatureRoute(request: Request, event: FetchEvent) {
@@ -47,7 +51,8 @@ export function projectMiniatureRoute(request: Request, event: FetchEvent) {
     const fakeResponse = new Response(request.clone().body, {
       status: 200,
       headers: {
-        'x-sw-generated-at': new Date().toISOString(),
+        'x-amz-meta-updated-at':
+          request.headers.get('x-amz-meta-updated-at') || new Date().toISOString(),
         'Content-Type': request.headers.get('Content-Type') || 'image/png',
       },
     })

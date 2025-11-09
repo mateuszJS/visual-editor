@@ -4,7 +4,7 @@ import useCreator from '@/hooks/useCreator/useCreator'
 import { useEffect } from 'react'
 import { mocked } from 'storybook/test'
 import initMagicRender from '@mateuszjs/magic-render'
-import { SanitizedProject } from '@/types'
+import { ApiProjectAssetsData } from '../../../apiTypes'
 
 const meta = {
   component: CreatorToolbox,
@@ -22,14 +22,10 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-const project: SanitizedProject = {
+const project: ApiProjectAssetsData = {
   id: '1',
-  width: 100,
-  height: 100,
   assets: [],
-  name: '',
-  owner_id: '',
-  updated_at: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
 }
 
 const initMagicRenderMock = {

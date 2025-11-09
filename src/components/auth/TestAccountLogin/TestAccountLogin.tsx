@@ -4,7 +4,7 @@ import userStore from '@/hooks/userStore/userStore'
 import Button from '@/components/Button/Button'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
-import { SanitizedUser } from '@/types'
+import { ApiUserBasic } from '../../../../apiTypes'
 
 interface Props {
   onSuccess: VoidFunction
@@ -12,7 +12,7 @@ interface Props {
 
 export default function GoogleLogin({ onSuccess }: Props) {
   const getCsrfToken = useCSRF()
-  const { fetcher } = useFetcher<SanitizedUser>()
+  const { fetcher } = useFetcher<ApiUserBasic>()
 
   async function googleLogin() {
     const csrfToken = await getCsrfToken()

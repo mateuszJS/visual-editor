@@ -8,8 +8,8 @@ import GoogleIcon from 'assets/google-logo.svg'
 import styles from './GoogleLogin.module.css'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
-import { SanitizedUser } from '@/types'
 import getUserAgent from '@/utils/getUserAgent'
+import { ApiUserBasic } from '../../../../apiTypes'
 
 interface Props {
   onSuccess: VoidFunction
@@ -18,7 +18,7 @@ interface Props {
 export default function GoogleLogin({ onSuccess }: Props) {
   const googleWrapper = useRef<HTMLDivElement>(null)
   const getCsrfToken = useCSRF()
-  const { fetcher } = useFetcher<SanitizedUser>()
+  const { fetcher } = useFetcher<ApiUserBasic>()
 
   const initGooglBtn = () => {
     // Migration docs: https://developers.google.com/identity/gsi/web/guides/migration

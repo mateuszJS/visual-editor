@@ -7,7 +7,7 @@ export const onRequestGet: Handler<'id'> = withSession(async (ctx, session) => {
   const [project, err] = await withError(async () => {
     const project = await ctx.env.db
       .prepare(
-        `SELECT id, assets
+        `SELECT id, assets, updated_at
           FROM projects
           WHERE id = ? AND owner_id = ?`
       )
@@ -46,7 +46,7 @@ export const onRequestPatch: Handler<'id'> = withSession(async (ctx, session) =>
     return await ctx.env.db
       .prepare(
         `UPDATE projects
-          SET ${columnsToUpdate}, updated_at = CURRENT_TIMESTAMP
+          SET ${columnsToUpdate}
           WHERE id = ? AND owner_id = ?
           RETURNING id`
       )

@@ -1,4 +1,4 @@
-import { Asset } from './asset'
+import { ApiAsset, ApiProjectAssetsData, ApiProjectMetaData } from '../../apiTypes'
 
 export type DB = {
   id: number
@@ -12,28 +12,16 @@ export type DB = {
   assets: string
 }
 
-export type MetaData = {
-  id: string
-  name: string | null
-  created_at: string
-  updated_at: string
-}
-
-export type AssetsData = {
-  id: string
-  assets: Asset[]
-  updated_at: string
-}
 export function sanitizeAssetsData(
   data: Pick<DB, 'id' | 'assets' | 'updated_at'> | null
-): AssetsData {
+): ApiProjectAssetsData {
   if (!data) {
     throw new Error('No data was found.')
   }
 
   const assets = (() => {
     try {
-      return JSON.parse(data.assets) as Asset[]
+      return JSON.parse(data.assets) as ApiAsset[]
     } catch (err) {
       // console.error(err) capture this log in the future
     }
@@ -46,13 +34,13 @@ export function sanitizeAssetsData(
   return {
     id: data.id.toString(),
     assets,
-    updated_at: data.updated_at,
+    updatedAt: data.updated_at,
   }
 }
 
 export function sanitizeMetaData(
   data: Pick<DB, 'id' | 'name' | 'created_at' | 'updated_at'> | null
-): MetaData {
+): ApiProjectMetaData {
   if (!data) {
     throw new Error('No data was found.')
   }
@@ -60,22 +48,19 @@ export function sanitizeMetaData(
   return {
     id: data.id.toString(),
     name: data.name,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
   }
 }
 
 export type ChangesRaw = {
   width?: number
   height?: number
-  assets?: Asset[]
+  assets?: ApiAsset[]
+  updatedAt?: string
 }
 
-export type ChangesSanitizedDB = {
-  width: number
-  height: number
-  assets: string
-}
+export type ChangesSanitizedDB = Pick<DB, 'width' | 'height' | 'assets' | 'updated_at'>
 
 // throws in case of invalid data
 export function sanitizeProjectPayload<R extends boolean>(
@@ -121,6 +106,17 @@ export function sanitizeProjectPayload(
 
   if (Object.keys(changes).length === 0) {
     throw Error('No valid fields to update')
+  }
+
+  if (typeof payload.updatedAt === 'string') {
+    try {
+      changes.updated_at = new Date(payload.updatedAt).toISOString()
+    } catch (err) {
+      throw Error('Invalid updatedAt date')
+    }
+  } else {
+    // update at is mandatory, always
+    throw Error('updatedAt is required')
   }
 
   return changes

@@ -8,16 +8,21 @@ describe('POST /api/projects', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'POST',
-      body: JSON.stringify({ width: 600, height: 400, assets: [] }),
+      body: JSON.stringify({
+        width: 600,
+        height: 400,
+        assets: [],
+        updatedAt: '2025-01-01T00:00:00.000Z',
+      }),
     })
     const response = await onRequestPost(getContext(request))
 
     expect(response.status).toBe(201)
     const json = await response.json()
     expect(json).toEqual({
-      created_at: expect.any(String),
+      createdAt: expect.any(String),
       id: '2',
-      updated_at: expect.any(String),
+      updatedAt: expect.any(String),
       name: null,
     })
   })
@@ -143,7 +148,12 @@ describe('POST /api/projects', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${nonExistingUserSessionToken}` },
       method: 'POST',
-      body: JSON.stringify({ width: 600, height: 400, assets: [] }),
+      body: JSON.stringify({
+        width: 600,
+        height: 400,
+        assets: [],
+        updatedAt: '2025-01-01T00:00:00.000Z',
+      }),
     })
     const response = await onRequestPost(getContext(request))
 
@@ -164,9 +174,9 @@ describe('GET /api/projects', () => {
     const json = await response.json()
     expect(json).toEqual([
       {
-        created_at: expect.any(String),
+        createdAt: expect.any(String),
         id: '1',
-        updated_at: expect.any(String),
+        updatedAt: expect.any(String),
         name: null,
       },
     ])

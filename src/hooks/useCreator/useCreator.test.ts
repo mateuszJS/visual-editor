@@ -5,7 +5,7 @@ import useProject from '@/hooks/useProject/useProject'
 import { server } from 'test/server'
 import { http, HttpResponse } from 'msw'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
-import { SanitizedProject } from '@/types'
+import { ApiProjectAssetsData } from '../../../apiTypes'
 
 const project = getSanitizedProject()
 
@@ -182,7 +182,7 @@ describe('useCreator', () => {
       let receivedPayload = null
       server.use(
         http.patch('/api/projects/:id', async ({ request }) => {
-          const data = (await request.json()) as SanitizedProject
+          const data = (await request.json()) as ApiProjectAssetsData
           receivedPayload = data?.assets
           return new HttpResponse(null, { status: 204 })
         })
@@ -200,7 +200,7 @@ describe('useCreator', () => {
 
       server.use(
         http.patch('/api/projects/:id', async ({ request }) => {
-          const data = (await request.json()) as SanitizedProject
+          const data = (await request.json()) as ApiProjectAssetsData
           receivedPayload = data?.assets
           return new HttpResponse(null, { status: 204 })
         })
@@ -214,7 +214,7 @@ describe('useCreator', () => {
 
       server.use(
         http.patch('/api/projects/:id', async ({ request }) => {
-          const data = (await request.json()) as SanitizedProject
+          const data = (await request.json()) as ApiProjectAssetsData
           receivedPayload = data?.assets
           return new HttpResponse(null, { status: 204 })
         })
@@ -282,7 +282,7 @@ describe('useCreator', () => {
       )
     })
 
-    it('if different project id assets will be dismissed', async () => {
+    it('if different project id is provided, then initial assets will be dismissed', async () => {
       const { result } = renderHook(useCreator)
 
       const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
@@ -291,7 +291,7 @@ describe('useCreator', () => {
         await result.current.init(window.creatorCanvas, project)
       })
 
-      expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(1, [], true)
+      expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(1, [], false)
     })
 
     it('initial assets are used only once', async () => {
@@ -311,7 +311,7 @@ describe('useCreator', () => {
 
       // remember that with init(canvas, project) we return a new creator instance
       // with a new resetAssets jest spy function, so thats why it should be 0 called, not 2
-      expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(1, [], true)
+      expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(1, [], false)
       canvas.remove()
     })
   })
@@ -337,7 +337,7 @@ describe('useCreator', () => {
       })
     })
 
-    expect(receivedRequest.headers.get('x-sw-generated-at')).toBe('2020-01-01T00:00:00.000Z')
+    expect(receivedRequest.headers.get('x-amz-meta-updated-at')).toBe('2020-01-01T00:00:00.000Z')
     expect(await receivedRequest.blob()).toEqual(new Blob(['canvas-blob'], { type: 'image/png' }))
 
     jest.useRealTimers()

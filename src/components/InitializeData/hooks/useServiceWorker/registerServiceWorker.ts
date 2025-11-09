@@ -32,8 +32,7 @@ export default async function registerServiceWorker(tryOnlyOnce = false) {
         `ServiceWorker failed to re-register after hard-refresh, reloading the page!`,
         err
       )
-      // In theory there is a possibility of infinite reload loop here
-      // return location.reload();
+      throw new Error('Failed to unregister service worker')
     }
   }
 

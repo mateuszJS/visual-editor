@@ -104,18 +104,19 @@ export function sanitizeProjectPayload(
     throw Error('Assets are required')
   }
 
+  if (Object.keys(changes).length === 0) {
+    throw Error('No valid fields to update')
+  }
+
   if (typeof payload.updatedAt === 'string') {
     try {
       changes.updated_at = new Date(payload.updatedAt).toISOString()
     } catch (err) {
       throw Error('Invalid updatedAt date')
     }
-  } else if (required) {
+  } else {
+    // update at is mandatory, always
     throw Error('updatedAt is required')
-  }
-
-  if (Object.keys(changes).length === 0) {
-    throw Error('No valid fields to update')
   }
 
   return changes

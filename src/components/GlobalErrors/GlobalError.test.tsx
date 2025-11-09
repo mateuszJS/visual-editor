@@ -47,5 +47,7 @@ describe('<GlobalError />', () => {
         'An error occurred while syncing project data. Check your internet connection.'
       )
     )
+
+    broadcast.close()
   })
 })

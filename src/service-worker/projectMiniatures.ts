@@ -37,7 +37,7 @@ export async function syncProjectMiniatures() {
       },
     })
 
-    // fetch above might fail(because of network for example), then data will not be removed
+    // fetch above might throw error (because of network for example), then data will not be removed
     await deleteCachedItem(req)
   })
 

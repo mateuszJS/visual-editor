@@ -16,6 +16,11 @@ export default async function registerServiceWorker(tryOnlyOnce = false) {
 
   if (!navigator.serviceWorker.controller) {
     // Worker isn't controlling, re-register
+
+    if (tryOnlyOnce) {
+      throw new Error('service worker controller not found after re-register')
+    }
+
     try {
       const reg = await navigator.serviceWorker.getRegistration()
       // Unregistering worker
@@ -50,6 +55,10 @@ export default async function registerServiceWorker(tryOnlyOnce = false) {
 
   if (serviceWorker.state == 'redundant') {
     // Worker is redundant, trying again
+    if (tryOnlyOnce) {
+      throw new Error('service worker became redundant during activation')
+    }
+
     return registerServiceWorker(true)
   }
 

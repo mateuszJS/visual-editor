@@ -11,12 +11,16 @@ export default function GlobalErrors() {
   useEffect(() => {
     const broadcast = new BroadcastChannel('sync-data')
 
-    broadcast.addEventListener('message', (event) => {
+    broadcast.onmessage = (event) => {
       if (typeof event.data === 'object' && event.data.type === 'SYNC_PROJECT_DATA_ERROR') {
         errorStore.message =
           'An error occurred while syncing project data. Check your internet connection.'
       }
-    })
+    }
+
+    return () => {
+      broadcast.close()
+    }
   }, [])
 
   if (message) {

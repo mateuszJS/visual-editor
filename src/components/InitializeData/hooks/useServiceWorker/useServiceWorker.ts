@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import registerServiceWorker from './registerServiceWorker'
 
 const setupServiceWorker = async () => {
   try {
     await registerServiceWorker()
+    const broadcast = new BroadcastChannel('sync-data')
+
     window.addEventListener('pagehide', () => {
-      const broadcast = new BroadcastChannel('sync-data')
       broadcast.postMessage('SYNC_PROJECT_DATA_START')
       broadcast.postMessage('SYNC_PROJECT_MINIATURE_START')
     })
@@ -15,13 +16,7 @@ const setupServiceWorker = async () => {
 }
 
 export default function useServiceWorker() {
-  const [startedSetup, setStartedSetup] = useState(false)
-
   useEffect(() => {
-    if (!startedSetup && 'serviceWorker' in navigator) {
-      setupServiceWorker().then(() => {
-        setStartedSetup(true)
-      })
-    }
-  }, [startedSetup])
+    setupServiceWorker()
+  }, [])
 }

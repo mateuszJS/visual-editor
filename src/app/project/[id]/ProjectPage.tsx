@@ -11,8 +11,6 @@ import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 
-const broadcast = new BroadcastChannel('sync-data')
-
 export default function Project() {
   const isMobile = useIsMobile()
   const pathname = usePathname()
@@ -24,6 +22,7 @@ export default function Project() {
   const { loading, project } = useProject(id)
 
   useEffect(() => {
+    const broadcast = new BroadcastChannel('sync-data')
     const intervalId = setInterval(() => {
       broadcast.postMessage('SYNC_PROJECT_DATA_START')
     }, 2 * 60 * 1000) // every 2 minutes
@@ -32,6 +31,7 @@ export default function Project() {
       clearInterval(intervalId)
       broadcast.postMessage('SYNC_PROJECT_DATA_START')
       broadcast.postMessage('SYNC_PROJECT_MINIATURE_START')
+      broadcast.close()
     }
   }, [])
 

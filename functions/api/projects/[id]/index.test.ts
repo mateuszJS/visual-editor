@@ -58,7 +58,10 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
-      body: JSON.stringify({ assets: [{ url: 'texture-url' }] }),
+      body: JSON.stringify({
+        assets: [{ url: 'texture-url' }],
+        updatedAt: '2024-06-01T00:00:00Z',
+      }),
     })
     const response = await onRequestPatch(getContext(request, { id: '1' }))
 
@@ -84,7 +87,10 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
-      body: JSON.stringify({ assets: [{ url: 'texture-url' }] }),
+      body: JSON.stringify({
+        assets: [{ url: 'texture-url' }],
+        updatedAt: '2024-06-01T00:00:00Z',
+      }),
     })
     const response = await onRequestPatch(getContext(request, { id: '-1' }))
 
@@ -98,7 +104,10 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${bobSessionToken}` },
       method: 'PATCH',
-      body: JSON.stringify({ assets: [{ url: 'texture-url' }] }),
+      body: JSON.stringify({
+        assets: [{ url: 'texture-url' }],
+        updatedAt: '2024-06-01T00:00:00Z',
+      }),
     })
     const response = await onRequestPatch(getContext(request, { id: '1' }))
 
@@ -112,7 +121,12 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${nonExistingUserSessionToken}` },
       method: 'PATCH',
-      body: JSON.stringify({ width: 600, height: 400, assets: [] }),
+      body: JSON.stringify({
+        width: 600,
+        height: 400,
+        assets: [],
+        updatedAt: '2024-06-01T00:00:00Z',
+      }),
     })
     const response = await onRequestPatch(getContext(request, { id: '1' }))
 
@@ -125,7 +139,7 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
-      body: JSON.stringify({ width: 0 }),
+      body: JSON.stringify({ width: 0, updatedAt: '2024-06-01T00:00:00Z' }),
     })
     const response = await onRequestPatch(getContext(request, { id: '1' }))
 
@@ -138,7 +152,7 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
-      body: JSON.stringify({ width: 3001 }),
+      body: JSON.stringify({ width: 3001, updatedAt: '2024-06-01T00:00:00Z' }),
     })
     const response = await onRequestPatch(getContext(request, { id: '1' }))
 
@@ -151,7 +165,7 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
-      body: JSON.stringify({ height: 0 }),
+      body: JSON.stringify({ height: 0, updatedAt: '2024-06-01T00:00:00Z' }),
     })
     const response = await onRequestPatch(getContext(request, { id: '1' }))
 
@@ -164,7 +178,7 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
-      body: JSON.stringify({ width: 300, height: 3001 }),
+      body: JSON.stringify({ height: 3001, updatedAt: '2024-06-01T00:00:00Z' }),
     })
     const response = await onRequestPatch(getContext(request, { id: '1' }))
 
@@ -177,7 +191,7 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
-      body: JSON.stringify({ assets: {} }),
+      body: JSON.stringify({ assets: {}, updatedAt: '2024-06-01T00:00:00Z' }),
     })
     const response = await onRequestPatch(getContext(request, { id: '1' }))
 
@@ -190,7 +204,7 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
-      body: '{"assets":[invalid json]}',
+      body: '{"assets":[invalid json],"updatedAt":"2024-06-01T00:00:00Z"}',
     })
     const response = await onRequestPatch(getContext(request, { id: '1' }))
 
@@ -203,7 +217,7 @@ describe('PATCH /api/projects/[id]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
       method: 'PATCH',
-      body: JSON.stringify({}),
+      body: JSON.stringify({ updatedAt: '2024-06-01T00:00:00Z' }),
     })
     const response = await onRequestPatch(getContext(request, { id: '1' }))
 

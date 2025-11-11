@@ -33,5 +33,5 @@
     ".next/types/**/*.ts",
     "vitest.config.mts"
   ],
-  "exclude": ["node_modules", "functions"]
+  "exclude": ["node_modules", "functions", "src/service-worker"]
 }

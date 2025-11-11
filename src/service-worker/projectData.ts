@@ -57,7 +57,6 @@ export async function projectRoute(
       .objectStore('projects')
       .put({
         id: projectId,
-        updated_at: new Date().toISOString(),
         ...json,
       })
 
@@ -76,6 +75,10 @@ function getAllKeys(db: IDBDatabase): Promise<string[]> {
   })
 }
 
+/**
+ * @returns true means no network error has occurred,
+ * false means one or more network errors happened
+ */
 export async function syncProjectData() {
   const db = await getDB()
   const keys = await getAllKeys(db)
@@ -97,7 +100,8 @@ export async function syncProjectData() {
     }
   })
 
-  return Promise.allSettled(tasks)
+  const results = await Promise.allSettled(tasks)
+  return results.filter((r) => r.status === 'rejected' && r.reason instanceof Error).length === 0
 }
 
 export async function clearProjectData() {

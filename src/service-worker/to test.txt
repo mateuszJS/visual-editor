@@ -1,1 +1,0 @@
-- if you spam with many miniatures, make sure latest one is sent only

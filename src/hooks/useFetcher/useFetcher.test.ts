@@ -44,14 +44,14 @@ describe('useFetcher', () => {
     const { fetcher } = result.current
 
     server.use(
-      http.get('/api/me', () => HttpResponse.json({ error: 'Error has occured' }, { status: 400 }))
+      http.get('/api/me', () => HttpResponse.json({ error: 'Error has occurred' }, { status: 400 }))
     )
 
     await act(() => fetcher('/api/me'))
 
     expect(result.current).toEqual({
       loading: false,
-      error: 'Error has occured',
+      error: 'Error has occurred',
       success: null,
       fetcher: expect.any(Function),
     })

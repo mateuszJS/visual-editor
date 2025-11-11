@@ -40,6 +40,7 @@ export default async (): Promise<Config> => {
         'ts-jest',
         {
           useESM: true,
+          tsconfig: '<rootDir>/src/service-worker/tsconfig.json',
         },
       ],
     } as unknown as Config['transform'],

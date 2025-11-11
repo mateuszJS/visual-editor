@@ -124,7 +124,7 @@ describe('Service worker', () => {
   })
 
   describe('sync project miniatures', () => {
-    it('send exactly one request when there is one or more miniatures in cache and clears out the cache', async () => {
+    it('sends exactly one request when there are one or more miniatures in cache and clears out the cache', async () => {
       const blobA = new Blob(['local-image-data'], { type: 'image/png' })
       await import('./sw')
       await self.trigger(

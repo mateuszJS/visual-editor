@@ -33,7 +33,6 @@ broadcast.onmessage = async (event) => {
   if (event.data === 'SYNC_PROJECT_DATA_START') {
     const fullSuccess = await syncProjectData()
     if (!fullSuccess) {
-      console.error('Error while syncing project data.')
       broadcast.postMessage({ type: 'SYNC_PROJECT_DATA_ERROR' })
     }
   } else if (event.data === 'SYNC_PROJECT_MINIATURE_START') {

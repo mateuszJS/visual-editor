@@ -28,7 +28,7 @@ export function sanitizeAssetsData(
   })()
 
   if (!assets || !Array.isArray(assets)) {
-    throw Error('An issue with assets has occured.')
+    throw Error('An issue with assets has occurred.')
   }
 
   return {

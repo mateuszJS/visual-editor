@@ -1,30 +1,4 @@
-export = makeServiceWorkerEnv
-declare function makeServiceWorkerEnv(): WorkerGlobalScope
-
-declare namespace makeServiceWorkerEnv {
-  interface Caches {
-    [key: string]: Cache
-  }
-
-  type Listeners = Map<keyof ServiceWorkerGlobalScopeEventMap, EventListener>
-
-  interface Snapshot {
-    /**
-     * A key/value map of current cache contents.
-     */
-    caches: Caches
-
-    /**
-     * A list of active clients.
-     */
-    clients: Client[]
-
-    /**
-     * A list of active notifications.
-     */
-    notifications: Notification[]
-  }
-}
+export {}
 
 declare global {
   /**
@@ -35,8 +9,8 @@ declare global {
   /**
    * Used to trigger active listeners.
    */
-  function trigger(type: keyof ServiceWorkerGlobalScopeEventMap): Promise<void>
   function trigger(name: 'fetch', request: string | Request): Promise<Response>
+  function trigger(type: keyof ServiceWorkerGlobalScopeEventMap): Promise<void>
   function trigger(
     name: 'notificationclick' | 'notificationclose',
     args: Notification

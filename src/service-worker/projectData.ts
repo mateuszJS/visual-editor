@@ -76,7 +76,7 @@ function getAllKeys(db: IDBDatabase): Promise<string[]> {
 }
 
 /**
- * @returns true means no network error has occured,
+ * @returns true means no network error has occurred,
  * false means one or more network errors happened
  */
 export async function syncProjectData() {

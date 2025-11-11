@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+///<reference path="../src/service-worker/service-worker-mock.d.ts" />
+
 import makeServiceWorkerEnv from 'service-worker-mock'
 import { IDBFactory } from 'fake-indexeddb'
 import { eraseDbPromise } from '../src/service-worker/db'
@@ -29,7 +32,10 @@ beforeEach(() => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { BroadcastChannel, indexedDB, ...env } = makeServiceWorkerEnv() as ReturnType<
     typeof makeServiceWorkerEnv
-  > & { BroadcastChannel: unknown; indexedDB: IDBFactory } // Broadcast from jsdom works fine,
+  > & {
+    BroadcastChannel: unknown
+    indexedDB: IDBFactory
+  } // Broadcast from jsdom works fine,
   // but that one from service-worker-mock does not send/receive messages
 
   Object.assign(global, env)

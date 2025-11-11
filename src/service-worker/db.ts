@@ -17,6 +17,11 @@ function initDB(onSuccess: (db: IDBDatabase) => void) {
   }
 }
 
+// Testing helper to reset the DB promise between tests
+export function eraseDbPromise() {
+  dbPromise = null
+}
+
 export function getDB(): Promise<IDBDatabase> {
   if (dbPromise) {
     return dbPromise

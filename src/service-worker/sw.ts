@@ -29,29 +29,19 @@ self.addEventListener('activate', (event) => {
 
 const broadcast = new BroadcastChannel('sync-data')
 
-broadcast.addEventListener('message', async (event) => {
+broadcast.onmessage = async (event) => {
   if (event.data === 'SYNC_PROJECT_DATA_START') {
-    try {
-      await syncProjectData()
-    } catch (error) {
-      console.error('Error while syncing project data: ', error)
-      broadcast.postMessage({ type: 'SYNC_PROJECT_DATA_ERROR', error })
+    const fullSuccess = await syncProjectData()
+    if (!fullSuccess) {
+      console.error('Error while syncing project data.')
+      broadcast.postMessage({ type: 'SYNC_PROJECT_DATA_ERROR' })
     }
   } else if (event.data === 'SYNC_PROJECT_MINIATURE_START') {
-    try {
-      await syncProjectMiniatures()
-    } catch (error) {
-      console.error('Error while syncing project miniatures: ', error)
-      broadcast.postMessage({ type: 'SYNC_PROJECT_MINIATURE_ERROR', error })
-    }
+    await syncProjectMiniatures()
   } else if (event.data === 'CLEAR_PROJECT') {
-    try {
-      await Promise.allSettled([clearProjectData(), clearProjectMiniatures()])
-    } catch (error) {
-      console.error('Error while clearing sync data DB: ', error)
-    }
+    await Promise.allSettled([clearProjectData(), clearProjectMiniatures()])
   }
-})
+}
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(handleFetch(event))

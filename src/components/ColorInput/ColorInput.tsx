@@ -8,9 +8,8 @@ import numberInputStyles from '@/components/NumberInput/NumberInput.module.css'
 interface Props {
   label: string
   value: Color // normalized RGBA array
-  unit?: string
-  disabled?: boolean
   onChange: (value: Color) => void
+  disabled?: boolean
 }
 
 function toHex(value: Color): string {
@@ -34,8 +33,8 @@ function fromHex(hex: string): Color {
 }
 
 /**
- * This component operates on hex values ONLY. It accept normalized rgba, but converts them to hex for the color picker.
- * any floating point precision issues are avoided this way.
+ * This component operates on hex values ONLY. It accepts normalized rgba, but converts them to hex for the color picker.
+ * Any floating point precision issues are avoided this way.
  *
  * In Storybook sometimes updates can be laggy/jarring/stuck in an infinite loop,
  * It happens because useArgs returns data from two renders ago, not latest data.
@@ -55,9 +54,8 @@ export default function ColorInput({ label, value, onChange, disabled = false }:
       <button
         aria-label="Color picker"
         popoverTarget={popoverId}
-        className={cn(numberInputStyles.root, {
-          [styles.disabled]: disabled,
-        })}
+        className={numberInputStyles.root}
+        disabled={disabled}
       >
         <span className={numberInputStyles.label}>{label}</span>
         <div className={styles.colorPicker}>

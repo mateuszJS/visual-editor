@@ -10,7 +10,7 @@ import BoundsPanel from '@/components/BoundsPanel/BoundsPanel'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
-import ShapePropsPanel from '@/components/ShapePropsPanel/ShapePropsPanel'
+// import ShapePropsPanel from '@/components/ShapePropsPanel/ShapePropsPanel'
 
 export default function Project() {
   const isMobile = useIsMobile()
@@ -45,7 +45,7 @@ export default function Project() {
       {!isMobile && (
         <section className={styles.panels}>
           <BoundsPanel />
-          <ShapePropsPanel />
+          {/* <ShapePropsPanel /> */}
         </section>
       )}
     </main>

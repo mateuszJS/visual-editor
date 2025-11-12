@@ -1,5 +1,4 @@
 import { HexAlphaColorPicker, HexColorInput } from 'react-colorful'
-import cn from 'classnames'
 import styles from './ColorInput.module.css'
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
 import { Color } from '@mateuszjs/magic-render'

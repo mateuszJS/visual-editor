@@ -3,6 +3,7 @@ import path from 'path'
 import 'jest-puppeteer'
 import 'expect-puppeteer'
 import { toMatchImageSnapshot } from 'jest-image-snapshot'
+import { Page } from 'puppeteer'
 
 expect.extend({ toMatchImageSnapshot })
 
@@ -31,7 +32,7 @@ export default async function visualSetup(
   storyId: string,
   dirname: string,
   failureThreshold: number,
-  options: { width?: number } = {}
+  options: { width?: number; beforeTest?: (page: Page) => Promise<void> } = {}
 ) {
   if (options.width) {
     await page.setViewport({ width: options.width, height: 720 })
@@ -57,6 +58,10 @@ export default async function visualSetup(
 
   if (!storyRoot) {
     throw new Error('Element with class #storybook-root not found')
+  }
+
+  if (options.beforeTest) {
+    await options.beforeTest(page)
   }
 
   await storyRoot.screenshot({ path: tempPath })

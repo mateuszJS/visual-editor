@@ -9,7 +9,7 @@ interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onCha
   onChange: (value: number) => void
 }
 
-export default function PropsPanel({ label, value, onChange, unit = '', ...rest }: Props) {
+export default function NumberInput({ label, value, onChange, unit = '', ...rest }: Props) {
   const [tempVal, setTempVal] = useState(value.toString())
 
   useEffect(() => {

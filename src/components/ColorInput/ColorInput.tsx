@@ -34,7 +34,7 @@ function fromHex(hex: string): Color {
 }
 
 /**
- * This components operates on hex values ONLY. It accept normalized rgba, but converts them to hex for the color picker.
+ * This component operates on hex values ONLY. It accept normalized rgba, but converts them to hex for the color picker.
  * any floating point precision issues are avoided this way.
  *
  * In Storybook sometimes updates can be laggy/jarring/stuck in an infinite loop,

@@ -1,16 +1,27 @@
 import { useEffect, useState } from 'react'
-import cn from 'classnames'
 import styles from './NumberInput.module.css'
+import decimals from '@/utils/decimals'
+import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
 
 interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   label: string
   value: number
   unit?: string
+  roundDecimals?: boolean
   onChange: (value: number) => void
 }
 
-export default function NumberInput({ label, value, onChange, unit = '', ...rest }: Props) {
+export default function NumberInput({
+  label,
+  value: rawValue,
+  onChange,
+  unit = '',
+  roundDecimals = true,
+  ...rest
+}: Props) {
+  const value = roundDecimals ? decimals(rawValue) : rawValue
   const [tempVal, setTempVal] = useState(value.toString())
+  const inputId = useUniqueId()
 
   useEffect(() => {
     const tempStringifiedValue =
@@ -52,27 +63,28 @@ export default function NumberInput({ label, value, onChange, unit = '', ...rest
   }
 
   return (
-    <label
-      className={cn(styles.root, {
-        [styles.disabled]: rest.disabled,
-      })}
-    >
-      <span className={styles.label}>{label}</span>
-      <input
-        type="text"
-        value={tempVal}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        className={styles.input}
-        size={1}
-        onBlur={onBlur}
-        {...rest}
-      />
-      <span className={styles.suffix}>
-        <span className={styles.invisible}>{tempVal}</span>
-        &nbsp;
-        {unit}
-      </span>
-    </label>
+    <>
+      <label className={styles.label} htmlFor={inputId}>
+        {label}
+      </label>
+      <div className={styles.resizableWrapper}>
+        <input
+          type="text"
+          value={tempVal}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          size={1}
+          onBlur={onBlur}
+          {...rest}
+          id={inputId}
+          className={styles.input}
+        />
+        <span className={styles.suffix}>
+          <span className={styles.invisible}>{tempVal}</span>
+          &nbsp;
+          {unit}
+        </span>
+      </div>
+    </>
   )
 }

@@ -60,6 +60,22 @@ describe('NumberInput', () => {
     })
   })
 
+  describe('decimal points', () => {
+    it('by default should round values to two decimal points', async () => {
+      render(<NumberInput {...defaultProps} value={4.719} />)
+      const input = screen.getByRole('textbox', { name: /test label/i })
+
+      expect(input).toHaveValue('4.72')
+    })
+
+    it('no rounding is prop roundDecimals = false', async () => {
+      render(<NumberInput {...defaultProps} value={4.719} roundDecimals={false} />)
+      const input = screen.getByRole('textbox', { name: /test label/i })
+
+      expect(input).toHaveValue('4.719')
+    })
+  })
+
   describe('typing invalid values', () => {
     it('should not update displayed value nor call onChange when typing "a"', async () => {
       const user = userEvent.setup()

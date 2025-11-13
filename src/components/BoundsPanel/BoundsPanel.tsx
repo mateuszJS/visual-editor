@@ -4,10 +4,6 @@ import { useSnapshot } from 'valtio'
 import NumberInput from '@/components/NumberInput/NumberInput'
 import styles from './BoundsPanel.module.css'
 
-function twoDecimals(value: number) {
-  return Math.round(value * 100) / 100
-}
-
 function getData(bounds: readonly PointUV[]) {
   const width = Math.hypot(bounds[0].x - bounds[1].x, bounds[0].y - bounds[1].y)
   const height = Math.hypot(bounds[0].x - bounds[3].x, bounds[0].y - bounds[3].y)
@@ -75,7 +71,7 @@ export default function BoundsPanel() {
       <NumberInput
         label="X:"
         name="x"
-        value={twoDecimals(x)}
+        value={x}
         onChange={(v) => onChange(v, y, width, height)}
         unit="px"
         disabled={!bounds}
@@ -83,7 +79,7 @@ export default function BoundsPanel() {
       <NumberInput
         label="Y:"
         name="y"
-        value={twoDecimals(y)}
+        value={y}
         onChange={(v) => onChange(x, v, width, height)}
         unit="px"
         disabled={!bounds}
@@ -91,7 +87,7 @@ export default function BoundsPanel() {
       <NumberInput
         label="W:"
         name="width"
-        value={twoDecimals(width)}
+        value={width}
         onChange={(v) => onChange(x, y, v, height)}
         unit="px"
         disabled={!bounds}
@@ -99,7 +95,7 @@ export default function BoundsPanel() {
       <NumberInput
         label="H:"
         name="height"
-        value={twoDecimals(height)}
+        value={height}
         onChange={(v) => onChange(x, y, width, v)}
         unit="px"
         disabled={!bounds}

@@ -67,14 +67,14 @@ export default function BoundsPanel() {
   }
 
   return (
-    <section className={styles.root}>
+    <fieldset className={styles.root} disabled={!bounds}>
+      <legend>Bounds</legend>
       <NumberInput
         label="X:"
         name="x"
         value={x}
         onChange={(v) => onChange(v, y, width, height)}
         unit="px"
-        disabled={!bounds}
       />
       <NumberInput
         label="Y:"
@@ -82,7 +82,6 @@ export default function BoundsPanel() {
         value={y}
         onChange={(v) => onChange(x, v, width, height)}
         unit="px"
-        disabled={!bounds}
       />
       <NumberInput
         label="W:"
@@ -90,7 +89,6 @@ export default function BoundsPanel() {
         value={width}
         onChange={(v) => onChange(x, y, v, height)}
         unit="px"
-        disabled={!bounds}
       />
       <NumberInput
         label="H:"
@@ -98,8 +96,7 @@ export default function BoundsPanel() {
         value={height}
         onChange={(v) => onChange(x, y, width, v)}
         unit="px"
-        disabled={!bounds}
       />
-    </section>
+    </fieldset>
   )
 }

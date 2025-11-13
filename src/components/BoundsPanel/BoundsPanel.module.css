@@ -2,4 +2,12 @@
   display: grid;
   grid-template-columns: auto 1fr auto 1fr;
   padding: 10px;
+
+  &[disabled] {
+    opacity: 0.7;
+
+    * {
+      cursor: not-allowed;
+    }
+  }
 }

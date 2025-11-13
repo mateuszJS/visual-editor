@@ -68,7 +68,7 @@ describe('NumberInput', () => {
       expect(input).toHaveValue('4.72')
     })
 
-    it('no rounding is prop roundDecimals = false', async () => {
+    it('no rounding when prop roundDecimals = false', async () => {
       render(<NumberInput {...defaultProps} value={4.719} roundDecimals={false} />)
       const input = screen.getByRole('textbox', { name: /test label/i })
 

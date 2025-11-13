@@ -27,11 +27,6 @@
   }
 }
 
-:is(.input, .label) [disabled] {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
 .suffix,
 .input {
   width: auto;

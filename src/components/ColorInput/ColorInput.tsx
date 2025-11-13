@@ -9,7 +9,6 @@ interface Props {
   label: string
   value: Color // normalized RGBA array
   onChange: (value: Color) => void
-  disabled?: boolean
 }
 
 function toHex(value: Color): string {
@@ -39,7 +38,7 @@ function fromHex(hex: string): Color {
  * In Storybook sometimes updates can be laggy/jarring/stuck in an infinite loop,
  * It happens because useArgs returns data from two renders ago, not latest data.
  */
-export default function ColorInput({ label, value, onChange, disabled = false }: Props) {
+export default function ColorInput({ label, value, onChange }: Props) {
   const popoverId = useUniqueId()
   const inputId = useUniqueId()
 
@@ -58,7 +57,6 @@ export default function ColorInput({ label, value, onChange, disabled = false }:
       <button
         popoverTarget={popoverId}
         className={cn(styles.colorPicker, numberInputStyles.input)}
-        disabled={disabled}
         id={inputId}
       >
         <div style={{ backgroundColor: hex }} />

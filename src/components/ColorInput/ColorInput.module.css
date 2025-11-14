@@ -1,8 +1,11 @@
-.colorPicker {
+button.colorPicker {
   width: 3rem;
   height: var(--16px);
   border-radius: 5px;
   overflow: hidden;
+  padding: 0;
+  margin-inline-start: 5px;
+  background-color: #333;
   background-image: linear-gradient(45deg, #888 25%, transparent 25%),
     linear-gradient(-45deg, #888 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, #888 75%),
@@ -31,9 +34,12 @@
 .hexLabel {
   display: block;
   margin-top: 10px;
-}
+  font-weight: 300;
+  font-size: var(--14px);
 
-.hexInput {
-  font-size: var(--16px);
-  width: 9ch;
+  input {
+    font: inherit;
+    letter-spacing: 1px;
+    width: 9ch;
+  }
 }

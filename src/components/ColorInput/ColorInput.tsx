@@ -3,12 +3,12 @@ import styles from './ColorInput.module.css'
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
 import { Color } from '@mateuszjs/magic-render'
 import numberInputStyles from '@/components/NumberInput/NumberInput.module.css'
+import cn from 'classnames'
 
 interface Props {
   label: string
   value: Color // normalized RGBA array
   onChange: (value: Color) => void
-  disabled?: boolean
 }
 
 function toHex(value: Color): string {
@@ -38,8 +38,9 @@ function fromHex(hex: string): Color {
  * In Storybook sometimes updates can be laggy/jarring/stuck in an infinite loop,
  * It happens because useArgs returns data from two renders ago, not latest data.
  */
-export default function ColorInput({ label, value, onChange, disabled = false }: Props) {
+export default function ColorInput({ label, value, onChange }: Props) {
   const popoverId = useUniqueId()
+  const inputId = useUniqueId()
 
   const onChangeColor = (newHex: string) => {
     const newValue = fromHex(newHex)
@@ -50,16 +51,15 @@ export default function ColorInput({ label, value, onChange, disabled = false }:
 
   return (
     <>
+      <label className={numberInputStyles.label} htmlFor={inputId}>
+        {label}
+      </label>
       <button
-        aria-label="Color picker"
         popoverTarget={popoverId}
-        className={numberInputStyles.root}
-        disabled={disabled}
+        className={cn(styles.colorPicker, numberInputStyles.input)}
+        id={inputId}
       >
-        <span className={numberInputStyles.label}>{label}</span>
-        <div className={styles.colorPicker}>
-          <div style={{ backgroundColor: hex }} />
-        </div>
+        <div style={{ backgroundColor: hex }} />
       </button>
       <div id={popoverId} popover="auto" className={styles.popover} role="dialog" aria-modal="true">
         <HexAlphaColorPicker color={hex} onChange={onChangeColor} />

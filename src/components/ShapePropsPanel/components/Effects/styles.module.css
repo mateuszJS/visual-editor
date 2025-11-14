@@ -1,0 +1,6 @@
+.root {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(var(--secondary-rgb), 0.5);
+}

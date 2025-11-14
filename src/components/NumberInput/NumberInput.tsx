@@ -73,7 +73,9 @@ export default function NumberInput({
           value={tempVal}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          size={1}
+          size={
+            1
+          } /* it's a solution for browser which does not support field-sizing: content; yet */
           onBlur={onBlur}
           {...rest}
           id={inputId}

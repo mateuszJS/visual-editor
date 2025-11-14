@@ -21,6 +21,7 @@
   border: none;
   background: var(--background);
   border-radius: 3px;
+  field-sizing: content;
 
   &:focus {
     outline: solid 4px var(--secondary-accent);

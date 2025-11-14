@@ -11,7 +11,7 @@ const meta = {
   tags: ['autodocs'],
   args: {
     label: 'X:',
-    value: 10,
+    value: 20,
     unit: 'px',
     onChange: fn(),
   },

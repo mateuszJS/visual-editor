@@ -5,11 +5,11 @@ import useFetcher from '../useFetcher/useFetcher'
 import nativeFetcher from '@/utils/nativeFetcher'
 import { proxyMap } from 'valtio/utils'
 import { ref, useSnapshot } from 'valtio'
-import { ApiProjectAssetsData } from '../../../apiTypes'
+import { ApiProjectContent } from '../../../apiTypes'
 
-const projectsStore = proxyMap<string, ApiProjectAssetsData>()
+const projectsStore = proxyMap<string, ApiProjectContent>()
 
-async function updateProject(id: string, project: Omit<ApiProjectAssetsData, 'id'>) {
+async function updateProject(id: string, project: Omit<Partial<ApiProjectContent>, 'id'>) {
   if (!projectsStore.has(id)) {
     throw Error(`Project with id ${id} does not exist in the store`)
   }
@@ -40,7 +40,7 @@ export default function useProject(id?: string) {
   const newProjId = useRef<string | undefined>(undefined)
   const projects = useSnapshot(projectsStore)
 
-  const { error, loading, fetcher } = useFetcher<ApiProjectAssetsData>()
+  const { error, loading, fetcher } = useFetcher<ApiProjectContent>()
 
   useEffect(() => {
     if (id && !projectsStore.has(id)) {
@@ -53,7 +53,7 @@ export default function useProject(id?: string) {
   function createProject(
     width: number,
     height: number,
-    successCallback: (project: ApiProjectAssetsData) => void
+    successCallback: (project: ApiProjectContent) => void
   ) {
     fetcher(
       '/api/projects',

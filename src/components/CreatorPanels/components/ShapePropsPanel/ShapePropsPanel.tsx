@@ -1,14 +1,13 @@
 import useCreator, { assetState } from '@/hooks/useCreator/useCreator'
-import { SdfEffect, ShapeProps } from '@mateuszjs/magic-render'
+import { SdfEffect } from '@mateuszjs/magic-render'
 import { useSnapshot } from 'valtio'
 import styles from './ShapePropsPanel.module.css'
-import NumberInput from '../NumberInput/NumberInput'
+import NumberInput from '@/components/NumberInput/NumberInput'
 import Effect from './components/Effects/Effect'
 import PlusIcon from 'assets/plus-icon.svg'
 
 export default function ShapePropsPanel() {
-  const { props: _props } = useSnapshot(assetState)
-  const props = _props as ShapeProps | null
+  const { props } = useSnapshot(assetState)
   const creator = useCreator()
 
   function getOnChangeEffect(index: number) {
@@ -16,7 +15,7 @@ export default function ShapePropsPanel() {
       if (!props) throw Error('No props available while modifying SDF effect!')
       creator.creator.updateAssetProps({
         ...props,
-        sdf_effects: props.sdf_effects.map((effect, i) => (i === index ? newEffect : effect)),
+        sdf_effects: props.sdf_effects?.map((effect, i) => (i === index ? newEffect : effect)),
       })
     }
   }
@@ -52,12 +51,14 @@ export default function ShapePropsPanel() {
           Add Effect
         </button>
       </div>
-      <NumberInput
-        label="Opacity:"
-        value={props.opacity * 100}
-        onChange={(value) => creator.creator.updateAssetProps({ ...props, opacity: value / 100 })}
-        unit="%"
-      />
+      {props.opacity && (
+        <NumberInput
+          label="Opacity:"
+          value={props.opacity * 100}
+          onChange={(value) => creator.creator.updateAssetProps({ ...props, opacity: value / 100 })}
+          unit="%"
+        />
+      )}
       {props.filter && (
         <div>
           <h4>Blur</h4>

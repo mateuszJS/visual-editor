@@ -16,8 +16,3 @@
       'toolbox creator panels';
   }
 }
-
-.panels {
-  grid-area: panels;
-  width: 200px;
-}

@@ -32,7 +32,7 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   const { setInitialAssets } = useCreator()
 
   const createProjectFrom = async (width: number, height: number, textureUrls: string[]) => {
-    createProject(500, 500, (project) => {
+    createProject(width, height, (project) => {
       setInitialAssets(project.id, textureUrls)
       close()
       router.push(`/project/${project.id}`)

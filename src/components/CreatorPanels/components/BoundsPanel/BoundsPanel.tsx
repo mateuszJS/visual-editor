@@ -59,6 +59,10 @@ export default function BoundsPanel() {
   const creator = useCreator()
   const { width, height, x, y } = bounds ? getData(bounds) : PLACEHOLDER_DATA
 
+  if (!bounds) {
+    return null
+  }
+
   function onChange(x: number, y: number, width: number, height: number) {
     if (!bounds) throw new Error('No bounds')
     const angle = Math.atan2(bounds[1].y - bounds[0].y, bounds[1].x - bounds[0].x)

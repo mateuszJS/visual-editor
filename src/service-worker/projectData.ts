@@ -1,11 +1,8 @@
 /* eslint-disable no-restricted-syntax */
-import type { ApiProjectAssetsData } from '../../apiTypes'
+import type { ApiProjectContent } from '../../apiTypes'
 import { getDB } from './db'
 
-async function getProject(
-  db: IDBDatabase,
-  projectId: string
-): Promise<ApiProjectAssetsData | null> {
+async function getProject(db: IDBDatabase, projectId: string): Promise<ApiProjectContent | null> {
   const dbReq = db.transaction(['projects'], 'readonly').objectStore('projects').get(projectId)
 
   return new Promise((resolve) => {
@@ -30,7 +27,7 @@ export async function projectRoute(
         if (!res.ok) {
           throw new Error('Failed to fetch project from server')
         }
-        return res.json() as Promise<ApiProjectAssetsData>
+        return res.json() as Promise<ApiProjectContent>
       }),
       getProject(db, projectId),
     ])

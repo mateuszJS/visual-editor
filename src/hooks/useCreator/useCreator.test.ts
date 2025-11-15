@@ -5,7 +5,7 @@ import useProject from '@/hooks/useProject/useProject'
 import { server } from 'test/server'
 import { http, HttpResponse } from 'msw'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
-import { ApiProjectAssetsData } from '../../../apiTypes'
+import { ApiProjectContent } from '../../../apiTypes'
 
 const project = getSanitizedProject()
 
@@ -182,7 +182,7 @@ describe('useCreator', () => {
       let receivedPayload = null
       server.use(
         http.patch('/api/projects/:id', async ({ request }) => {
-          const data = (await request.json()) as ApiProjectAssetsData
+          const data = (await request.json()) as ApiProjectContent
           receivedPayload = data?.assets
           return new HttpResponse(null, { status: 204 })
         })
@@ -200,7 +200,7 @@ describe('useCreator', () => {
 
       server.use(
         http.patch('/api/projects/:id', async ({ request }) => {
-          const data = (await request.json()) as ApiProjectAssetsData
+          const data = (await request.json()) as ApiProjectContent
           receivedPayload = data?.assets
           return new HttpResponse(null, { status: 204 })
         })
@@ -214,7 +214,7 @@ describe('useCreator', () => {
 
       server.use(
         http.patch('/api/projects/:id', async ({ request }) => {
-          const data = (await request.json()) as ApiProjectAssetsData
+          const data = (await request.json()) as ApiProjectContent
           receivedPayload = data?.assets
           return new HttpResponse(null, { status: 204 })
         })

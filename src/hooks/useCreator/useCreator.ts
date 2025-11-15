@@ -95,7 +95,7 @@ function useCreator() {
       // and we assume that canvas is mounted to DOM
 
       canvas.setAttribute('data-connected', '')
-      console.log(project.width, project.height)
+
       const creator = await initMagicRender(
         project.width,
         project.height,
@@ -159,7 +159,7 @@ function useCreator() {
     setProjectSize(width: number, height: number) {
       const creator = stateSnapshot.creator
       if (!creator) throw Error('Creator is not initialized')
-      console.log(creatorState.historySnapshots, creatorState.historySnapshotIndex)
+
       const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
       creator.setSnapshot({ width, height, assets: snapshot.assets }, true)
     },

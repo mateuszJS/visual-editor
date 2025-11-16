@@ -41,4 +41,7 @@ export default [
   http.get(/blob-uuid/, () => {
     return HttpResponse.arrayBuffer(mockBlobData.buffer)
   }),
+  http.put('/api/project-uploads/:projectId/miniature', async () => {
+    return new HttpResponse(null, { status: 204 })
+  }),
 ]

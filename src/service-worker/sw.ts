@@ -15,7 +15,12 @@ declare const self: ServiceWorkerGlobalScope
 const resources = self.__WB_MANIFEST // this is just to satisfy workbox
 
 const version = 24
-console.log(`Service Worker: Version ${version} loaded`)
+
+const isTestEnv = 'resetSwEnv' in self
+if (!isTestEnv) {
+  console.log(`Service Worker: Version ${version} loaded`)
+}
+
 self.addEventListener('install', () => {
   console.log(`================INSTALL V${version}=====================`)
   self.skipWaiting()

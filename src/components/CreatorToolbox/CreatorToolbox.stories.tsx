@@ -31,7 +31,7 @@ const project: ApiProjectContent = {
 }
 
 const initMagicRenderMock = {
-  resetAssets: () => {},
+  setSnapshot: () => {},
   destroy: () => {},
 } as unknown as Awaited<ReturnType<typeof initMagicRender>>
 

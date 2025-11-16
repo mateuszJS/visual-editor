@@ -1,15 +1,16 @@
-import type { SerializedOutputAsset, CreatorAPI } from '@mateuszjs/magic-render'
+import type { CreatorAPI, ProjectSnapshot } from '@mateuszjs/magic-render'
 
 let onSelectAssetCallback: (assetId: [number, number, number, number]) => void
-let onUpdateAssetsCallback: (assets: SerializedOutputAsset[]) => void
 let onPreviewUpdateCallback: (canvas: HTMLCanvasElement) => void
 
 /** this mock is created since currently github actions do not support GPU.
  * For WebGPU physical GPU is required, so far there is no way to simulate with CPU */
 export default function initMagicRenderMock(
+  width: number,
+  height: number,
   canvas: HTMLCanvasElement,
   uploadTexture: (url: string, onNewUrl: (newUrl: string) => void) => void,
-  onAssetsUpdate: (assets: SerializedOutputAsset[]) => void,
+  onSnapshotUpdate: (snapshot: ProjectSnapshot) => void,
   onAssetSelect: (assetId: [number, number, number, number]) => void,
   onProcessingUpdate: (inProgress: boolean) => void,
   onPreviewUpdate: (canvas: HTMLCanvasElement) => void,
@@ -24,13 +25,16 @@ export default function initMagicRenderMock(
 
   canvas.setAttribute('data-magic-render-linked', 'true')
   onSelectAssetCallback = onAssetSelect
-  onUpdateAssetsCallback = onAssetsUpdate
   onPreviewUpdateCallback = onPreviewUpdate
 
   return Promise.resolve({
     addImage: jest.fn(),
     removeAsset: jest.fn(),
-    resetAssets: jest.fn(),
+    setSnapshot: jest.fn((snapshot, withSnapshot) => {
+      if (withSnapshot) {
+        onSnapshotUpdate(snapshot)
+      }
+    }),
     setTool: jest.fn((tool) => {
       onUpdateTool(tool)
     }),
@@ -45,10 +49,6 @@ export default function initMagicRenderMock(
 
 export function __triggerSelectAsset(assetId: [number, number, number, number]) {
   onSelectAssetCallback(assetId)
-}
-
-export function __triggerUpdateAssets(assets: SerializedOutputAsset[]) {
-  onUpdateAssetsCallback(assets)
 }
 
 export function __triggerPreviewUpdate(canvas: HTMLCanvasElement) {

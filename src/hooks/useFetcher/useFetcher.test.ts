@@ -294,12 +294,8 @@ describe('useFetcher', () => {
     })
 
     describe("if previous request hasn't completed yet but will complete", () => {
-      beforeAll(() => {
+      beforeEach(() => {
         jest.useFakeTimers()
-      })
-
-      afterAll(() => {
-        jest.useRealTimers()
       })
 
       it('before current one completes', async () => {

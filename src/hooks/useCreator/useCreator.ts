@@ -64,8 +64,7 @@ function useCreator() {
 
   function setHistoricSnapshot(snapshotIndex: number) {
     creatorState.historySnapshotIndex = snapshotIndex
-    const historySnapshot = stateSnapshot.historySnapshots[stateSnapshot.historySnapshotIndex]
-    creatorState.creator!.setSnapshot(historySnapshot, false)
+    const historySnapshot = stateSnapshot.historySnapshots[snapshotIndex]
 
     updateProject(stateSnapshot.projectId!, {
       width: historySnapshot.width,
@@ -73,6 +72,8 @@ function useCreator() {
       assets: serializeAssets(historySnapshot.assets),
       updatedAt: new Date().toISOString(),
     })
+
+    creatorState.creator!.setSnapshot(historySnapshot, false)
   }
 
   return {
@@ -154,6 +155,7 @@ function useCreator() {
           : (project.assets as SerializedAsset[]),
       }
 
+      creatorState.initialAssets = null
       creator.setSnapshot(initialSnapshot, true)
     },
     setProjectSize(width: number, height: number) {

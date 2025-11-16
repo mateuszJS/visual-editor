@@ -1,39 +1,26 @@
 import { HttpResponse, http } from 'msw'
 import nativeFetcher from './index'
-import { server } from 'test/server'
+import { getRequest, server } from 'test/server'
 import { act } from '@testing-library/react'
-
-function spyRequest(method: 'get' | 'post') {
-  const output = {
-    receivedRequest: new Request('http://domain'),
-  }
-
-  server.use(
-    http[method]('/api/me', ({ request }) => {
-      output.receivedRequest = request
-      return HttpResponse.json(null, { status: 200 })
-    })
-  )
-
-  return output
-}
 
 describe('nativeFetcher', () => {
   it('should make a GET request and return the response', async () => {
-    const spy = spyRequest('get')
+    const reqPromise = getRequest('/api/me', 'GET')
 
     const response = await nativeFetcher('/api/me')
 
     expect(response).toBeInstanceOf(Response)
-    expect(spy.receivedRequest.method).toBe('GET')
-    expect(spy.receivedRequest.url).toBe('http://localhost/api/me')
-    expect(spy.receivedRequest.headers.get('x-csrf-token')).toBeNull()
-    expect(spy.receivedRequest.headers.get('Content-Type')).toBeNull()
-    expect(spy.receivedRequest.body).toBeNull()
+    const req = await reqPromise
+    expect(req.method).toBe('GET')
+    expect(req.url).toBe('http://localhost/api/me')
+    expect(req.headers.get('x-csrf-token')).toBeNull()
+    expect(req.headers.get('Content-Type')).toBeNull()
+    expect(req.body).toBeNull()
   })
 
   it('should include JSON body and Content-Type header for POST requests', async () => {
-    const spy = spyRequest('post')
+    server.use(http.post('/api/me', () => new HttpResponse()))
+    const reqPromise = getRequest('/api/me', 'POST')
 
     const jsonBody = { key: 'value' }
     const response = await nativeFetcher('/api/me', {
@@ -42,14 +29,16 @@ describe('nativeFetcher', () => {
     })
 
     expect(response).toBeInstanceOf(Response)
-    expect(spy.receivedRequest.method).toBe('POST')
-    expect(spy.receivedRequest.url).toBe('http://localhost/api/me')
-    expect(spy.receivedRequest.headers.get('Content-Type')).toBe('application/json')
-    expect(spy.receivedRequest.body).not.toBeNull()
+    const req = await reqPromise
+    expect(req.method).toBe('POST')
+    expect(req.url).toBe('http://localhost/api/me')
+    expect(req.headers.get('Content-Type')).toBe('application/json')
+    expect(req.body).not.toBeNull()
   })
 
   it('should include CSRF token in headers if provided', async () => {
-    const spy = spyRequest('post')
+    server.use(http.post('/api/me', () => new HttpResponse()))
+    const reqPromise = getRequest('/api/me', 'POST')
 
     const response = await nativeFetcher('/api/me', {
       method: 'POST',
@@ -57,7 +46,8 @@ describe('nativeFetcher', () => {
     })
 
     expect(response).toBeInstanceOf(Response)
-    expect(spy.receivedRequest.headers.get('x-csrf-token')).toBe('test-csrf-token')
+    const req = await reqPromise
+    expect(req.headers.get('x-csrf-token')).toBe('test-csrf-token')
   })
 
   it('should send CLEAR_PROJECT message and redirect to /login on 401 status if withRedirect is true(default)', async () => {

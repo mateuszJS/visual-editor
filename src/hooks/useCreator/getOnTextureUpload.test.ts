@@ -16,22 +16,19 @@ describe('getOnTextureUpload', () => {
   it('should not call endpoint when URL does not start with "blob:"', async () => {
     const regularUrl = 'https://example.com/image.jpg'
 
-    let apiWasCalled = false
     server.use(
-      http.post(`/api/project-uploads/:projectId/access-url`, () => {
-        apiWasCalled = true
-        return new HttpResponse(null, { status: 201 })
+      http.post('https://example.com/image.jpg', () => {
+        throw Error('API should not have been called')
       })
     )
 
     await getOnTextureUpload(PROJECT_ID)(regularUrl, mockSetNewUrl)
 
-    expect(apiWasCalled).toBe(false)
     expect(mockSetNewUrl).not.toHaveBeenCalled()
     expect(errorStore.message).toBeNull()
   })
 
-  it('should handle failure when fetching blob URL fails', async () => {
+  it('should handle failure coming from fetching blob', async () => {
     const blobUrl = 'blob:http://localhost:3000/blob-uuid'
 
     server.use(

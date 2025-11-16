@@ -49,6 +49,7 @@ afterEach(() => {
   server.resetHandlers()
   document.getElementById('non-modal-content')!.remove()
   window.creatorCanvas.remove()
+  jest.useRealTimers()
 })
 
 afterAll(() => {

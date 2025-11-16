@@ -6,7 +6,7 @@ import { server } from 'test/server'
 describe('useProject', () => {
   describe('fetching project', () => {
     it('that is already in the the storage does not trigger a request', async () => {
-      const { result, rerender } = renderHook(() => useProject('1'))
+      const { result, rerender } = renderHook(useProject, { initialProps: '1' })
 
       await act(() => {
         // allow the micro-tasks / timers to run
@@ -19,19 +19,24 @@ describe('useProject', () => {
         project: { id: '1' },
       })
 
-      let madeRequest = false
+      rerender('2')
+
+      await act(() => {
+        // allow the micro-tasks / timers to run
+      })
+
       server.use(
         http.get('/api/projects/1', () => {
-          madeRequest = true
-          return HttpResponse.error()
+          throw Error('Request should not be made')
         })
       )
 
-      rerender(2)
-      // rerender with same project id
-      await act(() => {})
+      rerender('1')
 
-      expect(madeRequest).toBe(false)
+      await act(() => {
+        // allow the micro-tasks / timers to run
+      })
+
       expect(result.current).toMatchObject({
         loading: false,
         error: null,

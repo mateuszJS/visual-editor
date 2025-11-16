@@ -9,9 +9,7 @@ export default function ProjectPropsPanel() {
   const { project } = useProject(id)
   const { selectedAssetId, setProjectSize } = useCreator()
 
-  const isProjectContext = !!selectedAssetId
-
-  if (!project || isProjectContext) {
+  if (!project || selectedAssetId != null) {
     return null
   }
 

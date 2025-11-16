@@ -3,9 +3,8 @@ import useCreator from './useCreator'
 import { __triggerPreviewUpdate } from '@mateuszjs/magic-render'
 import useProject from '@/hooks/useProject/useProject'
 import { getRequest, server } from 'test/server'
-import { http, HttpResponse } from 'msw'
+import { http } from 'msw'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
-import { get } from 'lodash'
 
 const project = getSanitizedProject()
 

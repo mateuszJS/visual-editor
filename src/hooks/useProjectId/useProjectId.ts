@@ -1,7 +1,7 @@
 import { usePathname } from 'next/navigation'
 
 /**
- * @returns currently open project base on the URL path
+ * @returns currently open project based on the URL path
  */
 export default function useProjectId() {
   const pathname = usePathname()

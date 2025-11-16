@@ -64,7 +64,7 @@ function useCreator() {
 
   function setHistoricSnapshot(snapshotIndex: number) {
     creatorState.historySnapshotIndex = snapshotIndex
-    const historySnapshot = stateSnapshot.historySnapshots[creatorState.historySnapshotIndex]
+    const historySnapshot = stateSnapshot.historySnapshots[stateSnapshot.historySnapshotIndex]
     creatorState.creator!.setSnapshot(historySnapshot, false)
 
     updateProject(stateSnapshot.projectId!, {
@@ -134,7 +134,7 @@ function useCreator() {
         }
       )
 
-      // verify if canvas is still connected to DOM after promise is creator is resolved
+      // verify if canvas is still connected to DOM after creator promise is resolved
       if (canvas.isConnected) {
         creatorState.creator = ref(creator)
         creatorState.projectId = project.id

@@ -51,7 +51,7 @@ export default function ShapePropsPanel() {
           Add Effect
         </button>
       </div>
-      {props.opacity && (
+      {props.opacity !== undefined && (
         <NumberInput
           label="Opacity:"
           value={props.opacity * 100}

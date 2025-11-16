@@ -23,7 +23,7 @@ export const onRequestPost = withSession(async (ctx, session) => {
       .prepare(
         `INSERT INTO projects (width, height, assets, owner_id)
          VALUES (?, ?, ?, ?)
-         RETURNING id, name, created_at, updated_at`
+         RETURNING id, width, height, assets, updated_at`
       )
       .bind(
         sanitizedChanges.width,
@@ -31,9 +31,9 @@ export const onRequestPost = withSession(async (ctx, session) => {
         sanitizedChanges.assets,
         session.userId
       )
-      .first<Pick<Project.DB, 'id' | 'name' | 'created_at' | 'updated_at'>>()
+      .first<Pick<Project.DB, 'id' | 'width' | 'height' | 'assets' | 'updated_at'>>()
 
-    return Project.sanitizeMetaData(project)
+    return Project.sanitizeContent(project)
   })
 
   if (err) {

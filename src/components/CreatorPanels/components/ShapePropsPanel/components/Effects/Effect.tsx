@@ -1,7 +1,7 @@
 import ColorInput from '@/components/ColorInput/ColorInput'
 import NumberInput from '@/components/NumberInput/NumberInput'
 import { SdfEffect } from '@mateuszjs/magic-render'
-import styles from './styles.module.css'
+import styles from './Effect.module.css'
 
 interface Props extends SdfEffect {
   onChange: (changes: SdfEffect) => void

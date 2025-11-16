@@ -1,4 +1,4 @@
-import { ApiAsset, ApiProjectAssetsData, ApiProjectMetaData } from '../../apiTypes'
+import { ApiAsset, ApiProjectContent, ApiProjectMetaData } from '../../apiTypes'
 
 export type DB = {
   id: number
@@ -12,22 +12,17 @@ export type DB = {
   assets: string
 }
 
-export function sanitizeAssetsData(
-  data: Pick<DB, 'id' | 'assets' | 'updated_at'> | null
-): ApiProjectAssetsData {
+export function sanitizeContent(
+  data: Pick<DB, 'id' | 'assets' | 'updated_at' | 'width' | 'height'> | null
+): ApiProjectContent {
   if (!data) {
     throw new Error('No data was found.')
   }
 
-  const assets = (() => {
-    try {
-      return JSON.parse(data.assets) as ApiAsset[]
-    } catch (err) {
-      // console.error(err) capture this log in the future
-    }
-  })()
-
-  if (!assets || !Array.isArray(assets)) {
+  let assets: ApiAsset[]
+  try {
+    assets = JSON.parse(data.assets) as ApiAsset[]
+  } catch (err) {
     throw Error('An issue with assets has occurred.')
   }
 
@@ -35,6 +30,8 @@ export function sanitizeAssetsData(
     id: data.id.toString(),
     assets,
     updatedAt: data.updated_at,
+    width: data.width,
+    height: data.height,
   }
 }
 

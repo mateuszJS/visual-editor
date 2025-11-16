@@ -1,5 +1,6 @@
 // DOCS: https://github.com/zackargyle/service-workers/blob/master/packages/service-worker-mock/README.md
 // EXAMPLE USAGE: https://github.com/zackargyle/service-workers/blob/master/packages/service-worker-mock/__tests__/basic.js
+
 import { waitFor } from './testing-utils'
 import { getDB } from './db'
 

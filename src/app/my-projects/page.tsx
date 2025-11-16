@@ -1,7 +1,7 @@
 'use client'
 
 import useProjectsList from '@/hooks/useProjectsList/useProjectsList'
-import styles from './styles.module.css'
+import styles from './page.module.css'
 import ProjectPanel from '@/components/ProjectPanel/ProjectPanel'
 import Navigation from '@/components/Navigation/Navigation'
 

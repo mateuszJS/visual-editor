@@ -2,7 +2,7 @@ import visualSetup from 'test/visual-setup'
 
 describe('Color Input', () => {
   it('default', async () => {
-    await visualSetup('components-colorinput--default', __dirname, 300, {
+    await visualSetup('components-colorinput--default', __dirname, 800, {
       beforeTest: async (page) => {
         // Wait for potential animations to finish
         const labelEl = await page.$('label')

@@ -1,4 +1,9 @@
-export type ApiAsset = Record<string, string | number | null | boolean | ApiAsset[]>
+import type { SerializedAsset } from '@mateuszjs/magic-render'
+
+export type ApiAsset = Omit<
+  SerializedAsset,
+  'id' | 'texture_id' | 'cache_texture_id' | 'sdf_texture_id'
+>
 
 export type ApiProjectMetaData = {
   id: string
@@ -7,10 +12,12 @@ export type ApiProjectMetaData = {
   updatedAt: string
 }
 
-export type ApiProjectAssetsData = {
+export type ApiProjectContent = {
   id: string
   assets: ApiAsset[]
   updatedAt: string
+  width: number
+  height: number
 }
 
 export type ApiUserBasic = {

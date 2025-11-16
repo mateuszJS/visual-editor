@@ -7,14 +7,14 @@ export const onRequestGet: Handler<'id'> = withSession(async (ctx, session) => {
   const [project, err] = await withError(async () => {
     const project = await ctx.env.db
       .prepare(
-        `SELECT id, assets, updated_at
+        `SELECT id, assets, updated_at, width, height
           FROM projects
           WHERE id = ? AND owner_id = ?`
       )
       .bind(ctx.params.id, session.userId)
-      .first<Pick<Project.DB, 'id' | 'assets' | 'updated_at'>>()
+      .first<Pick<Project.DB, 'id' | 'assets' | 'updated_at' | 'width' | 'height'>>()
 
-    return Project.sanitizeAssetsData(project)
+    return Project.sanitizeContent(project)
   })
 
   if (err) {

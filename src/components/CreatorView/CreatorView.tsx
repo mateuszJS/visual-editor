@@ -4,10 +4,10 @@ import { useEffect, useRef } from 'react'
 import cn from 'classnames'
 import styles from './CreatorView.module.css'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { ApiProjectAssetsData } from '../../../apiTypes'
+import { ApiProjectContent } from '../../../apiTypes'
 
 interface Props {
-  project: ApiProjectAssetsData
+  project: ApiProjectContent
 }
 
 export default function CreatorView({ project }: Props) {

@@ -3,18 +3,17 @@
 import useProject from '@/hooks/useProject/useProject'
 import initMagicRender, {
   CreatorTool,
-  SerializedInputAsset,
-  SerializedOutputAsset,
   PointUV,
   ShapeProps,
-  SerializedOutputImage,
-  SerializedOutputShape,
-  SerializedOutputText,
+  ProjectSnapshot,
+  SerializedAsset,
 } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
 import getOnTextureUpload from './getOnTextureUpload'
 import uploadMiniature from './uploadMiniature'
-import { ApiAsset, ApiProjectAssetsData } from '../../../apiTypes'
+import { ApiProjectContent } from '../../../apiTypes'
+import serializeAssets from './serializeAsset'
+import { useRef } from 'react'
 
 type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 
@@ -23,7 +22,7 @@ interface CreatorStore {
   projectId: string | null
   initialAssets: { projectId: string; assetUrls: string[] } | null
   selectedAssetId: number | null
-  historySnapshots: SerializedOutputAsset[][]
+  historySnapshots: ProjectSnapshot[]
   historySnapshotIndex: number
   tool: CreatorTool
 }
@@ -50,18 +49,6 @@ const creatorState = proxy<CreatorStore>({
   tool: CreatorTool.SelectAsset,
 })
 
-type SerializedOutputAssetMerged = SerializedOutputImage &
-  SerializedOutputShape &
-  SerializedOutputText // this type only exist to allow fields removal that might not exist on all variants of the union
-
-function serializeAssets(assets: SerializedOutputAssetMerged[]) {
-  return assets.map(
-    // due to the nature of TypeScript, we cannot deny properties while doing spread operator
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    ({ id, texture_id, cache_texture_id, sdf_texture_id, ...rest }) => rest as unknown as ApiAsset
-  )
-}
-
 /*
   Hook to be used whenever reference to the creator is needed, like in many Tollbox components.
   Cannot accept any arguments because might be used in a very deep nested component inside creator view.
@@ -69,21 +56,24 @@ function serializeAssets(assets: SerializedOutputAssetMerged[]) {
 function useCreator() {
   const stateSnapshot = useSnapshot(creatorState)
   const { updateProject } = useProject()
+  const bypassInitialSnapshotRequest = useRef(true)
+  // do not send initial snapshot if not needed (the request should be send only when initial assets provided)
 
   const canUndo = stateSnapshot.historySnapshotIndex > 0
   const canRedo = stateSnapshot.historySnapshots.length - 1 > stateSnapshot.historySnapshotIndex
 
   function setHistoricSnapshot(snapshotIndex: number) {
     creatorState.historySnapshotIndex = snapshotIndex
-    const assets = stateSnapshot.historySnapshots[
-      creatorState.historySnapshotIndex
-    ] as SerializedOutputAssetMerged[]
-    creatorState.creator!.resetAssets(assets)
+    const historySnapshot = stateSnapshot.historySnapshots[snapshotIndex]
 
     updateProject(stateSnapshot.projectId!, {
-      assets: serializeAssets(assets),
+      width: historySnapshot.width,
+      height: historySnapshot.height,
+      assets: serializeAssets(historySnapshot.assets),
       updatedAt: new Date().toISOString(),
     })
+
+    creatorState.creator!.setSnapshot(historySnapshot, false)
   }
 
   return {
@@ -100,7 +90,7 @@ function useCreator() {
       if (stateSnapshot.projectId === null) throw new Error('Project id is not initialized')
       return stateSnapshot.projectId
     },
-    async init(canvas: HTMLCanvasElement, project: ApiProjectAssetsData) {
+    async init(canvas: HTMLCanvasElement, project: ApiProjectContent) {
       if (canvas.hasAttribute('data-connected')) return
       // is already connected to the creator
       // and we assume that canvas is mounted to DOM
@@ -108,20 +98,28 @@ function useCreator() {
       canvas.setAttribute('data-connected', '')
 
       const creator = await initMagicRender(
+        project.width,
+        project.height,
         canvas,
         getOnTextureUpload(project.id),
-        (assets) => {
+        (snapshot) => {
           if (creatorState.historySnapshotIndex < creatorState.historySnapshots.length - 1) {
             creatorState.historySnapshots.splice(creatorState.historySnapshotIndex + 1)
           }
 
-          creatorState.historySnapshots.push(ref(assets))
+          creatorState.historySnapshots.push(ref(snapshot))
           creatorState.historySnapshotIndex = creatorState.historySnapshots.length - 1
 
-          updateProject(project.id, {
-            assets: serializeAssets(assets as SerializedOutputAssetMerged[]),
-            updatedAt: new Date().toISOString(),
-          })
+          if (!bypassInitialSnapshotRequest.current) {
+            updateProject(project.id, {
+              width: snapshot.width,
+              height: snapshot.height,
+              assets: serializeAssets(snapshot.assets),
+              updatedAt: new Date().toISOString(),
+            })
+          }
+
+          bypassInitialSnapshotRequest.current = false
         },
         (assetId) => {
           creatorState.selectedAssetId = assetId[0] || null
@@ -137,24 +135,35 @@ function useCreator() {
         }
       )
 
-      const initialAssets =
-        creatorState.initialAssets?.projectId === project.id
-          ? creatorState.initialAssets.assetUrls.map((url) => ({ url }))
-          : null
-
-      creator.resetAssets(
-        (initialAssets || project.assets) as SerializedInputAsset[],
-        !!initialAssets // triggers update only when there are initial assets
-        // no need to trigger update when project is just opened and no changes were made
-      )
-      creatorState.initialAssets = null
-
+      // verify if canvas is still connected to DOM after creator promise is resolved
       if (canvas.isConnected) {
         creatorState.creator = ref(creator)
         creatorState.projectId = project.id
       } else {
         creator.destroy()
       }
+
+      const { initialAssets } = creatorState
+      const hasInitialAssets = initialAssets?.projectId === project.id
+      bypassInitialSnapshotRequest.current = !hasInitialAssets
+
+      const initialSnapshot: ProjectSnapshot = {
+        width: project.width,
+        height: project.height,
+        assets: hasInitialAssets
+          ? initialAssets.assetUrls.map((url) => ({ url }))
+          : (project.assets as SerializedAsset[]),
+      }
+
+      creatorState.initialAssets = null
+      creator.setSnapshot(initialSnapshot, true)
+    },
+    setProjectSize(width: number, height: number) {
+      const creator = stateSnapshot.creator
+      if (!creator) throw Error('Creator is not initialized')
+
+      const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
+      creator.setSnapshot({ width, height, assets: snapshot.assets }, true)
     },
     destroy(canvas: HTMLCanvasElement) {
       if (!canvas.isConnected) {

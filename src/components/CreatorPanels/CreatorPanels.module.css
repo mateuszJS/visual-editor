@@ -1,0 +1,4 @@
+.root {
+  grid-area: panels;
+  width: 200px;
+}

@@ -24,8 +24,8 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs()
 
-    const onChange = (value: Color) => {
-      args.onChange(value)
+    const onChange = (value: Color, preview: boolean) => {
+      args.onChange(value, preview)
       updateArgs({ value })
     }
 

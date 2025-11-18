@@ -1,14 +1,33 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import NumberInput from './NumberInput'
+import { useState } from 'react'
 
-describe('NumberInput', () => {
-  const defaultProps = {
-    label: 'Test Label',
-    value: 0,
-    onChange: jest.fn(),
+interface Props {
+  initialValue: number
+  onChange?: (newValue: number, commit: boolean) => void
+  roundDecimals?: boolean
+}
+
+const TestableComponent = ({ initialValue, onChange = () => {}, roundDecimals }: Props) => {
+  const [value, setValue] = useState(initialValue)
+
+  const onChangeWrapper = (newValue: number, commit: boolean) => {
+    setValue(newValue)
+    onChange(newValue, commit)
   }
 
+  return (
+    <NumberInput
+      label="Test label"
+      value={value}
+      onChange={onChangeWrapper}
+      roundDecimals={roundDecimals}
+    />
+  )
+}
+
+describe('NumberInput', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -18,7 +37,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} onChange={onChange} />)
+      render(<TestableComponent initialValue={0} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -26,14 +45,17 @@ describe('NumberInput', () => {
       await user.type(input, '1')
 
       expect(input).toHaveValue('1')
-      expect(onChange).toHaveBeenLastCalledWith(1)
+      expect(onChange).toHaveBeenLastCalledWith(1, false)
+
+      await user.click(document.body) // blur input
+      expect(onChange).toHaveBeenLastCalledWith(1, true)
     })
 
-    it('should display "-" and call onChange with 0 when typing "-"', async () => {
+    it('when type "-" should display "-" and call onChange with 0 when typing "-"', async () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} onChange={onChange} />)
+      render(<TestableComponent initialValue={0} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -41,14 +63,14 @@ describe('NumberInput', () => {
       await user.type(input, '-')
 
       expect(input).toHaveValue('-')
-      expect(onChange).toHaveBeenLastCalledWith(0)
+      expect(onChange).toHaveBeenLastCalledWith(0, false)
     })
 
-    it('should display "-.5" and call onChange with "-0.5" value when typing "-.5"', async () => {
+    it('when type "-.5" should display "-.5" and call onChange with "-0.5" value when typing "-.5"', async () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} onChange={onChange} />)
+      render(<TestableComponent initialValue={0} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -56,20 +78,20 @@ describe('NumberInput', () => {
       await user.type(input, '-.5')
 
       expect(input).toHaveValue('-.5')
-      expect(onChange).toHaveBeenLastCalledWith(-0.5)
+      expect(onChange).toHaveBeenLastCalledWith(-0.5, false)
     })
   })
 
   describe('decimal points', () => {
     it('by default should round values to two decimal points', async () => {
-      render(<NumberInput {...defaultProps} value={4.719} />)
+      render(<TestableComponent initialValue={4.719} />)
       const input = screen.getByRole('textbox', { name: /test label/i })
 
       expect(input).toHaveValue('4.72')
     })
 
     it('no rounding when prop roundDecimals = false', async () => {
-      render(<NumberInput {...defaultProps} value={4.719} roundDecimals={false} />)
+      render(<TestableComponent initialValue={4.719} roundDecimals={false} />)
       const input = screen.getByRole('textbox', { name: /test label/i })
 
       expect(input).toHaveValue('4.719')
@@ -81,7 +103,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={5} onChange={onChange} />)
+      render(<TestableComponent initialValue={5} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
       await user.type(input, 'a')
@@ -94,7 +116,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} onChange={onChange} />)
+      render(<TestableComponent initialValue={0} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -102,14 +124,14 @@ describe('NumberInput', () => {
       await user.type(input, '1a')
 
       expect(input).toHaveValue('1')
-      expect(onChange).toHaveBeenLastCalledWith(1)
+      expect(onChange).toHaveBeenLastCalledWith(1, false)
     })
 
     it('should not update displayed value nor call onChange when pasting "Infinity"', async () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={5} onChange={onChange} />)
+      render(<TestableComponent initialValue={5} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -124,7 +146,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={5} onChange={onChange} />)
+      render(<TestableComponent initialValue={5} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -139,7 +161,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={5} onChange={onChange} />)
+      render(<TestableComponent initialValue={5} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -156,28 +178,47 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={5.7} onChange={onChange} />)
+      render(<TestableComponent initialValue={5.7} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
       await user.click(input)
       await user.keyboard('{ArrowUp}')
 
-      expect(onChange).toHaveBeenCalledWith(7)
+      expect(onChange).toHaveBeenCalledWith(7, true)
+    })
+
+    it('pressing key for longer should increase value by 1. Another increase happens after releasing and pressing key again.', async () => {
+      const user = userEvent.setup()
+      const onChange = jest.fn()
+
+      render(<TestableComponent initialValue={1} onChange={onChange} />)
+
+      const input = screen.getByRole('textbox', { name: /test label/i })
+
+      await user.click(input)
+
+      await user.keyboard('{ArrowUp>10/}')
+      expect(onChange).toHaveBeenCalledTimes(1)
+      expect(onChange).toHaveBeenLastCalledWith(2, true)
+
+      await user.keyboard('{ArrowUp>10/}')
+      expect(onChange).toHaveBeenCalledTimes(2)
+      expect(onChange).toHaveBeenLastCalledWith(3, true)
     })
 
     it('should round decimal value and decrease by 1 when pressing ArrowDown', async () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={5.3} onChange={onChange} />)
+      render(<TestableComponent initialValue={5.3} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
       await user.click(input)
       await user.keyboard('{ArrowDown}')
 
-      expect(onChange).toHaveBeenCalledWith(4)
+      expect(onChange).toHaveBeenCalledWith(4, true)
     })
   })
 
@@ -186,7 +227,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={0} onChange={onChange} />)
+      render(<TestableComponent initialValue={0} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -201,7 +242,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={-0.5} onChange={onChange} />)
+      render(<TestableComponent initialValue={-0.5} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -216,7 +257,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={0} onChange={onChange} />)
+      render(<TestableComponent initialValue={0} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -230,7 +271,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={1} onChange={onChange} />)
+      render(<TestableComponent initialValue={1} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 
@@ -245,7 +286,7 @@ describe('NumberInput', () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
-      render(<NumberInput {...defaultProps} value={-0.01} onChange={onChange} />)
+      render(<TestableComponent initialValue={-0.01} onChange={onChange} />)
 
       const input = screen.getByRole('textbox', { name: /test label/i })
 

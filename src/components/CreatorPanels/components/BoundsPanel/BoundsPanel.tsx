@@ -56,6 +56,7 @@ function getNewBounds(
 
 export default function BoundsPanel() {
   const { bounds } = useSnapshot(assetState)
+
   const creator = useCreator()
   const { width, height, x, y } = bounds ? getData(bounds) : PLACEHOLDER_DATA
 
@@ -63,11 +64,11 @@ export default function BoundsPanel() {
     return null
   }
 
-  function onChange(x: number, y: number, width: number, height: number) {
+  function onChange(x: number, y: number, width: number, height: number, commit: boolean) {
     if (!bounds) throw new Error('No bounds')
     const angle = Math.atan2(bounds[1].y - bounds[0].y, bounds[1].x - bounds[0].x)
     const newBounds = getNewBounds(x, y, width, height, angle)
-    creator.creator.updateAssetBounds(newBounds)
+    creator.creator.updateAssetBounds(newBounds, commit)
   }
 
   return (
@@ -77,28 +78,28 @@ export default function BoundsPanel() {
         label="X:"
         name="x"
         value={x}
-        onChange={(v) => onChange(v, y, width, height)}
+        onChange={(value, commit) => onChange(value, y, width, height, commit)}
         unit="px"
       />
       <NumberInput
         label="Y:"
         name="y"
         value={y}
-        onChange={(v) => onChange(x, v, width, height)}
+        onChange={(value, commit) => onChange(x, value, width, height, commit)}
         unit="px"
       />
       <NumberInput
         label="W:"
         name="width"
         value={width}
-        onChange={(v) => onChange(x, y, v, height)}
+        onChange={(value, commit) => onChange(x, y, value, height, commit)}
         unit="px"
       />
       <NumberInput
         label="H:"
         name="height"
         value={height}
-        onChange={(v) => onChange(x, y, width, v)}
+        onChange={(value, commit) => onChange(x, y, width, value, commit)}
         unit="px"
       />
     </fieldset>

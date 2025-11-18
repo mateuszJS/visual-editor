@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { HexAlphaColorPicker, HexColorInput } from 'react-colorful'
 import styles from './ColorInput.module.css'
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
@@ -8,7 +9,7 @@ import cn from 'classnames'
 interface Props {
   label: string
   value: Color // normalized RGBA array
-  onChange: (value: Color) => void
+  onChange: (value: Color, commit: boolean) => void
 }
 
 function toHex(value: Color): string {
@@ -41,13 +42,36 @@ function fromHex(hex: string): Color {
 export default function ColorInput({ label, value, onChange }: Props) {
   const popoverId = useUniqueId()
   const inputId = useUniqueId()
+  const hex = toHex(value)
+  const valueRef = useRef(hex) // onChange(.., false) doesn't trigger re-render
+  // so this ref helps us keep track of the latest value
 
-  const onChangeColor = (newHex: string) => {
-    const newValue = fromHex(newHex)
-    onChange(newValue)
+  if (valueRef.current !== hex) {
+    valueRef.current = hex
   }
 
-  const hex = toHex(value)
+  const onChangeColor = (newHex: string) => {
+    valueRef.current = newHex
+    onChange(fromHex(newHex), false)
+  }
+
+  const lastCommitedHex = useRef<string | null>(null)
+  const handlePopoverToggle = (e: React.ToggleEvent<HTMLDivElement>) => {
+    if (e.newState === 'open') {
+      // Store the initial value when editing starts
+      lastCommitedHex.current = hex
+    }
+  }
+
+  const submitChange = () => {
+    // Only commit if the value actually changed from when editing started(lastCommitedHex has changed)
+    // alternative would be to use just "value" instead of "lastCommitedHex", but this way we heavly depend on
+    // making sure unnecesary renders won't happen, what seems to be too fragile strategy
+    if (lastCommitedHex.current !== valueRef.current) {
+      lastCommitedHex.current = valueRef.current
+      onChange(fromHex(valueRef.current), true)
+    }
+  }
 
   return (
     <>
@@ -61,11 +85,24 @@ export default function ColorInput({ label, value, onChange }: Props) {
       >
         <div style={{ backgroundColor: hex }} />
       </button>
-      <div id={popoverId} popover="auto" className={styles.popover} role="dialog" aria-modal="true">
-        <HexAlphaColorPicker color={hex} onChange={onChangeColor} />
+      <div
+        id={popoverId}
+        popover="auto"
+        className={styles.popover}
+        role="dialog"
+        aria-modal="true"
+        onToggle={handlePopoverToggle}
+      >
+        <HexAlphaColorPicker color={hex} onChange={onChangeColor} onPointerUp={submitChange} />
         <label className={styles.hexLabel}>
           Hex: #
-          <HexColorInput color={hex} onChange={onChangeColor} className={styles.hexInput} alpha />
+          <HexColorInput
+            color={hex}
+            onChange={onChangeColor}
+            className={styles.hexInput}
+            alpha
+            onBlur={submitChange}
+          />
         </label>
       </div>
     </>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './NumberInput.module.css'
 import decimals from '@/utils/decimals'
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
@@ -8,7 +8,7 @@ interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onCha
   value: number
   unit?: string
   roundDecimals?: boolean
-  onChange: (value: number) => void
+  onChange: (value: number, commit: boolean) => void
 }
 
 export default function NumberInput({
@@ -21,6 +21,7 @@ export default function NumberInput({
 }: Props) {
   const value = roundDecimals ? decimals(rawValue) : rawValue
   const [tempVal, setTempVal] = useState(value.toString())
+  const pressedKeys = useRef<Record<string, boolean>>({})
   const inputId = useUniqueId()
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function NumberInput({
 
   const onBlur = () => {
     setTempVal(value.toString()) // reset to last valid value
+    onChange(value, true)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,23 +44,32 @@ export default function NumberInput({
     if (val === '-' || val === '-.') {
       // Number('-') returns NaN
       setTempVal(val)
-      onChange(0)
+      onChange(0, false)
       return
     }
 
     const num = Number(val) // avoid parseFloat -> allows non-numerical characters at the end
     if (!Number.isNaN(num) && Math.abs(num) !== Infinity) {
       setTempVal(val)
-      onChange(num)
+      onChange(num, false)
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (pressedKeys.current[e.key]) return
+    pressedKeys.current[e.key] = true
+
     const mod = e.key === 'ArrowUp' ? 1 : e.key === 'ArrowDown' ? -1 : 0
     if (mod !== 0) {
       e.preventDefault()
       const newValue = Math.round(value + mod)
-      onChange(newValue)
+      onChange(newValue, true)
+    }
+  }
+
+  const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      pressedKeys.current[e.key] = false
     }
   }
 
@@ -72,7 +83,8 @@ export default function NumberInput({
           type="text"
           value={tempVal}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
+          onKeyDown={onKeyDown}
+          onKeyUp={onKeyUp}
           size={
             1
           } /* it's a solution for browser which does not support field-sizing: content; yet */

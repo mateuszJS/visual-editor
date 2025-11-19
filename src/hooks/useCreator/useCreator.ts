@@ -49,8 +49,28 @@ const creatorState = proxy<CreatorStore>({
   tool: CreatorTool.SelectAsset,
 })
 
+function updateSelectedAssetStore(snapshot?: ProjectSnapshot) {
+  const lastSnapshot = snapshot ?? creatorState.historySnapshots[creatorState.historySnapshotIndex]
+
+  if (!lastSnapshot) throw Error('No history snapshots available')
+
+  const asset = creatorState.selectedAssetId
+    ? lastSnapshot.assets.find((a) => a.id === creatorState.selectedAssetId)
+    : null
+
+  if (!asset) return
+
+  if (asset.bounds === undefined) throw new Error('Asset bounds are undefined')
+
+  assetState.bounds = asset.bounds
+
+  if ('props' in asset) {
+    assetState.props = asset.props
+  }
+}
+
 /*
-  Hook to be used whenever reference to the creator is needed, like in many Tollbox components.
+  Hook to be used whenever reference to the creator is needed, like in many Toolbox components.
   Cannot accept any arguments because might be used in a very deep nested component inside creator view.
 */
 function useCreator() {
@@ -74,6 +94,7 @@ function useCreator() {
     })
 
     creatorState.creator!.setSnapshot(historySnapshot, false)
+    updateSelectedAssetStore()
   }
 
   return {
@@ -102,7 +123,11 @@ function useCreator() {
         project.height,
         canvas,
         getOnTextureUpload(project.id),
-        (snapshot) => {
+        (snapshot, commit) => {
+          updateSelectedAssetStore(snapshot)
+
+          if (!commit) return
+
           if (creatorState.historySnapshotIndex < creatorState.historySnapshots.length - 1) {
             creatorState.historySnapshots.splice(creatorState.historySnapshotIndex + 1)
           }
@@ -123,15 +148,12 @@ function useCreator() {
         },
         (assetId) => {
           creatorState.selectedAssetId = assetId[0] || null
+          updateSelectedAssetStore()
         },
         () => {},
-        (canvas) => uploadMiniature(canvas, project.id),
+        (miniCanvas) => uploadMiniature(miniCanvas, project.id),
         (tool) => {
           creatorState.tool = tool
-        },
-        (bounds, props) => {
-          assetState.bounds = bounds
-          assetState.props = props
         }
       )
 

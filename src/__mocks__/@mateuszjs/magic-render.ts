@@ -1,22 +1,21 @@
 import type { CreatorAPI, ProjectSnapshot } from '@mateuszjs/magic-render'
+import initCreator from '@mateuszjs/magic-render'
 
 let onSelectAssetCallback: (assetId: [number, number, number, number]) => void
 let onPreviewUpdateCallback: (canvas: HTMLCanvasElement) => void
 
 /** this mock is created since currently github actions do not support GPU.
  * For WebGPU physical GPU is required, so far there is no way to simulate with CPU */
-export default function initMagicRenderMock(
+const initMagicRenderMock: typeof initCreator = function (
   width: number,
   height: number,
   canvas: HTMLCanvasElement,
   uploadTexture: (url: string, onNewUrl: (newUrl: string) => void) => void,
-  onSnapshotUpdate: (snapshot: ProjectSnapshot) => void,
+  onSnapshotUpdate: (snapshot: ProjectSnapshot, commit: boolean) => void,
   onAssetSelect: (assetId: [number, number, number, number]) => void,
   onProcessingUpdate: (inProgress: boolean) => void,
   onPreviewUpdate: (canvas: HTMLCanvasElement) => void,
-  onUpdateTool: (tool: CreatorTool) => void,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onUpdateProps: (bounds: unknown[] | null, props: Partial<unknown> | null) => void
+  onUpdateTool: (tool: CreatorTool) => void
 ): Promise<CreatorAPI> {
   if (canvas.getAttribute('data-magic-render-linked') === 'true') {
     // on purpose we do not compare lastCanvas to canvas to do not introduce any more logic to this mock
@@ -32,7 +31,7 @@ export default function initMagicRenderMock(
     removeAsset: jest.fn(),
     setSnapshot: jest.fn((snapshot, withSnapshot) => {
       if (withSnapshot) {
-        onSnapshotUpdate(snapshot)
+        onSnapshotUpdate(snapshot, withSnapshot)
       }
     }),
     setTool: jest.fn((tool) => {
@@ -64,3 +63,5 @@ export enum CreatorTool {
   SelectNode = 2,
   Text = 3,
 }
+
+export default initMagicRenderMock

@@ -11,12 +11,15 @@ export default function ShapePropsPanel() {
   const creator = useCreator()
 
   function getOnChangeEffect(index: number) {
-    return (newEffect: SdfEffect) => {
+    return (newEffect: SdfEffect, commit: boolean) => {
       if (!props) throw Error('No props available while modifying SDF effect!')
-      creator.creator.updateAssetProps({
-        ...props,
-        sdf_effects: props.sdf_effects?.map((effect, i) => (i === index ? newEffect : effect)),
-      })
+      creator.creator.updateAssetProps(
+        {
+          ...props,
+          sdf_effects: props.sdf_effects?.map((effect, i) => (i === index ? newEffect : effect)),
+        },
+        commit
+      )
     }
   }
 
@@ -27,10 +30,13 @@ export default function ShapePropsPanel() {
       dist_start: 5,
       dist_end: -5,
     }
-    creator.creator.updateAssetProps({
-      ...props,
-      sdf_effects: [...(props.sdf_effects || []), newEffect],
-    })
+    creator.creator.updateAssetProps(
+      {
+        ...props,
+        sdf_effects: [...(props.sdf_effects || []), newEffect],
+      },
+      true
+    )
   }
 
   if (!props) {
@@ -55,7 +61,9 @@ export default function ShapePropsPanel() {
         <NumberInput
           label="Opacity:"
           value={props.opacity * 100}
-          onChange={(value) => creator.creator.updateAssetProps({ ...props, opacity: value / 100 })}
+          onChange={(value, commit) =>
+            creator.creator.updateAssetProps({ ...props, opacity: value / 100 }, commit)
+          }
           unit="%"
         />
       )}
@@ -65,22 +73,34 @@ export default function ShapePropsPanel() {
           <NumberInput
             label="x:"
             value={props.filter.gaussianBlur.x}
-            onChange={(x) =>
-              creator.creator.updateAssetProps({
-                ...props,
-                filter: { ...props.filter, gaussianBlur: { x, y: props!.filter!.gaussianBlur.y } },
-              })
+            onChange={(x, commit) =>
+              creator.creator.updateAssetProps(
+                {
+                  ...props,
+                  filter: {
+                    ...props.filter,
+                    gaussianBlur: { x, y: props!.filter!.gaussianBlur.y },
+                  },
+                },
+                commit
+              )
             }
             unit="px"
           />
           <NumberInput
             label="y:"
             value={props.filter.gaussianBlur.y}
-            onChange={(y) =>
-              creator.creator.updateAssetProps({
-                ...props,
-                filter: { ...props.filter, gaussianBlur: { x: props!.filter!.gaussianBlur.x, y } },
-              })
+            onChange={(y, commit) =>
+              creator.creator.updateAssetProps(
+                {
+                  ...props,
+                  filter: {
+                    ...props.filter,
+                    gaussianBlur: { x: props!.filter!.gaussianBlur.x, y },
+                  },
+                },
+                commit
+              )
             }
             unit="px"
           />

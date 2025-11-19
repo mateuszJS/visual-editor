@@ -61,8 +61,8 @@ export default function ShapePropsPanel() {
         <NumberInput
           label="Opacity:"
           value={props.opacity * 100}
-          onChange={(value) =>
-            creator.creator.updateAssetProps({ ...props, opacity: value / 100 }, true)
+          onChange={(value, commit) =>
+            creator.creator.updateAssetProps({ ...props, opacity: value / 100 }, commit)
           }
           unit="%"
         />
@@ -73,7 +73,7 @@ export default function ShapePropsPanel() {
           <NumberInput
             label="x:"
             value={props.filter.gaussianBlur.x}
-            onChange={(x) =>
+            onChange={(x, commit) =>
               creator.creator.updateAssetProps(
                 {
                   ...props,
@@ -82,7 +82,7 @@ export default function ShapePropsPanel() {
                     gaussianBlur: { x, y: props!.filter!.gaussianBlur.y },
                   },
                 },
-                true
+                commit
               )
             }
             unit="px"
@@ -90,7 +90,7 @@ export default function ShapePropsPanel() {
           <NumberInput
             label="y:"
             value={props.filter.gaussianBlur.y}
-            onChange={(y) =>
+            onChange={(y, commit) =>
               creator.creator.updateAssetProps(
                 {
                   ...props,
@@ -99,7 +99,7 @@ export default function ShapePropsPanel() {
                     gaussianBlur: { x: props!.filter!.gaussianBlur.x, y },
                   },
                 },
-                true
+                commit
               )
             }
             unit="px"

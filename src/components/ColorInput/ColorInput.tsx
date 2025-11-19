@@ -55,20 +55,20 @@ export default function ColorInput({ label, value, onChange }: Props) {
     onChange(fromHex(newHex), false)
   }
 
-  const lastCommitedHex = useRef<string | null>(null)
+  const lastCommittedHex = useRef<string | null>(null)
   const handlePopoverToggle = (e: React.ToggleEvent<HTMLDivElement>) => {
     if (e.newState === 'open') {
       // Store the initial value when editing starts
-      lastCommitedHex.current = hex
+      lastCommittedHex.current = hex
     }
   }
 
   const submitChange = () => {
-    // Only commit if the value actually changed from when editing started(lastCommitedHex has changed)
-    // alternative would be to use just "value" instead of "lastCommitedHex", but this way we heavly depend on
-    // making sure unnecesary renders won't happen, what seems to be too fragile strategy
-    if (lastCommitedHex.current !== valueRef.current) {
-      lastCommitedHex.current = valueRef.current
+    // Only commit if the value actually changed from when editing started(lastCommittedHex has changed)
+    // alternative would be to use just "value" instead of "lastCommittedHex", but this way we heavily depend on
+    // making sure unnecessary renders won't happen, what seems to be too fragile strategy
+    if (lastCommittedHex.current !== valueRef.current) {
+      lastCommittedHex.current = valueRef.current
       onChange(fromHex(valueRef.current), true)
     }
   }

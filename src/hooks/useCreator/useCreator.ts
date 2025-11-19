@@ -51,6 +51,9 @@ const creatorState = proxy<CreatorStore>({
 
 function updateSelectedAssetStore(snapshot?: ProjectSnapshot) {
   const lastSnapshot = snapshot ?? creatorState.historySnapshots[creatorState.historySnapshotIndex]
+
+  if (!lastSnapshot) throw Error('No history snapshots available')
+
   const asset = creatorState.selectedAssetId
     ? lastSnapshot.assets.find((a) => a.id === creatorState.selectedAssetId)
     : null
@@ -67,7 +70,7 @@ function updateSelectedAssetStore(snapshot?: ProjectSnapshot) {
 }
 
 /*
-  Hook to be used whenever reference to the creator is needed, like in many Tollbox components.
+  Hook to be used whenever reference to the creator is needed, like in many Toolbox components.
   Cannot accept any arguments because might be used in a very deep nested component inside creator view.
 */
 function useCreator() {

@@ -20,13 +20,13 @@ export default function Effect({ onChange, ...effect }: Props) {
       <NumberInput
         label="From:"
         value={effect.dist_start}
-        onChange={(dist_start) => onChange({ ...effect, dist_start }, true)}
+        onChange={(dist_start, commit) => onChange({ ...effect, dist_start }, commit)}
         unit="px"
       />
       <NumberInput
         label="To:"
         value={effect.dist_end}
-        onChange={(dist_end) => onChange({ ...effect, dist_end }, true)}
+        onChange={(dist_end, commit) => onChange({ ...effect, dist_end }, commit)}
         unit="px"
       />
     </li>

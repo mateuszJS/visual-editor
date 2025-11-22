@@ -21,7 +21,7 @@ import { useRef } from 'react'
 
 interface AssetStore {
   bounds: PointUV[] | null
-  props: Partial<ShapeProps> | null
+  props: ShapeProps | null
   typoProps: TypoProps | null
 }
 export const assetState = proxy<AssetStore>({

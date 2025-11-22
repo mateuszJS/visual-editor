@@ -3,6 +3,7 @@ import BoundsPanel from './components/BoundsPanel/BoundsPanel'
 import ShapePropsPanel from './components/ShapePropsPanel/ShapePropsPanel'
 import styles from './CreatorPanels.module.css'
 import ProjectPropsPanel from './components/ProjectPropsPanel/ProjectPropsPanel'
+import TypographyPanel from './components/TypographyPanel/TypographyPanel'
 
 export default function CreatorPanels() {
   const isMobile = useIsMobile()
@@ -15,6 +16,7 @@ export default function CreatorPanels() {
       <ProjectPropsPanel />
       <BoundsPanel />
       <ShapePropsPanel />
+      <TypographyPanel />
     </section>
   )
 }

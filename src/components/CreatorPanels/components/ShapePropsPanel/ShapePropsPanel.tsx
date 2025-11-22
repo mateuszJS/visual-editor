@@ -13,10 +13,11 @@ export default function ShapePropsPanel() {
   function getOnChangeEffect(index: number) {
     return (newEffect: SdfEffect, commit: boolean) => {
       if (!props) throw Error('No props available while modifying SDF effect!')
+
       creator.creator.updateAssetProps(
         {
           ...props,
-          sdf_effects: props.sdf_effects?.map((effect, i) => (i === index ? newEffect : effect)),
+          sdf_effects: props.sdf_effects.map((effect, i) => (i === index ? newEffect : effect)),
         },
         commit
       )

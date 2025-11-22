@@ -7,6 +7,7 @@ import initMagicRender, {
   ShapeProps,
   ProjectSnapshot,
   SerializedAsset,
+  TypoProps,
 } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
 import getOnTextureUpload from './getOnTextureUpload'
@@ -15,8 +16,31 @@ import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
 import { useRef } from 'react'
 
-type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
+// we extract this part to a separate hook since not all components using useCreator need this data
+// and this data is going to be updated quite frequently
 
+interface AssetStore {
+  bounds: PointUV[] | null
+  props: ShapeProps | null
+  typoProps: TypoProps | null
+}
+export const assetState = proxy<AssetStore>({
+  bounds: null,
+  props: null,
+  typoProps: null,
+})
+
+const DEFAULT_FONTS: Record<string, number> = {
+  'Outfit - Variable': 0,
+  'EBGaramond - Variable': 1,
+  'Shadows Into Light': 2,
+  Barriecito: 3,
+  'Imperial Script': 4,
+  Pacifico: 5,
+  Creepster: 6,
+}
+
+type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 interface CreatorStore {
   creator: MagicRender | null
   projectId: string | null
@@ -25,19 +49,8 @@ interface CreatorStore {
   historySnapshots: ProjectSnapshot[]
   historySnapshotIndex: number
   tool: CreatorTool
+  fonts: Record<string, number>
 }
-
-// we extract this part to a separate hook since not all components using useCreator need this data
-// and this data is going to be updated quite frequently
-
-interface AssetStore {
-  bounds: PointUV[] | null
-  props: Partial<ShapeProps> | null
-}
-export const assetState = proxy<AssetStore>({
-  bounds: null,
-  props: null,
-})
 
 const creatorState = proxy<CreatorStore>({
   creator: null,
@@ -47,12 +60,13 @@ const creatorState = proxy<CreatorStore>({
   historySnapshots: [],
   historySnapshotIndex: 0,
   tool: CreatorTool.SelectAsset,
+  fonts: DEFAULT_FONTS,
 })
 
 function updateSelectedAssetStore(snapshot?: ProjectSnapshot) {
   const lastSnapshot = snapshot ?? creatorState.historySnapshots[creatorState.historySnapshotIndex]
 
-  if (!lastSnapshot) throw Error('No history snapshots available')
+  // if (!lastSnapshot) throw Error('No history snapshots available')
 
   const asset = creatorState.selectedAssetId
     ? lastSnapshot.assets.find((a) => a.id === creatorState.selectedAssetId)
@@ -66,6 +80,10 @@ function updateSelectedAssetStore(snapshot?: ProjectSnapshot) {
 
   if ('props' in asset) {
     assetState.props = asset.props
+  }
+
+  if ('typo_props' in asset) {
+    assetState.typoProps = asset.typo_props || null
   }
 }
 
@@ -103,6 +121,7 @@ function useCreator() {
     undo: canUndo ? () => setHistoricSnapshot(stateSnapshot.historySnapshotIndex - 1) : null,
     redo: canRedo ? () => setHistoricSnapshot(stateSnapshot.historySnapshotIndex + 1) : null,
     tool: stateSnapshot.tool,
+    fonts: stateSnapshot.fonts,
     get creator() {
       if (stateSnapshot.creator === null) throw new Error('Creator is not initialized')
       return stateSnapshot.creator
@@ -154,6 +173,10 @@ function useCreator() {
         (miniCanvas) => uploadMiniature(miniCanvas, project.id),
         (tool) => {
           creatorState.tool = tool
+        },
+        function getFontUrl(id: number) {
+          // This link is for development purposes only. In production, fonts should be served from a proper storage.
+          return `https://pub-dca9f88586314ce2a8a165d963769bf0.r2.dev/${id}.woff`
         }
       )
 
@@ -201,6 +224,12 @@ function useCreator() {
     },
     setInitialAssets(projectId: string, assetUrls: string[]) {
       creatorState.initialAssets = ref({ projectId, assetUrls })
+    },
+    updateAssetTypoProps(props: TypoProps, commit: boolean) {
+      const creator = stateSnapshot.creator
+      if (!creator) throw Error('Creator is not initialized')
+
+      creator.updateAssetTypoProps(props, commit)
     },
   }
 }

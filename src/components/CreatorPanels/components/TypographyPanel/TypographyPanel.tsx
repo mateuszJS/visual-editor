@@ -26,7 +26,7 @@ export default function TypographyPanel() {
         <option value="" disabled>
           Select font
         </option>
-        {Object.entries(creator.fonts).map((name, id) => (
+        {Object.entries(creator.fonts).map(([name, id]) => (
           <option key={id} value={id}>
             {name}
           </option>

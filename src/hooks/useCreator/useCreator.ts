@@ -64,9 +64,15 @@ const creatorState = proxy<CreatorStore>({
 })
 
 function updateSelectedAssetStore(snapshot?: ProjectSnapshot) {
+  assetState.bounds = null
+  assetState.props = null
+  assetState.typoProps = null
+
+  if (!creatorState.selectedAssetId) return
+
   const lastSnapshot = snapshot ?? creatorState.historySnapshots[creatorState.historySnapshotIndex]
 
-  // if (!lastSnapshot) throw Error('No history snapshots available')
+  if (!lastSnapshot) throw Error('No history snapshots available')
 
   const asset = creatorState.selectedAssetId
     ? lastSnapshot.assets.find((a) => a.id === creatorState.selectedAssetId)

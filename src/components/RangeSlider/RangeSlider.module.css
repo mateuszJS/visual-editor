@@ -16,8 +16,6 @@
     content: '';
     display: block;
     height: 0.3em;
-    /* justify-self: stretch;
-    align-self: center; */
     background: rgba(var(--secondary-rgb), 0.5);
     grid-area: 1 / 1;
     margin: auto var(--thumb-radius);

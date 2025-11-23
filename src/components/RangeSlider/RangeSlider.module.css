@@ -1,0 +1,108 @@
+.inputsWrapper {
+  --height: 1em;
+  --thumb-diameter: var(--height);
+  --thumb-radius: calc(0.5 * var(--thumb-diameter));
+  --useful-width: calc(100% - var(--thumb-diameter));
+
+  display: grid;
+  grid-template-rows: var(--height);
+  position: relative;
+  isolation: isolate; /* create new stacking context for ::after(got z-index: -1) */
+  align-items: center;
+  justify-items: stretch;
+
+  &::before {
+    /* full track */
+    content: '';
+    display: block;
+    height: 0.3em;
+    /* justify-self: stretch;
+    align-self: center; */
+    background: rgba(var(--secondary-rgb), 0.5);
+    grid-area: 1 / 1;
+    margin: auto var(--thumb-radius);
+    border-radius: 0.15em;
+    z-index: -1;
+  }
+
+  &::after {
+    /* selected range track */
+    content: '';
+    display: block;
+    background: color-mix(in srgb, var(--secondary-accent) 70%, var(--background) 30%);
+    grid-area: 1 / 1;
+
+    --diff: calc(var(--max) - var(--min));
+    --track-length: calc(var(--useful-width) / var(--diff));
+
+    width: calc(abs(var(--end) - var(--start)) * var(--track-length));
+    height: 0.5em;
+
+    --smallest: min(var(--start), var(--end));
+    --smallest-offset: calc(var(--smallest) - var(--min));
+    margin-left: calc(var(--thumb-radius) + var(--smallest-offset) * var(--track-length));
+    z-index: -1;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  clip-path: inset(50%);
+}
+
+.slider {
+  grid-area: 1 / 1;
+  background: none; /* get rid of white Chrome background */
+  color: color-mix(in srgb, var(--secondary) 30%, var(--background) 70%);
+  font: inherit; /* fix too small font-size in both Chrome & Firefox */
+  margin: 0;
+  pointer-events: none; /* let clicks pass through */
+  display: block;
+  width: 100%;
+
+  &::-webkit-slider-runnable-track,
+  &::-webkit-slider-thumb,
+  & {
+    -webkit-appearance: none;
+  }
+
+  &::-webkit-slider-runnable-track {
+    background: none; /* get rid of Firefox track background */
+    height: 100%;
+    width: 100%;
+  }
+  &::-moz-range-track {
+    background: none; /* get rid of Firefox track background */
+    height: 100%;
+    width: 100%;
+  }
+
+  &::-webkit-slider-thumb {
+    background: currentcolor;
+    border: none; /* get rid of Firefox thumb border */
+    border-radius: 0; /* get rid of Firefox corner rounding */
+    pointer-events: auto; /* catch clicks */
+    width: var(--thumb-diameter);
+    height: var(--thumb-diameter);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  &::-moz-range-thumb {
+    background: currentcolor;
+    border: none; /* get rid of Firefox thumb border */
+    border-radius: 0; /* get rid of Firefox corner rounding */
+    pointer-events: auto; /* catch clicks */
+    width: var(--thumb-diameter);
+    height: var(--thumb-diameter);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  &:hover::-webkit-slider-thumb {
+    outline: 2px solid var(--secondary-accent);
+  }
+  &:hover::-moz-range-thumb {
+    outline: 2px solid var(--secondary-accent);
+  }
+}

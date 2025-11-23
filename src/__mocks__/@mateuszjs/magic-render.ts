@@ -29,7 +29,7 @@ const initMagicRenderMock: typeof initCreator = function (
   return Promise.resolve({
     addImage: jest.fn(),
     removeAsset: jest.fn(),
-    setSnapshot: jest.fn((snapshot, withSnapshot) => {
+    setSnapshot: jest.fn(async (snapshot, withSnapshot) => {
       if (withSnapshot) {
         onSnapshotUpdate(snapshot, withSnapshot)
       }
@@ -40,9 +40,11 @@ const initMagicRenderMock: typeof initCreator = function (
     destroy: () => {
       canvas.removeAttribute('data-magic-render-linked')
     },
-    toggleSharedTextEffects: jest.fn(),
     updateAssetProps: jest.fn(),
     updateAssetBounds: jest.fn(),
+    updateAssetTypoProps: jest.fn(),
+    INFINITE_DISTANCE_THRESHOLD: 10000,
+    INFINITE_DISTANCE: 100000,
   })
 }
 

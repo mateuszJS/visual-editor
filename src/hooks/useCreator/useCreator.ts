@@ -3,8 +3,6 @@
 import useProject from '@/hooks/useProject/useProject'
 import initMagicRender, {
   CreatorTool,
-  PointUV,
-  ShapeProps,
   ProjectSnapshot,
   SerializedAsset,
   TypoProps,
@@ -15,20 +13,10 @@ import uploadMiniature from './uploadMiniature'
 import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
 import { useRef } from 'react'
+import { updateSelectedAssetStore } from '@/stores/asset'
 
 // we extract this part to a separate hook since not all components using useCreator need this data
 // and this data is going to be updated quite frequently
-
-interface AssetStore {
-  bounds: PointUV[] | null
-  props: ShapeProps | null
-  typoProps: TypoProps | null
-}
-export const assetState = proxy<AssetStore>({
-  bounds: null,
-  props: null,
-  typoProps: null,
-})
 
 const DEFAULT_FONTS: Record<string, number> = {
   'Outfit - Variable': 0,
@@ -63,36 +51,6 @@ const creatorState = proxy<CreatorStore>({
   fonts: DEFAULT_FONTS,
 })
 
-function updateSelectedAssetStore(snapshot?: ProjectSnapshot) {
-  assetState.bounds = null
-  assetState.props = null
-  assetState.typoProps = null
-
-  if (!creatorState.selectedAssetId) return
-
-  const lastSnapshot = snapshot ?? creatorState.historySnapshots[creatorState.historySnapshotIndex]
-
-  if (!lastSnapshot) throw Error('No history snapshots available')
-
-  const asset = creatorState.selectedAssetId
-    ? lastSnapshot.assets.find((a) => a.id === creatorState.selectedAssetId)
-    : null
-
-  if (!asset) return
-
-  if (asset.bounds === undefined) throw new Error('Asset bounds are undefined')
-
-  assetState.bounds = asset.bounds
-
-  if ('props' in asset) {
-    assetState.props = asset.props
-  }
-
-  if ('typo_props' in asset) {
-    assetState.typoProps = asset.typo_props || null
-  }
-}
-
 /*
   Hook to be used whenever reference to the creator is needed, like in many Toolbox components.
   Cannot accept any arguments because might be used in a very deep nested component inside creator view.
@@ -118,7 +76,10 @@ function useCreator() {
     })
 
     creatorState.creator!.setSnapshot(historySnapshot, false)
-    updateSelectedAssetStore()
+    updateSelectedAssetStore(
+      creatorState.historySnapshots[creatorState.historySnapshotIndex],
+      creatorState.selectedAssetId
+    )
   }
 
   return {
@@ -149,7 +110,7 @@ function useCreator() {
         canvas,
         getOnTextureUpload(project.id),
         (snapshot, commit) => {
-          updateSelectedAssetStore(snapshot)
+          updateSelectedAssetStore(snapshot, creatorState.selectedAssetId)
 
           if (!commit) return
 
@@ -173,7 +134,10 @@ function useCreator() {
         },
         (assetId) => {
           creatorState.selectedAssetId = assetId[0] || null
-          updateSelectedAssetStore()
+          updateSelectedAssetStore(
+            creatorState.historySnapshots[creatorState.historySnapshotIndex],
+            creatorState.selectedAssetId
+          )
         },
         () => {},
         (miniCanvas) => uploadMiniature(miniCanvas, project.id),

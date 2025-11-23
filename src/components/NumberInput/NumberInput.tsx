@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import styles from './NumberInput.module.css'
 import decimals from '@/utils/decimals'
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
+import cn from 'classnames'
 
 interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   label: string
@@ -17,6 +18,7 @@ export default function NumberInput({
   onChange,
   unit = '',
   roundDecimals = true,
+  className,
   ...rest
 }: Props) {
   const value = roundDecimals ? decimals(rawValue) : rawValue
@@ -78,7 +80,7 @@ export default function NumberInput({
       <label className={styles.label} htmlFor={inputId}>
         {label}
       </label>
-      <div className={styles.resizableWrapper}>
+      <div className={cn(styles.resizableWrapper, className)}>
         <input
           type="text"
           value={tempVal}
@@ -89,6 +91,7 @@ export default function NumberInput({
             1
           } /* it's a solution for browser which does not support field-sizing: content; yet */
           onBlur={onBlur}
+          autoComplete="off"
           {...rest}
           id={inputId}
           className={styles.input}

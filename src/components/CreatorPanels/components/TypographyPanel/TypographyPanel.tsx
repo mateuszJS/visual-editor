@@ -1,4 +1,5 @@
-import useCreator, { assetState } from '@/hooks/useCreator/useCreator'
+import useCreator from '@/hooks/useCreator/useCreator'
+import { assetState } from '@/stores/asset'
 import { useSnapshot } from 'valtio'
 
 export default function TypographyPanel() {

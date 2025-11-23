@@ -6,7 +6,7 @@ import { Color } from '@mateuszjs/magic-render'
 import numberInputStyles from '@/components/NumberInput/NumberInput.module.css'
 import cn from 'classnames'
 
-interface Props {
+interface Props extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value' | 'onChange'> {
   label: string
   value: Color // normalized RGBA array
   onChange: (value: Color, commit: boolean) => void
@@ -39,7 +39,7 @@ function fromHex(hex: string): Color {
  * In Storybook sometimes updates can be laggy/jarring/stuck in an infinite loop,
  * It happens because useArgs returns data from two renders ago, not latest data.
  */
-export default function ColorInput({ label, value, onChange }: Props) {
+export default function ColorInput({ label, value, onChange, ...rest }: Props) {
   const popoverId = useUniqueId()
   const inputId = useUniqueId()
   const hex = toHex(value)
@@ -75,13 +75,15 @@ export default function ColorInput({ label, value, onChange }: Props) {
 
   return (
     <>
-      <label className={numberInputStyles.label} htmlFor={inputId}>
+      {/* <label className={numberInputStyles.label} htmlFor={inputId}>
         {label}
-      </label>
+      </label> */}
       <button
+        {...rest}
         popoverTarget={popoverId}
-        className={cn(styles.colorPicker, numberInputStyles.input)}
+        className={cn(styles.colorPicker, numberInputStyles.input, rest.className)}
         id={inputId}
+        aria-label={label}
       >
         <div style={{ backgroundColor: hex }} />
       </button>

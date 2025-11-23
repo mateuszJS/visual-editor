@@ -20,9 +20,7 @@ export function updateSelectedAssetStore(
   assetState.props = null
   assetState.typoProps = null
 
-  if (!selectedAssetId) return
-
-  const asset = selectedAssetId ? snapshot.assets.find((a) => a.id === selectedAssetId) : null
+  const asset = snapshot.assets.find((a) => a.id === selectedAssetId)
 
   if (!asset) return
 

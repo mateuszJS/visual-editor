@@ -52,7 +52,7 @@ export default function RangeSlider({
         className={styles.slider}
         onChange={(e) => {
           const value = Number(e.target.value)
-          onChange(value, Math.min(end, value), true)
+          onChange(value, Math.min(value, end), true)
         }}
       />
       <label className={styles.srOnly} htmlFor={`${id}-end`}>
@@ -67,7 +67,7 @@ export default function RangeSlider({
         className={styles.slider}
         onChange={(e) => {
           const value = Number(e.target.value)
-          onChange(Math.max(start, value), value, true)
+          onChange(Math.max(value, start), value, true)
         }}
       />
     </div>

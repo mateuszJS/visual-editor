@@ -134,10 +134,11 @@ function useCreator() {
         },
         (assetId) => {
           creatorState.selectedAssetId = assetId[0] || null
-          updateSelectedAssetStore(
-            creatorState.historySnapshots[creatorState.historySnapshotIndex],
-            creatorState.selectedAssetId
-          )
+          const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
+
+          if (snapshot) {
+            updateSelectedAssetStore(snapshot, creatorState.selectedAssetId)
+          }
         },
         () => {},
         (miniCanvas) => uploadMiniature(miniCanvas, project.id),

@@ -41,7 +41,6 @@ function fromHex(hex: string): Color {
  */
 export default function ColorInput({ label, value, onChange, ...rest }: Props) {
   const popoverId = useUniqueId()
-  const inputId = useUniqueId()
   const hex = toHex(value)
   const valueRef = useRef(hex) // onChange(.., false) doesn't trigger re-render
   // so this ref helps us keep track of the latest value
@@ -75,14 +74,10 @@ export default function ColorInput({ label, value, onChange, ...rest }: Props) {
 
   return (
     <>
-      {/* <label className={numberInputStyles.label} htmlFor={inputId}>
-        {label}
-      </label> */}
       <button
         {...rest}
         popoverTarget={popoverId}
         className={cn(styles.colorPicker, numberInputStyles.input, rest.className)}
-        id={inputId}
         aria-label={label}
       >
         <div style={{ backgroundColor: hex }} />

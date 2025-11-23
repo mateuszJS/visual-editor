@@ -80,7 +80,6 @@
   &::-webkit-slider-thumb {
     background: currentcolor;
     border: none; /* get rid of Firefox thumb border */
-    border-radius: 0; /* get rid of Firefox corner rounding */
     pointer-events: auto; /* catch clicks */
     width: var(--thumb-diameter);
     height: var(--thumb-diameter);
@@ -91,7 +90,6 @@
   &::-moz-range-thumb {
     background: currentcolor;
     border: none; /* get rid of Firefox thumb border */
-    border-radius: 0; /* get rid of Firefox corner rounding */
     pointer-events: auto; /* catch clicks */
     width: var(--thumb-diameter);
     height: var(--thumb-diameter);

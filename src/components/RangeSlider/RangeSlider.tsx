@@ -33,7 +33,7 @@ export default function RangeSlider({
   } as React.CSSProperties
 
   return (
-    // label or fieldset is not used because of issue(grid on the doesnt work in chrome)
+    // label or fieldset is not used because grid on them doesn't work properly in Chrome
     <div
       className={cn(styles.inputsWrapper, className)}
       style={cssVars}
@@ -41,7 +41,7 @@ export default function RangeSlider({
       aria-label={ariaLabel}
     >
       <label className={styles.srOnly} htmlFor={`${id}-start`}>
-        start:
+        Distance at which effect starts
       </label>
       <input
         id={`${id}-start`}
@@ -56,7 +56,7 @@ export default function RangeSlider({
         }}
       />
       <label className={styles.srOnly} htmlFor={`${id}-end`}>
-        end:
+        Distance at which effect ends
       </label>
       <input
         id={`${id}-end`}

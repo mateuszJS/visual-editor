@@ -12,7 +12,7 @@ exports[`RangeSlider matches snapshot 1`] = `
       class="srOnly"
       for="id-0-start"
     >
-      start:
+      Distance at which effect starts
     </label>
     <input
       class="slider"
@@ -26,7 +26,7 @@ exports[`RangeSlider matches snapshot 1`] = `
       class="srOnly"
       for="id-0-end"
     >
-      end:
+      Distance at which effect ends
     </label>
     <input
       class="slider"

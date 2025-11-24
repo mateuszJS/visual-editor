@@ -1,23 +1,26 @@
-import useCreator, { assetState } from '@/hooks/useCreator/useCreator'
+import useCreator from '@/hooks/useCreator/useCreator'
 import { SdfEffect } from '@mateuszjs/magic-render'
 import { useSnapshot } from 'valtio'
 import styles from './ShapePropsPanel.module.css'
 import NumberInput from '@/components/NumberInput/NumberInput'
 import Effect from './components/Effects/Effect'
 import PlusIcon from 'assets/plus-icon.svg'
+import { assetState } from '@/stores/asset'
 
 export default function ShapePropsPanel() {
   const { props } = useSnapshot(assetState)
   const creator = useCreator()
 
   function getOnChangeEffect(index: number) {
-    return (newEffect: SdfEffect, commit: boolean) => {
+    return (newEffect: SdfEffect | null, commit: boolean) => {
       if (!props) throw Error('No props available while modifying SDF effect!')
 
       creator.creator.updateAssetProps(
         {
           ...props,
-          sdf_effects: props.sdf_effects.map((effect, i) => (i === index ? newEffect : effect)),
+          sdf_effects: props.sdf_effects
+            .map((effect, i) => (i === index ? newEffect : effect))
+            .filter(Boolean),
         },
         commit
       )
@@ -45,8 +48,8 @@ export default function ShapePropsPanel() {
   }
 
   return (
-    <section>
-      <h3 className={styles.title}>Shape Properties</h3>
+    <fieldset>
+      <legend>Shape Properties</legend>
       <ol>
         {props.sdf_effects?.map((effect, index) => (
           <Effect key={index} {...effect} onChange={getOnChangeEffect(index)} />
@@ -107,6 +110,6 @@ export default function ShapePropsPanel() {
           />
         </div>
       )}
-    </section>
+    </fieldset>
   )
 }

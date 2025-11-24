@@ -11,7 +11,7 @@ const meta = {
   },
   tags: ['autodocs'],
   args: {
-    label: 'Fill:',
+    label: 'fill color',
     value: [1, 1, 1, 1],
     onChange: fn(),
   },

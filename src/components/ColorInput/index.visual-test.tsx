@@ -2,10 +2,10 @@ import visualSetup from 'test/visual-setup'
 
 describe('Color Input', () => {
   it('default', async () => {
-    await visualSetup('components-colorinput--default', __dirname, 800, {
+    await visualSetup('components-colorinput--default', __dirname, 1200, {
       beforeTest: async (page) => {
         // Wait for potential animations to finish
-        const labelEl = await page.$('label')
+        const labelEl = await page.$('[aria-label="fill color"]')
         await labelEl!.click()
 
         const colorSpectrum = await page.$('[aria-label="Color"]')

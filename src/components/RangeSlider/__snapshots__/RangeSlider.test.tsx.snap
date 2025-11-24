@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RangeSlider matches snapshot 1`] = `
+<div>
+  <div
+    aria-label="Test range"
+    class="inputsWrapper"
+    role="group"
+    style="--start: 10; --end: 90; --min: 0; --max: 100;"
+  >
+    <label
+      class="srOnly"
+      for="id-0-start"
+    >
+      Distance at which effect starts
+    </label>
+    <input
+      class="slider"
+      id="id-0-start"
+      max="100"
+      min="0"
+      type="range"
+      value="10"
+    />
+    <label
+      class="srOnly"
+      for="id-0-end"
+    >
+      Distance at which effect ends
+    </label>
+    <input
+      class="slider"
+      id="id-0-end"
+      max="100"
+      min="0"
+      type="range"
+      value="90"
+    />
+  </div>
+</div>
+`;

@@ -1,4 +1,5 @@
-import useCreator, { assetState } from '@/hooks/useCreator/useCreator'
+import useCreator from '@/hooks/useCreator/useCreator'
+import { assetState } from '@/stores/asset'
 import { useSnapshot } from 'valtio'
 
 export default function TypographyPanel() {
@@ -26,7 +27,7 @@ export default function TypographyPanel() {
         <option value="" disabled>
           Select font
         </option>
-        {Object.entries(creator.fonts).map((name, id) => (
+        {Object.entries(creator.fonts).map(([name, id]) => (
           <option key={id} value={id}>
             {name}
           </option>

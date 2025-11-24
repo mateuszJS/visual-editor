@@ -1,8 +1,9 @@
-import useCreator, { assetState } from '@/hooks/useCreator/useCreator'
+import useCreator from '@/hooks/useCreator/useCreator'
 import { PointUV } from '@mateuszjs/magic-render'
 import { useSnapshot } from 'valtio'
 import NumberInput from '@/components/NumberInput/NumberInput'
 import styles from './BoundsPanel.module.css'
+import { assetState } from '@/stores/asset'
 
 function getData(bounds: readonly PointUV[]) {
   const width = Math.hypot(bounds[0].x - bounds[1].x, bounds[0].y - bounds[1].y)

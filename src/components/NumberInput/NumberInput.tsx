@@ -77,7 +77,7 @@ export default function NumberInput({
 
   return (
     <>
-      <label className={styles.label} htmlFor={inputId}>
+      <label className={styles.label} htmlFor={inputId} suppressHydrationWarning>
         {label}
       </label>
       <div className={cn(styles.resizableWrapper, className)}>
@@ -94,6 +94,7 @@ export default function NumberInput({
           autoComplete="off"
           {...rest}
           id={inputId}
+          suppressHydrationWarning
           className={styles.input}
         />
         <span className={styles.suffix}>

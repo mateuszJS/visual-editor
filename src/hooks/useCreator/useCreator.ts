@@ -4,7 +4,7 @@ import useProject from '@/hooks/useProject/useProject'
 import initMagicRender, {
   CreatorTool,
   ProjectSnapshot,
-  SerializedAsset,
+  Asset,
   TypoProps,
 } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
@@ -13,7 +13,7 @@ import uploadMiniature from './uploadMiniature'
 import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
 import { useRef } from 'react'
-import { updateSelectedAssetStore } from '@/stores/asset'
+import { resetAssetStore, updateSelectedAssetStore } from '@/stores/asset'
 
 // we extract this part to a separate hook since not all components using useCreator need this data
 // and this data is going to be updated quite frequently
@@ -168,7 +168,7 @@ function useCreator() {
         height: project.height,
         assets: hasInitialAssets
           ? initialAssets.assetUrls.map((url) => ({ url }))
-          : (project.assets as SerializedAsset[]),
+          : (project.assets as Asset[]),
       }
 
       creatorState.initialAssets = null
@@ -191,6 +191,7 @@ function useCreator() {
         creatorState.historySnapshots = []
         creatorState.historySnapshotIndex = 0
         canvas.removeAttribute('data-connected')
+        resetAssetStore()
       }
     },
     setInitialAssets(projectId: string, assetUrls: string[]) {

@@ -1,10 +1,12 @@
 import type { NextConfig } from 'next'
 import webpackConfig from './webpack.config'
 import { ip } from 'address'
+import path from 'path'
 
 const nextConfig: NextConfig = {
   output: 'export',
   webpack: webpackConfig,
+  outputFileTracingRoot: path.join(__dirname, '../../../'),
   async rewrites() {
     return [
       {

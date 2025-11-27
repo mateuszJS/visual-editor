@@ -1,14 +1,25 @@
 import ColorInput from '@/components/ColorInput/ColorInput'
 import NumberInput from '@/components/NumberInput/NumberInput'
-import { SdfEffect } from '@mateuszjs/magic-render'
+import { Fill, SdfEffect } from '@mateuszjs/magic-render'
 import styles from './Effect.module.css'
 import cn from 'classnames'
 import useCreator from '@/hooks/useCreator/useCreator'
 import CloseIcon from 'assets/close-icon.svg'
 import RangeSlider from '@/components/RangeSlider/RangeSlider'
+import CodeInput from '@/components/CodeInput/CodeInput'
 
 interface Props extends SdfEffect {
   onChange: (changes: SdfEffect | null, commit: boolean) => void
+}
+
+function mapFillType(fill: Fill): 'solid' | 'program' {
+  if ('solid' in fill) {
+    return 'solid'
+  }
+  if ('program' in fill) {
+    return 'program'
+  }
+  throw Error('Unknown fill type')
 }
 
 export default function Effect({ onChange, ...effect }: Props) {
@@ -16,8 +27,31 @@ export default function Effect({ onChange, ...effect }: Props) {
   const startIsInfinite = creator.INFINITE_DISTANCE_THRESHOLD < effect.dist_start
   const startValue = startIsInfinite ? effect.dist_end + 10 : effect.dist_start
 
+  const onChangeType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+    if (value === 'solid') {
+      onChange({ ...effect, fill: { solid: [1, 1, 1, 1] } }, true)
+    } else if (value === 'program') {
+      onChange(
+        {
+          ...effect,
+          fill: {
+            program: { code: 'color=vec4f(abs(signed_distance*0.01),path_t%1,angle/6.24,1);' },
+          },
+        },
+        true
+      )
+    } else {
+      throw Error('Unknown fill type')
+    }
+  }
+
   return (
     <li className={styles.root}>
+      <select className={styles.fillType} value={mapFillType(effect.fill)} onChange={onChangeType}>
+        <option value="solid">Solid Fill</option>
+        <option value="program">Custom Program</option>
+      </select>
       <button onClick={() => onChange(null, true)} className={styles.remove}>
         <CloseIcon />
       </button>
@@ -27,6 +61,14 @@ export default function Effect({ onChange, ...effect }: Props) {
           value={effect.fill.solid}
           onChange={(color, commit) => onChange({ ...effect, fill: { solid: color } }, commit)}
           className={styles.fill}
+        />
+      )}
+      {'program' in effect.fill && (
+        <CodeInput
+          value={effect.fill.program.code}
+          onChange={(code, commit) => onChange({ ...effect, fill: { program: { code } } }, commit)}
+          className={styles.fill}
+          errors={effect.fill.program.errors}
         />
       )}
       <NumberInput
@@ -59,8 +101,8 @@ export default function Effect({ onChange, ...effect }: Props) {
         className={styles.range}
         min={-100}
         max={100}
-        start={effect.dist_start}
-        end={effect.dist_end}
+        start={Math.min(effect.dist_start, 100)}
+        end={Math.max(effect.dist_end, -100)}
         onChange={(dist_start, dist_end, commit) =>
           onChange({ ...effect, dist_start, dist_end }, commit)
         }

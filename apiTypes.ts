@@ -1,9 +1,6 @@
-import type { SerializedAsset } from '@mateuszjs/magic-render'
+import type { Asset } from '@mateuszjs/magic-render'
 
-export type ApiAsset = Omit<
-  SerializedAsset,
-  'id' | 'texture_id' | 'cache_texture_id' | 'sdf_texture_id'
->
+export type ApiAsset = Omit<Asset, 'id' | 'texture_id' | 'cache_texture_id' | 'sdf_texture_id'>
 
 export type ApiProjectMetaData = {
   id: string

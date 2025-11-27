@@ -7,28 +7,3 @@
     height: auto;
   }
 }
-
-.popover {
-  margin: 0;
-  inset: auto;
-  position-area: center left;
-  background: var(--background);
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  overflow: visible; /* those little circles on color sliders can be moved to the edges,
-  so part of the circle overflow popover */
-}
-
-.hexLabel {
-  display: block;
-  margin-top: 10px;
-  font-weight: 300;
-  font-size: var(--14px);
-
-  input {
-    font: inherit;
-    letter-spacing: 1px;
-    width: 9ch;
-  }
-}

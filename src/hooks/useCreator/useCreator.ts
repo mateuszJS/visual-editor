@@ -168,7 +168,8 @@ function useCreator() {
         height: project.height,
         assets: hasInitialAssets
           ? initialAssets.assetUrls.map((url) => ({ url }))
-          : (project.assets as Asset[]),
+          : (project.assets as Asset[]), // those two types are same
+        // just TS cannot infer that
       }
 
       creatorState.initialAssets = null

@@ -54,7 +54,7 @@ export default function ShapePropsPanel() {
       {
         ...props,
         filter:
-          x == 0 && y == 0
+          x === 0 && y === 0
             ? null
             : {
                 ...props.filter,

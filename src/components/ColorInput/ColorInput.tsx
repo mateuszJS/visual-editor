@@ -1,10 +1,9 @@
-import { useRef } from 'react'
-import { HexAlphaColorPicker, HexColorInput } from 'react-colorful'
 import styles from './ColorInput.module.css'
-import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
 import { Color } from '@mateuszjs/magic-render'
 import numberInputStyles from '@/components/NumberInput/NumberInput.module.css'
 import cn from 'classnames'
+import Popover from '../Popover/Popover'
+import ColorSelection from './components/ColorSelection/ColorSelection'
 
 interface Props extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value' | 'onChange'> {
   label: string
@@ -40,68 +39,22 @@ function fromHex(hex: string): Color {
  * It happens because useArgs returns data from two renders ago, not latest data.
  */
 export default function ColorInput({ label, value, onChange, ...rest }: Props) {
-  const popoverId = useUniqueId()
   const hex = toHex(value)
-  const valueRef = useRef(hex) // onChange(.., false) doesn't trigger re-render
-  // so this ref helps us keep track of the latest value
-
-  if (valueRef.current !== hex) {
-    valueRef.current = hex
-  }
-
-  const onChangeColor = (newHex: string) => {
-    valueRef.current = newHex
-    onChange(fromHex(newHex), false)
-  }
-
-  const lastCommittedHex = useRef<string | null>(null)
-  const handlePopoverToggle = (e: React.ToggleEvent<HTMLDivElement>) => {
-    if (e.newState === 'open') {
-      // Store the initial value when editing starts
-      lastCommittedHex.current = hex
-    }
-  }
-
-  const submitChange = () => {
-    // Only commit if the value actually changed from when editing started(lastCommittedHex has changed)
-    // alternative would be to use just "value" instead of "lastCommittedHex", but this way we heavily depend on
-    // making sure unnecessary renders won't happen, what seems to be too fragile strategy
-    if (lastCommittedHex.current !== valueRef.current) {
-      lastCommittedHex.current = valueRef.current
-      onChange(fromHex(valueRef.current), true)
-    }
-  }
 
   return (
-    <>
-      <button
-        {...rest}
-        popoverTarget={popoverId}
-        className={cn(styles.colorPicker, numberInputStyles.input, rest.className)}
-        aria-label={label}
-      >
-        <div style={{ backgroundColor: hex }} />
-      </button>
-      <div
-        id={popoverId}
-        popover="auto"
-        className={styles.popover}
-        role="dialog"
-        aria-modal="true"
-        onToggle={handlePopoverToggle}
-      >
-        <HexAlphaColorPicker color={hex} onChange={onChangeColor} onPointerUp={submitChange} />
-        <label className={styles.hexLabel}>
-          Hex: #
-          <HexColorInput
-            color={hex}
-            onChange={onChangeColor}
-            className={styles.hexInput}
-            alpha
-            onBlur={submitChange}
-          />
-        </label>
-      </div>
-    </>
+    <Popover
+      trigger={() => <div style={{ backgroundColor: hex }} />}
+      aria-label={label}
+      className={cn(styles.colorPicker, numberInputStyles.input, rest.className)}
+      popoverClassName={styles.popover}
+      {...rest}
+    >
+      <ColorSelection
+        initialValue={hex}
+        onChange={(newHex, commit) => {
+          onChange(fromHex(newHex), commit)
+        }}
+      />
+    </Popover>
   )
 }

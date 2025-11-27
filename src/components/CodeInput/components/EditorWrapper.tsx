@@ -24,7 +24,7 @@ export default function EditorWrapper({ initialValue, onChange }: Props) {
 
   const onUpdateCode = (code: string) => {
     // Editor triggers this event on first render
-    if (initialValue !== code) {
+    if (initialValueRef.current !== code) {
       onChange(code, true)
     }
   }

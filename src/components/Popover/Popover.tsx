@@ -1,5 +1,7 @@
-import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
 import { ToggleEventHandler, useState } from 'react'
+import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
+import cn from 'classnames'
+import styles from './Popover.module.css'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   trigger: () => React.ReactNode
@@ -24,7 +26,7 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
         id={popoverId}
         suppressHydrationWarning
         popover="auto"
-        className={popoverClassName}
+        className={cn(styles.popover, popoverClassName)}
         role="dialog"
         aria-modal="true"
         onBeforeToggle={toggleIsShown}

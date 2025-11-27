@@ -18,10 +18,7 @@ export default function UploadTexture() {
   const isMobile = useIsMobile()
 
   async function addTextures(textureUrls: string[]) {
-    textureUrls.forEach((url) => {
-      creatorApi.creator.addImage(url)
-    })
-
+    creatorApi.creator.addImages(textureUrls)
     setIsUploadShown(false)
   }
 

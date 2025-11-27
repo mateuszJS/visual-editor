@@ -49,6 +49,6 @@ describe('UploadTexture', () => {
     await user.upload(fileInputTrigger, files)
 
     const { result } = renderHook(useCreator)
-    expect(result.current.creator.addImage).toHaveBeenCalledTimes(1)
+    expect(result.current.creator.addImages).toHaveBeenCalledTimes(1)
   })
 })

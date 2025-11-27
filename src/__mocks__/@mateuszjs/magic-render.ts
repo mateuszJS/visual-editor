@@ -27,7 +27,7 @@ const initMagicRenderMock: typeof initCreator = function (
   onPreviewUpdateCallback = onPreviewUpdate
 
   return Promise.resolve({
-    addImage: jest.fn(),
+    addImages: jest.fn(),
     removeAsset: jest.fn(),
     setSnapshot: jest.fn(async (snapshot, withSnapshot) => {
       if (withSnapshot) {

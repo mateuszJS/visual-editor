@@ -5,7 +5,6 @@
   font-size: var(--13px);
   font-weight: 300;
   color: var(--primary);
-  padding: 6px 10px;
   border-radius: 8px;
   background-color: rgba(var(--primary-rgb), 0.1);
   transition: background-color 0.2s ease-in-out;

@@ -6,6 +6,7 @@ import NumberInput from '@/components/NumberInput/NumberInput'
 import Effect from './components/Effects/Effect'
 import PlusIcon from 'assets/plus-icon.svg'
 import { assetState } from '@/stores/asset'
+import PanelWrapper from '../PanelWrapper/PanelWrapper'
 
 export default function ShapePropsPanel() {
   const { props } = useSnapshot(assetState)
@@ -66,46 +67,47 @@ export default function ShapePropsPanel() {
   }
 
   return (
-    <fieldset>
-      <legend>Shape Properties</legend>
-      <ol>
-        {props.sdf_effects?.map((effect, index) => (
-          <Effect key={index} {...effect} onChange={getOnChangeEffect(index)} />
-        ))}
-      </ol>
+    <PanelWrapper id="shapeProps">
       <div>
-        <button className={styles.button} onClick={addNewEffect}>
-          <PlusIcon />
-          Add Effect
-        </button>
-      </div>
-      {props.opacity !== undefined && (
-        <NumberInput
-          label="Opacity:"
-          value={props.opacity * 100}
-          onChange={(value, commit) =>
-            creator.creator.updateAssetProps({ ...props, opacity: value / 100 }, commit)
-          }
-          unit="%"
-        />
-      )}
-      {props.filter && (
+        <ol>
+          {props.sdf_effects?.map((effect, index) => (
+            <Effect key={index} {...effect} onChange={getOnChangeEffect(index)} />
+          ))}
+        </ol>
         <div>
-          <h4>Blur</h4>
-          <NumberInput
-            label="x:"
-            value={props.filter.gaussianBlur.x}
-            onChange={(x, commit) => setBlur(x, props!.filter!.gaussianBlur.y, commit)}
-            unit="px"
-          />
-          <NumberInput
-            label="y:"
-            value={props.filter.gaussianBlur.y}
-            onChange={(y, commit) => setBlur(props!.filter!.gaussianBlur.x, y, commit)}
-            unit="px"
-          />
+          <button className={styles.button} onClick={addNewEffect}>
+            <PlusIcon />
+            Add Effect
+          </button>
         </div>
-      )}
-    </fieldset>
+        {props.opacity !== undefined && (
+          <NumberInput
+            label="Opacity:"
+            value={props.opacity * 100}
+            onChange={(value, commit) =>
+              creator.creator.updateAssetProps({ ...props, opacity: value / 100 }, commit)
+            }
+            unit="%"
+          />
+        )}
+        {props.filter && (
+          <div>
+            <h4>Blur</h4>
+            <NumberInput
+              label="x:"
+              value={props.filter.gaussianBlur.x}
+              onChange={(x, commit) => setBlur(x, props!.filter!.gaussianBlur.y, commit)}
+              unit="px"
+            />
+            <NumberInput
+              label="y:"
+              value={props.filter.gaussianBlur.y}
+              onChange={(y, commit) => setBlur(props!.filter!.gaussianBlur.x, y, commit)}
+              unit="px"
+            />
+          </div>
+        )}
+      </div>
+    </PanelWrapper>
   )
 }

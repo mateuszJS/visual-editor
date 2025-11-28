@@ -4,6 +4,7 @@ import { useSnapshot } from 'valtio'
 import NumberInput from '@/components/NumberInput/NumberInput'
 import styles from './BoundsPanel.module.css'
 import { assetState } from '@/stores/asset'
+import PanelWrapper from '../PanelWrapper/PanelWrapper'
 
 function getData(bounds: readonly PointUV[]) {
   const width = Math.hypot(bounds[0].x - bounds[1].x, bounds[0].y - bounds[1].y)
@@ -73,36 +74,39 @@ export default function BoundsPanel() {
   }
 
   return (
-    <fieldset className={styles.root} disabled={!bounds}>
-      <legend>Bounds</legend>
-      <NumberInput
-        label="X:"
-        name="x"
-        value={x}
-        onChange={(value, commit) => onChange(value, y, width, height, commit)}
-        unit="px"
-      />
-      <NumberInput
-        label="Y:"
-        name="y"
-        value={y}
-        onChange={(value, commit) => onChange(x, value, width, height, commit)}
-        unit="px"
-      />
-      <NumberInput
-        label="W:"
-        name="width"
-        value={width}
-        onChange={(value, commit) => onChange(x, y, value, height, commit)}
-        unit="px"
-      />
-      <NumberInput
-        label="H:"
-        name="height"
-        value={height}
-        onChange={(value, commit) => onChange(x, y, width, value, commit)}
-        unit="px"
-      />
-    </fieldset>
+    <PanelWrapper id="bounds">
+      <div className={styles.root}>
+        <NumberInput
+          label="X:"
+          name="x"
+          value={x}
+          onChange={(value, commit) => onChange(value, y, width, height, commit)}
+          unit="px"
+        />
+        <span className="spacer" />
+        <NumberInput
+          label="Y:"
+          name="y"
+          value={y}
+          onChange={(value, commit) => onChange(x, value, width, height, commit)}
+          unit="px"
+        />
+        <NumberInput
+          label="W:"
+          name="width"
+          value={width}
+          onChange={(value, commit) => onChange(x, y, value, height, commit)}
+          unit="px"
+        />
+        <span className="spacer" />
+        <NumberInput
+          label="H:"
+          name="height"
+          value={height}
+          onChange={(value, commit) => onChange(x, y, width, value, commit)}
+          unit="px"
+        />
+      </div>
+    </PanelWrapper>
   )
 }

@@ -1,11 +1,12 @@
 'use client'
 
 import useProject from '@/hooks/useProject/useProject'
-import initMagicRender, {
+import type {
   CreatorTool,
   ProjectSnapshot,
   Asset,
   TypoProps,
+  CreatorAPI,
 } from '@mateuszjs/magic-render'
 import { proxy, ref, useSnapshot } from 'valtio'
 import getOnTextureUpload from './getOnTextureUpload'
@@ -28,9 +29,8 @@ const DEFAULT_FONTS: Record<string, number> = {
   Creepster: 6,
 }
 
-type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 interface CreatorStore {
-  creator: MagicRender | null
+  creator: CreatorAPI | null
   projectId: string | null
   initialAssets: { projectId: string; assetUrls: string[] } | null
   selectedAssetId: number | null
@@ -47,7 +47,7 @@ const creatorState = proxy<CreatorStore>({
   selectedAssetId: null,
   historySnapshots: [],
   historySnapshotIndex: 0,
-  tool: CreatorTool.SelectAsset,
+  tool: 0, // CreatorTool.SelectAsset,
   fonts: DEFAULT_FONTS,
 })
 
@@ -103,7 +103,7 @@ function useCreator() {
       // and we assume that canvas is mounted to DOM
 
       canvas.setAttribute('data-connected', '')
-
+      const initMagicRender = (await import('@mateuszjs/magic-render')).default
       const creator = await initMagicRender(
         project.width,
         project.height,

@@ -1,7 +1,7 @@
 import numberInputStyles from '@/components/NumberInput/NumberInput.module.css'
 import cn from 'classnames'
 import CodeSymbol from 'assets/code-symbol.svg'
-import type { CustomProgramError } from '@mateuszjs/magic-render'
+import { CustomProgramError } from '@mateuszjs/magic-render/types'
 import Popover from '@/components/Popover/Popover'
 import EditorWrapper from './components/EditorWrapper'
 import styles from './CodeInput.module.css'

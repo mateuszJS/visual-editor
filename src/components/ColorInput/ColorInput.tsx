@@ -1,5 +1,5 @@
 import styles from './ColorInput.module.css'
-import { Color } from '@mateuszjs/magic-render'
+import { Color } from '@mateuszjs/magic-render/types'
 import numberInputStyles from '@/components/NumberInput/NumberInput.module.css'
 import cn from 'classnames'
 import Popover from '../Popover/Popover'

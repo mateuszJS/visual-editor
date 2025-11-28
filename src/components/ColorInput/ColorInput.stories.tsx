@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs'
 import { fn } from 'storybook/test'
 import ColorInput from './ColorInput'
 import { useArgs } from 'storybook/preview-api'
-import { Color } from '@mateuszjs/magic-render'
+import { Color } from '@mateuszjs/magic-render/types'
 
 const meta = {
   component: ColorInput,

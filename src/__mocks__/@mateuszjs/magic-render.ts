@@ -1,4 +1,4 @@
-import type { CreatorAPI, ProjectSnapshot } from '@mateuszjs/magic-render'
+import { CreatorAPI, ProjectSnapshot } from '@mateuszjs/magic-render/types'
 import initCreator from '@mateuszjs/magic-render'
 
 let onSelectAssetCallback: (assetId: [number, number, number, number]) => void

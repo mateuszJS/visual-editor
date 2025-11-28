@@ -1,4 +1,4 @@
-import type { Asset, Image, Shape, Text } from '@mateuszjs/magic-render'
+import type { Asset, Image, Shape, Text } from '@mateuszjs/magic-render/types'
 import type { ApiAsset } from '../../../apiTypes'
 
 type SerializedOutputAssetMerged = Image & Shape & Text // this type only exist to allow fields removal that might not exist on all variants of the union

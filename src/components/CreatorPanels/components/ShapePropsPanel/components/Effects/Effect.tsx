@@ -1,6 +1,6 @@
 import ColorInput from '@/components/ColorInput/ColorInput'
 import NumberInput from '@/components/NumberInput/NumberInput'
-import { Fill, SdfEffect } from '@mateuszjs/magic-render'
+import { Fill, SdfEffect } from '@mateuszjs/magic-render/types'
 import styles from './Effect.module.css'
 import cn from 'classnames'
 import useCreator from '@/hooks/useCreator/useCreator'

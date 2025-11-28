@@ -1,4 +1,4 @@
-import type { PointUV, ProjectSnapshot, ShapeProps, TypoProps } from '@mateuszjs/magic-render'
+import type { PointUV, ProjectSnapshot, ShapeProps, TypoProps } from '@mateuszjs/magic-render/types'
 import { proxy, ref } from 'valtio'
 
 interface AssetStore {

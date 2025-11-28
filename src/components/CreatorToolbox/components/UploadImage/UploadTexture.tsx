@@ -6,7 +6,7 @@ import { lazy, Suspense, useState } from 'react'
 import useCreator from '@/hooks/useCreator/useCreator'
 import Tooltip from '@/components/Tooltip/Tooltip'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
-import { CreatorTool } from '@mateuszjs/magic-render'
+import { CreatorTool } from '@mateuszjs/magic-render/types'
 
 const UploadModal = lazy(() => import('./UploadModal'))
 

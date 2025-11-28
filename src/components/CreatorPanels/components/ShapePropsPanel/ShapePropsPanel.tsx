@@ -1,5 +1,5 @@
 import useCreator from '@/hooks/useCreator/useCreator'
-import { SdfEffect } from '@mateuszjs/magic-render'
+import { SdfEffect } from '@mateuszjs/magic-render/types'
 import { useSnapshot } from 'valtio'
 import styles from './ShapePropsPanel.module.css'
 import NumberInput from '@/components/NumberInput/NumberInput'

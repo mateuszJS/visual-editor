@@ -7,7 +7,7 @@ import type {
   Asset,
   TypoProps,
   CreatorAPI,
-} from '@mateuszjs/magic-render'
+} from '@mateuszjs/magic-render/types'
 import { proxy, ref, useSnapshot } from 'valtio'
 import getOnTextureUpload from './getOnTextureUpload'
 import uploadMiniature from './uploadMiniature'

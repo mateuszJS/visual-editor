@@ -1,5 +1,5 @@
 import useCreator from '@/hooks/useCreator/useCreator'
-import { PointUV } from '@mateuszjs/magic-render'
+import { PointUV } from '@mateuszjs/magic-render/types'
 import { useSnapshot } from 'valtio'
 import NumberInput from '@/components/NumberInput/NumberInput'
 import styles from './BoundsPanel.module.css'

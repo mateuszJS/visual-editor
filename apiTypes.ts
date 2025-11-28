@@ -1,4 +1,4 @@
-import type { Asset } from '@mateuszjs/magic-render'
+import type { Asset } from '@mateuszjs/magic-render/types'
 
 export type ApiAsset = Omit<Asset, 'id' | 'texture_id' | 'cache_texture_id' | 'sdf_texture_id'>
 

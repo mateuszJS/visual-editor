@@ -28,6 +28,8 @@ export default async (): Promise<Config> => {
       '<rootDir>/src/utils/**/*.test.{ts,tsx}',
     ],
     setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
+    globalSetup: '<rootDir>/test/visual-global-setup.ts',
+    globalTeardown: '<rootDir>/test/visual-global-teardown.ts',
     moduleNameMapper,
   })
 

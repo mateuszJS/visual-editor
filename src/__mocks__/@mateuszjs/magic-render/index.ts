@@ -1,4 +1,4 @@
-import { CreatorAPI, ProjectSnapshot } from '@mateuszjs/magic-render/types'
+import { CreatorAPI, CreatorTool, ProjectSnapshot } from '@mateuszjs/magic-render/types'
 import initCreator from '@mateuszjs/magic-render'
 
 let onSelectAssetCallback: (assetId: [number, number, number, number]) => void
@@ -54,16 +54,6 @@ export function __triggerSelectAsset(assetId: [number, number, number, number]) 
 
 export function __triggerPreviewUpdate(canvas: HTMLCanvasElement) {
   onPreviewUpdateCallback(canvas)
-}
-
-// we could import actual exports from magic-render package
-// but it requries magic-render to export as CommonJS with traget "node" just for this one case
-// it's cheaper to just copy enum CreatorTool from the magic-render package and place it here
-export enum CreatorTool {
-  SelectAsset = 0,
-  DrawBezierCurve = 1,
-  SelectNode = 2,
-  Text = 3,
 }
 
 export default initMagicRenderMock

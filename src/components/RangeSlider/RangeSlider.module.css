@@ -51,7 +51,7 @@
 .slider {
   grid-area: 1 / 1;
   background: none; /* get rid of white Chrome background */
-  color: color-mix(in srgb, var(--secondary) 30%, var(--background) 70%);
+  color: color-mix(in srgb, var(--secondary) 40%, var(--background) 60%);
   font: inherit; /* fix too small font-size in both Chrome & Firefox */
   margin: 0;
   pointer-events: none; /* let clicks pass through */
@@ -77,7 +77,7 @@
 
   &::-webkit-slider-thumb {
     background: currentcolor;
-    border: none; /* get rid of Firefox thumb border */
+    border: 2px solid var(--background);
     pointer-events: auto; /* catch clicks */
     width: var(--thumb-diameter);
     height: var(--thumb-diameter);
@@ -87,7 +87,7 @@
 
   &::-moz-range-thumb {
     background: currentcolor;
-    border: none; /* get rid of Firefox thumb border */
+    border: 2px solid var(--background);
     pointer-events: auto; /* catch clicks */
     width: var(--thumb-diameter);
     height: var(--thumb-diameter);

@@ -3,6 +3,7 @@ import CreatorToolbox from './CreatorToolbox'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { useEffect } from 'react'
 import { mocked } from 'storybook/test'
+import { CreatorAPI } from '@mateuszjs/magic-render/types'
 import initMagicRender from '@mateuszjs/magic-render'
 import { ApiProjectContent } from '../../../apiTypes'
 
@@ -33,7 +34,7 @@ const project: ApiProjectContent = {
 const initMagicRenderMock = {
   setSnapshot: () => {},
   destroy: () => {},
-} as unknown as Awaited<ReturnType<typeof initMagicRender>>
+} as unknown as CreatorAPI
 
 export const Default: Story = {
   decorators: [

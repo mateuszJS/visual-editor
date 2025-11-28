@@ -1,21 +1,25 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
 import { fn } from 'storybook/test'
-import ColorInput from './ColorInput'
+import CodeInput from './CodeInput'
 import { useArgs } from 'storybook/preview-api'
-import { Color } from '@mateuszjs/magic-render/types'
 
 const meta = {
-  component: ColorInput,
+  component: CodeInput,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
   args: {
-    label: 'fill color',
-    value: [1, 1, 1, 1],
+    value: `color=vec4f(
+  abs(signed_distance*0.01),
+  path_t%1,
+  angle/6.24,
+  1
+);`,
+    errors: [],
     onChange: fn(),
   },
-} satisfies Meta<typeof ColorInput>
+} satisfies Meta<typeof CodeInput>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -24,7 +28,7 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs()
 
-    const onChange = (value: Color, preview: boolean) => {
+    const onChange = (value: string, preview: boolean) => {
       args.onChange(value, preview)
       updateArgs({ value })
     }
@@ -33,7 +37,7 @@ export const Default: Story = {
       <>
         <div
           style={{
-            width: 350,
+            width: 450,
             height: 300,
             padding: 50,
             background: '#444',
@@ -42,7 +46,9 @@ export const Default: Story = {
             justifyContent: 'flex-end',
           }}
         >
-          <ColorInput {...args} onChange={onChange} />
+          <div style={{ height: 45, display: 'flex', justifyContent: 'stretch' }}>
+            <CodeInput {...args} onChange={onChange} />
+          </div>
         </div>
       </>
     )

@@ -1,7 +1,7 @@
 .root {
-  position: relative;
   display: grid;
   grid-template:
+    'fill-type fill-type fill-type remove' auto
     'fill . . .' auto
     'fill . . .' auto
     'slider slider slider slider' auto
@@ -42,9 +42,8 @@
 }
 
 .remove {
-  position: absolute;
-  top: 3px;
-  right: 5px;
+  grid-area: remove;
+  justify-self: end;
   padding: 2px;
   line-height: var(--8px);
   opacity: 0.7;
@@ -52,4 +51,8 @@
   &:hover {
     background-color: rgba(var(--secondary-rgb), 0.2);
   }
+}
+
+.fillType {
+  grid-area: fill-type;
 }

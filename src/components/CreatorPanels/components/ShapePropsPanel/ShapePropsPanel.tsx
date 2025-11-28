@@ -1,5 +1,5 @@
 import useCreator from '@/hooks/useCreator/useCreator'
-import { SdfEffect } from '@mateuszjs/magic-render'
+import { SdfEffect } from '@mateuszjs/magic-render/types'
 import { useSnapshot } from 'valtio'
 import styles from './ShapePropsPanel.module.css'
 import NumberInput from '@/components/NumberInput/NumberInput'
@@ -47,6 +47,24 @@ export default function ShapePropsPanel() {
     return null
   }
 
+  function setBlur(x: number, y: number, commit: boolean) {
+    if (!props) throw Error('No props available while modifying blur!')
+
+    creator.creator.updateAssetProps(
+      {
+        ...props,
+        filter:
+          x === 0 && y === 0
+            ? null
+            : {
+                ...props.filter,
+                gaussianBlur: { x, y },
+              },
+      },
+      commit
+    )
+  }
+
   return (
     <fieldset>
       <legend>Shape Properties</legend>
@@ -77,35 +95,13 @@ export default function ShapePropsPanel() {
           <NumberInput
             label="x:"
             value={props.filter.gaussianBlur.x}
-            onChange={(x, commit) =>
-              creator.creator.updateAssetProps(
-                {
-                  ...props,
-                  filter: {
-                    ...props.filter,
-                    gaussianBlur: { x, y: props!.filter!.gaussianBlur.y },
-                  },
-                },
-                commit
-              )
-            }
+            onChange={(x, commit) => setBlur(x, props!.filter!.gaussianBlur.y, commit)}
             unit="px"
           />
           <NumberInput
             label="y:"
             value={props.filter.gaussianBlur.y}
-            onChange={(y, commit) =>
-              creator.creator.updateAssetProps(
-                {
-                  ...props,
-                  filter: {
-                    ...props.filter,
-                    gaussianBlur: { x: props!.filter!.gaussianBlur.x, y },
-                  },
-                },
-                commit
-              )
-            }
+            onChange={(y, commit) => setBlur(props!.filter!.gaussianBlur.x, y, commit)}
             unit="px"
           />
         </div>

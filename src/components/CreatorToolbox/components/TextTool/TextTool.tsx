@@ -3,7 +3,7 @@
 import TextIcon from 'assets/text-icon.svg'
 import NavButton from '@/components/NavButton/NavButton'
 import Tooltip from '@/components/Tooltip/Tooltip'
-import { CreatorTool } from '@mateuszjs/magic-render'
+import { CreatorTool } from '@mateuszjs/magic-render/types'
 import useCreator from '@/hooks/useCreator/useCreator'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
 

@@ -1,0 +1,12 @@
+.hexLabel {
+  display: block;
+  margin-top: 10px;
+  font-weight: 300;
+  font-size: var(--14px);
+
+  input {
+    font: inherit;
+    letter-spacing: 1px;
+    width: 9ch;
+  }
+}

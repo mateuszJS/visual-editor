@@ -1,19 +1,20 @@
 'use client'
 
 import useProject from '@/hooks/useProject/useProject'
-import initMagicRender, {
+import type {
   CreatorTool,
   ProjectSnapshot,
-  SerializedAsset,
+  Asset,
   TypoProps,
-} from '@mateuszjs/magic-render'
+  CreatorAPI,
+} from '@mateuszjs/magic-render/types'
 import { proxy, ref, useSnapshot } from 'valtio'
 import getOnTextureUpload from './getOnTextureUpload'
 import uploadMiniature from './uploadMiniature'
 import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
 import { useRef } from 'react'
-import { updateSelectedAssetStore } from '@/stores/asset'
+import { resetAssetStore, updateSelectedAssetStore } from '@/stores/asset'
 
 // we extract this part to a separate hook since not all components using useCreator need this data
 // and this data is going to be updated quite frequently
@@ -28,9 +29,8 @@ const DEFAULT_FONTS: Record<string, number> = {
   Creepster: 6,
 }
 
-type MagicRender = Awaited<ReturnType<typeof initMagicRender>>
 interface CreatorStore {
-  creator: MagicRender | null
+  creator: CreatorAPI | null
   projectId: string | null
   initialAssets: { projectId: string; assetUrls: string[] } | null
   selectedAssetId: number | null
@@ -47,7 +47,7 @@ const creatorState = proxy<CreatorStore>({
   selectedAssetId: null,
   historySnapshots: [],
   historySnapshotIndex: 0,
-  tool: CreatorTool.SelectAsset,
+  tool: 0, // CreatorTool.SelectAsset,
   fonts: DEFAULT_FONTS,
 })
 
@@ -103,7 +103,7 @@ function useCreator() {
       // and we assume that canvas is mounted to DOM
 
       canvas.setAttribute('data-connected', '')
-
+      const initMagicRender = (await import('@mateuszjs/magic-render')).default
       const creator = await initMagicRender(
         project.width,
         project.height,
@@ -168,7 +168,8 @@ function useCreator() {
         height: project.height,
         assets: hasInitialAssets
           ? initialAssets.assetUrls.map((url) => ({ url }))
-          : (project.assets as SerializedAsset[]),
+          : (project.assets as Asset[]), // those two types are same
+        // just TS cannot infer that
       }
 
       creatorState.initialAssets = null
@@ -191,6 +192,7 @@ function useCreator() {
         creatorState.historySnapshots = []
         creatorState.historySnapshotIndex = 0
         canvas.removeAttribute('data-connected')
+        resetAssetStore()
       }
     },
     setInitialAssets(projectId: string, assetUrls: string[]) {

@@ -1,5 +1,5 @@
-import type { PointUV, ProjectSnapshot, ShapeProps, TypoProps } from '@mateuszjs/magic-render'
-import { proxy } from 'valtio'
+import type { PointUV, ProjectSnapshot, ShapeProps, TypoProps } from '@mateuszjs/magic-render/types'
+import { proxy, ref } from 'valtio'
 
 interface AssetStore {
   bounds: PointUV[] | null
@@ -12,13 +12,17 @@ export const assetState = proxy<AssetStore>({
   typoProps: null,
 })
 
+export function resetAssetStore() {
+  assetState.bounds = null
+  assetState.props = null
+  assetState.typoProps = null
+}
+
 export function updateSelectedAssetStore(
   snapshot: ProjectSnapshot,
   selectedAssetId: number | null
 ) {
-  assetState.bounds = null
-  assetState.props = null
-  assetState.typoProps = null
+  resetAssetStore()
 
   const asset = snapshot.assets.find((a) => a.id === selectedAssetId)
 
@@ -26,13 +30,13 @@ export function updateSelectedAssetStore(
 
   if (asset.bounds === undefined) throw new Error('Asset bounds are undefined')
 
-  assetState.bounds = asset.bounds
+  assetState.bounds = ref(asset.bounds)
 
   if ('props' in asset) {
-    assetState.props = asset.props
+    assetState.props = ref(asset.props)
   }
 
   if ('typo_props' in asset) {
-    assetState.typoProps = asset.typo_props || null
+    assetState.typoProps = ref(asset.typo_props) || null
   }
 }

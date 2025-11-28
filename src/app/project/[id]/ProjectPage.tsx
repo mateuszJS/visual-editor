@@ -1,12 +1,12 @@
 'use client'
 
+import { useEffect } from 'react'
 import useProject from '@/hooks/useProject/useProject'
 import OverlayLoader from '@/components/OverlayLoader/OverlayLoader'
 import styles from './ProjectPage.module.css'
 import CreatorView from '@/components/CreatorView/CreatorView'
 import CreatorNav from '@/components/CreatorNav/CreatorNav'
 import CreatorToolbox from '@/components/CreatorToolbox/CreatorToolbox'
-import { useEffect } from 'react'
 import CreatorPanels from '@/components/CreatorPanels/CreatorPanels'
 import useProjectId from '@/hooks/useProjectId/useProjectId'
 

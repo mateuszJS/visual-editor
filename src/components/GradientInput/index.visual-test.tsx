@@ -2,7 +2,7 @@ import visualSetup from 'test/visual-setup'
 
 describe('Gradient Input', () => {
   it('default', async () => {
-    await visualSetup('components-gradientinput--default', __dirname, 0, {
+    await visualSetup('components-gradientinput--default', __dirname, 1300, {
       beforeTest: async (page) => {
         // Wait for potential animations to finish
         const button = await page.$('[aria-label="gradient fill"]')

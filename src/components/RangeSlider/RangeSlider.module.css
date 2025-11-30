@@ -6,8 +6,7 @@
 }
 
 .selectedRangeTrack {
-  background: red;
-  /* color-mix(in srgb, var(--secondary-accent) 70%, var(--background) 30%); */
+  background: color-mix(in srgb, var(--secondary-accent) 70%, var(--background) 30%);
   grid-area: 1 / 1;
 
   --diff: calc(var(--max) - var(--min));

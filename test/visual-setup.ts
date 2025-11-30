@@ -3,6 +3,7 @@ import path from 'path'
 import 'jest-puppeteer'
 import 'expect-puppeteer'
 import { toMatchImageSnapshot } from 'jest-image-snapshot'
+import { Page } from 'puppeteer'
 
 expect.extend({ toMatchImageSnapshot })
 
@@ -30,10 +31,9 @@ beforeAll(async () => {
 export default async function visualSetup(
   storyId: string,
   dirname: string,
-  options: { colorThreshold?: number; failureThreshold?: number; width?: number } = {}
+  failureThreshold: number,
+  options: { width?: number; beforeTest?: (page: Page) => Promise<void> } = {}
 ) {
-  const { colorThreshold = 0.1, failureThreshold = 0.013 } = options
-
   if (options.width) {
     await page.setViewport({ width: options.width, height: 720 })
   }
@@ -59,18 +59,23 @@ export default async function visualSetup(
   if (!storyRoot) {
     throw new Error('Element with class #storybook-root not found')
   }
+
+  if (options.beforeTest) {
+    await options.beforeTest(page)
+  }
+
   await storyRoot.screenshot({ path: tempPath })
-  // storybook-root
-  // await page.screenshot({ path: tempPath });
   const imageBuffer = fs.readFileSync(tempPath)
 
   // Compare with baseline
   try {
     // Compare with baseline
     expect(imageBuffer).toMatchImageSnapshot({
+      // DO NOT CHANGE STRATEGY
+      // ssim is allowing too many failures, similar to percentage
+      failureThresholdType: 'pixel',
       customSnapshotsDir: screenshotsDir,
       failureThreshold,
-      failureThresholdType: 'percent',
       allowSizeMismatch: true, // Elements which use fractions of rem/em units can have different size on different machines by 1-2px
       updatePassedSnapshot: true, // allows to update screenshots when -u flag is passed(flag ot update snapshots)
       customSnapshotIdentifier: expect
@@ -78,7 +83,7 @@ export default async function visualSetup(
         .currentTestName?.replace(/\//g, '')
         .replace(/\s/g, '_'),
       customDiffConfig: {
-        threshold: colorThreshold,
+        threshold: 0.1,
       },
     })
   } finally {

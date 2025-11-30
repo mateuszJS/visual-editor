@@ -46,3 +46,8 @@ storybook-static
 
 .swc/
 certificates
+
+.wrangler/
+
+public/sw.js
+public/sw.js.LICENSE.txt

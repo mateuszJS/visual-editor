@@ -26,8 +26,9 @@ describe('useFetcher', () => {
       })
     )
 
-    await act(() => {
-      fetcher('/api/me')
+    await act(async () => {
+      fetcher('/api/me') // we set delay('infinite') so response won't arrive
+      // that's why we don't await fetcher
     })
 
     expect(result.current).toEqual({
@@ -43,16 +44,14 @@ describe('useFetcher', () => {
     const { fetcher } = result.current
 
     server.use(
-      http.get('/api/me', () => HttpResponse.json({ error: 'Error has occured' }, { status: 400 }))
+      http.get('/api/me', () => HttpResponse.json({ error: 'Error has occurred' }, { status: 400 }))
     )
 
-    await act(() => {
-      fetcher('/api/me')
-    })
+    await act(() => fetcher('/api/me'))
 
     expect(result.current).toEqual({
       loading: false,
-      error: 'Error has occured',
+      error: 'Error has occurred',
       success: null,
       fetcher: expect.any(Function),
     })
@@ -64,9 +63,7 @@ describe('useFetcher', () => {
 
     server.use(http.get('/api/me', () => new HttpResponse(null, { status: 400 })))
 
-    await act(() => {
-      fetcher('/api/me')
-    })
+    await act(() => fetcher('/api/me'))
 
     expect(result.current).toEqual({
       loading: false,
@@ -81,14 +78,14 @@ describe('useFetcher', () => {
     const { result } = renderHook(() => useFetcher())
     const { fetcher } = result.current
 
-    await act(async () => {
+    await act(async () =>
       fetcher('/api/me', (user) => {
         expect(user).toEqual({
           firstName: 'John',
           lastName: 'Smith',
         })
       })
-    })
+    )
 
     expect(result.current).toEqual({
       loading: false,
@@ -109,11 +106,11 @@ describe('useFetcher', () => {
 
     server.use(http.get('/api/me', () => new HttpResponse()))
 
-    await act(async () => {
+    await act(async () =>
       fetcher('/api/me', (success) => {
         expect(success).toBeUndefined()
       })
-    })
+    )
 
     expect(result.current).toEqual({
       loading: false,
@@ -128,14 +125,14 @@ describe('useFetcher', () => {
       const { result } = renderHook(() => useFetcher())
       const { fetcher } = result.current
 
-      await act(async () => {
+      await act(async () =>
         fetcher('/api/me', (user) => {
           expect(user).toEqual({
             firstName: 'John',
             lastName: 'Smith',
           })
         })
-      })
+      )
 
       // test if first request was handled correctly
       expect(result.current).toEqual({
@@ -214,7 +211,7 @@ describe('useFetcher', () => {
     })
   })
 
-  describe('returns latest sent request related output', () => {
+  describe('returns output related to the latest fetcher(ignores previous calls of fetcher)', () => {
     it('if previous request completed with success', async () => {
       const { result } = renderHook(() => useFetcher())
       const { fetcher } = result.current
@@ -301,18 +298,13 @@ describe('useFetcher', () => {
         jest.useFakeTimers()
       })
 
-      afterEach(() => {
-        jest.useRealTimers()
-      })
-
       it('before current one completes', async () => {
         /*
           1. fetcher('api/me')
           2. fetcher('api/projects/1')
-          3. Receives response for api/me
+          3. Receives response for api/me (should ignore)
           4. Receives response for api/projects/1
         */
-
         server.use(
           http.get('/api/me', async () => {
             await delay(1)
@@ -330,13 +322,13 @@ describe('useFetcher', () => {
         const { result } = renderHook(() => useFetcher())
         const { fetcher } = result.current
 
-        await act(() => {
+        await act(async () => {
           fetcher('/api/me')
         })
 
         expect(result.current.loading).toEqual(true)
 
-        await act(() => {
+        await act(async () => {
           fetcher('/api/projects/1')
         })
 
@@ -372,7 +364,6 @@ describe('useFetcher', () => {
           3. Receives response for api/projects/1
           4. Receives response for api/me
         */
-
         server.use(
           http.get('/api/projects/1', async () => {
             await delay(1)

@@ -1,33 +1,31 @@
-import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
+import { act, render, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import UploadTexture from './UploadTexture'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
+import { getSanitizedProject } from '@/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 
 describe('UploadTexture', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(() => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
   })
 
   it('should render the image icon with label', async () => {
     const { container } = render(<UploadTexture />)
     await act(async () => {
-      /* wait for lazy loading */
+      /* wait for suspense */
     })
     expect(container).toMatchSnapshot()
   })
 
   it('renders upload modal when clicked', async () => {
+    const user = userEvent.setup()
     render(<UploadTexture />)
-    await act(async () => {}) /* wait for lazy loading */
 
     const uploadBtn = screen.getByRole('button', { description: 'Upload Image' })
-    fireEvent.click(uploadBtn)
+    await user.click(uploadBtn)
 
     expect(
       await screen.findByRole('dialog', {
@@ -51,6 +49,6 @@ describe('UploadTexture', () => {
     await user.upload(fileInputTrigger, files)
 
     const { result } = renderHook(useCreator)
-    expect(result.current.creator.addImage).toHaveBeenCalledTimes(1)
+    expect(result.current.creator.addImages).toHaveBeenCalledTimes(1)
   })
 })

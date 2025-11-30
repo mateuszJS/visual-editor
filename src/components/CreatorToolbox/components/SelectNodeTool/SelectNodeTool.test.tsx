@@ -2,16 +2,14 @@ import { act, render, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import SelectNodeTool from './SelectNodeTool'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
+import { getSanitizedProject } from '@/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 
 describe('SelectNodeTool', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(() => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
   })
 
   it('should render select node icon with tooltip saying: Select Node', () => {

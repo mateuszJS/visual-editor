@@ -2,8 +2,8 @@ import { act, render, renderHook, screen } from '@testing-library/react'
 import CreatorToolbox from './CreatorToolbox'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { __triggerSelectAsset } from '@mateuszjs/magic-render'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
 import * as LoaderHarness from '@/components/OverlayLoader/harness'
+import { getSanitizedProject } from '@/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 
@@ -15,14 +15,18 @@ const desktopButtons = ['Select Object', 'Select Node', 'Draw Shape', 'Add Text'
 describe('CreatorToolbox - creator not initialized yet', () => {
   it('for desktop', async () => {
     render(<CreatorToolbox />)
-    await act(async () => {}) /* wait for lazy components */
+    await act(async () => {
+      /* wait for suspense */
+    })
     expect(LoaderHarness.getLoader()).toBeInTheDocument()
   })
 
   it('for mobile', async () => {
     isMobile = true
     render(<CreatorToolbox />)
-    await act(async () => {}) /* wait for lazy components */
+    await act(async () => {
+      /* wait for suspense */
+    })
     expect(LoaderHarness.getLoader()).toBeInTheDocument()
   })
 })
@@ -30,20 +34,22 @@ describe('CreatorToolbox - creator not initialized yet', () => {
 describe('CreatorToolbox - desktop', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(async () => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
     isMobile = false
   })
 
   it('default state of toolbox', async () => {
     render(<CreatorToolbox />)
-    await act(async () => {}) /* wait for lazy components */
+
+    await act(async () => {
+      /* wait for suspense */
+    })
 
     expect(LoaderHarness.getLoader()).not.toBeInTheDocument()
 
     desktopButtons.forEach((tooltip) => {
-      expect(screen.queryByRole('button', { description: tooltip })).toBeInTheDocument()
+      const btn = screen.queryByRole('button', { description: tooltip })
+      expect(btn).toBeInTheDocument()
     })
 
     expect(screen.getByRole('navigation').children).toHaveLength(desktopButtons.length)
@@ -51,7 +57,6 @@ describe('CreatorToolbox - desktop', () => {
 
   it('toolbox states in default state despite the selected asset', async () => {
     render(<CreatorToolbox />)
-    await act(async () => {}) /* wait for lazy components */
     await act(async () => {
       __triggerSelectAsset([1, 0, 0, 0])
     })
@@ -59,7 +64,8 @@ describe('CreatorToolbox - desktop', () => {
     expect(LoaderHarness.getLoader()).not.toBeInTheDocument()
 
     desktopButtons.forEach((tooltip) => {
-      expect(screen.queryByRole('button', { description: tooltip })).toBeInTheDocument()
+      const btn = screen.queryByRole('button', { description: tooltip })
+      expect(btn).toBeInTheDocument()
     })
 
     expect(screen.getByRole('navigation').children).toHaveLength(desktopButtons.length)
@@ -69,16 +75,15 @@ describe('CreatorToolbox - desktop', () => {
 describe('CreatorToolbox - mobile', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(async () => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
     isMobile = true
   })
 
   it('default state of toolbox', async () => {
     render(<CreatorToolbox />)
-    await act(async () => {}) /* wait for lazy components */
-
+    await act(async () => {
+      /* wait for suspense */
+    })
     expect(LoaderHarness.getLoader()).not.toBeInTheDocument()
 
     mobileButtons.forEach((name) => {
@@ -90,7 +95,6 @@ describe('CreatorToolbox - mobile', () => {
 
   it('after selecting an asset', async () => {
     render(<CreatorToolbox />)
-    await act(async () => {}) /* wait for lazy components */
     await act(async () => {
       __triggerSelectAsset([1, 0, 0, 0])
     })

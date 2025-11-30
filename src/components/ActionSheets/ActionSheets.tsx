@@ -8,7 +8,6 @@ import IconButton from '@/components/IconButton/IconButton'
 
 try {
   Modal.setAppElement('#non-modal-content')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 } catch (err) {
   throw Error('All ActionSheets should be lazy loaded!')
 }

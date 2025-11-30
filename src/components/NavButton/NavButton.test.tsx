@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom'
-import { fireEvent, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { render, screen } from '@testing-library/react'
 import HomeIcon from 'assets/home-icon.svg'
 import NavButton from './NavButton'
 
@@ -16,7 +16,8 @@ describe('<NavButton>', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('should trigger onClick callbakc when clicked', () => {
+  it('should trigger onClick callback when clicked', async () => {
+    const user = userEvent.setup()
     const onClick = jest.fn()
 
     render(
@@ -28,7 +29,7 @@ describe('<NavButton>', () => {
       </NavButton>
     )
 
-    fireEvent.click(screen.getByText(/Content/i))
+    await user.click(screen.getByText(/Content/i))
 
     expect(onClick).toHaveBeenCalledTimes(1)
   })

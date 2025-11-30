@@ -30,16 +30,18 @@
 
   /* font sizes to avoid fighting with rem */
   --8px: 0.5rem;
+  --9px: 0.5625rem;
+  --10px: 0.625rem;
+  --11px: 0.6875rem;
   --12px: 0.75rem;
   --13px: 0.8125rem;
   --14px: 0.875rem;
-  /* --15px: 0.9375rem; */
+  --15px: 0.9375rem;
   --16px: 1rem;
-  /* --17px: 1.0625rem; */
+  --17px: 1.0625rem;
   --18px: 1.125rem;
   --19px: 1.1875rem;
   --20px: 1.25rem;
-  /* --21px: 1.3125rem; */
   --28px: 1.75rem;
   --40px: 2.5rem;
 }
@@ -149,8 +151,20 @@ button {
   background: none;
 }
 
-ul {
+ul,
+ol {
   list-style: none;
+}
+
+legend {
+  text-transform: uppercase;
+  font-size: var(--10px);
+  margin-inline-start: 5px;
+}
+
+fieldset {
+  padding-inline: 5px;
+  border-radius: 3px;
 }
 
 .page {

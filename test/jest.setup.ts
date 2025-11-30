@@ -15,6 +15,20 @@ beforeAll(() => {
   } as unknown as typeof Image
 
   global.URL.createObjectURL = jest.fn(() => 'blob://image-blob') // jsdom does not support File as argument, only blob
+
+  const registration = {
+    active: {
+      postMessage: jest.fn(),
+    },
+  }
+
+  Object.defineProperty(global.navigator, 'serviceWorker', {
+    value: {
+      register: jest.fn(() => {
+        return Promise.resolve(registration)
+      }),
+    },
+  })
 })
 
 beforeEach(() => {
@@ -35,6 +49,9 @@ afterEach(() => {
   server.resetHandlers()
   document.getElementById('non-modal-content')!.remove()
   window.creatorCanvas.remove()
+  jest.useRealTimers()
 })
 
-afterAll(() => server.close())
+afterAll(() => {
+  server.close()
+})

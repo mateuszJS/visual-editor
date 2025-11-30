@@ -1,11 +1,10 @@
 import { act, renderHook } from '@testing-library/react'
 import useCreator from './useCreator'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
-import { __triggerUpdateAssets } from '@mateuszjs/magic-render'
+import { __triggerPreviewUpdate } from '@mateuszjs/magic-render'
 import useProject from '@/hooks/useProject/useProject'
-import { server } from 'test/server'
-import { http, HttpResponse } from 'msw'
-import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
+import { getRequest, server } from 'test/server'
+import { http } from 'msw'
+import { getSanitizedProject } from '@/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 
@@ -13,10 +12,9 @@ describe('useCreator', () => {
   it('creator is ready only after initialization', async () => {
     const { result } = renderHook(useCreator)
 
-    await act(async () => {
-      result.current.init(window.creatorCanvas, project)
-      expect(result.current.isReady).toBe(false)
-    })
+    expect(result.current.isReady).toBe(false)
+
+    await act(async () => result.current.init(window.creatorCanvas, project))
 
     expect(result.current.isReady).toBe(true)
   })
@@ -26,18 +24,16 @@ describe('useCreator', () => {
 
     await act(async () => {
       const canvas = document.createElement('canvas')
-      result.current.init(canvas, project)
+      await result.current.init(canvas, project)
     })
 
     expect(result.current.isReady).toBe(false)
   })
 
-  it('canvas is marked as conntected once initialized', async () => {
+  it('canvas is marked as connected once initialized', async () => {
     const { result } = renderHook(useCreator)
 
-    await act(async () => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(async () => result.current.init(window.creatorCanvas, project))
 
     expect(window.creatorCanvas.hasAttribute('data-connected')).toBe(true)
   })
@@ -47,9 +43,7 @@ describe('useCreator', () => {
 
     expect(() => result.current.creator).toThrow('Creator is not initialized')
 
-    await act(async () => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(async () => result.current.init(window.creatorCanvas, project))
 
     expect(() => result.current.creator).not.toThrow('Creator is not initialized')
   })
@@ -59,9 +53,7 @@ describe('useCreator', () => {
 
     expect(() => result.current.projectId).toThrow('Project id is not initialized')
 
-    await act(async () => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(async () => result.current.init(window.creatorCanvas, project))
 
     expect(result.current.projectId).toEqual('1')
   })
@@ -69,14 +61,10 @@ describe('useCreator', () => {
   it("initializing creator with same canvas element twice doesn't produce a new creator", async () => {
     const { result } = renderHook(useCreator)
 
-    await act(async () => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(async () => result.current.init(window.creatorCanvas, project))
     const creatorFirstInit = result.current.creator
 
-    await act(async () => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(async () => result.current.init(window.creatorCanvas, project))
     const creatorSecondInit = result.current.creator
 
     expect(creatorFirstInit).toBe(creatorSecondInit)
@@ -90,9 +78,7 @@ describe('useCreator', () => {
     const canvas = document.createElement('canvas')
     document.body.appendChild(canvas)
 
-    await act(async () => {
-      result.current.init(canvas, project)
-    })
+    await act(async () => result.current.init(canvas, project))
 
     expect(canvas.hasAttribute('data-magic-render-linked')).toBe(true)
 
@@ -114,15 +100,18 @@ describe('useCreator', () => {
     beforeEach(async () => {
       const { result: useProjectRef } = renderHook(useProject)
 
-      await act(async () => {
-        useProjectRef.current.createProject(100, 100, () => {})
-      })
+      await act(
+        async () =>
+          new Promise((resolve) => {
+            useProjectRef.current.createProject(100, 100, () => {
+              resolve()
+            })
+          })
+      )
 
       const { result: useCreatorRef } = renderHook(useCreator)
 
-      await act(async () => {
-        useCreatorRef.current.init(window.creatorCanvas, project)
-      })
+      await act(async () => useCreatorRef.current.init(window.creatorCanvas, project))
     })
 
     it('undo is null when there is no more snapshots to go back in time', async () => {
@@ -131,9 +120,14 @@ describe('useCreator', () => {
       expect(result.current.undo).toBeNull()
 
       await act(async () => {
-        __triggerUpdateAssets([])
-        __triggerUpdateAssets([{ id: 1 }])
-        __triggerUpdateAssets([{ id: 1 }, { id: 2 }])
+        result.current.creator.setSnapshot(
+          { width: 100, height: 100, assets: [{ url: '1' }] },
+          true
+        )
+        result.current.creator.setSnapshot(
+          { width: 100, height: 100, assets: [{ url: '1' }, { url: '2' }] },
+          true
+        )
       })
 
       expect(result.current.undo).toEqual(expect.any(Function))
@@ -157,8 +151,15 @@ describe('useCreator', () => {
       expect(result.current.redo).toBeNull()
 
       await act(async () => {
-        __triggerUpdateAssets([{ id: 1 }])
-        __triggerUpdateAssets([{ id: 1 }, { id: 2 }])
+        result.current.creator.setSnapshot(
+          { width: 100, height: 100, assets: [{ url: '1' }] },
+          true
+        )
+
+        result.current.creator.setSnapshot(
+          { width: 100, height: 100, assets: [{ url: '1' }, { url: '2' }] },
+          true
+        )
       })
 
       await act(async () => {
@@ -174,63 +175,70 @@ describe('useCreator', () => {
       expect(result.current.redo).toBeNull()
     })
 
-    it('breaking chain of undos(by any new snapshot) correctly cuts the history', async () => {
+    it('breaking chain of undos(by introducing a new snapshot) cuts the history', async () => {
+      // PATCH requests won't be sent if proejct doesn't exists in local storage already
+      const { result: projectHookResult } = renderHook(() => useProject())
+      await act(() => {
+        projectHookResult.current.createProject(100, 100, () => {})
+      })
+
       const { result } = renderHook(useCreator)
 
       expect(result.current.redo).toBeNull()
 
+      // provide some history samplea
       await act(async () => {
-        __triggerUpdateAssets([{ url: '1' }])
-        __triggerUpdateAssets([{ url: '1' }, { url: '2' }])
-        __triggerUpdateAssets([{ url: '1' }, { url: '2' }, { url: '3' }])
+        result.current.creator.setSnapshot(
+          { width: 100, height: 100, assets: [{ url: '1' }] },
+          true
+        )
+        result.current.creator.setSnapshot(
+          { width: 100, height: 100, assets: [{ url: '1' }, { url: '2' }] },
+          true
+        )
+        result.current.creator.setSnapshot(
+          { width: 100, height: 100, assets: [{ url: '1' }, { url: '2' }, { url: '3' }] },
+          true
+        )
       })
 
       await act(async () => {
         result.current.undo?.()
       })
 
-      let receivedPayload = null
-      server.use(
-        http.patch('/api/projects/:id', async ({ request }) => {
-          const data = (await request.json()) as SanitizedProject
-          receivedPayload = data?.assets
-          return new HttpResponse(null, { status: 204 })
-        })
-      )
+      let updateProjectReq = getRequest('/api/projects/1', 'PATCH')
 
+      // do first change to cut history
       await act(async () => {
-        __triggerUpdateAssets([{ url: '1' }, { url: '2' }, { url: '4' }])
+        result.current.creator.setSnapshot(
+          { width: 100, height: 100, assets: [{ url: '1' }, { url: '2' }, { url: '4' }] },
+          true
+        )
+      })
+      // verify the cut
+      await expect((await updateProjectReq).json()).resolves.toMatchObject({
+        assets: [{ url: '1' }, { url: '2' }, { url: '4' }],
       })
 
-      expect(receivedPayload).toEqual([{ url: '1' }, { url: '2' }, { url: '4' }])
-
-      await act(async () => {
-        result.current.undo?.()
-      })
-
-      server.use(
-        http.patch('/api/projects/:id', async ({ request }) => {
-          const data = (await request.json()) as SanitizedProject
-          receivedPayload = data?.assets
-          return new HttpResponse(null, { status: 204 })
-        })
-      )
-
-      expect(receivedPayload).toEqual([{ url: '1' }, { url: '2' }])
+      updateProjectReq = getRequest('/api/projects/1', 'PATCH')
 
       await act(async () => {
         result.current.undo?.()
       })
 
-      server.use(
-        http.patch('/api/projects/:id', async ({ request }) => {
-          const data = (await request.json()) as SanitizedProject
-          receivedPayload = data?.assets
-          return new HttpResponse(null, { status: 204 })
-        })
-      )
+      await expect((await updateProjectReq).json()).resolves.toMatchObject({
+        assets: [{ url: '1' }, { url: '2' }],
+      })
 
-      expect(receivedPayload).toEqual([{ url: '1' }])
+      updateProjectReq = getRequest('/api/projects/1', 'PATCH')
+
+      await act(async () => {
+        result.current.undo?.()
+      })
+
+      await expect((await updateProjectReq).json()).resolves.toMatchObject({
+        assets: [{ url: '1' }],
+      })
     })
   })
 
@@ -244,7 +252,7 @@ describe('useCreator', () => {
     document.body.appendChild(canvas)
 
     await act(async () => {
-      result.current.init(canvas, project)
+      await result.current.init(canvas, project)
       document.body.removeChild(canvas)
       result.current.destroy(canvas)
     })
@@ -276,54 +284,103 @@ describe('useCreator', () => {
   })
 
   describe('providing initial assets to creator', () => {
-    it('with matching project id assets will be used right after creator initialization', async () => {
-      const { result } = renderHook(useCreator)
-
-      const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
-      await act(async () => {
-        result.current.setInitialAssets(project.id, assets)
-        result.current.init(window.creatorCanvas, project)
-      })
-
-      expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(
-        1,
-        [{ url: expect.any(String) }, { url: expect.any(String) }],
-        true
-      )
-    })
-
-    it('if different project id assets will be dismissed', async () => {
+    it('if different project id is provided, then initial assets will be dismissed', async () => {
       const { result } = renderHook(useCreator)
 
       const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets('2', assets)
-        result.current.init(window.creatorCanvas, project)
+        await result.current.init(window.creatorCanvas, project)
       })
 
-      expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(1, [], true)
+      expect(result.current.creator.setSnapshot).toHaveBeenNthCalledWith(
+        1,
+        { assets: [], height: 500, width: 500 },
+        true
+      )
     })
 
-    it('initial assets are used only once', async () => {
+    it('initial assets are used only once, and request is sent only when are used', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2020-01-01'))
+
+      const { result: projectHookResult } = renderHook(() => useProject())
+      await act(() => {
+        projectHookResult.current.createProject(100, 100, () => {})
+      })
+
       const { result } = renderHook(useCreator)
+
+      const updateProjectRequest = getRequest('/api/projects/1', 'PATCH')
 
       const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
         result.current.setInitialAssets(project.id, assets)
-        result.current.init(window.creatorCanvas, project)
+        await result.current.init(window.creatorCanvas, project)
       })
+
+      expect(result.current.creator.setSnapshot).toHaveBeenNthCalledWith(
+        1,
+        {
+          assets: [
+            { url: 'blob:http://localhost/image-1' },
+            { url: 'blob:http://localhost/image-2' },
+          ],
+          height: 500,
+          width: 500,
+        },
+        true
+      )
+
+      await expect((await updateProjectRequest).json()).resolves.toEqual({
+        width: 500,
+        height: 500,
+        assets: [
+          { url: 'blob:http://localhost/image-1' },
+          { url: 'blob:http://localhost/image-2' },
+        ],
+        updatedAt: '2020-01-01T00:00:00.000Z',
+      })
+
+      server.use(
+        http.patch('/api/projects/:id', async () => {
+          throw new Error('Should not be called again')
+        })
+      )
 
       const canvas = document.createElement('canvas')
       await act(async () => {
         window.document.body.appendChild(canvas)
-
-        result.current.init(canvas, project)
+        await result.current.init(canvas, project)
       })
 
-      // remember that with init(canvas, project) we return a new creator instance
-      // with a new resetAssets jest spy function, so thats why it should be 0 called, not 2
-      expect(result.current.creator.resetAssets).toHaveBeenNthCalledWith(1, [], true)
+      expect(result.current.creator.setSnapshot).toHaveBeenNthCalledWith(
+        1,
+        { assets: [], height: 500, width: 500 },
+        true
+      )
+
       canvas.remove()
     })
+  })
+
+  it('request with miniature is sent on miniature update', async () => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'))
+
+    const { result } = renderHook(useCreator)
+    await act(async () => result.current.init(window.creatorCanvas, project))
+
+    const putRequest = getRequest('/api/project-uploads/1/miniature', 'PUT')
+
+    await act(async () => {
+      __triggerPreviewUpdate({
+        toBlob: (cb: (blob: Blob | null) => void) => {
+          cb(new Blob(['canvas-blob'], { type: 'image/png' }))
+        },
+      })
+    })
+
+    const req = await putRequest
+    expect(req.headers.get('x-amz-meta-updated-at')).toBe('2020-01-01T00:00:00.000Z')
+    expect(await req.blob()).toEqual(new Blob(['canvas-blob'], { type: 'image/png' }))
   })
 })

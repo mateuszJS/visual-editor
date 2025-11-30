@@ -10,7 +10,10 @@ interface Props {
 export default function Tooltip({ children, tooltipContent }: Props) {
   const isMobile = useIsMobile()
   const tooltipId = useUniqueId()
-  const props = { 'aria-describedby': tooltipId }
+  const props = {
+    'aria-describedby': tooltipId,
+    suppressHydrationWarning: true,
+  }
 
   if (isMobile) {
     // no tooltip on mobile, so no need for aria-describedby
@@ -20,7 +23,7 @@ export default function Tooltip({ children, tooltipContent }: Props) {
   return (
     <div className={styles.root}>
       {children(props)}
-      <div id={tooltipId} className={styles.tooltip}>
+      <div id={tooltipId} suppressHydrationWarning className={styles.tooltip}>
         {tooltipContent}
       </div>
     </div>

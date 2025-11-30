@@ -5,6 +5,7 @@
   right: 30px;
 
   display: flex;
+  align-items: flex-start;
   gap: 16px;
 
   background-color: var(--danger);

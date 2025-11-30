@@ -2,9 +2,10 @@ import type { Meta, StoryObj } from '@storybook/nextjs'
 import CreatorToolbox from './CreatorToolbox'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { useEffect } from 'react'
-import { SanitizedProject } from '@/app/api/utils/sanitizeProjectData'
 import { mocked } from 'storybook/test'
+import { CreatorAPI } from '@mateuszjs/magic-render/types'
 import initMagicRender from '@mateuszjs/magic-render'
+import { ApiProjectContent } from '../../../apiTypes'
 
 const meta = {
   component: CreatorToolbox,
@@ -22,20 +23,18 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-const project: SanitizedProject = {
+const project: ApiProjectContent = {
   id: '1',
-  width: 100,
-  height: 100,
   assets: [],
-  name: '',
-  owner_id: '',
-  last_updated: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  width: 500,
+  height: 500,
 }
 
 const initMagicRenderMock = {
-  resetAssets: () => {},
+  setSnapshot: () => {},
   destroy: () => {},
-} as unknown as Awaited<ReturnType<typeof initMagicRender>>
+} as unknown as CreatorAPI
 
 export const Default: Story = {
   decorators: [

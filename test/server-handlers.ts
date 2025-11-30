@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw'
 
 const file = new File(['image-data'], 'image-blob.png', { type: 'image/png' })
+const mockBlobData = new Uint8Array([1, 2, 3, 4])
 
 export default [
   http.get('/api/me', () => {
@@ -27,10 +28,20 @@ export default [
   http.patch('/api/projects/:id', () => {
     return new HttpResponse(null, { status: 204 })
   }),
-  http.post('/api/project-uploads/:projectId', () => {
-    return new HttpResponse('3', { status: 201 })
+  http.put('/api/project-uploads/:projectId', () => {
+    const res = new HttpResponse(null, { status: 204 })
+    Object.defineProperty(res, 'url', {
+      value: 'https://storage-provider.com/projectId/new-upload-id',
+    })
+    return res
   }),
-  http.get('/api/project-uploads/:projectId/:id', () => {
-    return new HttpResponse(file, { status: 200 })
+  http.get('/api/project-uploads/:projectId/:uploadId', () => {
+    return new HttpResponse(file, { status: 204 })
+  }),
+  http.get(/blob-uuid/, () => {
+    return HttpResponse.arrayBuffer(mockBlobData.buffer)
+  }),
+  http.put('/api/project-uploads/:projectId/miniature', async () => {
+    return new HttpResponse(null, { status: 204 })
   }),
 ]

@@ -3,7 +3,7 @@
 import PenToolIcon from 'assets/pen-icon.svg'
 import NavButton from '@/components/NavButton/NavButton'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { CreatorTool } from '@mateuszjs/magic-render'
+import { CreatorTool } from '@mateuszjs/magic-render/types'
 import Tooltip from '@/components/Tooltip/Tooltip'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
 

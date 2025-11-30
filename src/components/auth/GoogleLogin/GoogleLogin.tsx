@@ -7,8 +7,9 @@ import Button from '@/components/Button/Button'
 import GoogleIcon from 'assets/google-logo.svg'
 import styles from './GoogleLogin.module.css'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
-import { SanitizedUser } from '@/app/api/utils/sanitizeUserData'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
+import getUserAgent from '@/utils/getUserAgent'
+import { ApiUserBasic } from '../../../../apiTypes'
 
 interface Props {
   onSuccess: VoidFunction
@@ -17,7 +18,7 @@ interface Props {
 export default function GoogleLogin({ onSuccess }: Props) {
   const googleWrapper = useRef<HTMLDivElement>(null)
   const getCsrfToken = useCSRF()
-  const { fetcher } = useFetcher<SanitizedUser>()
+  const { fetcher } = useFetcher<ApiUserBasic>()
 
   const initGooglBtn = () => {
     // Migration docs: https://developers.google.com/identity/gsi/web/guides/migration
@@ -37,7 +38,7 @@ export default function GoogleLogin({ onSuccess }: Props) {
           {
             method: 'POST',
             csrfToken,
-            json: { idToken: credential },
+            json: { idToken: credential, userAgent: getUserAgent() },
           },
           (user) => {
             userStore.user = user

@@ -21,21 +21,32 @@ export default async (): Promise<Config> => {
   const frontendConfig = await buildConfig({
     displayName: 'Frontend',
     testEnvironment: 'jest-fixed-jsdom',
+    testMatch: [
+      '<rootDir>/src/app/**/*.test.{ts,tsx}',
+      '<rootDir>/src/components/**/*.test.{ts,tsx}',
+      '<rootDir>/src/hooks/**/*.test.{ts,tsx}',
+      '<rootDir>/src/utils/**/*.test.{ts,tsx}',
+    ],
     setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
-    testPathIgnorePatterns: ['/src/app/api/.*test\\.ts$'],
     moduleNameMapper,
   })
 
-  const backendConfig = await buildConfig({
-    displayName: 'Backend',
-    testEnvironment: 'node',
-    testMatch: ['<rootDir>/src/app/api/**/*.test.ts'],
+  const serviceWorkerConfig: Config = {
+    displayName: 'Service Worker',
+    testMatch: ['<rootDir>/src/service-worker/*.test.ts'],
+    setupFilesAfterEnv: ['<rootDir>/test/service-worker.setup.ts'],
+    transform: {
+      '^.+\\.tsx?$': [
+        'ts-jest',
+        {
+          useESM: true,
+          tsconfig: '<rootDir>/src/service-worker/tsconfig.json',
+        },
+      ],
+    } as unknown as Config['transform'],
+    extensionsToTreatAsEsm: ['.ts', '.tsx'],
     moduleNameMapper,
-    fakeTimers: {
-      enableGlobally: true,
-      now: new Date('2024-01-01').getTime(),
-    },
-  })
+  }
 
   const visualRegressionConfig: Config = {
     displayName: 'Visual Regression',
@@ -59,7 +70,7 @@ export default async (): Promise<Config> => {
     collectCoverage: true,
     coverageDirectory: 'coverage',
     coverageProvider: 'v8',
-    projects: [frontendConfig, backendConfig, visualRegressionConfig],
+    projects: [frontendConfig, serviceWorkerConfig, visualRegressionConfig],
   }
 
   return config

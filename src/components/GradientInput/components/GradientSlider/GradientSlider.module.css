@@ -1,0 +1,33 @@
+.slider {
+  --handle-height: calc(var(--thumb-diameter) * 1.5);
+  padding-block-end: var(--handle-height);
+
+  input {
+    --thumb-background: linear-gradient(currentColor, currentColor) no-repeat center 79% / 60% 50%,
+      conic-gradient(
+          at 50% 0,
+          transparent 125deg,
+          var(--background) 125deg 235deg,
+          transparent 235deg
+        )
+        no-repeat top center / 100% 100%;
+
+    &::-webkit-slider-thumb {
+      will-change: transform;
+      background: var(--thumb-background);
+      height: var(--handle-height);
+      transform: translateY(15px);
+    }
+    &::-moz-range-thumb {
+      will-change: transform;
+      background: var(--thumb-background);
+      height: var(--handle-height);
+      transform: translateY(15px);
+    }
+  }
+}
+
+.gradientTrack {
+  width: 100%;
+  height: 100%;
+}

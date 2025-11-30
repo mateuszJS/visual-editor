@@ -14,9 +14,8 @@ export default function NavLink({ children, href, className }: Props) {
 
   return (
     <Link
-      className={cn(styles.navItem, className, {
-        [styles.active]: pathname === href,
-      })}
+      className={cn(styles.navItem, className)}
+      aria-current={pathname === href ? 'page' : undefined}
       href={href}
     >
       {children}

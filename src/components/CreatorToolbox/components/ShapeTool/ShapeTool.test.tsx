@@ -1,19 +1,15 @@
-import { act, fireEvent, render, renderHook, screen } from '@testing-library/react'
+import { act, render, renderHook, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import ShapeTool from './ShapeTool'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { getSanitizedProject } from '@/app/api/test/getSanitizedProject'
-import { CreatorTool } from '@mateuszjs/magic-render'
+import { getSanitizedProject } from '@/test/getSanitizedProject'
 
 const project = getSanitizedProject()
 
 describe('ShapeTool', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(() => {
-      const canvas = document.createElement('canvas')
-      document.body.appendChild(canvas)
-      result.current.init(canvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
   })
 
   it('should render pen icon with label', () => {
@@ -21,15 +17,21 @@ describe('ShapeTool', () => {
     expect(container).toMatchSnapshot()
   })
 
-  it('uploads files and adds to the project', async () => {
+  it('clicks causes creator to update the tool to DrawBezierCurve', async () => {
+    const user = userEvent.setup()
     render(<ShapeTool />)
-    const shapeToolBtn = screen.getByRole('button', {
-      name: /shape/i,
-    })
-    fireEvent.click(shapeToolBtn)
 
-    const { result } = renderHook(useCreator)
+    await user.click(
+      screen.getByRole('button', {
+        description: /draw shape/i,
+      })
+    )
 
-    expect(result.current.creator.setTool).toHaveBeenCalledWith(CreatorTool.DrawShape)
+    expect(
+      await screen.findByRole('button', {
+        description: /draw shape/i,
+        pressed: true,
+      })
+    ).toBeInTheDocument()
   })
 })

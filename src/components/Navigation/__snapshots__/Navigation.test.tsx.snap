@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Navigation> should render five standard links for unautenticated user 1`] = `
+exports[`<Navigation> should render five standard links for unauthenticated user 1`] = `
 <div>
   <nav
     class="navigation-bar"
@@ -10,10 +10,13 @@ exports[`<Navigation> should render five standard links for unautenticated user 
       href="/"
     >
       <svg />
-      Home
+      <span>
+        Home
+      </span>
     </a>
     <a
-      class="navItem active"
+      aria-current="page"
+      class="navItem"
       href="/explore"
     >
       <svg />

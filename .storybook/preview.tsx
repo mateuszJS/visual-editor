@@ -1,12 +1,15 @@
-import type { Preview } from '@storybook/react'
-import { themes } from '@storybook/theming'
-import { Outfit } from 'next/font/google'
+import type { Preview } from '@storybook/nextjs'
+import { sb } from 'storybook/test'
+import { themes } from 'storybook/theming'
+import localFont from 'next/font/local'
 import '../src/app/globals.css'
 
-const outfit = Outfit({
+const outfit = localFont({
+  src: '../local-outfit.woff2',
   variable: '--font-outfit',
-  subsets: ['latin'],
 })
+
+sb.mock(import('@mateuszjs/magic-render'))
 
 const preview: Preview = {
   parameters: {

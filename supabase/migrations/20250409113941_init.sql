@@ -33,25 +33,3 @@ create table projects (
   height int not null,
   miniature_created_at timestamp
 );
-
-
-create table project_textures (
-  id uuid default gen_random_uuid() primary key,
-  owner_id uuid references users not null
-);
-
-insert into storage.buckets
-  (id, name, public)
-values
-  ('project-textures', 'project-textures', true);
-
-insert into storage.buckets
-  (id, name, public)
-values
-  ('project-miniatures', 'project-miniatures', true);
-
--- create policy "public-storage-objects"
--- on storage.objects
--- for insert with check (
---   true
--- );

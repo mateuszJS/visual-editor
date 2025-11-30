@@ -1,0 +1,4 @@
+.root {
+  display: grid;
+  grid-template-columns: auto 1fr 5px auto 1fr;
+}

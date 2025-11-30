@@ -10,9 +10,7 @@ describe('userStore', () => {
 
     expect(result.current.user).toBeUndefined()
 
-    await act(async () => {
-      initUserStore()
-    })
+    await act(() => initUserStore())
 
     expect(result.current.user).toEqual({ firstName: 'John', lastName: 'Smith' })
   })
@@ -25,9 +23,7 @@ describe('userStore', () => {
     // normally API returns 400 without json, but here we won't to make sure it's gonna work even if JSON ir returned
     server.use(http.get('/api/me', () => HttpResponse.json({ name: 'Judas' }, { status: 400 })))
 
-    await act(async () => {
-      initUserStore()
-    })
+    await act(() => initUserStore())
 
     expect(result.current.user).toBeNull()
   })
@@ -36,7 +32,7 @@ describe('userStore', () => {
     const { result } = renderHook(() => useSnapshot(userStore))
 
     const mockUser = {
-      id: 1,
+      id: '1',
       email: 'alice@google.com',
       name: 'Alice',
       avatar: 'http://alice.jpg',

@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react'
+import { renderHook } from '@testing-library/react'
 import useCSRF from './useCSRF'
 import { http, HttpResponse } from 'msw'
 import { server } from 'test/server'
@@ -13,8 +13,6 @@ describe('useCSRF', () => {
   it('if initial request failes, it retries when token is requested', async () => {
     server.use(http.get('/api/csrf', () => HttpResponse.error()))
     const { result } = renderHook(() => useCSRF())
-
-    await act(() => {}) // wait for current request/renders to complete
 
     server.use(
       http.get('/api/csrf', () => HttpResponse.json({ csrfToken: 'csrf-token' }, { status: 200 }))

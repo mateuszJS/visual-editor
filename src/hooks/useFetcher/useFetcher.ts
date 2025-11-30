@@ -1,12 +1,12 @@
 import errorStore from '@/stores/error'
-import nativeFetcher, { FetcherOptions } from '@/utils/fetcher'
-import { getErrorMessage } from '@/utils/fetcher/getErrorMessage'
+import nativeFetcher, { FetcherOptions } from '@/utils/nativeFetcher'
+import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
 import { useEffect, useRef, useState } from 'react'
 
-type Success<T> = [T] extends [never] ? Record<string, never> : { json: T }
+type Success<T> = T extends never ? Record<never, never> : { json: T }
 
 // Conditional return type based on whether T is provided
-type FetcherReturn<T> = [T] extends [never] ? void : T
+// type FetcherReturn<T> = T extends never ? void : T
 
 const DEFAULT_ERROR_MESSAGE =
   'Something went wrong. Please try again. If the issue still persist, please contact support.'
@@ -14,11 +14,11 @@ const DEFAULT_ERROR_MESSAGE =
 /**
  * Custom hook to fetch data with enhanced error handling and loading state management.
  * Returned response body can be retrived in two ways:
- * 1. read "success" property from the hhook - best if not future actions needed expect rerendering
- * 2. pass a callback as the last argument to the fetcher function - best if you need to do something on success only, and leaves error handling for the hook
+ * 1. read "success" property from the hook - best if not future actions needed except rerendering
+ * 2. pass a callback as the last argument to the fetcher function - best if you need to perform an action(redirect, call function) on success only, and leaves error handling for the hook
  * fetcher() doesn't return data with response body in promise on purpose, callbacks are preferred since those won't need error handing(Promise.reject needs a catch block)
  */
-export default function useFetcher<T = never>() {
+export default function useFetcher<T extends Record<string, unknown> | Array<unknown> = never>() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<Success<T> | null>(null)
@@ -26,8 +26,8 @@ export default function useFetcher<T = never>() {
 
   async function enhancedFetcher(
     url: string,
-    secondArg?: FetcherOptions | ((data: FetcherReturn<T>) => void),
-    successCallback?: (data: FetcherReturn<T>) => void
+    secondArg?: FetcherOptions | ((data: T) => void),
+    successCallback?: (data: T) => void
   ): Promise<void> {
     const fetcherOptions = typeof secondArg === 'object' ? secondArg : {}
 
@@ -43,23 +43,24 @@ export default function useFetcher<T = never>() {
     requestId.current = newRequestId
 
     try {
-      const response = await nativeFetcher(url, fetcherOptions)
+      const response = await nativeFetcher<T>(url, fetcherOptions)
 
       if (requestId.current !== newRequestId) return undefined // this is not the latest request
 
       const contentType = response.headers.get('Content-Type')
-      const json = contentType === 'application/json' ? await response.json() : null
 
       if (!response.ok) {
+        const json = contentType === 'application/json' ? await response.json() : null
         setError(json?.error || DEFAULT_ERROR_MESSAGE)
       } else {
-        if (json) {
-          setSuccess({ json } as Success<T>)
-          successCallback?.(json as FetcherReturn<T>)
+        const json = contentType === 'application/json' ? await response.json() : null
+        if (json !== null) {
+          setSuccess({ json } as Success<T>) // should be infered by TS without "as"
+          successCallback?.(json)
           return undefined
         } else {
-          setSuccess({} as Success<T>)
-          successCallback?.(undefined as FetcherReturn<T>)
+          setSuccess({} as Success<T>) // should be infered by TS without "as"
+          successCallback?.(undefined as never)
         }
       }
       return undefined

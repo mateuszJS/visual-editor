@@ -2,11 +2,24 @@
 
 exports[`TextTool should render text icon with label 1`] = `
 <div>
-  <button
-    class="navItem"
+  <div
+    class="root"
   >
-    <svg />
-    Text
-  </button>
+    <button
+      aria-describedby="id-0"
+      aria-pressed="false"
+      class="navItem"
+    >
+      <svg />
+    </button>
+    <div
+      class="tooltip"
+      id="id-0"
+    >
+      <span>
+        Add Text
+      </span>
+    </div>
+  </div>
 </div>
 `;

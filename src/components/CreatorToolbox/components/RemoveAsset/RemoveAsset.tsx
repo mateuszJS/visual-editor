@@ -8,11 +8,9 @@ export default function RemoveAsset() {
   const { creator } = useCreator()
 
   return (
-    <>
-      <NavButton onClick={() => creator.removeAsset()}>
-        <TrashIcon />
-        Remove
-      </NavButton>
-    </>
+    <NavButton onClick={() => creator.removeAsset()}>
+      <TrashIcon />
+      Remove
+    </NavButton>
   )
 }

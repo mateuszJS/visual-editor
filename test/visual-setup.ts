@@ -3,6 +3,7 @@ import path from 'path'
 import 'jest-puppeteer'
 import 'expect-puppeteer'
 import { toMatchImageSnapshot } from 'jest-image-snapshot'
+import { Page } from 'puppeteer'
 
 expect.extend({ toMatchImageSnapshot })
 
@@ -27,7 +28,16 @@ beforeAll(async () => {
  * Visual setup for Storybook stories
  * @param storyId - Storybook story ID takend from storbyook iframe URL
  */
-export default async function visualSetup(storyId: string, dirname: string, colorThreshold = 0.1) {
+export default async function visualSetup(
+  storyId: string,
+  dirname: string,
+  failureThreshold: number,
+  options: { width?: number; beforeTest?: (page: Page) => Promise<void> } = {}
+) {
+  if (options.width) {
+    await page.setViewport({ width: options.width, height: 720 })
+  }
+
   // Create screenshots directory
   const screenshotsDir = path.join(dirname, '__image_snapshots__')
   if (!fs.existsSync(screenshotsDir)) {
@@ -49,29 +59,41 @@ export default async function visualSetup(storyId: string, dirname: string, colo
   if (!storyRoot) {
     throw new Error('Element with class #storybook-root not found')
   }
+
+  if (options.beforeTest) {
+    await options.beforeTest(page)
+  }
+
   await storyRoot.screenshot({ path: tempPath })
-  // storybook-root
-  // await page.screenshot({ path: tempPath });
   const imageBuffer = fs.readFileSync(tempPath)
 
   // Compare with baseline
   try {
     // Compare with baseline
     expect(imageBuffer).toMatchImageSnapshot({
+      // DO NOT CHANGE STRATEGY
+      // ssim is allowing too many failures, similar to percentage
+      failureThresholdType: 'pixel',
       customSnapshotsDir: screenshotsDir,
-      failureThreshold: 0.023,
-      failureThresholdType: 'percent',
-      updatePassedSnapshot: true /* change to true to force to update screenshots,
-      even if it's under the thresold failure */,
-      customSnapshotIdentifier: storyId,
+      failureThreshold,
+      allowSizeMismatch: true, // Elements which use fractions of rem/em units can have different size on different machines by 1-2px
+      updatePassedSnapshot: true, // allows to update screenshots when -u flag is passed(flag ot update snapshots)
+      customSnapshotIdentifier: expect
+        .getState()
+        .currentTestName?.replace(/\//g, '')
+        .replace(/\s/g, '_'),
       customDiffConfig: {
-        threshold: colorThreshold,
+        threshold: 0.1,
       },
     })
   } finally {
     // Clean up temporary file
     if (fs.existsSync(tempPath)) {
       fs.unlinkSync(tempPath)
+    }
+
+    if (options.width) {
+      await page.setViewport({ width: 1280, height: 720 })
     }
   }
 }

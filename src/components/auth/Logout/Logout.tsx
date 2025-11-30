@@ -5,8 +5,9 @@ import Button from '@/components/Button/Button'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
 
 export default function Logout() {
-  const { fetcher } = useFetcher<void>()
-  const onClick = () => {
+  const { fetcher } = useFetcher()
+
+  const onClick = async () => {
     fetcher(
       '/api/auth/logout',
       {

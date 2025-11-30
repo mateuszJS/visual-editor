@@ -1,0 +1,32 @@
+.root {
+  min-width: 200px;
+}
+
+.columnsSplit {
+  display: flex;
+
+  & > * {
+    flex-grow: 1;
+
+    &:not(:first-child) {
+      margin-inline-start: 10px;
+      border-inline-start: 1px solid var(--secondary);
+      padding-inline-start: 10px;
+    }
+  }
+}
+
+.stopDetails {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.stopPosition {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.colorInput {
+  width: var(--16px);
+}

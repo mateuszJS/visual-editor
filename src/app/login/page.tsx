@@ -1,7 +1,7 @@
 'use client'
 
 import GoogleLogin from '@/components/auth/GoogleLogin/GoogleLogin'
-import styles from './styles.module.css'
+import styles from './page.module.css'
 import TestAccountLogin from '@/components/auth/TestAccountLogin/TestAccountLogin'
 import { useRouter } from 'next/navigation'
 import useGuestOnly from '@/hooks/useGuestOnly/useGuestOnly'

@@ -1,8 +1,7 @@
-import { render, screen, fireEvent, act } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import Logout from './Logout'
 import userStore from '@/hooks/userStore/userStore'
-import { server } from 'test/server'
-import { http, HttpResponse } from 'msw'
+import userEvent from '@testing-library/user-event'
 
 describe('Logout component', () => {
   const { reload } = window.location
@@ -19,21 +18,13 @@ describe('Logout component', () => {
   })
 
   it('should call fetcher, reset user and reload window on click', async () => {
-    server.use(
-      http.delete('/api/auth/logout', () => {
-        return new HttpResponse(null, { status: 204 })
-      })
-    )
+    const user = userEvent.setup()
 
     render(<Logout />)
-
     const logoutButton = screen.getByRole('button', { name: /logout/i })
-    fireEvent.click(logoutButton)
-
-    await act(async () => {})
+    await user.click(logoutButton)
 
     expect(userStore.user).toBeNull()
-
     expect(window.location.reload).toHaveBeenCalled()
   })
 })

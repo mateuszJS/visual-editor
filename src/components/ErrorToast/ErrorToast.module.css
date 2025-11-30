@@ -5,11 +5,12 @@
   right: 30px;
 
   display: flex;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 16px;
 
   background-color: var(--danger);
-  padding: 1rem 1.3rem 1.3rem;
-  border-radius: 1rem;
+  padding: 16px 21px 21px;
+  border-radius: 16px;
   text-align: left;
 
   /* Smooth transitions for both enter and exit */
@@ -30,10 +31,9 @@
 }
 
 .closeButton {
-  margin: -0.4rem -0.6rem 0 auto;
+  margin: -6px -10px 0 auto;
 }
 
 .errorIcon {
-  margin-top: 0.2rem;
-  font-size: 1.2rem;
+  font-size: var(--19px);
 }

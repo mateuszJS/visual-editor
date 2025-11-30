@@ -1,17 +1,21 @@
-import fetcher from '@/utils/fetcher'
+import nativeFetcher from '@/utils/nativeFetcher'
 
 export default function uploadMiniature(canvas: HTMLCanvasElement, projectId: string) {
-  canvas.toBlob((blob) => {
-    try {
-      const formData = new FormData()
-      formData.append('file', blob!)
+  canvas.toBlob(async (blob) => {
+    if (!blob) return
 
-      fetcher(`/api/projects/${projectId}/miniature`, {
-        method: 'POST',
-        formData,
+    try {
+      await nativeFetcher(`/api/project-uploads/${projectId}/miniature`, {
+        method: 'PUT',
+        body: blob,
+        options: {
+          headers: {
+            'x-amz-meta-updated-at': new Date().toISOString(),
+          },
+        },
       })
     } catch (err) {
-      console.error('Failed to upload miniature:', err)
+      // console.error('Failed to upload miniature:', err) capture this log in the future
     }
   })
 }

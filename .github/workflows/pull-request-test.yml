@@ -5,10 +5,10 @@ on:
       - develop
 
 env:
-  NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-  SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-  PRIVATE_SUPABASE_ANON_KEY: ${{ secrets.PRIVATE_SUPABASE_ANON_KEY }}
-  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+  # All below values are mandatory during the build, but real value need to be used while running
+  # so build can succedd with dummy values
+  NEXT_PUBLIC_GOOGLE_CLIENT_ID: x
+  SESSION_SECRET: x
 
 permissions:
   contents: write
@@ -16,38 +16,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  check_if_pull_request_exists:
-    runs-on: ubuntu-latest
-    outputs:
-      has_pr: ${{ steps.check.outputs.has_pr }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check for PR to develop
-        id: check
-        run: |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          echo "Current branch: $BRANCH_NAME"
-
-          # Use GitHub API directly instead of gh CLI
-          PR_URL="https://api.github.com/repos/$GITHUB_REPOSITORY/pulls?head=${GITHUB_REPOSITORY_OWNER}:${BRANCH_NAME}&base=develop&state=open"
-          echo "Checking PR URL: $PR_URL"
-
-          PR_COUNT=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "$PR_URL" | jq length)
-          echo "Found $PR_COUNT PRs"
-
-          if [[ "$PR_COUNT" -gt 0 ]]; then
-            echo "has_pr=true" >> $GITHUB_OUTPUT
-            echo "✅ PR to develop exists"
-          else
-            echo "has_pr=false" >> $GITHUB_OUTPUT
-            echo "❌ No PR to develop found"
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   run_unit_tests:
-    needs: check_if_pull_request_exists
-    if: needs.check_if_pull_request_exists.outputs.has_pr == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,8 +26,24 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm audit signatures
+      - run: npm run build-storybook
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Storybook to Vercel
+        id: deploy
+        run: |
+          # Deploy storybook-static directory to Vercel
+          DEPLOYMENT_URL=$(vercel deploy storybook-static --token=${{ secrets.VERCEL_TOKEN }} --yes --target=preview)
+          echo "deployment_url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "Deployed Storybook to: $DEPLOYMENT_URL"
+
       - name: Run unit tests for Frontend, Backend and Visual Regression
-        run: npm test
+        run: npm test && npm run cf-test
       - name: Visual Regression tests - Upload diff images to branch
         if: always()
         run: |
@@ -121,6 +106,7 @@ jobs:
             const issue_number = context.issue.number;
             const branchName = process.env.DIFFS_BRANCH;
             const commentTitle = '## Visual Test Failures';
+            const deployUrl = '${{ steps.deploy.outputs.deployment_url }}';
 
             // 1. Find existing visual test comments
             const comments = await github.rest.issues.listComments({
@@ -159,7 +145,7 @@ jobs:
               return;
             }
 
-            let commentBody = `${commentTitle}\n\nFound ${diffFiles.length} visual differences:\n\n`;
+            let commentBody = `${commentTitle}\n\nYour Storybook has been deployed to a preview environment:\n[${deployUrl}](${deployUrl})\n\nFound ${diffFiles.length} visual differences:\n\n`;
 
             // Add each image to the comment
             diffFiles.forEach(file => {

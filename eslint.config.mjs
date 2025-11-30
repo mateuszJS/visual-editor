@@ -32,8 +32,19 @@ const eslintConfig = [
           selector: "CallExpression[callee.name='fetch']",
           message: 'Use fetcher instead of native fetch.',
         },
+        {
+          selector: "CallExpression[callee.name='useParams']",
+          message:
+            "useParams won't work with exporting static files from Next.js. Instead use usePathname and split('/')",
+        },
       ],
       'react-hooks/exhaustive-deps': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          caughtErrors: 'none',
+        },
+      ],
     },
   }),
 ]

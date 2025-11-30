@@ -1,0 +1,35 @@
+Pros:
+R2 seems to be at least 3x faster than Google Storage for downloading assets. Entity Tags are also supported out of the box.
+
+Cloudflare & R2 Performance:
+
+Upload: Request sent: 14.29ms, Waiting for server response: 464.54ms, Content download: 6.11ms
+Download: Request sent: 0.13ms, Waiting for server response: 380ms, Content download: 58.27ms
+Download with ETag (304 Not Modified): Request sent: 83µs, Waiting for server response: 188.60ms, Content download: 4.15ms
+Google Cloud Storage Performance (for comparison):
+
+Note: The Vercel deployment failed due to a Supabase integration issue, so I requested a direct link to the Google Bucket, which is supposed to be even faster than a signed URL.
+Waiting time: 381.72ms, Content download: 793.90ms
+No ETags were returned to test, but the winner is obvious.
+Static Asset Delivery:
+
+Cloudflare (Global):
+/login.html: Waiting: 70ms, Receiving: 0ms
+Largest JS file (174.78kB): Waiting: 44ms, Receiving: 0ms
+Vercel:
+/login.html: Waiting: 24ms, Receiving: 171ms
+Largest JS file (174.78kB): Waiting: 455ms, Receiving: 5ms
+API Endpoint Performance:
+
+Cloudflare:
+/me (401): 19ms
+/csrf: 25ms
+Vercel:
+Failed to deploy Vercel Functions calling Supabase (the project is not paused, despite the error message).
+Build and deploy processes seem noticeably faster than on Vercel.
+
+Cloudflare automatically integrates with GitHub and comments on my pull requests when a preview deployment is ready.
+
+Cons:
+Functions do not run in a standard Node.js environment. It's a Node.js-like environment, polyfilled by unenv (Universal Node Environment). Because of this, not all Node.js APIs are supported. For example, I had to polyfill the crypto module for google-auth-library.
+D1 uses SQLite, so it inherits all the quirks of SQLite. For instance, if you want to change a column's type, you have to create a new table, move the data to it, remove the previous table, and then rename the new table to the original table's name.

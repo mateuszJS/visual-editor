@@ -24,8 +24,9 @@ export default function GradientSlider({ stops, onChange, onSelectStop, classNam
       handles={handles}
       min={0}
       max={1}
-      onChange={(handles, commit) => {
-        const newStops = handles.map((handle, index) => ({ ...stops[index], offset: handle.value }))
+      onChange={(index, newValue, commit) => {
+        const newStops = [...stops]
+        newStops[index] = { ...newStops[index], offset: newValue }
         onChange(newStops, commit)
       }}
       className={cn(styles.slider, className)}

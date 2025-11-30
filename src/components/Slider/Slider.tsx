@@ -14,7 +14,7 @@ interface Props {
   handles: Handle[]
   min: number
   max: number
-  onChange: (values: Handle[], commit: boolean) => void
+  onChange: (index: number, newValue: number, commit: boolean) => void
   className?: string // className mainly to style handlers
   children?: React.ReactNode // track is transparent by default
   onFocusHandler?: (index: number) => void
@@ -53,13 +53,11 @@ export default function RangeSlider({
             max={max}
             className={styles.slider}
             onChange={(e) => {
-              const newValues = [...handles]
-              newValues[index].value = Number(e.target.value)
-              onChange(newValues, false)
+              onChange(index, Number(e.target.value), false)
             }}
             style={{ color: handle.color }}
             onFocus={onFocusHandler && (() => onFocusHandler(index))}
-            onPointerUp={() => onChange(handles, true)}
+            onPointerUp={() => onChange(index, handles[index].value, true)}
           />
         </Fragment>
       ))}

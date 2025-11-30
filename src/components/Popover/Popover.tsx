@@ -18,7 +18,7 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
       setIsShown(event.newState === 'open')
     }
   }
-
+  console.log('Popover', rest)
   return (
     <>
       <button popoverTarget={popoverId} suppressHydrationWarning {...rest}>

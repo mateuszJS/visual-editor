@@ -26,7 +26,6 @@ export default function ColorInput({ label, value, onChange, ...rest }: Props) {
       )}
       <Popover
         trigger={() => <div style={{ backgroundColor: hex }} />}
-        aria-label={label}
         popoverClassName={styles.popover}
         {...rest}
         id={inputId}

@@ -37,12 +37,12 @@ export default function RangeSlider({
       ]}
       min={min}
       max={max}
-      onChange={(handles, commit) => {
-        onChange(
-          Math.max(handles[0].value, handles[1].value),
-          Math.min(handles[0].value, handles[1].value),
-          commit
-        )
+      onChange={(index, newValue, commit) => {
+        if (index === 0) {
+          onChange(newValue, Math.min(newValue, end), commit)
+        } else {
+          onChange(Math.max(start, newValue), newValue, commit)
+        }
       }}
       className={cn(styles.slider, className)}
     >

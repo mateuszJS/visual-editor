@@ -20,6 +20,7 @@ const meta = {
         { offset: 1, color: [0, 0, 1, 1] },
       ],
     } satisfies LinearGradient,
+    'aria-label': 'gradient fill',
     onChange: fn(),
   },
 } satisfies Meta<typeof GradientInput>

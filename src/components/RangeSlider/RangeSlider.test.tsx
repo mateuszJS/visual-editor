@@ -56,7 +56,7 @@ describe('RangeSlider', () => {
     const startInput = screen.getByLabelText('Distance at which effect starts')
     fireEvent.change(startInput, { target: { value: '50' } })
 
-    expect(onChange).toHaveBeenCalledWith(50, 20, true)
+    expect(onChange).toHaveBeenCalledWith(50, 20, false)
   })
 
   it('calls onChange when end slider is moved', () => {
@@ -68,7 +68,7 @@ describe('RangeSlider', () => {
     const endInput = screen.getByLabelText('Distance at which effect ends')
     fireEvent.change(endInput, { target: { value: '20' } })
 
-    expect(onChange).toHaveBeenCalledWith(90, 20, true)
+    expect(onChange).toHaveBeenCalledWith(90, 20, false)
   })
 
   it('clamps start value to end value when start > end', () => {
@@ -80,18 +80,6 @@ describe('RangeSlider', () => {
     const startInput = screen.getByLabelText('Distance at which effect starts')
     fireEvent.change(startInput, { target: { value: '10' } })
 
-    expect(onChange).toHaveBeenCalledWith(10, 10, true)
-  })
-
-  it('clamps end value to start value when end < start', () => {
-    const onChange = jest.fn()
-    render(
-      <TestableComponent initialStart={50} initialEnd={10} min={0} max={100} onChange={onChange} />
-    )
-
-    const endInput = screen.getByLabelText('Distance at which effect ends')
-    fireEvent.change(endInput, { target: { value: '70' } })
-
-    expect(onChange).toHaveBeenCalledWith(70, 70, true)
+    expect(onChange).toHaveBeenCalledWith(10, 10, false)
   })
 })

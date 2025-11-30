@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
 import { fn } from 'storybook/test'
-import Slider, { Handle } from './Slider'
+import Slider from './Slider'
 import { useArgs } from 'storybook/preview-api'
 
 const meta = {
@@ -28,7 +28,9 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs()
 
-    const onChange = (handles: Handle[], commit: boolean) => {
+    const onChange = (index: number, newValue: number, commit: boolean) => {
+      const handles = [...args.handles]
+      handles[index] = { ...handles[index], value: newValue }
       args.onChange(handles, commit)
       updateArgs({ handles })
     }

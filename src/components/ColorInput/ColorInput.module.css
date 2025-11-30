@@ -15,6 +15,7 @@ button.colorPicker {
   div {
     width: 100%;
     height: 100%;
+    min-height: var(--15px);
   }
 }
 

@@ -11,10 +11,7 @@ interface Props<T extends Gradient> {
   onChange: (newValue: T, commit: boolean) => void
 }
 
-// This component receives initial stops and later does not sync values
-// from outside! Bu propagates changes inside to outside world
 export default function GradientSelection<T extends Gradient>({ value, onChange }: Props<T>) {
-  // const [stop, setStops] = usr<GradientStop[]>(initialStops)
   const [selectedStopIndex, setSelectedStopIndex] = useState<number | null>(null)
 
   const selectedStop = selectedStopIndex !== null ? value.stops[selectedStopIndex] : null
@@ -101,11 +98,11 @@ export default function GradientSelection<T extends Gradient>({ value, onChange 
               <ColorInput
                 label="Stop color:"
                 value={selectedStop.color}
-                onChange={(newColor) => {
+                onChange={(newColor, commit) => {
                   const newStops = value.stops.map((stop, index) =>
                     index === selectedStopIndex ? { ...stop, color: newColor } : stop
                   )
-                  onChange({ ...value, stops: newStops }, false)
+                  onChange({ ...value, stops: newStops }, commit)
                 }}
                 className={styles.colorInput}
               />

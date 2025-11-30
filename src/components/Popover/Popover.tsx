@@ -14,7 +14,9 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
   const popoverId = useUniqueId()
 
   const toggleIsShown: ToggleEventHandler<HTMLDivElement> = (event) => {
-    setIsShown(event.newState === 'open')
+    if (event.target === event.currentTarget) {
+      setIsShown(event.newState === 'open')
+    }
   }
 
   return (

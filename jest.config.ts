@@ -29,12 +29,6 @@ export default async (): Promise<Config> => {
     ],
     setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
     moduleNameMapper,
-
-    // we had to add dedicated server with custom setup & teardown
-    // otherwise default puppetieer server doesn't stop when jest fails
-    // https://github.com/argos-ci/jest-puppeteer/issues/305
-    globalSetup: '<rootDir>/test/visual-global-setup.ts',
-    globalTeardown: '<rootDir>/test/visual-global-teardown.ts',
   })
 
   const serviceWorkerConfig: Config = {
@@ -68,6 +62,12 @@ export default async (): Promise<Config> => {
     } as unknown as Config['transform'],
     extensionsToTreatAsEsm: ['.ts', '.tsx'],
     moduleNameMapper,
+
+    // we had to add dedicated server with custom setup & teardown
+    // otherwise default puppetieer server doesn't stop when jest fails
+    // https://github.com/argos-ci/jest-puppeteer/issues/305
+    globalSetup: '<rootDir>/test/visual-global-setup.ts',
+    globalTeardown: '<rootDir>/test/visual-global-teardown.ts',
   }
 
   const config: Config = {

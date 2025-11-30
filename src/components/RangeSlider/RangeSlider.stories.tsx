@@ -11,7 +11,7 @@ const meta = {
   tags: ['autodocs'],
   args: {
     ariaLabel: 'range',
-    start: 10,
+    start: 80,
     end: 20,
     min: 0,
     max: 100,

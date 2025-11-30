@@ -1,6 +1,6 @@
-import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
-import styles from './RangeSlider.module.css'
 import cn from 'classnames'
+import Slider from '@/components/Slider/Slider'
+import styles from './RangeSlider.module.css'
 
 interface Props {
   ariaLabel: string
@@ -12,9 +12,6 @@ interface Props {
   className?: string
 }
 
-// created base on:
-// https://css-tricks.com/multi-thumb-sliders-particular-two-thumb-case/
-
 export default function RangeSlider({
   ariaLabel,
   min,
@@ -24,7 +21,6 @@ export default function RangeSlider({
   onChange,
   className,
 }: Props) {
-  const id = useUniqueId()
   const cssVars = {
     '--start': start,
     '--end': end,
@@ -33,43 +29,27 @@ export default function RangeSlider({
   } as React.CSSProperties
 
   return (
-    // label or fieldset is not used because grid on them doesn't work properly in Chrome
-    <div
-      className={cn(styles.inputsWrapper, className)}
-      style={cssVars}
-      role="group"
-      aria-label={ariaLabel}
+    <Slider
+      ariaLabel={ariaLabel}
+      handles={[
+        { label: 'Distance at which effect starts', value: start },
+        { label: 'Distance at which effect ends', value: end },
+      ]}
+      min={min}
+      max={max}
+      onChange={(handles, commit) => {
+        onChange(
+          Math.max(handles[0].value, handles[1].value),
+          Math.min(handles[0].value, handles[1].value),
+          commit
+        )
+      }}
+      className={cn(styles.slider, className)}
     >
-      <label className={styles.srOnly} htmlFor={`${id}-start`}>
-        Distance at which effect starts
-      </label>
-      <input
-        id={`${id}-start`}
-        type="range"
-        min={min}
-        value={start}
-        max={max}
-        className={styles.slider}
-        onChange={(e) => {
-          const value = Number(e.target.value)
-          onChange(value, Math.min(value, end), true)
-        }}
-      />
-      <label className={styles.srOnly} htmlFor={`${id}-end`}>
-        Distance at which effect ends
-      </label>
-      <input
-        id={`${id}-end`}
-        type="range"
-        min={min}
-        value={end}
-        max={max}
-        className={styles.slider}
-        onChange={(e) => {
-          const value = Number(e.target.value)
-          onChange(Math.max(value, start), value, true)
-        }}
-      />
-    </div>
+      <>
+        <div className={styles.track} />
+        <div className={styles.selectedRangeTrack} style={cssVars} />
+      </>
+    </Slider>
   )
 }

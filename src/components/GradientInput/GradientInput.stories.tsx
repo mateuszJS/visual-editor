@@ -1,21 +1,28 @@
 import type { Meta, StoryObj } from '@storybook/nextjs'
 import { fn } from 'storybook/test'
-import ColorInput from './ColorInput'
+import GradientInput from './GradientInput'
 import { useArgs } from 'storybook/preview-api'
-import { Color } from '@mateuszjs/magic-render/types'
+import { LinearGradient } from '@mateuszjs/magic-render/types'
 
 const meta = {
-  component: ColorInput,
+  component: GradientInput,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
   args: {
-    label: 'fill color:',
-    value: [1, 1, 1, 1],
+    value: {
+      start: { x: 0.1, y: 0.1 },
+      end: { x: 0.9, y: 0.9 },
+      stops: [
+        { offset: 0, color: [1, 0, 0, 1] },
+        { offset: 0.5, color: [0, 1, 0, 1] },
+        { offset: 1, color: [0, 0, 1, 1] },
+      ],
+    } satisfies LinearGradient,
     onChange: fn(),
   },
-} satisfies Meta<typeof ColorInput>
+} satisfies Meta<typeof GradientInput>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -24,7 +31,7 @@ export const Default: Story = {
   render: function Render(args) {
     const [, updateArgs] = useArgs()
 
-    const onChange = (value: Color, preview: boolean) => {
+    const onChange = (value: LinearGradient, preview: boolean) => {
       args.onChange(value, preview)
       updateArgs({ value })
     }
@@ -42,7 +49,7 @@ export const Default: Story = {
             justifyContent: 'flex-end',
           }}
         >
-          <ColorInput {...args} onChange={onChange} />
+          <GradientInput {...args} onChange={onChange} />
         </div>
       </>
     )

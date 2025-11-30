@@ -156,6 +156,17 @@ ol {
   list-style: none;
 }
 
+legend {
+  text-transform: uppercase;
+  font-size: var(--10px);
+  margin-inline-start: 5px;
+}
+
+fieldset {
+  padding-inline: 5px;
+  border-radius: 3px;
+}
+
 .page {
   display: grid;
   grid-template-rows: 1fr auto;

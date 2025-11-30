@@ -7,14 +7,21 @@ import useCreator from '@/hooks/useCreator/useCreator'
 import CloseIcon from 'assets/close-icon.svg'
 import RangeSlider from '@/components/RangeSlider/RangeSlider'
 import CodeInput from '@/components/CodeInput/CodeInput'
+import GradientInput from '@/components/GradientInput/GradientInput'
 
 interface Props extends SdfEffect {
   onChange: (changes: SdfEffect | null, commit: boolean) => void
 }
 
-function mapFillType(fill: Fill): 'solid' | 'program' {
+function mapFillType(fill: Fill): 'solid' | 'linear' | 'radial' | 'program' {
   if ('solid' in fill) {
     return 'solid'
+  }
+  if ('linear' in fill) {
+    return 'linear'
+  }
+  if ('radial' in fill) {
+    return 'radial'
   }
   if ('program' in fill) {
     return 'program'
@@ -31,6 +38,43 @@ export default function Effect({ onChange, ...effect }: Props) {
     const value = e.target.value
     if (value === 'solid') {
       onChange({ ...effect, fill: { solid: [1, 1, 1, 1] } }, true)
+    } else if (value === 'linear') {
+      onChange(
+        {
+          ...effect,
+          fill: {
+            linear: {
+              start: { x: 0, y: 0 },
+              end: { x: 1, y: 1 },
+              stops: [
+                { offset: 0, color: [1, 0, 0, 1] },
+                { offset: 0.5, color: [0, 1, 0, 1] },
+                { offset: 1, color: [0, 0, 1, 1] },
+              ],
+            },
+          },
+        },
+        true
+      )
+    } else if (value === 'radial') {
+      onChange(
+        {
+          ...effect,
+          fill: {
+            radial: {
+              start: { x: 0.5, y: 0.5 },
+              end: { x: 1, y: 1 },
+              stops: [
+                { offset: 0, color: [1, 0, 0, 1] },
+                { offset: 0.5, color: [0, 1, 0, 1] },
+                { offset: 1, color: [0, 0, 1, 1] },
+              ],
+              radius_ratio: 1,
+            },
+          },
+        },
+        true
+      )
     } else if (value === 'program') {
       onChange(
         {
@@ -50,6 +94,8 @@ export default function Effect({ onChange, ...effect }: Props) {
     <li className={styles.root}>
       <select className={styles.fillType} value={mapFillType(effect.fill)} onChange={onChangeType}>
         <option value="solid">Solid Fill</option>
+        <option value="linear">Linear Gradient</option>
+        <option value="radial">Radial Gradient</option>
         <option value="program">Custom Program</option>
       </select>
       <button onClick={() => onChange(null, true)} className={styles.remove}>
@@ -57,9 +103,25 @@ export default function Effect({ onChange, ...effect }: Props) {
       </button>
       {'solid' in effect.fill && (
         <ColorInput
-          label="Fill"
+          aria-label="Fill with solid color"
           value={effect.fill.solid}
           onChange={(color, commit) => onChange({ ...effect, fill: { solid: color } }, commit)}
+          className={styles.fill}
+        />
+      )}
+      {'linear' in effect.fill && (
+        <GradientInput
+          aria-label="Fill with linear gradient"
+          value={effect.fill.linear}
+          onChange={(linear, commit) => onChange({ ...effect, fill: { linear } }, commit)}
+          className={styles.fill}
+        />
+      )}
+      {'radial' in effect.fill && (
+        <GradientInput
+          aria-label="Fill with radial gradient"
+          value={effect.fill.radial}
+          onChange={(radial, commit) => onChange({ ...effect, fill: { radial } }, commit)}
           className={styles.fill}
         />
       )}

@@ -1,0 +1,72 @@
+.inputsWrapper {
+  --height: 1em;
+  --thumb-diameter: var(--height);
+  --thumb-radius: calc(0.5 * var(--thumb-diameter));
+  --useful-width: calc(100% - var(--thumb-diameter));
+
+  display: grid;
+  grid-template-rows: var(--height);
+  position: relative;
+  align-items: center;
+  justify-items: stretch;
+  width: 100%;
+}
+
+.trackWrapper {
+  display: grid;
+  align-items: center;
+  height: 100%;
+  grid-area: 1 / 1;
+  margin: 0 var(--thumb-radius);
+
+  & > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  clip-path: inset(50%);
+}
+
+.slider {
+  grid-area: 1 / 1;
+  background: none; /* get rid of white Chrome background */
+  color: color-mix(in srgb, var(--secondary) 40%, var(--background) 60%);
+  font: inherit; /* fix too small font-size in both Chrome & Firefox */
+  margin: 0;
+  pointer-events: none; /* let clicks pass through */
+  display: block;
+  width: 100%;
+  appearance: none;
+
+  &::-webkit-slider-runnable-track {
+    background: none; /* get rid of Firefox track background */
+    height: 100%;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  &::-moz-range-track {
+    background: none; /* get rid of Firefox track background */
+    height: 100%;
+    width: 100%;
+  }
+
+  &::-webkit-slider-thumb {
+    background: currentcolor;
+    border: none;
+    pointer-events: auto; /* catch clicks */
+    width: var(--thumb-diameter);
+    height: var(--thumb-diameter);
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+  &::-moz-range-thumb {
+    background: currentcolor;
+    border: none;
+    pointer-events: auto; /* catch clicks */
+    width: var(--thumb-diameter);
+    height: var(--thumb-diameter);
+    cursor: pointer;
+  }
+}

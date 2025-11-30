@@ -15,17 +15,10 @@ button.colorPicker {
   div {
     width: 100%;
     height: 100%;
-    min-height: var(--15px);
   }
 }
 
 .popover {
   overflow: visible; /* those little circles on color sliders can be moved to the edges,
   so part of the circle overflow popover */
-}
-
-button.withLabel {
-  min-width: 2.5em;
-  aspect-ratio: auto;
-  margin-inline-start: 0.2em;
 }

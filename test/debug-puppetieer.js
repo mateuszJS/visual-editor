@@ -1,4 +1,4 @@
-// you can run this file in case if only during screenshot testing
+// you can run this file if only during screenshot testing
 // something looks different from storybook
 // it might be because of chrome version, in this case
 // install puppeteer again to fetch newest version

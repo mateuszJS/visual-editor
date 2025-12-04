@@ -4,7 +4,7 @@ import { ip } from 'address'
 import path from 'path'
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
   webpack: webpackConfig,
 
   outputFileTracingRoot: path.join(__dirname, '../../../'),
@@ -13,10 +13,6 @@ const nextConfig: NextConfig = {
 
   async rewrites() {
     return [
-      {
-        source: '/project/:id',
-        destination: '/project/[-id]',
-      },
       {
         source: '/api/:path*',
         destination: 'http://localhost:8788/api/:path*', // Nextjs doesn't support self-signed HTTPS certificate

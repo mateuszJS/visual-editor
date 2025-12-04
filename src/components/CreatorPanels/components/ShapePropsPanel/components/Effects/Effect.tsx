@@ -80,7 +80,14 @@ export default function Effect({ onChange, ...effect }: Props) {
         {
           ...effect,
           fill: {
-            program: { code: 'color=vec4f(abs(signed_distance*0.01),path_t%1,angle/6.24,1);' },
+            program: {
+              code: `color=vec4f(
+  abs(signed_distance*0.01),
+  path_t % 1,
+  sin(angle / 2),
+  1
+);`,
+            },
           },
         },
         true
@@ -121,7 +128,9 @@ export default function Effect({ onChange, ...effect }: Props) {
         <GradientInput
           aria-label="Fill with radial gradient"
           value={effect.fill.radial}
-          onChange={(radial, commit) => onChange({ ...effect, fill: { radial } }, commit)}
+          onChange={(radial, commit) => {
+            onChange({ ...effect, fill: { radial } }, commit)
+          }}
           className={styles.fill}
         />
       )}
@@ -130,7 +139,10 @@ export default function Effect({ onChange, ...effect }: Props) {
           value={effect.fill.program.code}
           onChange={(code, commit) => onChange({ ...effect, fill: { program: { code } } }, commit)}
           className={styles.fill}
-          errors={effect.fill.program.errors}
+          error={
+            effect.fill.program
+              .errors?.[0] /* I don't think it's possible to have more than one compilation error in WGSL */
+          }
         />
       )}
       <NumberInput
@@ -163,8 +175,8 @@ export default function Effect({ onChange, ...effect }: Props) {
         className={styles.range}
         min={-100}
         max={100}
-        start={Math.min(effect.dist_start, 100)}
-        end={Math.max(effect.dist_end, -100)}
+        start={effect.dist_start}
+        end={effect.dist_end}
         onChange={(dist_start, dist_end, commit) =>
           onChange({ ...effect, dist_start, dist_end }, commit)
         }

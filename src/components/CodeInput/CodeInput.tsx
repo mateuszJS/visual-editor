@@ -9,7 +9,7 @@ import styles from './CodeInput.module.css'
 interface Props {
   value: string
   onChange: (value: string, commit: boolean) => void
-  error: CustomProgramError | undefined
+  error?: CustomProgramError
   className?: string
 }
 

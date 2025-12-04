@@ -1,15 +1,6 @@
 import { CustomProgramError } from '@mateuszjs/magic-render/types'
 import { Token, TokenStream } from 'prism-react-editor/prism'
 
-/*
-1. How to handle list of errors, just a loop should be fine IMO
-2. Can I add custom attribute, if not, then we would need to maybe do it manually in useLayoutEffect?
-Once new errors arrive, we modify attributes. If it's impossible to rerender editor then 
-lets add attributes manually, but if it's possible to trigger rerender(and onTokenize) again
-then we could just sdd classes like .error-1, error-2,
-3. Popup outgrows the screen size, how to make popup stay within the screen size.
-*/
-
 export default function onTokenize(err: CustomProgramError | undefined, tokens: TokenStream) {
   if (!err) return
 

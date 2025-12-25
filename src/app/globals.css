@@ -167,6 +167,10 @@ fieldset {
   border-radius: 3px;
 }
 
+[popover] {
+  border: none;
+}
+
 .page {
   display: grid;
   grid-template-rows: 1fr auto;

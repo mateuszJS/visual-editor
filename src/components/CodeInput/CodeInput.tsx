@@ -26,7 +26,7 @@ export default function CodeInput({ value, onChange, errors, className }: Props)
           <ul>
             {errors.map((error, index) => (
               <li key={index}>
-                Line {error.line}: {error.message}
+                Line {error.lineNum}: {error.message}
               </li>
             ))}
           </ul>

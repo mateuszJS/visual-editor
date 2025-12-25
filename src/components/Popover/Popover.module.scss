@@ -1,0 +1,119 @@
+$arrow-length: 15px;
+
+.connector {
+}
+
+.connector:popover-open + .popover {
+  display: block;
+}
+
+.popover {
+  display: none;
+  margin: 0;
+  inset: auto;
+  --margin: 10px;
+
+  right: calc(anchor(left));
+  align-self: anchor-center;
+  position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+
+  margin: var(--margin) $arrow-length var(--margin) var(--margin);
+  max-width: 50vw;
+  padding-right: $arrow-length;
+  background: none;
+
+  .arrow {
+    position: absolute;
+    right: 0;
+    bottom: 100px;
+    translate: 100%;
+    scale: -1 1;
+  }
+}
+
+.popoverContent {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--secondary) 30%, transparent);
+  background: var(--background);
+
+  --padding: 10px;
+
+  padding: var(--padding);
+  border-radius: 5px;
+  width: 100%;
+
+  :global(.prism-code-editor) {
+    max-height: calc(100svh - 2 * var(--margin) - 2 * var(--padding));
+    overflow: auto;
+    overscroll-behavior: contain;
+
+    /* Force scrollbar to be always shown(when overflow happens)
+   otherwise dissapears on MacOS while user is not scrolling */
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      background-color: rgba(var(--primary-rgb), 0.2);
+      width: 7px;
+      height: 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: rgba(var(--primary-rgb), 0.5);
+    }
+  }
+}
+
+.arrow {
+  --size: 1.5em;
+  --square-size: calc(var(--size) / 1.4142);
+  --half-square-size: calc(var(--square-size) / 2);
+
+  display: flex;
+  align-items: center;
+  height: var(--size);
+
+  /* Inherit styles from the container, but hide the container itself */
+  background-color: inherit;
+  border: inherit;
+  visibility: hidden;
+
+  /* Ensure border doesn't reduce the content area where the arrow lives
+  Otherwise child's corners gonna be cut out */
+  box-sizing: content-box;
+
+  &:before {
+    /* This element is used to push the arrow by the 2.5 * border width */
+    content: '';
+    box-sizing: content-box;
+    --border-width: calc(100% - var(--half-square-size));
+    width: calc(var(--border-width) / 2);
+    flex-shrink: 0;
+    border-left: inherit;
+    border-right: inherit;
+  }
+
+  &:after {
+    content: '';
+
+    /* Make the pseudo-element visible - parent has visibility: hidden */
+    visibility: visible;
+
+    /* ​1.4142 ≈ √2 ensures the diagonal of the inner square matches the side of the outer square */
+    width: var(--square-size);
+    height: var(--square-size);
+    flex-shrink: 0;
+
+    /* push square by half to the right */
+    margin-right: calc(var(--half-square-size) * -1);
+
+    /* Inherit background and border from the .arrow element (which inherited from its parent) */
+    background-color: inherit;
+    border: inherit;
+
+    /* Hide the top and right borders to create the arrow shape */
+    border-top-color: transparent;
+    border-right-color: transparent;
+
+    rotate: 45deg;
+  }
+}

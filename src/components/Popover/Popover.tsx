@@ -32,18 +32,15 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
         {trigger()}
       </button>
       <div
+        suppressHydrationWarning
         popover="auto"
         id={popoverId}
         onBeforeToggle={toggleIsShown}
         role="dialog"
         aria-modal="true"
-        className={styles.connector}
-      />
-      <div
-        suppressHydrationWarning
         className={cn(styles.popover, popoverClassName)}
-        role="dialog"
-        aria-modal="true"
+        // role="dialog"
+        // aria-modal="true"
         style={
           {
             position: 'fixed',
@@ -52,31 +49,21 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
           } as React.CSSProperties
         }
       >
-        <div />
-
-        <div className={styles.popoverContent}>{isShown ? children : null}</div>
+        <div className={styles.popoverContent}>
+          {isShown ? children : null}
+          <div
+            className={styles.arrow}
+            style={
+              {
+                alignSelf: 'anchor-center',
+                right: `anchor(--${popoverId}-body-anchor right)`,
+                top: `clamp(calc(anchor(--${popoverId}-body-anchor top) + var(--arrow-min-offset)), anchor(--${popoverId}-anchor top), calc(anchor(--${popoverId}-body-anchor bottom) - var(--arrow-min-offset)))`,
+                bottom: `clamp(calc(anchor(--${popoverId}-body-anchor bottom) + var(--arrow-min-offset)), anchor(--${popoverId}-anchor bottom), calc(anchor(--${popoverId}-body-anchor top) - var(--arrow-min-offset)))`,
+              } as React.CSSProperties
+            }
+          />
+        </div>
       </div>
-      {/* <div> */}
-      <div
-        className={styles.arrow}
-        style={
-          {
-            position: 'fixed',
-            // 'position-anchor': `--${popoverId}-anchor`,
-
-            // top: `anchor(--${popoverId}-anchor top)`,
-            top: `anchor(--${popoverId}-anchor center)`,
-            right: `anchor(--${popoverId}-body-anchor right)`,
-            // right: `anchor(--${popoverId}-anchor left)`,
-
-            // left: 'anchor(--one right)',
-            // bottom: 'anchor(--two top)',
-
-            background: 'lime',
-          } as React.CSSProperties
-        }
-      />
-      {/* </div> */}
     </>
   )
 }

@@ -1,14 +1,6 @@
 $arrow-length: 15px;
 
-.connector {
-}
-
-.connector:popover-open + .popover {
-  display: block;
-}
-
 .popover {
-  display: none;
   margin: 0;
   inset: auto;
   --margin: 10px;
@@ -19,21 +11,30 @@ $arrow-length: 15px;
 
   margin: var(--margin) $arrow-length var(--margin) var(--margin);
   max-width: 50vw;
-  padding-right: $arrow-length;
   background: none;
 
   .arrow {
-    position: absolute;
-    right: 0;
-    bottom: 100px;
-    translate: 100%;
+    position: fixed;
+    inset: auto;
+    translate: 100% 0;
     scale: -1 1;
+  }
+
+  transition: 0.2s ease-in-out allow-discrete;
+  transition-property: display, opacity;
+
+  @starting-style {
+    opacity: 0;
+  }
+
+  &:popover-open {
+    opacity: 1;
   }
 }
 
 .popoverContent {
   position: relative;
-  border: 1px solid color-mix(in srgb, var(--secondary) 30%, transparent);
+  border: 3px solid color-mix(in srgb, var(--secondary) 30%, transparent);
   background: var(--background);
 
   --padding: 10px;
@@ -67,6 +68,9 @@ $arrow-length: 15px;
   --size: 1.5em;
   --square-size: calc(var(--size) / 1.4142);
   --half-square-size: calc(var(--square-size) / 2);
+  --arrow-min-offset: 20px;
+
+  position: absolute;
 
   display: flex;
   align-items: center;
@@ -86,9 +90,8 @@ $arrow-length: 15px;
     content: '';
     box-sizing: content-box;
     --border-width: calc(100% - var(--half-square-size));
-    width: calc(var(--border-width) / 2);
+    width: var(--border-width);
     flex-shrink: 0;
-    border-left: inherit;
     border-right: inherit;
   }
 
@@ -117,3 +120,10 @@ $arrow-length: 15px;
     rotate: 45deg;
   }
 }
+
+/* &.fixed {
+    position: fixed; */
+/* containing block for fixed anchor posotion = border box, for absolute it's padding-box */
+/* because of that we have to move element by additiona lhalf border width while doing position fixed */
+/* --position-fixed-fix: 1; */
+/* } */

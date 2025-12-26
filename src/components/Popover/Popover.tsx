@@ -49,20 +49,18 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
           } as React.CSSProperties
         }
       >
-        <div className={styles.popoverContent}>
-          {isShown ? children : null}
-          <div
-            className={styles.arrow}
-            style={
-              {
-                alignSelf: 'anchor-center',
-                right: `anchor(--${popoverId}-body-anchor right)`,
-                top: `clamp(calc(anchor(--${popoverId}-body-anchor top) + var(--arrow-min-offset)), anchor(--${popoverId}-anchor top), calc(anchor(--${popoverId}-body-anchor bottom) - var(--arrow-min-offset)))`,
-                bottom: `clamp(calc(anchor(--${popoverId}-body-anchor bottom) + var(--arrow-min-offset)), anchor(--${popoverId}-anchor bottom), calc(anchor(--${popoverId}-body-anchor top) - var(--arrow-min-offset)))`,
-              } as React.CSSProperties
-            }
-          />
-        </div>
+        {isShown ? children : null}
+        <div
+          className={styles.arrow}
+          style={
+            {
+              alignSelf: 'anchor-center',
+              right: `anchor(--${popoverId}-body-anchor right)`,
+              top: `clamp(calc(anchor(--${popoverId}-body-anchor top) + var(--arrow-min-offset)), anchor(--${popoverId}-anchor top), calc(anchor(--${popoverId}-body-anchor bottom) - var(--arrow-min-offset)))`,
+              bottom: `clamp(calc(anchor(--${popoverId}-body-anchor bottom) + var(--arrow-min-offset)), anchor(--${popoverId}-anchor bottom), calc(anchor(--${popoverId}-body-anchor top) - var(--arrow-min-offset)))`,
+            } as React.CSSProperties
+          }
+        />
       </div>
     </>
   )

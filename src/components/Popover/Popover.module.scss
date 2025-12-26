@@ -3,6 +3,9 @@ $arrow-length: 15px;
 .popover {
   margin: 0;
   inset: auto;
+
+  --padding: 10px;
+  --border-width: 2px;
   --margin: 10px;
 
   right: calc(anchor(left));
@@ -11,7 +14,32 @@ $arrow-length: 15px;
 
   margin: var(--margin) $arrow-length var(--margin) var(--margin);
   max-width: 50vw;
-  background: none;
+
+  border: var(--border-width) solid color-mix(in srgb, var(--secondary) 30%, transparent);
+  background: var(--background);
+
+  padding: var(--padding);
+  border-radius: 5px;
+
+  :global(.prism-code-editor) {
+    max-height: calc(100svh - 2 * var(--margin) - 2 * var(--padding) - 2 * var(--border-width));
+    overflow: auto;
+    overscroll-behavior: contain;
+
+    /* Force scrollbar to be always shown(when overflow happens)
+   otherwise dissapears on MacOS while user is not scrolling */
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      background-color: rgba(var(--primary-rgb), 0.2);
+      width: 7px;
+      height: 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: rgba(var(--primary-rgb), 0.5);
+    }
+  }
 
   .arrow {
     position: fixed;
@@ -29,38 +57,6 @@ $arrow-length: 15px;
 
   &:popover-open {
     opacity: 1;
-  }
-}
-
-.popoverContent {
-  position: relative;
-  border: 3px solid color-mix(in srgb, var(--secondary) 30%, transparent);
-  background: var(--background);
-
-  --padding: 10px;
-
-  padding: var(--padding);
-  border-radius: 5px;
-  width: 100%;
-
-  :global(.prism-code-editor) {
-    max-height: calc(100svh - 2 * var(--margin) - 2 * var(--padding));
-    overflow: auto;
-    overscroll-behavior: contain;
-
-    /* Force scrollbar to be always shown(when overflow happens)
-   otherwise dissapears on MacOS while user is not scrolling */
-    &::-webkit-scrollbar {
-      -webkit-appearance: none;
-      background-color: rgba(var(--primary-rgb), 0.2);
-      width: 7px;
-      height: 0;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 4px;
-      background-color: rgba(var(--primary-rgb), 0.5);
-    }
   }
 }
 

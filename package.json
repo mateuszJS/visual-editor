@@ -76,7 +76,7 @@
     "next-router-mock": "^0.9.13",
     "puppeteer": "^24.31.0",
     "service-worker-mock": "^2.0.5",
-    "storybook": "^9.1.10",
+    "storybook": "^9.1.19",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "typescript": "^5",

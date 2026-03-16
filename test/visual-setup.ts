@@ -11,12 +11,13 @@ expect.extend({ toMatchImageSnapshot })
 const knownTrashConsoleLogs = [
   '%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold',
   'Failed to load resource: the server responded with a status of 404 (Not Found)',
+  'Runtime config is deprecated and will be removed in Next.js 16. Please remove the usage of "next/config" from your project.',
 ]
 
 beforeAll(async () => {
   page.on('console', (msg) => {
     const text = msg.text()
-    if (!knownTrashConsoleLogs.includes(text)) {
+    if (!knownTrashConsoleLogs.some((phase) => text.includes(phase))) {
       console.log('BROWSER CONSOLE:', text)
     }
   })

@@ -49,7 +49,7 @@ export default function RangeSlider({
             type="range"
             step={0.01}
             min={min}
-            value={handle.value}
+            value={Math.max(min, Math.min(handle.value, max))}
             max={max}
             className={styles.slider}
             onChange={(e) => {

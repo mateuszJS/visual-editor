@@ -1,12 +1,14 @@
-import { useRef } from 'react'
-import { Editor } from 'prism-react-editor'
+import { useLayoutEffect, useRef } from 'react'
+import { Editor, PrismEditor } from 'prism-react-editor'
 import { BasicSetup } from 'prism-react-editor/setups'
+import { CustomProgramError } from '@mateuszjs/magic-render/types'
+import onTokenize from './onTokenize'
 
-// Adding the JSX grammar
-import 'prism-react-editor/prism/languages/jsx'
+// Adding the WGSL grammar
+import 'prism-react-editor/prism/languages/wgsl'
 
-// Adds comment toggling and auto-indenting for JSX
-import 'prism-react-editor/languages/jsx'
+// Adds comment toggling and auto-indenting for WGSL
+import 'prism-react-editor/languages/wgsl'
 
 import 'prism-react-editor/layout.css'
 import 'prism-react-editor/themes/github-dark.css'
@@ -14,25 +16,44 @@ import 'prism-react-editor/themes/github-dark.css'
 // Required by the basic setup
 import 'prism-react-editor/search.css'
 
+// out custom overrides
+import './overridePrismStyles.css'
+
 interface Props {
-  initialValue: string
+  value: string
   onChange: (value: string, commit: boolean) => void
+  error?: CustomProgramError
 }
 
-export default function EditorWrapper({ initialValue, onChange }: Props) {
-  const initialValueRef = useRef(initialValue)
+export default function EditorWrapper({ value, onChange, error }: Props) {
+  const initialValue = useRef(value) /* changing value causes reset of the editor */
+  const editorEl = useRef<PrismEditor>(null)
+
+  const errorRef = useRef(error) // to ensure onTokenzie always reads up to date errors
+  errorRef.current = error
 
   const onUpdateCode = (code: string) => {
-    // Editor triggers this event on first render
-    if (initialValueRef.current !== code) {
+    if (value !== code) {
       onChange(code, true)
     }
   }
 
-  /* changing value causes reset of the editor */
+  useLayoutEffect(() => {
+    editorEl.current?.update()
+  }, [error])
+
   return (
-    <Editor language="jsx" value={initialValueRef.current} onUpdate={onUpdateCode}>
-      {(editor) => <BasicSetup editor={editor} />}
-    </Editor>
+    <>
+      <Editor
+        language="wgsl"
+        value={initialValue.current}
+        onUpdate={onUpdateCode}
+        wordWrap
+        onTokenize={(tokens) => onTokenize(errorRef.current, tokens)}
+        ref={editorEl}
+      >
+        {(editor) => <BasicSetup editor={editor} />}
+      </Editor>
+    </>
   )
 }

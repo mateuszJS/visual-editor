@@ -7,3 +7,16 @@
     height: auto;
   }
 }
+
+.errorTitle {
+  font-size: var(--12px);
+  font-weight: 400;
+  color: red;
+  margin-block-start: 10px;
+}
+
+.errorBody {
+  max-height: 8lh;
+  white-space: pre;
+  overflow-y: auto;
+}

@@ -9,11 +9,11 @@ import styles from './CodeInput.module.css'
 interface Props {
   value: string
   onChange: (value: string, commit: boolean) => void
-  errors: CustomProgramError[] | undefined
+  error?: CustomProgramError
   className?: string
 }
 
-export default function CodeInput({ value, onChange, errors, className }: Props) {
+export default function CodeInput({ value, onChange, error, className }: Props) {
   return (
     <>
       <Popover
@@ -21,15 +21,14 @@ export default function CodeInput({ value, onChange, errors, className }: Props)
         className={cn(styles.triggerBtn, numberInputStyles.input, className)}
         aria-label="Open code editor"
       >
-        <EditorWrapper initialValue={value} onChange={onChange} />
-        {errors && errors.length > 0 && (
-          <ul>
-            {errors.map((error, index) => (
-              <li key={index}>
-                Line {error.line}: {error.message}
-              </li>
-            ))}
-          </ul>
+        <EditorWrapper value={value} onChange={onChange} error={error} />
+        {error && (
+          <section>
+            <h4 className={styles.errorTitle}>Compilation Error:</h4>
+            <p className={styles.errorBody}>
+              Line {error.lineNum}:{error.linePos} {error.message}
+            </p>
+          </section>
         )}
       </Popover>
     </>

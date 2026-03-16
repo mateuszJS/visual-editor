@@ -79,7 +79,6 @@ $arrow-length: 15px;
 
   /* Ensure border doesn't reduce the content area where the arrow lives
   Otherwise child's corners gonna be cut out */
-  box-sizing: content-box;
 
   &:before {
     /* This element is used to push the arrow by the 2.5 * border width */
@@ -114,12 +113,6 @@ $arrow-length: 15px;
     border-right-color: transparent;
 
     rotate: 45deg;
+    clip-path: polygon(0% 0, 100% 100%, 0% 100%);
   }
 }
-
-/* &.fixed {
-    position: fixed; */
-/* containing block for fixed anchor posotion = border box, for absolute it's padding-box */
-/* because of that we have to move element by additiona lhalf border width while doing position fixed */
-/* --position-fixed-fix: 1; */
-/* } */

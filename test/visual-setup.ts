@@ -17,7 +17,7 @@ const knownTrashConsoleLogs = [
 beforeAll(async () => {
   page.on('console', (msg) => {
     const text = msg.text()
-    if (!knownTrashConsoleLogs.some((phase) => text.includes(phase))) {
+    if (!knownTrashConsoleLogs.some((phrase) => text.includes(phrase))) {
       console.log('BROWSER CONSOLE:', text)
     }
   })

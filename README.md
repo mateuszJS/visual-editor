@@ -16,7 +16,7 @@ To start development you need two terminal:
    npm run dev
 ```
 
-2. Second for coudflare functions:
+2. Second for Cloudflare functions:
 
 ```bash
 npm run cf-dev-http

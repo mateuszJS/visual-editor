@@ -76,7 +76,9 @@ body {
   font-family: var(--font-outfit, ''), Helvetica, sans-serif;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
@@ -165,6 +167,10 @@ legend {
 fieldset {
   padding-inline: 5px;
   border-radius: 3px;
+}
+
+[popover] {
+  border: none;
 }
 
 .page {

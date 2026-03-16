@@ -15,6 +15,9 @@ interface Props {
 
 export default function CodeInput({ value, onChange, errors, className }: Props) {
   return (
+    /* render code editor base on:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/content-visibility
+    */
     <>
       <Popover
         trigger={() => <CodeSymbol />}
@@ -26,7 +29,7 @@ export default function CodeInput({ value, onChange, errors, className }: Props)
           <ul>
             {errors.map((error, index) => (
               <li key={index}>
-                Line {error.line}: {error.message}
+                Line {error.lineNum}: {error.message}
               </li>
             ))}
           </ul>

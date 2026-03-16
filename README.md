@@ -2,27 +2,25 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Installing dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm i
 ```
 
-## Start development
+To start development you need two terminal:
 
-1. ```bash
-   npm i
-   ```
-2. Start docker
-3. ```bash
-   supabase start
-   ```
+1. One to start Next.js app
+
+```bash
+   npm run dev
+```
+
+2. Second for coudflare functions:
+
+```bash
+npm run cf-dev-http
+```
 
 4. Visit `localhost:3000
 

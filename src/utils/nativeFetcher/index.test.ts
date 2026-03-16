@@ -51,12 +51,11 @@ describe('nativeFetcher', () => {
   })
 
   it('should send CLEAR_PROJECT message and redirect to /login on 401 status if withRedirect is true(default)', async () => {
-    const { replace } = window.location
-
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: { ...window.location, replace: jest.fn() },
-    })
+    const implSymbol = Reflect.ownKeys(window.location).find((i) => typeof i === 'symbol')!
+    const windowReplace = jest.spyOn(
+      (window.location as unknown as { [key: symbol]: { replace: VoidFunction } })[implSymbol],
+      'replace'
+    )
 
     const broadcast = new BroadcastChannel('sync-data')
     const messagesReceivedPromise = new Promise<void>((resolve) => {
@@ -76,9 +75,8 @@ describe('nativeFetcher', () => {
 
     await act(() => messagesReceivedPromise)
 
-    expect(window.location.replace).toHaveBeenCalledWith('/login')
-
-    window.location.replace = replace
+    expect(windowReplace).toHaveBeenCalledWith('/login')
+    windowReplace.mockRestore()
   })
 
   it('should not redirect on 401 status if disableAuth401Redirect is true', async () => {

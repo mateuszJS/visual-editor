@@ -41,7 +41,8 @@ export default function UploadTextures({ onUpload }: Props) {
 
   useEffect(() => {
     if (acceptedFiles.length > 0) {
-      onUpload(acceptedFiles.map((file) => URL.createObjectURL(file)))
+      const urls = acceptedFiles.map((file) => URL.createObjectURL(file))
+      onUpload(urls)
     }
   }, [acceptedFiles])
 

@@ -1,28 +1,21 @@
 import errorStore from '@/stores/error'
-import fetcher from '@/utils/fetcher'
+import nativeFetcher from '@/utils/nativeFetcher'
 
 export default function getOnTextureUpload(projectId: string) {
   return async (url: string, setNewUrl: (newUrl: string) => void) => {
     if (!url.startsWith('blob:')) return
 
     try {
-      const file = await fetcher(url).then((res) => res.blob())
-      const uploadUrlRes = await fetcher(`/api/project-uploads/${projectId}/access-url`, {
-        method: 'POST',
-        json: { contentLength: file.size },
-      })
+      const fileRes = await nativeFetcher(url)
 
-      const uploadUrlJson = await uploadUrlRes.json()
-
-      if (!uploadUrlJson.url || !uploadUrlJson.uploadId) {
-        throw Error(
-          `Failed to generate upload url. url: ${uploadUrlJson.url}, uploadId: ${uploadUrlJson.uploadId}`
-        )
+      if (!fileRes.ok) {
+        errorStore.message = 'Failed to fetch file.'
+        return
       }
 
-      // eslint-disable-next-line no-restricted-syntax
-      const response = await fetch(uploadUrlJson.url, {
-        // this is not our service API, so we don't use fetcher
+      const file = await fileRes.blob() // do we need this? Maybewe can just pass body
+
+      const response = await nativeFetcher(`/api/project-uploads/${projectId}`, {
         method: 'PUT',
         body: file,
       })
@@ -32,7 +25,14 @@ export default function getOnTextureUpload(projectId: string) {
         return
       }
 
-      setNewUrl(`/api/project-uploads/${projectId}/${uploadUrlJson.uploadId}`)
+      const { pathname } = new URL(response.url)
+      const uploadId = pathname.split('/')[2]
+
+      if (uploadId) {
+        setNewUrl(`/api/project-uploads/${projectId}/${uploadId}`)
+      } else {
+        console.error('Upload ID is missing in the response headers.')
+      }
     } catch (err) {
       errorStore.message = 'Failed to upload file.'
     }

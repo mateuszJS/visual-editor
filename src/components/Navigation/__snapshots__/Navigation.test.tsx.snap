@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Navigation> should render five standard links for unautenticated user 1`] = `
+exports[`<Navigation> should render five standard links for unauthenticated user 1`] = `
 <div>
   <nav
     class="navigation-bar"

@@ -1,0 +1,41 @@
+.track {
+  height: 0.3em;
+  background: rgba(var(--secondary-rgb), 0.5);
+  border-radius: 0.15em;
+  width: 100%;
+}
+
+.selectedRangeTrack {
+  background: color-mix(in srgb, var(--secondary-accent) 70%, var(--background) 30%);
+  grid-area: 1 / 1;
+
+  --diff: calc(var(--max) - var(--min));
+  --track-length: calc(var(--useful-width) / var(--diff));
+
+  width: calc(abs(var(--end) - var(--start)) * var(--track-length));
+  height: 0.5em;
+
+  --smallest: min(var(--start), var(--end));
+  --smallest-offset: calc(var(--smallest) - var(--min));
+  margin-left: calc(var(--thumb-radius) + var(--smallest-offset) * var(--track-length));
+}
+
+.slider input {
+  --border: color-mix(in srgb, var(--secondary) 20%, var(--background) 80%);
+
+  &::-webkit-slider-thumb {
+    border: 2px solid var(--border);
+    border-radius: 2px;
+  }
+  &::-moz-range-thumb {
+    border: 2px solid var(--border);
+    border-radius: 2px;
+  }
+
+  &:hover::-webkit-slider-thumb {
+    outline: 2px solid var(--secondary-accent);
+  }
+  &:hover::-moz-range-thumb {
+    outline: 2px solid var(--secondary-accent);
+  }
+}

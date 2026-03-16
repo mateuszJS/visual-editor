@@ -16,22 +16,19 @@ describe('getOnTextureUpload', () => {
   it('should not call endpoint when URL does not start with "blob:"', async () => {
     const regularUrl = 'https://example.com/image.jpg'
 
-    await getOnTextureUpload(PROJECT_ID)(regularUrl, mockSetNewUrl)
-
-    let apiWasCalled = false
     server.use(
-      http.post(`/api/project-uploads/:projectId/access-url`, () => {
-        apiWasCalled = true
-        return new HttpResponse(null, { status: 201 })
+      http.post('https://example.com/image.jpg', () => {
+        throw Error('API should not have been called')
       })
     )
 
-    expect(apiWasCalled).toBe(false)
+    await getOnTextureUpload(PROJECT_ID)(regularUrl, mockSetNewUrl)
+
     expect(mockSetNewUrl).not.toHaveBeenCalled()
     expect(errorStore.message).toBeNull()
   })
 
-  it('should handle failure when fetching blob URL fails', async () => {
+  it('should handle failure coming from fetching blob', async () => {
     const blobUrl = 'blob:http://localhost:3000/blob-uuid'
 
     server.use(
@@ -46,7 +43,7 @@ describe('getOnTextureUpload', () => {
     expect(errorStore.message).toBe('Failed to upload file.')
   })
 
-  it('should successfully fetch blob and upload to server', async () => {
+  it('should successfully obtain blob and upload to server', async () => {
     const blobUrl = 'blob:http://localhost:3000/blob-uuid'
 
     await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
@@ -59,23 +56,8 @@ describe('getOnTextureUpload', () => {
     const blobUrl = 'blob:http://localhost:3000/blob-uuid'
 
     server.use(
-      http.post('/api/project-uploads/:projectId/access-url', () => {
+      http.put('/api/project-uploads/:projectId', () => {
         return HttpResponse.json({ error: 'Upload failed' }, { status: 400 })
-      })
-    )
-
-    await getOnTextureUpload(PROJECT_ID)(blobUrl, mockSetNewUrl)
-
-    expect(mockSetNewUrl).not.toHaveBeenCalled()
-    expect(errorStore.message).toBe('Failed to upload file.')
-  })
-
-  it('should handle failure of external API while uploading', async () => {
-    const blobUrl = 'blob:http://localhost:3000/blob-uuid'
-
-    server.use(
-      http.put('http://storage-provider.com/signed-url-to-bucket', () => {
-        return new HttpResponse(null, { status: 500 })
       })
     )
 

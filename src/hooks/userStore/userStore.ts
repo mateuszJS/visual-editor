@@ -1,13 +1,13 @@
 'use client'
 
 import errorStore from '@/stores/error'
-import { SanitizedUser } from '@/types'
-import fetcher from '@/utils/fetcher'
-import { getErrorMessage } from '@/utils/fetcher/getErrorMessage'
+import nativeFetcher from '@/utils/nativeFetcher'
+import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
 import { proxy } from 'valtio'
+import { ApiUserBasic } from '../../../apiTypes'
 
 export interface UserStore {
-  user: SanitizedUser | null | undefined // null if not logged in, undefined if request is pending and we don't yet know
+  user: ApiUserBasic | null | undefined // null if not logged in, undefined if request is pending and we don't yet know
 }
 
 const userStore = proxy<UserStore>({
@@ -16,12 +16,12 @@ const userStore = proxy<UserStore>({
 
 export async function initUserStore() {
   try {
-    const response = await fetcher('/api/me', {
+    const response = await nativeFetcher<ApiUserBasic>('/api/me', {
       disableAuth401Redirect: true,
     })
 
     if (response.ok) {
-      userStore.user = (await response.json()) as SanitizedUser
+      userStore.user = await response.json()
     } else {
       userStore.user = null
     }

@@ -2,7 +2,7 @@ import { act, screen, render, renderHook } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import SelectAssetTool from './SelectAssetTool'
 import useCreator from '@/hooks/useCreator/useCreator'
-import { CreatorTool } from '@mateuszjs/magic-render'
+import { CreatorTool } from '@mateuszjs/magic-render/types'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
 
 const project = getSanitizedProject()
@@ -10,12 +10,10 @@ const project = getSanitizedProject()
 describe('SelectAssetTool', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
-    await act(() => {
-      result.current.init(window.creatorCanvas, project)
-    })
+    await act(() => result.current.init(window.creatorCanvas, project))
   })
 
-  it('should render select object icon with label', () => {
+  it('should render select object icon with label', async () => {
     const { container } = render(<SelectAssetTool />)
     expect(container).toMatchSnapshot()
   })

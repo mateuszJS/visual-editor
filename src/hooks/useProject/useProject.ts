@@ -2,23 +2,28 @@
 
 import { useEffect, useRef } from 'react'
 import useFetcher from '../useFetcher/useFetcher'
-import nativeFetcher from '@/utils/fetcher'
+import nativeFetcher from '@/utils/nativeFetcher'
 import { proxyMap } from 'valtio/utils'
 import { ref, useSnapshot } from 'valtio'
-import { SanitizedProject, UpdateProjectPayload } from '@/types'
+import { ApiProjectContent } from '../../../apiTypes'
 
-const projectsStore = proxyMap<string, SanitizedProject>()
+const projectsStore = proxyMap<string, ApiProjectContent>()
 
-async function updateProject(id: string, project: UpdateProjectPayload) {
+async function updateProject(id: string, project: Omit<Partial<ApiProjectContent>, 'id'>) {
   if (!projectsStore.has(id)) {
     throw Error(`Project with id ${id} does not exist in the store`)
   }
 
   try {
-    await nativeFetcher(`/api/projects/${id}`, {
+    const res = await nativeFetcher(`/api/projects/${id}`, {
       method: 'PATCH',
       json: project,
     })
+
+    if (!res.ok) {
+      throw Error('Failed to update project.')
+    }
+
     projectsStore.set(
       id,
       ref({
@@ -35,7 +40,7 @@ export default function useProject(id?: string) {
   const newProjId = useRef<string | undefined>(undefined)
   const projects = useSnapshot(projectsStore)
 
-  const { error, loading, fetcher } = useFetcher<SanitizedProject>()
+  const { error, loading, fetcher } = useFetcher<ApiProjectContent>()
 
   useEffect(() => {
     if (id && !projectsStore.has(id)) {
@@ -48,7 +53,7 @@ export default function useProject(id?: string) {
   function createProject(
     width: number,
     height: number,
-    successCallback: (project: SanitizedProject) => void
+    successCallback: (project: ApiProjectContent) => void
   ) {
     fetcher(
       '/api/projects',
@@ -58,6 +63,7 @@ export default function useProject(id?: string) {
           width,
           height,
           assets: [],
+          updatedAt: new Date().toISOString(),
         },
       },
       (project) => {

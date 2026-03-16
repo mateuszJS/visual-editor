@@ -1,4 +1,4 @@
-import { Asset } from './asset'
+import { ApiAsset, ApiProjectContent, ApiProjectMetaData } from '../../apiTypes'
 
 export type DB = {
   id: number
@@ -6,46 +6,38 @@ export type DB = {
   height: number
   owner_id: number
   name: string | null
-  miniature_created_at: string | null
+  miniature_updated_at: string | null
   created_at: string
-  last_updated: string
+  updated_at: string
   assets: string
 }
 
-export type MetaData = {
-  id: string
-  name: string | null
-  created_at: string
-  last_updated: string
-}
-
-export type AssetsData = {
-  id: string
-  assets: Asset[]
-}
-export function sanitizeAssetsData(data: Pick<DB, 'id' | 'assets'> | null): AssetsData {
+export function sanitizeContent(
+  data: Pick<DB, 'id' | 'assets' | 'updated_at' | 'width' | 'height'> | null
+): ApiProjectContent {
   if (!data) {
     throw new Error('No data was found.')
   }
 
-  const assets = (() => {
-    try {
-      return JSON.parse(data.assets) as Asset[]
-    } catch (err) {
-      console.error(err)
-    }
-  })()
-
-  if (!assets || !Array.isArray(assets)) {
-    throw Error('An issue with assets has occured.')
+  let assets: ApiAsset[]
+  try {
+    assets = JSON.parse(data.assets) as ApiAsset[]
+  } catch (err) {
+    throw Error('An issue with assets has occurred.')
   }
 
-  return { id: data.id.toString(), assets }
+  return {
+    id: data.id.toString(),
+    assets,
+    updatedAt: data.updated_at,
+    width: data.width,
+    height: data.height,
+  }
 }
 
 export function sanitizeMetaData(
-  data: Pick<DB, 'id' | 'name' | 'created_at' | 'last_updated'> | null
-): MetaData {
+  data: Pick<DB, 'id' | 'name' | 'created_at' | 'updated_at'> | null
+): ApiProjectMetaData {
   if (!data) {
     throw new Error('No data was found.')
   }
@@ -53,22 +45,19 @@ export function sanitizeMetaData(
   return {
     id: data.id.toString(),
     name: data.name,
-    created_at: data.created_at,
-    last_updated: data.last_updated,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
   }
 }
 
 export type ChangesRaw = {
   width?: number
   height?: number
-  assets?: Asset[]
+  assets?: ApiAsset[]
+  updatedAt?: string
 }
 
-export type ChangesSanitizedDB = {
-  width: number
-  height: number
-  assets: string
-}
+export type ChangesSanitizedDB = Pick<DB, 'width' | 'height' | 'assets' | 'updated_at'>
 
 // throws in case of invalid data
 export function sanitizeProjectPayload<R extends boolean>(
@@ -99,7 +88,10 @@ export function sanitizeProjectPayload(
     throw Error('Height is required')
   }
 
-  if (Array.isArray(payload.assets)) {
+  if (payload.assets) {
+    if (!Array.isArray(payload.assets)) {
+      throw Error('Assets must be an array')
+    }
     try {
       changes.assets = JSON.stringify(payload.assets)
     } catch (err) {
@@ -111,6 +103,17 @@ export function sanitizeProjectPayload(
 
   if (Object.keys(changes).length === 0) {
     throw Error('No valid fields to update')
+  }
+
+  if (typeof payload.updatedAt === 'string') {
+    try {
+      changes.updated_at = new Date(payload.updatedAt).toISOString()
+    } catch (err) {
+      throw Error('Invalid updatedAt date')
+    }
+  } else {
+    // update at is mandatory, always
+    throw Error('updatedAt is required')
   }
 
   return changes

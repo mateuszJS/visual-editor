@@ -1,0 +1,8 @@
+.root {
+  grid-area: panels;
+  width: 200px;
+
+  & > *:not(:last-child) {
+    margin-block-end: 10px;
+  }
+}

@@ -1,6 +1,6 @@
 import errorStore from '@/stores/error'
-import fetcher from '@/utils/fetcher'
-import { getErrorMessage } from '@/utils/fetcher/getErrorMessage'
+import nativeFetcher from '@/utils/nativeFetcher'
+import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
 import { useEffect } from 'react'
 
 let token = ''
@@ -8,11 +8,20 @@ let tokenPromise: Promise<void> | null = null
 
 async function getCSRFToken() {
   try {
-    const response = await fetcher('/api/csrf')
+    const response = await nativeFetcher<{ csrfToken: string }>('/api/csrf')
+
+    if (!response.ok) {
+      const { error } = await response.json()
+      console.error('Error fetching CSRF token', error)
+      errorStore.message = 'Something went wrong. Please enter this view again.'
+      return
+    }
+
     const { csrfToken } = await response.json()
     token = csrfToken
   } catch (error) {
-    errorStore.message = 'Error fetching CSRF token' + getErrorMessage(error)
+    console.error('Error fetching CSRF token' + getErrorMessage(error))
+    errorStore.message = 'Something went wrong. Please enter this view again.'
   } finally {
     tokenPromise = null
   }

@@ -1,7 +1,7 @@
 'use client'
 
 import useProjectsList from '@/hooks/useProjectsList/useProjectsList'
-import styles from './styles.module.css'
+import styles from './page.module.css'
 import ProjectPanel from '@/components/ProjectPanel/ProjectPanel'
 import Navigation from '@/components/Navigation/Navigation'
 
@@ -28,7 +28,7 @@ export default function MyProjects() {
         <ul className={styles.list}>
           {[...projectsList.values()].map((project) => (
             <li key={project.id}>
-              <ProjectPanel id={project.id} text={formatDate(project.last_updated)} />
+              <ProjectPanel id={project.id} text={formatDate(project.updatedAt)} />
             </li>
           ))}
         </ul>

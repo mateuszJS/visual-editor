@@ -6,7 +6,7 @@ import { lazy, Suspense, useState } from 'react'
 import useCreator from '@/hooks/useCreator/useCreator'
 import Tooltip from '@/components/Tooltip/Tooltip'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
-import { CreatorTool } from '@mateuszjs/magic-render'
+import { CreatorTool } from '@mateuszjs/magic-render/types'
 
 const UploadModal = lazy(() => import('./UploadModal'))
 
@@ -17,11 +17,8 @@ export default function UploadTexture() {
   const creatorApi = useCreator()
   const isMobile = useIsMobile()
 
-  async function addTextures(textureUrls: string[]) {
-    textureUrls.forEach((url) => {
-      creatorApi.creator.addImage(url)
-    })
-
+  function addTextures(textureUrls: string[]) {
+    creatorApi.creator.addImages(textureUrls)
     setIsUploadShown(false)
   }
 

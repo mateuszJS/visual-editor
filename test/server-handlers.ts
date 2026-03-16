@@ -28,19 +28,20 @@ export default [
   http.patch('/api/projects/:id', () => {
     return new HttpResponse(null, { status: 204 })
   }),
-  http.post('/api/project-uploads/:projectId/access-url', () => {
-    return HttpResponse.json(
-      { uploadId: 'new-upload-id', url: 'http://storage-provider.com/signed-url-to-bucket' },
-      { status: 201 }
-    )
-  }),
-  http.put('http://storage-provider.com/signed-url-to-bucket', () => {
-    return new HttpResponse(null, { status: 204 })
+  http.put('/api/project-uploads/:projectId', () => {
+    const res = new HttpResponse(null, { status: 204 })
+    Object.defineProperty(res, 'url', {
+      value: 'https://storage-provider.com/projectId/new-upload-id',
+    })
+    return res
   }),
   http.get('/api/project-uploads/:projectId/:uploadId', () => {
     return new HttpResponse(file, { status: 204 })
   }),
   http.get(/blob-uuid/, () => {
     return HttpResponse.arrayBuffer(mockBlobData.buffer)
+  }),
+  http.put('/api/project-uploads/:projectId/miniature', async () => {
+    return new HttpResponse(null, { status: 204 })
   }),
 ]

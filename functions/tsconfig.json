@@ -1,11 +1,23 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
-    // "moduleResolution": "bundler",
-    "target": "esnext",
+    "composite": true,
+    "moduleResolution": "bundler",
     "module": "esnext",
+    "target": "esnext",
     "lib": ["esnext"],
-    "types": ["./types.d.ts", "./handlers.d.ts", "node"],
-    "strict": true
-  }
+    "types": ["@cloudflare/vitest-pool-workers"],
+    "strict": true,
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "./**/*.ts",
+    "./env.d.ts",
+    "./handlers.d.ts",
+    "./types.d.ts",
+    "../vitest.config.mts",
+    "../src/utils/getUserAgent.ts",
+    "../apiTypes.ts"
+  ]
 }

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<ProjectPanel> should render a project details link with provided text 1`] = `
 <div>
@@ -6,7 +6,7 @@ exports[`<ProjectPanel> should render a project details link with provided text 
     aria-label="Go to project name project details"
     class="projectPanel"
     href="/project/0"
-    style="background-image: url("/api/project-uploads/0/miniature");"
+    style="background-image: url(/api/project-uploads/0/miniature);"
   >
     <p>
       project name

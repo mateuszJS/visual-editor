@@ -16,7 +16,6 @@ const meta = {
   angle/6.24,
   1
 );`,
-    errors: [],
     onChange: fn(),
   },
 } satisfies Meta<typeof CodeInput>

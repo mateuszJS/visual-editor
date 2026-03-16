@@ -6,4 +6,6 @@
   padding: 10px;
   border: none;
   border-radius: 5px;
+  max-width: 500px;
+  max-height: 500px;
 }

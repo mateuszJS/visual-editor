@@ -101,4 +101,30 @@ describe('Slider', () => {
       true
     )
   })
+
+  it("doesn't clamp values which were not updated", async () => {
+    const onChange = jest.fn()
+    render(
+      <TestableComponent
+        initialHandles={[
+          { label: 'handler A', value: 50 },
+          { label: 'handler B', value: 200 },
+        ]}
+        min={0}
+        max={100}
+        onChange={onChange}
+      />
+    )
+
+    const startInput = screen.getByLabelText('handler A')
+    fireEvent.change(startInput, { target: { value: '30' } })
+
+    expect(onChange).toHaveBeenCalledWith(
+      [
+        { label: 'handler A', value: 30 },
+        { label: 'handler B', value: 200 },
+      ],
+      false
+    )
+  })
 })

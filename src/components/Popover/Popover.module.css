@@ -1,5 +1,3 @@
-$arrow-length: 15px;
-
 .popover {
   margin: 0;
   inset: auto;
@@ -10,9 +8,12 @@ $arrow-length: 15px;
 
   right: calc(anchor(left));
   align-self: anchor-center;
-  position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  position-try-fallbacks:
+    flip-block,
+    flip-inline,
+    flip-block flip-inline;
 
-  margin: var(--margin) $arrow-length var(--margin) var(--margin);
+  margin: var(--margin) 15px var(--margin) var(--margin);
   max-width: 50vw;
 
   border: var(--border-width) solid color-mix(in srgb, var(--secondary) 30%, transparent);

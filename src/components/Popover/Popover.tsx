@@ -1,7 +1,7 @@
 import React, { ToggleEventHandler, useState } from 'react'
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
 import cn from 'classnames'
-import styles from './Popover.module.scss'
+import styles from './Popover.module.css'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   trigger: () => React.ReactNode

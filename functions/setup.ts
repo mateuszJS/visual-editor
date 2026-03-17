@@ -1,13 +1,26 @@
 import '@total-typescript/ts-reset'
 import { beforeAll, vi } from 'vitest'
 import { TokenPayload } from 'google-auth-library'
-import { applyD1Migrations, env } from 'cloudflare:test'
+import { applyD1Migrations, D1Migration } from 'cloudflare:test'
+import { env } from 'cloudflare:workers'
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
+
+// Most helpful docs so far:
+// https://github.com/cloudflare/workers-sdk/pull/11632/changes
+// https://blog.cloudflare.com/workers-vitest-integration/
 
 // works only with "@cloudflare/vitest-pool-workers": "^0.8.49",
 // newer version has bug when setup file runs again
 // https://github.com/cloudflare/workers-sdk/issues/10506
-await applyD1Migrations(env.db, env.TEST_MIGRATIONS)
+
+// interface Cloudflare.Env {
+//   TEST_MIGRATIONS: unknown
+// }
+
+await applyD1Migrations(
+  env.db,
+  (env as unknown as Cloudflare.Env & { TEST_MIGRATIONS: D1Migration[] }).TEST_MIGRATIONS
+)
 
 beforeAll(async () => {
   vi.useFakeTimers()

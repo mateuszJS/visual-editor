@@ -59,6 +59,7 @@
     "@types/react-dom": "^19",
     "@types/react-modal": "^3.16.3",
     "@types/uuid": "^10.0.0",
+    "@vitest/utils": "^4.1.0",
     "address": "^2.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",

@@ -12,8 +12,6 @@ export default defineConfig({
     include: ['./functions/**/*.test.ts'],
     setupFiles: ['./functions/setup.ts'],
   },
-  // include: ['./functions/**/*.test.ts'],
-  // setupFiles: ['./functions/setup.ts'],
   plugins: [
     tsconfigPaths({ root: './functions' }),
     cloudflareTest(async () => {

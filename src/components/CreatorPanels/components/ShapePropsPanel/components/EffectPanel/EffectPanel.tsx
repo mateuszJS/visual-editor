@@ -1,16 +1,17 @@
 import ColorInput from '@/components/ColorInput/ColorInput'
 import NumberInput from '@/components/NumberInput/NumberInput'
-import { Fill, SdfEffect } from '@mateuszjs/magic-render/types'
-import styles from './Effect.module.css'
+import type { Fill, Effect } from '@mateuszjs/magic-render/types'
+import styles from './EffectPanel.module.css'
 import cn from 'classnames'
 import useCreator from '@/hooks/useCreator/useCreator'
 import CloseIcon from 'assets/close-icon.svg'
 import RangeSlider from '@/components/RangeSlider/RangeSlider'
 import CodeInput from '@/components/CodeInput/CodeInput'
 import GradientInput from '@/components/GradientInput/GradientInput'
+import clamp from '@/utils/clamp'
 
-interface Props extends SdfEffect {
-  onChange: (changes: SdfEffect | null, commit: boolean) => void
+interface Props extends Effect {
+  onChange: (changes: Effect | null, commit: boolean) => void
 }
 
 function mapFillType(fill: Fill): 'solid' | 'linear' | 'radial' | 'program' {
@@ -29,7 +30,7 @@ function mapFillType(fill: Fill): 'solid' | 'linear' | 'radial' | 'program' {
   throw Error('Unknown fill type')
 }
 
-export default function Effect({ onChange, ...effect }: Props) {
+export default function EffectPanel({ onChange, ...effect }: Props) {
   const { creator } = useCreator()
   const startIsInfinite = creator.INFINITE_DISTANCE_THRESHOLD < effect.dist_start
   const startValue = startIsInfinite ? effect.dist_end + 10 : effect.dist_start
@@ -175,8 +176,8 @@ export default function Effect({ onChange, ...effect }: Props) {
         className={styles.range}
         min={-100}
         max={100}
-        start={effect.dist_start}
-        end={effect.dist_end}
+        start={clamp(effect.dist_start, -100, 100)}
+        end={clamp(effect.dist_end, -100, 100)}
         onChange={(dist_start, dist_end, commit) =>
           onChange({ ...effect, dist_start, dist_end }, commit)
         }

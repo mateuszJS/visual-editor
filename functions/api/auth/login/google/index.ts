@@ -79,7 +79,7 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
   })
 
   if (err) {
-    // console.error(err) capture this log in the future
+    console.error(err) // capture this log in the future
     return getResponseError('Authentication failed')
   }
 

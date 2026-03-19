@@ -29,11 +29,12 @@ export default [
     return new HttpResponse(null, { status: 204 })
   }),
   http.put('/api/project-uploads/:projectId', () => {
-    const res = new HttpResponse(null, { status: 204 })
-    Object.defineProperty(res, 'url', {
-      value: 'https://storage-provider.com/projectId/new-upload-id',
-    })
-    return res
+    // jsdom fetch does not follow 307 redirects, so I hade to use 303 instead
+    return HttpResponse.redirect('https://storage-provider.com/projectId/new-upload-id', 303)
+  }),
+  // TODO: once we get rid of jest & jsdom, lets change this get to put to actually replicate how prod works
+  http.get('https://storage-provider.com/projectId/new-upload-id', () => {
+    return new HttpResponse(null, { status: 204 })
   }),
   http.get('/api/project-uploads/:projectId/:uploadId', () => {
     return new HttpResponse(file, { status: 204 })

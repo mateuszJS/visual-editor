@@ -1,7 +1,9 @@
 import { act, renderHook } from '@testing-library/react'
-import { delay, http, HttpResponse } from 'msw'
+import { http, HttpResponse } from 'msw'
 import useProject from './useProject'
 import { server } from 'test/server'
+
+const waitForever = () => new Promise<never>(() => {})
 
 describe('useProject', () => {
   describe('fetching project', () => {
@@ -47,7 +49,7 @@ describe('useProject', () => {
     it('set loading to true while requesting', async () => {
       server.use(
         http.get('/api/projects/1', async () => {
-          await delay('infinite')
+          await waitForever()
           return HttpResponse.json({ id: '1' }, { status: 200 })
         })
       )
@@ -96,7 +98,7 @@ describe('useProject', () => {
 
       server.use(
         http.post('/api/projects', async () => {
-          await delay('infinite')
+          await waitForever()
           return HttpResponse.json({ id: '1' }, { status: 201 })
         })
       )
@@ -168,7 +170,7 @@ describe('useProject', () => {
 
       server.use(
         http.patch('/api/projects/:id', async () => {
-          await delay('infinite')
+          await waitForever()
           return HttpResponse.json(null, { status: 204 })
         })
       )

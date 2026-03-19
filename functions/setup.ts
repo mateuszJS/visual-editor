@@ -9,14 +9,6 @@ import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 // https://github.com/cloudflare/workers-sdk/pull/11632/changes
 // https://blog.cloudflare.com/workers-vitest-integration/
 
-// works only with "@cloudflare/vitest-pool-workers": "^0.8.49",
-// newer version has bug when setup file runs again
-// https://github.com/cloudflare/workers-sdk/issues/10506
-
-// interface Cloudflare.Env {
-//   TEST_MIGRATIONS: unknown
-// }
-
 await applyD1Migrations(
   env.db,
   (env as unknown as Cloudflare.Env & { TEST_MIGRATIONS: D1Migration[] }).TEST_MIGRATIONS

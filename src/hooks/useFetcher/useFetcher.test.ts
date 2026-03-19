@@ -3,6 +3,9 @@ import useFetcher from './useFetcher'
 import { delay, http, HttpResponse } from 'msw'
 import { server } from 'test/server'
 
+const waitForever = () => new Promise<never>(() => {})
+// jsdom has osme issues with msw, it's a fix until we get rid of jest & jsdom
+
 describe('useFetcher', () => {
   it('no error, loading or success by default', async () => {
     const { result } = renderHook(() => useFetcher())
@@ -21,7 +24,7 @@ describe('useFetcher', () => {
 
     server.use(
       http.get('/api/me', async () => {
-        await delay('infinite')
+        await waitForever()
         return HttpResponse.json({ userId: 0 }, { status: 200 })
       })
     )
@@ -150,7 +153,7 @@ describe('useFetcher', () => {
       // make request pending
       server.use(
         http.get('/api/me', async () => {
-          await delay('infinite')
+          await waitForever()
           return HttpResponse.json({ userId: 0 }, { status: 200 })
         })
       )
@@ -191,7 +194,7 @@ describe('useFetcher', () => {
       // make request pending
       server.use(
         http.get('/api/me', async () => {
-          await delay('infinite')
+          await waitForever()
           return HttpResponse.json({ userId: 0 }, { status: 200 })
         })
       )

@@ -22,13 +22,6 @@ export default defineConfig({
       const assetsPath = path.join(__dirname, './out')
 
       return {
-        // plugins: [tsconfigPaths({ root: './functions' })],
-        // test: {
-        // root: './functions', // avoid this, causes to create node_modules in ./functions
-        // include: ['./functions/**/*.test.ts'],
-        // setupFiles: ['./functions/setup.ts'],
-        // poolOptions: {
-        //   workers: {
         wrangler: { configPath: './wrangler.jsonc' },
         miniflare: {
           bindings: {
@@ -43,9 +36,6 @@ export default defineConfig({
             ASSETS: await buildPagesASSETSBinding(assetsPath),
           },
         },
-        //   },
-        // },
-        // },
       }
     }),
   ],

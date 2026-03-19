@@ -1,56 +1,60 @@
 import '@total-typescript/ts-reset'
-import { beforeAll, vi } from 'vitest'
+import { beforeAll, beforeEach, vi } from 'vitest'
 import { TokenPayload } from 'google-auth-library'
-import { applyD1Migrations, env } from 'cloudflare:test'
+import { applyD1Migrations } from 'cloudflare:test'
+import { env } from 'cloudflare:workers'
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 
-// works only with "@cloudflare/vitest-pool-workers": "^0.8.49",
-// newer version has bug when setup file runs again
-// https://github.com/cloudflare/workers-sdk/issues/10506
-await applyD1Migrations(env.db, env.TEST_MIGRATIONS)
+// Most helpful docs so far:
+// https://github.com/cloudflare/workers-sdk/pull/11632/changes
+// https://blog.cloudflare.com/workers-vitest-integration/
 
 beforeAll(async () => {
+  await applyD1Migrations(env.db, env.TEST_MIGRATIONS)
+
   vi.useFakeTimers()
   const date = Date.UTC(2000, 0)
   vi.setSystemTime(date)
 
   vi.mock('google-auth-library/build/src/auth/oauth2client', () => {
     return {
-      OAuth2Client: vi.fn().mockImplementation(() => {
+      OAuth2Client: vi.fn(function () {
         return {
-          verifyIdToken: vi.fn().mockImplementation(({ idToken }: { idToken: string }) => ({
-            getPayload: vi.fn().mockImplementation(() => {
-              if (idToken === 'new-token') {
-                return {
-                  email: 'test@example.com',
-                  given_name: 'John Doe',
-                  picture: 'https://example.com/avatar.png',
-                  iss: 'https://accounts.google.com',
-                  sub: '2660163898',
-                  aud: '',
-                  iat: 1704067200,
-                  exp: 4859740800,
-                } satisfies TokenPayload
-              } else if (idToken === 'existing-token') {
-                return {
-                  email: 'alicewe@example.com',
-                  given_name: 'Alice',
-                  picture: 'https://example.com/alice.png',
-                  iss: 'https://accounts.google.com',
-                  sub: '1', // Alice mock user,
-                  aud: '',
-                  iat: 1704067200,
-                  exp: 4859740800,
-                } satisfies TokenPayload
-              } else if (idToken === 'error-token') {
-                throw new Error('Invalid ID token')
-              } else if (idToken === 'invalid-token') {
-                return undefined
-              }
+          verifyIdToken: vi.fn(function ({ idToken }: { idToken: string }) {
+            return {
+              getPayload: vi.fn(function () {
+                if (idToken === 'new-token') {
+                  return {
+                    email: 'test@example.com',
+                    given_name: 'John Doe',
+                    picture: 'https://example.com/avatar.png',
+                    iss: 'https://accounts.google.com',
+                    sub: '2660163898',
+                    aud: '',
+                    iat: 1704067200,
+                    exp: 4859740800,
+                  } satisfies TokenPayload
+                } else if (idToken === 'existing-token') {
+                  return {
+                    email: 'alicewe@example.com',
+                    given_name: 'Alice',
+                    picture: 'https://example.com/alice.png',
+                    iss: 'https://accounts.google.com',
+                    sub: '1', // Alice mock user,
+                    aud: '',
+                    iat: 1704067200,
+                    exp: 4859740800,
+                  } satisfies TokenPayload
+                } else if (idToken === 'error-token') {
+                  throw new Error('Invalid ID token')
+                } else if (idToken === 'invalid-token') {
+                  return undefined
+                }
 
-              throw Error('Unhandled token type: ' + idToken)
-            }),
-          })),
+                throw Error('Unhandled token type: ' + idToken)
+              }),
+            }
+          }),
         }
       }),
     }
@@ -90,6 +94,18 @@ beforeAll(async () => {
       }),
     }
   })
+})
+
+beforeEach(async () => {
+  await env.db.prepare('DELETE FROM projects').run()
+  await env.db.prepare('DELETE FROM users').run()
+  // await env.userUploads.list().then(({ objects }) => {
+  //   return Promise.all(
+  //     objects.map((obj) => {
+  //       return env.userUploads.delete(obj.key)
+  //     })
+  //   )
+  // })
 
   // prettier-ignore
   await env.db

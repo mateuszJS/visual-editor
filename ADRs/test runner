@@ -12,6 +12,7 @@ Benefits of vitest:
 - From the other hand cloudflare drops support for Jest and encourages to move to vitest.
   Although its for workers, for page functions they do not have much docs & examples.
 - Tests are clearer, runs in browser so behaviour is closer to production
+- no JsDom which starts beign a pain in the ass. e.g. mocking window.location properties is not allowed to spy on them
 
 For now we stick with jest, there is no visible obstacle before moving vitest.
 Once cloudflare provides dedicated config for pages(and it will be good) then we can consider move to vitest again.

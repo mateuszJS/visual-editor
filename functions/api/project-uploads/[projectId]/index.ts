@@ -7,12 +7,11 @@ import getUploadUrl from './getUploadUrl'
 export const onRequestPut = withSession<'projectId'>(async (ctx, session) => {
   const contentLength = Number(ctx.request.headers.get('Content-Length'))
 
-  const [url, err] = await withError(async () =>
+  const [url, err] = await withError(() =>
     getUploadUrl(ctx, ctx.params.projectId as string, uuid(), contentLength, session.userId, null)
   )
 
   if (err) {
-    console.error(err)
     return getResponseError('Failed to generate signed URL.', 403)
   }
 

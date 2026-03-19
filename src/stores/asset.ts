@@ -1,20 +1,29 @@
-import type { PointUV, ProjectSnapshot, ShapeProps, TypoProps } from '@mateuszjs/magic-render/types'
+import type {
+  PointUV,
+  ProjectSnapshot,
+  BasicProps,
+  TypoProps,
+  Effect,
+} from '@mateuszjs/magic-render/types'
 import { proxy, ref } from 'valtio'
 
 interface AssetStore {
   bounds: PointUV[] | null
-  props: ShapeProps | null
+  props: BasicProps | null
+  effects: Effect[] | null
   typoProps: TypoProps | null
 }
 export const assetState = proxy<AssetStore>({
   bounds: null,
   props: null,
+  effects: null,
   typoProps: null,
 })
 
 export function resetAssetStore() {
   assetState.bounds = null
   assetState.props = null
+  assetState.effects = null
   assetState.typoProps = null
 }
 
@@ -38,5 +47,9 @@ export function updateSelectedAssetStore(
 
   if ('typo_props' in asset) {
     assetState.typoProps = ref(asset.typo_props) || null
+  }
+
+  if ('effects' in asset) {
+    assetState.effects = ref(asset.effects)
   }
 }

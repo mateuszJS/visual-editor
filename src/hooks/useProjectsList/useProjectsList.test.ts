@@ -1,7 +1,9 @@
 import { act, renderHook } from '@testing-library/react'
-import { delay, http, HttpResponse } from 'msw'
+import { http, HttpResponse } from 'msw'
 import useProjectsList from './useProjectsList'
 import { server } from 'test/server'
+
+const waitForever = () => new Promise<never>(() => {})
 
 describe('useProjectsList', () => {
   it('return list of projects', async () => {
@@ -24,7 +26,7 @@ describe('useProjectsList', () => {
   it('set loading to true while requesting', async () => {
     server.use(
       http.get('/api/projects', async () => {
-        await delay('infinite')
+        await waitForever()
         return HttpResponse.json({ id: '1' }, { status: 200 })
       })
     )

@@ -2,6 +2,7 @@ import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
 import styles from './Slider.module.css'
 import cn from 'classnames'
 import { Fragment } from 'react'
+import clamp from '@/utils/clamp'
 
 export interface Handle {
   label: string
@@ -49,7 +50,7 @@ export default function RangeSlider({
             type="range"
             step={0.01}
             min={min}
-            value={Math.max(min, Math.min(handle.value, max))}
+            value={clamp(handle.value, min, max)}
             max={max}
             className={styles.slider}
             onChange={(e) => {

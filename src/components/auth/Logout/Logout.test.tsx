@@ -4,20 +4,15 @@ import userStore from '@/hooks/userStore/userStore'
 import userEvent from '@testing-library/user-event'
 
 describe('Logout component', () => {
-  const { reload } = window.location
-
-  beforeAll(() => {
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: { ...window.location, reload: jest.fn() },
-    })
-  })
-
-  afterAll(() => {
-    window.location.reload = reload
-  })
-
   it('should call fetcher, reset user and reload window on click', async () => {
+    const implSymbol = Reflect.ownKeys(window.location).find((i) => typeof i === 'symbol')!
+    const windowReload = jest
+      .spyOn(
+        (window.location as unknown as { [key: symbol]: { reload: VoidFunction } })[implSymbol],
+        'reload'
+      )
+      .mockImplementation(() => {})
+
     const user = userEvent.setup()
 
     render(<Logout />)
@@ -25,6 +20,7 @@ describe('Logout component', () => {
     await user.click(logoutButton)
 
     expect(userStore.user).toBeNull()
-    expect(window.location.reload).toHaveBeenCalled()
+    expect(windowReload).toHaveBeenCalled()
+    windowReload.mockRestore()
   })
 })

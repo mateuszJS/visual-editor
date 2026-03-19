@@ -35,7 +35,7 @@ describe('userStore', () => {
       id: '1',
       email: 'alice@google.com',
       name: 'Alice',
-      avatar: 'http://alice.jpg',
+      photo: 'http://alice.jpg',
       projects: [],
     }
     await act(async () => {

@@ -35,11 +35,7 @@ export default function RangeSlider({
   onFocusHandler,
 }: Props) {
   const id = useUniqueId()
-  console.log(
-    min,
-    max,
-    handles.map((handle) => handle.value)
-  )
+
   return (
     // label or fieldset is not used because grid on them doesn't work properly in Chrome
     <div className={cn(styles.inputsWrapper, className)} role="group" aria-label={ariaLabel}>

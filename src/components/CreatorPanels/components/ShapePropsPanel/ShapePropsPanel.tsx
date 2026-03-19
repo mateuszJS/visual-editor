@@ -15,7 +15,7 @@ export default function ShapePropsPanel() {
   function getOnChangeEffect(index: number) {
     return (newEffect: Effect | null, commit: boolean) => {
       if (!props) throw Error('No props available while modifying SDF effect!')
-      if (!effects) throw Error('You cannot modified effects of element that has no effects')
+      if (!effects) throw Error('You cannot modify effects of element that has no effects')
 
       creator.creator.updateAssetProps(
         props,

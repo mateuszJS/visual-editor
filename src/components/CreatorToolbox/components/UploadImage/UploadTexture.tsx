@@ -2,7 +2,7 @@
 
 import PictureIcon from 'assets/picture-icon.svg'
 import NavButton from '@/components/NavButton/NavButton'
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense } from 'react'
 import useCreator from '@/hooks/useCreator/useCreator'
 import Tooltip from '@/components/Tooltip/Tooltip'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'

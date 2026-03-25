@@ -41,6 +41,7 @@ const initMagicRenderMock: typeof initCreator = function (
       canvas.removeAttribute('data-magic-render-linked')
     },
     updateAssetProps: jest.fn(),
+    updateAssetEffects: jest.fn(),
     updateAssetBounds: jest.fn(),
     updateAssetTypoProps: jest.fn(),
     INFINITE_DISTANCE_THRESHOLD: 10000,

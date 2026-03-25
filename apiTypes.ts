@@ -19,7 +19,7 @@ export type ApiProjectContent = {
 
 export type ApiUserBasic = {
   id: string
-  email: string | null
+  email: string
   name: string | null
   photo: string | null
 }

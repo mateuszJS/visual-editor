@@ -24,6 +24,7 @@ jobs:
         with:
           node-version: '24.x'
       - run: npm ci
+      - run: npm run typecheck
       - run: npm run build
       - run: npm audit signatures
       - run: npm run build-storybook

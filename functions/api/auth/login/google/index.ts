@@ -3,7 +3,7 @@ import { attachSessionCookie } from '@/wrappers/session'
 import getResponseError from '@/utils/getResponseError'
 import { withCSRFProtection } from '@/wrappers/csrf'
 import getUserData from '@/utils/getUserData'
-import withError from '@/utils/error'
+import withError, { ErrorMsg } from '@/utils/error'
 import { env } from 'cloudflare:workers'
 
 // avoid import from google-auth-library. One of the exports(gcp-metadata -> google-logging-utils)
@@ -80,7 +80,7 @@ export const onRequestPost = withCSRFProtection(async (ctx) => {
 
   if (err) {
     // console.error(err) // capture this log in the future
-    return getResponseError('Authentication failed')
+    return getResponseError(err instanceof ErrorMsg ? err.safeMsg : 'Authentication failed')
   }
 
   const response = Response.json(userData, { status: 200 })

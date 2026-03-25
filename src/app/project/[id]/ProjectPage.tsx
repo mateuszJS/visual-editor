@@ -9,6 +9,7 @@ import CreatorNav from '@/components/CreatorNav/CreatorNav'
 import CreatorToolbox from '@/components/CreatorToolbox/CreatorToolbox'
 import CreatorPanels from '@/components/CreatorPanels/CreatorPanels'
 import useProjectId from '@/hooks/useProjectId/useProjectId'
+import disablePageZoom from '@/utils/disablePageZoom'
 
 export default function Project() {
   const id = useProjectId()
@@ -16,15 +17,25 @@ export default function Project() {
 
   useEffect(() => {
     const broadcast = new BroadcastChannel('sync-data')
-    const intervalId = setInterval(() => {
-      broadcast.postMessage('SYNC_PROJECT_DATA_START')
-    }, 2 * 60 * 1000) // every 2 minutes
+    const intervalId = setInterval(
+      () => {
+        broadcast.postMessage('SYNC_PROJECT_DATA_START')
+      },
+      2 * 60 * 1000
+    ) // every 2 minutes
 
     return () => {
       clearInterval(intervalId)
       broadcast.postMessage('SYNC_PROJECT_DATA_START')
       broadcast.postMessage('SYNC_PROJECT_MINIATURE_START')
       broadcast.close()
+    }
+  }, [])
+
+  useEffect(() => {
+    const controller = disablePageZoom()
+    return () => {
+      controller.abort()
     }
   }, [])
 

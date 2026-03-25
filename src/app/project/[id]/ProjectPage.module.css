@@ -16,3 +16,7 @@
       'toolbox creator panels';
   }
 }
+
+:global(html):has(.page) {
+  overscroll-behavior: none;
+}

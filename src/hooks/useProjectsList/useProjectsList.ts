@@ -3,6 +3,7 @@ import useFetcher from '../useFetcher/useFetcher'
 import { proxyMap } from 'valtio/utils'
 import { useSnapshot } from 'valtio'
 import { ApiProjectMetaData } from '../../../apiTypes'
+import errorStore from '@/stores/error'
 
 const projectsListStore = proxyMap<string, ApiProjectMetaData>()
 
@@ -18,8 +19,12 @@ export default function useProjectsList() {
     })
   }, [])
 
+  useEffect(() => {
+    errorStore.message = error
+  }, [error])
+
   return {
-    loading,
+    loading: loading && projectsList.size === 0,
     error,
     projectsList,
   }

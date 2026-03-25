@@ -4,7 +4,7 @@ export type DB = {
   id: number
   name: string | null
   photo: string | null
-  email: string | null
+  email: string
   created_at: string
   language: string | null
   country: string | null

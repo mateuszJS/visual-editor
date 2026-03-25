@@ -17,14 +17,13 @@ function formatDate(time: string) {
 }
 
 export default function MyProjects() {
-  const { loading, error, projectsList } = useProjectsList()
+  const { loading, projectsList } = useProjectsList()
 
   return (
     <div className="page">
       <main>
-        <h1>My Projects</h1>
+        <h1 className="page-title">Projects</h1>
         {loading && <p>Loading...</p>}
-        {error && <p>Error: {error}</p>}
         <ul className={styles.list}>
           {[...projectsList.values()].map((project) => (
             <li key={project.id}>

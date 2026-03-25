@@ -17,8 +17,7 @@ export default function ShapePropsPanel() {
       if (!props) throw Error('No props available while modifying SDF effect!')
       if (!effects) throw Error('You cannot modify effects of element that has no effects')
 
-      creator.creator.updateAssetProps(
-        props,
+      creator.creator.updateAssetEffects(
         effects.map((effect, i) => (i === index ? newEffect : effect)).filter(Boolean),
         commit
       )
@@ -34,7 +33,7 @@ export default function ShapePropsPanel() {
       dist_start: 5,
       dist_end: -5,
     }
-    creator.creator.updateAssetProps(props, [...effects, newEffect], true)
+    creator.creator.updateAssetEffects([...effects, newEffect], true)
   }
 
   if (!props) {
@@ -49,7 +48,6 @@ export default function ShapePropsPanel() {
         ...props,
         blur: x === 0 && y === 0 ? null : { x, y },
       },
-      effects ?? [],
       commit
     )
   }
@@ -73,11 +71,7 @@ export default function ShapePropsPanel() {
             label="Opacity:"
             value={props.opacity * 100}
             onChange={(value, commit) =>
-              creator.creator.updateAssetProps(
-                { ...props, opacity: value / 100 },
-                effects ?? [],
-                commit
-              )
+              creator.creator.updateAssetProps({ ...props, opacity: value / 100 }, commit)
             }
             unit="%"
           />

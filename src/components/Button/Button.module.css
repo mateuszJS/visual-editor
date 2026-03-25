@@ -19,11 +19,15 @@
 
 .secondary {
   --border-width: 2px;
-  border: var(--border-width) solid var(--primary);
+  border: var(--border-width) solid;
   color: var(--primary);
   background: transparent;
   padding: calc(12px - var(--border-width)) calc(14px - var(--border-width));
 }
+
+/* .danger {
+  color: var(--danger);
+} */
 
 .expand {
   width: 100%;

@@ -2,6 +2,7 @@ import { TokenPayload } from 'google-auth-library'
 import * as User from '../types/user'
 import type { UserAgentInfo } from '../../src/utils/getUserAgent'
 import { ApiUserBasic } from '../../apiTypes'
+import { ErrorMsg } from './error'
 
 // This function can throw!
 export default async function getUserData(
@@ -22,6 +23,10 @@ export default async function getUserData(
 
   // const language = req.headers.get('accept-language')?.split(',')[0]
   // const { isBot, browser, device, engine, os } = userAgent(req)
+
+  if (!payload.email) {
+    throw new ErrorMsg('Email is required to create an account.')
+  }
 
   const createdUser = await db
     .prepare(

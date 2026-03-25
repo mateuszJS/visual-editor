@@ -45,6 +45,16 @@ beforeAll(async () => {
                     iat: 1704067200,
                     exp: 4859740800,
                   } satisfies TokenPayload
+                } else if (idToken === 'no-email-token') {
+                  return {
+                    given_name: 'John Doe',
+                    picture: 'https://example.com/avatar.png',
+                    iss: 'https://accounts.google.com',
+                    sub: '2660163898',
+                    aud: '',
+                    iat: 1704067200,
+                    exp: 4859740800,
+                  } satisfies TokenPayload
                 } else if (idToken === 'error-token') {
                   throw new Error('Invalid ID token')
                 } else if (idToken === 'invalid-token') {

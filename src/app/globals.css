@@ -24,7 +24,8 @@
   --secondary-accent-rgb: 10, 10, 100;
   --secondary-accent: rgb(var(--secondary-accent-rgb));
 
-  --global-padding: 15px;
+  --global-padding-x: 20px;
+  --global-padding-y: 10px;
 
   --danger: #f8504d;
 
@@ -110,6 +111,12 @@ input {
   margin-block-start: 64px;
 }
 
+.mt-auto {
+  margin-block-start: auto;
+}
+.mb-auto {
+  margin-block-end: auto;
+}
 .ml-auto {
   margin-inline-start: auto;
 }
@@ -174,7 +181,7 @@ fieldset {
 
 .page main {
   overflow-y: auto;
-  padding: 0 var(--global-padding);
+  padding: var(--global-padding-y) var(--global-padding-x);
 }
 
 .text-ellipsis {
@@ -193,4 +200,11 @@ fieldset {
   justify-content: space-between;
   align-items: center;
   padding: 3px calc(var(--global-padding) * 0.5) 11px;
+}
+
+.page-title {
+  font-size: var(--14px);
+  text-align: center;
+  font-weight: 200;
+  padding-bottom: 15px;
 }

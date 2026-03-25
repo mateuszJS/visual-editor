@@ -6,7 +6,6 @@ export type DB = {
   height: number
   owner_id: number
   name: string | null
-  miniature_updated_at: string | null
   created_at: string
   updated_at: string
   assets: string

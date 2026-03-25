@@ -164,6 +164,25 @@ describe('GET /auth/login/google', () => {
     expect(response.headers.get('Set-Cookie')).toBeNull()
   })
 
+  it('returned error if google auth lib has thrown error', async () => {
+    const request = new Request('x:', {
+      method: 'POST',
+      body: JSON.stringify({ idToken: 'no-email-token' }),
+      headers: {
+        'x-csrf-token': 'a',
+        Cookie: 'csrf-token=a',
+      },
+    })
+
+    const response = await onRequestPost(getContext(request))
+
+    expect(await response.json()).toEqual({
+      error: 'Email is required to create an account.',
+    })
+    expect(response.status).toBe(400)
+    expect(response.headers.get('Set-Cookie')).toBeNull()
+  })
+
   it('returns error if json is invalid', async () => {
     const request = new Request('x:', {
       method: 'POST',

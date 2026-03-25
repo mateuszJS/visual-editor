@@ -25,6 +25,7 @@ export default function useProjectsList() {
 
   return {
     loading: loading && projectsList.size === 0,
+    error,
     projectsList,
   }
 }

@@ -18,7 +18,7 @@ export default function UploadTexture() {
 
   function addTextures(textureUrls: string[]) {
     creatorApi.creator.addImages(textureUrls)
-    window['upload-image'].close()
+    document.querySelector<HTMLDialogElement>('#upload-image-modal')?.close()
   }
 
   return (

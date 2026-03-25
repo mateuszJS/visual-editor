@@ -17,13 +17,13 @@ export default function Login() {
 
   return (
     <div className="page">
-      <div className={styles.page}>
+      <main className={styles.page}>
         <div className={styles.contentWrapper}>
           <h1 className="mb-16">Sign in</h1>
           <GoogleLogin onSuccess={homeRedirect} />
           <TestAccountLogin onSuccess={homeRedirect} />
         </div>
-      </div>
+      </main>
       <Navigation />
     </div>
   )

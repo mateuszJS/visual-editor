@@ -52,7 +52,11 @@ describe('CreatorToolbox - desktop', () => {
       expect(btn).toBeInTheDocument()
     })
 
-    expect(screen.getByRole('navigation').children).toHaveLength(desktopButtons.length)
+    expect(
+      Array.from(screen.getByRole('navigation').children).filter(
+        (child) => child.tagName !== 'DIALOG'
+      )
+    ).toHaveLength(desktopButtons.length)
   })
 
   it('toolbox states in default state despite the selected asset', async () => {
@@ -68,7 +72,11 @@ describe('CreatorToolbox - desktop', () => {
       expect(btn).toBeInTheDocument()
     })
 
-    expect(screen.getByRole('navigation').children).toHaveLength(desktopButtons.length)
+    expect(
+      Array.from(screen.getByRole('navigation').children).filter(
+        (child) => child.tagName !== 'DIALOG'
+      )
+    ).toHaveLength(desktopButtons.length)
   })
 })
 
@@ -90,7 +98,11 @@ describe('CreatorToolbox - mobile', () => {
       expect(screen.queryByRole('button', { name })).toBeInTheDocument()
     })
 
-    expect(screen.getByRole('navigation').children).toHaveLength(mobileButtons.length)
+    expect(
+      Array.from(screen.getByRole('navigation').children).filter(
+        (child) => child.tagName !== 'DIALOG'
+      )
+    ).toHaveLength(mobileButtons.length)
   })
 
   it('after selecting an asset', async () => {

@@ -23,11 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.variable}`}>
-        <div id="non-modal-content">
-          <InitializeData />
-          {children}
-          <GlobalErrors />
-        </div>
+        <InitializeData />
+        {children}
+        <GlobalErrors />
       </body>
     </html>
   )

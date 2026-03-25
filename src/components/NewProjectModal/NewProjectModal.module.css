@@ -26,47 +26,71 @@
 
 .blankCanvasList {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   overflow-x: auto;
 
-  margin-inline: calc(-1 * var(--modal-space-inline));
-  padding-inline: var(--modal-space-inline);
+  padding-inline: var(--padding-x);
 
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+
+  scroll-timeline: --list-scroll inline;
 
   &::-webkit-scrollbar {
     display: none;
   }
 
+  &:before,
   &:after {
     content: '';
     position: absolute;
-    right: 0;
     display: block;
     height: 100%;
-    width: calc(2 * var(--modal-space-inline));
-    background: linear-gradient(90deg, transparent 0%, var(--modal-background) 100%);
+    width: calc(6 * var(--padding-x));
+    left: 0;
+    background: linear-gradient(270deg, transparent 0%, var(--background) 100%);
     pointer-events: none;
+    animation: fade;
+    animation-timeline: --list-scroll;
+    animation-range: 0px 100px;
+  }
+
+  &:after {
+    left: auto;
+    right: 0;
+    scale: -1;
+    animation-direction: reverse;
+    animation-range: calc(100% - 100px) 100%;
   }
 }
 
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.listFadeout {
+  position: relative;
+  margin-inline: calc(-1 * var(--padding-x));
+}
+
 .blankCanvasOption {
+  --hover-background: rgba(var(--primary-rgb), 0.1);
+
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
   gap: 5px;
-  padding: 5px 20px;
+  padding: 5px 10px;
   height: 100%;
   font-size: var(--13px);
   font-weight: 300;
   border-radius: 5px;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: rgba(var(--primary-rgb), 0.1);
-  }
 }
 
 .screen {

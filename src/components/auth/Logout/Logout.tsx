@@ -23,7 +23,7 @@ export default function Logout() {
   }
 
   return (
-    <Button onClick={onClick} type="secondary" expand className={styles.btn}>
+    <Button onClick={onClick} variant="secondary" expand className={styles.btn}>
       <ExitIcon />
       Logout
     </Button>

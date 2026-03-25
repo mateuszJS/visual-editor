@@ -20,11 +20,7 @@ const preview: Preview = {
   decorators: [
     (Story) => {
       document.body.classList.add(outfit.variable)
-      return (
-        <div id="non-modal-content">
-          <Story />
-        </div>
-      )
+      return <Story />
     },
   ],
 }

@@ -13,13 +13,12 @@ const UploadModal = lazy(() => import('./UploadModal'))
 const tooltipContent = <span>Upload Image</span>
 
 export default function UploadTexture() {
-  const [isUploadShown, setIsUploadShown] = useState(false)
   const creatorApi = useCreator()
   const isMobile = useIsMobile()
 
   function addTextures(textureUrls: string[]) {
     creatorApi.creator.addImages(textureUrls)
-    setIsUploadShown(false)
+    window['upload-image'].close()
   }
 
   return (
@@ -28,9 +27,10 @@ export default function UploadTexture() {
         {(props) => (
           <NavButton
             {...props}
+            commandfor="upload-image-modal"
+            command="show-modal"
             onClick={() => {
               creatorApi.creator.setTool(CreatorTool.SelectAsset)
-              setIsUploadShown(true)
             }}
           >
             <PictureIcon />
@@ -39,11 +39,7 @@ export default function UploadTexture() {
         )}
       </Tooltip>
       <Suspense>
-        <UploadModal
-          isOpen={isUploadShown}
-          close={() => setIsUploadShown(false)}
-          onUpload={addTextures}
-        />
+        <UploadModal onUpload={addTextures} />
       </Suspense>
     </>
   )

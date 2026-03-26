@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<GlobalError /> should render error message when there is one 1`] = `
 <div>
@@ -15,7 +15,7 @@ exports[`<GlobalError /> should render error message when there is one 1`] = `
     </p>
     <button
       aria-label="Close"
-      class="iconButton closeButton"
+      class="button closeButton ghost onlyIcon"
     >
       <svg />
     </button>

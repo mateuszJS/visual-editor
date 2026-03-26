@@ -1,23 +1,28 @@
 import PlusIcon from 'assets/plus-icon.svg'
+import { lazy, Suspense, useEffect } from 'react'
+import Button from '@/components/Button/Button'
 import styles from './CreateButton.module.css'
-import { lazy, Suspense, useEffect, useState } from 'react'
 
 const NewProjectModal = lazy(() => import('@/components/NewProjectModal/NewProjectModal'))
 
 export default function CreateButton() {
-  const [isModal, setIsModal] = useState(false)
-
   useEffect(() => {
     import('@/components/NewProjectModal/NewProjectModal')
   }, [])
 
   return (
     <>
-      <button className={styles.createButton} onClick={() => setIsModal(true)} type="button">
+      <Button
+        iconOnly
+        className={styles.createButton}
+        variant="ghost"
+        commandfor="new-project-modal"
+        command="show-modal"
+      >
         <PlusIcon />
-      </button>
+      </Button>
       <Suspense>
-        <NewProjectModal isOpen={isModal} close={() => setIsModal(false)} />
+        <NewProjectModal />
       </Suspense>
     </>
   )

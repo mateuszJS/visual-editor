@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Navigation> should render five standard links for unauthenticated user 1`] = `
 <div>
@@ -23,8 +23,9 @@ exports[`<Navigation> should render five standard links for unauthenticated user
       Explore
     </a>
     <button
-      class="createButton"
-      type="button"
+      class="button createButton ghost onlyIcon"
+      command="show-modal"
+      commandfor="new-project-modal"
     >
       <svg />
     </button>

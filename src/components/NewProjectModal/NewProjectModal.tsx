@@ -11,11 +11,7 @@ import ActionSheets from '../ActionSheets/ActionSheets'
 import useProject from '@/hooks/useProject/useProject'
 import useCreator from '@/hooks/useCreator/useCreator'
 import getSizeFromImages from './getSizeFromImages'
-
-interface Props {
-  isOpen: boolean
-  close: VoidFunction
-}
+import Button from '../Button/Button'
 
 const blankCanvasSizes = [
   { width: 2, height: 3.3, label: 'TikTok', icon: TikTokIcon },
@@ -27,7 +23,7 @@ const blankCanvasSizes = [
   { width: 3, height: 3, label: 'Custom' },
 ]
 
-export default function NewProjectModal({ isOpen, close }: Props) {
+export default function NewProjectModal() {
   const router = useRouter()
   const { createProject, loading } = useProject()
   const { setInitialAssets } = useCreator()
@@ -50,29 +46,32 @@ export default function NewProjectModal({ isOpen, close }: Props) {
   }
 
   return (
-    <ActionSheets isOpen={isOpen} close={close} title="Start new project">
+    <ActionSheets title="Start new project" id="new-project-modal">
       <OverlayLoader loading={loading} />
       <UploadTextures onUpload={(urls) => createProjectFrom(500, 500, urls)} />
       <p className={styles.divider}>Or</p>
       <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with desired size</h3>
-      <ul className={styles.blankCanvasList}>
-        {blankCanvasSizes.map((size) => (
-          <li key={size.label}>
-            <button
-              className={styles.blankCanvasOption}
-              onClick={() => createProjectFrom(size.width * 500, size.height * 500, [])}
-            >
-              <div
-                className={styles.screen}
-                style={{ width: size.width + 'rem', height: size.height + 'rem' }}
+      <div className={styles.listFadeout}>
+        <ul className={styles.blankCanvasList}>
+          {blankCanvasSizes.map((size) => (
+            <li key={size.label}>
+              <Button
+                variant="ghost"
+                className={styles.blankCanvasOption}
+                onClick={() => createProjectFrom(size.width * 500, size.height * 500, [])}
               >
-                {size.icon && <size.icon />}
-              </div>
-              <p>{size.label}</p>
-            </button>
-          </li>
-        ))}
-      </ul>
+                <div
+                  className={styles.screen}
+                  style={{ width: size.width + 'rem', height: size.height + 'rem' }}
+                >
+                  {size.icon && <size.icon />}
+                </div>
+                <p>{size.label}</p>
+              </Button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </ActionSheets>
   )
 }

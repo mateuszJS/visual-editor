@@ -2,14 +2,12 @@ import ActionSheets from '@/components/ActionSheets/ActionSheets'
 import UploadTextures from '@/components/UploadTextures/UploadTextures'
 
 interface Props {
-  isOpen: boolean
-  close: VoidFunction
   onUpload: (textureUrls: string[]) => void
 }
 
-export default function UploadModal({ isOpen, close, onUpload }: Props) {
+export default function UploadModal({ onUpload }: Props) {
   return (
-    <ActionSheets title="Upload image" isOpen={isOpen} close={close}>
+    <ActionSheets id="upload-image-modal" title="Upload image">
       <UploadTextures onUpload={onUpload} />
     </ActionSheets>
   )

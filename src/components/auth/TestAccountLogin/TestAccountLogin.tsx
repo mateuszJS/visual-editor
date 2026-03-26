@@ -31,7 +31,7 @@ export default function GoogleLogin({ onSuccess }: Props) {
   }
 
   return (
-    <Button type="secondary" expand className="mt-16" onClick={googleLogin}>
+    <Button variant="secondary" expand className="mt-16" onClick={googleLogin}>
       Use test account
     </Button>
   )

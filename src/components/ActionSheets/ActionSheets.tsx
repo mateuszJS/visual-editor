@@ -1,54 +1,44 @@
 'use client'
 
-import Modal from 'react-modal'
 import CloseIcon from 'assets/close-icon.svg'
 import styles from './ActionSheets.module.css'
-import classNamesOverlay from '@/components/shared/overlayStyles'
-import IconButton from '@/components/IconButton/IconButton'
-
-try {
-  Modal.setAppElement('#non-modal-content')
-} catch (err) {
-  throw Error('All ActionSheets should be lazy loaded!')
-}
+import Button from '../Button/Button'
 
 interface Props {
-  isOpen: boolean
-  close: VoidFunction
+  id: string
   children: React.ReactNode
   title: string
 }
 
-const classNames = {
-  base: styles.base,
-  afterOpen: styles.open,
-  beforeClose: styles.closed,
-}
+export default function ActionSheets({ id, children, title }: Props) {
+  const handleClose = (e: React.MouseEvent<HTMLDialogElement>) => {
+    // iOS does NOT support closing modal via click on backdrop currently.
+    const dialogDimensions = e.currentTarget.getBoundingClientRect()
+    if (
+      e.clientX < dialogDimensions.left ||
+      e.clientX > dialogDimensions.right ||
+      e.clientY < dialogDimensions.top ||
+      e.clientY > dialogDimensions.bottom
+    ) {
+      e.currentTarget.close()
+    }
+  }
 
-const TRANSITION_TIME_MS = 300
-
-const style = {
-  overlay: { '--transition-time': `${TRANSITION_TIME_MS}ms` } as React.CSSProperties,
-}
-
-export default function ActionSheets({ isOpen, close, children, title }: Props) {
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={close}
-      className={classNames}
-      contentLabel={title}
-      overlayClassName={classNamesOverlay}
-      closeTimeoutMS={TRANSITION_TIME_MS}
-      style={style}
-    >
+    <dialog id={id} className={styles.dialog} onClick={handleClose}>
       <div className={styles.header}>
-        <IconButton onClick={close} className={styles.closeButton}>
+        <Button
+          iconOnly
+          variant="ghost"
+          className={styles.closeButton}
+          commandfor={id}
+          command="close"
+        >
           <CloseIcon />
-        </IconButton>
+        </Button>
         <h2 className={styles.title}>{title}</h2>
       </div>
       {children}
-    </Modal>
+    </dialog>
   )
 }

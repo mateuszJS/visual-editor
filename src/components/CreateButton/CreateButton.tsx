@@ -1,7 +1,7 @@
 import PlusIcon from 'assets/plus-icon.svg'
-import styles from './CreateButton.module.css'
 import { lazy, Suspense, useEffect } from 'react'
 import Button from '@/components/Button/Button'
+import styles from './CreateButton.module.css'
 
 const NewProjectModal = lazy(() => import('@/components/NewProjectModal/NewProjectModal'))
 

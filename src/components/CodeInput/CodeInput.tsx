@@ -1,4 +1,3 @@
-import numberInputStyles from '@/components/NumberInput/NumberInput.module.css'
 import cn from 'classnames'
 import CodeSymbol from 'assets/code-symbol.svg'
 import { CustomProgramError } from '@mateuszjs/magic-render/types'
@@ -18,7 +17,7 @@ export default function CodeInput({ value, onChange, error, className }: Props) 
     <>
       <Popover
         trigger={() => <CodeSymbol />}
-        className={cn(styles.triggerBtn, numberInputStyles.input, className)}
+        className={cn(styles.triggerBtn, className)}
         aria-label="Open code editor"
       >
         <EditorWrapper value={value} onChange={onChange} error={error} />

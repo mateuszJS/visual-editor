@@ -2,6 +2,9 @@
   aspect-ratio: 1;
   border-radius: 5px;
   border: 2px solid rgba(var(--secondary-rgb), 0.4);
+  padding: 0.4em;
+  background: var(--background);
+  --hover-background: var(--background);
 
   svg {
     height: auto;

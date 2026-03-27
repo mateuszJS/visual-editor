@@ -119,7 +119,7 @@ export default function EffectPanel({ onChange, ...effect }: Props) {
       )}
       {'linear' in effect.fill && (
         <GradientInput
-          aria-label="Fill with linear gradient"
+          ariaLabel="Fill with linear gradient"
           value={effect.fill.linear}
           onChange={(linear, commit) => onChange({ ...effect, fill: { linear } }, commit)}
           className={styles.fill}
@@ -127,7 +127,7 @@ export default function EffectPanel({ onChange, ...effect }: Props) {
       )}
       {'radial' in effect.fill && (
         <GradientInput
-          aria-label="Fill with radial gradient"
+          ariaLabel="Fill with radial gradient"
           value={effect.fill.radial}
           onChange={(radial, commit) => {
             onChange({ ...effect, fill: { radial } }, commit)

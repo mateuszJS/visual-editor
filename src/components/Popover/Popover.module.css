@@ -1,11 +1,107 @@
 .popover {
   margin: 0;
   inset: auto;
-  position-area: center left;
+
+  --padding: 10px;
+  --border-width: 2px;
+  --margin: 10px;
+
+  right: calc(anchor(left));
+  align-self: anchor-center;
+  position-try-fallbacks:
+    flip-block,
+    flip-inline,
+    flip-block flip-inline;
+
+  margin: var(--margin) 15px var(--margin) var(--margin);
+  max-width: 50vw;
+
+  border: var(--border-width) solid color-mix(in srgb, var(--secondary) 30%, transparent);
   background: var(--background);
-  padding: 10px;
-  border: none;
+
+  padding: var(--padding);
   border-radius: 5px;
-  max-width: 500px;
-  max-height: 500px;
+
+  :global(.prism-code-editor) {
+    max-height: calc(100svh - 2 * var(--margin) - 2 * var(--padding) - 2 * var(--border-width));
+    overflow: auto;
+    overscroll-behavior: contain;
+
+    /* Force scrollbar to be always shown(when overflow happens)
+   otherwise dissapears on MacOS while user is not scrolling */
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      background-color: rgba(var(--primary-rgb), 0.2);
+      width: 7px;
+      height: 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: rgba(var(--primary-rgb), 0.5);
+    }
+  }
+
+  .arrow {
+    position: fixed;
+    inset: auto;
+    translate: 100% 0;
+    scale: -1 1;
+  }
+
+  transition: 0.2s ease-in-out allow-discrete;
+  transition-property: display, opacity;
+
+  @starting-style {
+    opacity: 0;
+  }
+
+  &:popover-open {
+    opacity: 1;
+  }
+}
+
+.arrow {
+  --size: 1.5em;
+  --square-size: calc(var(--size) / 1.4142);
+  --half-square-size: calc(var(--square-size) / 2);
+  --arrow-min-offset: 20px;
+
+  width: calc(var(--half-square-size) - 1px); /* 1px -> half of border width */
+
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+  height: var(--size);
+
+  /* Inherit styles from the container, but hide the container itself */
+  background-color: inherit;
+  border: inherit;
+  visibility: hidden;
+
+  &:after {
+    content: '';
+
+    /* Make the pseudo-element visible - parent has visibility: hidden */
+    visibility: visible;
+
+    /* ​1.4142 ≈ √2 ensures the diagonal of the inner square matches the side of the outer square */
+    width: var(--square-size);
+    height: var(--square-size);
+    flex-shrink: 0;
+
+    /* push square by half to the right */
+    /* margin-right: calc(var(--half-square-size) * -1); */
+
+    /* Inherit background and border from the .arrow element (which inherited from its parent) */
+    background-color: inherit;
+    border: inherit;
+
+    /* Hide the top and right borders to create the arrow shape */
+    border-top-color: transparent;
+    border-right-color: transparent;
+
+    rotate: 45deg;
+  }
 }

@@ -11,7 +11,7 @@
 
   @media (hover: hover) {
     /* to avoid using hover effect when click on mobile */
-    &:hover {
+    &:not(.noHover):hover {
       background: var(--hover-background);
     }
   }

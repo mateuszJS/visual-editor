@@ -16,6 +16,7 @@
 .fill {
   grid-area: fill;
   margin-inline-end: 3px;
+  --hover-background: transparent;
 }
 
 .range {

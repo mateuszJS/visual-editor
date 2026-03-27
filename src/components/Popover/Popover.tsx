@@ -2,8 +2,9 @@ import { ToggleEventHandler, useState } from 'react'
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
 import cn from 'classnames'
 import styles from './Popover.module.css'
+import Button, { Props as ButtonProps } from '../Button/Button'
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type Props = ButtonProps & {
   trigger: () => React.ReactNode
   children: React.ReactNode
   popoverClassName?: string
@@ -21,9 +22,13 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
 
   return (
     <>
-      <button popoverTarget={popoverId} suppressHydrationWarning {...rest}>
+      <Button
+        {...rest}
+        popoverTarget={popoverId}
+        style={{ 'anchor-name': `--${popoverId}-anchor` } as React.CSSProperties}
+      >
         {trigger()}
-      </button>
+      </Button>
       <div
         id={popoverId}
         suppressHydrationWarning
@@ -32,8 +37,26 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
         role="dialog"
         aria-modal="true"
         onBeforeToggle={toggleIsShown}
+        style={
+          {
+            position: 'fixed',
+            'anchor-name': `--${popoverId}-body-anchor`,
+            'position-anchor': `--${popoverId}-anchor`,
+          } as React.CSSProperties
+        }
       >
         {isShown ? children : null}
+        <div
+          className={styles.arrow}
+          style={
+            {
+              alignSelf: 'anchor-center',
+              right: `anchor(--${popoverId}-body-anchor right)`,
+              top: `clamp(calc(anchor(--${popoverId}-body-anchor top) + var(--arrow-min-offset)), anchor(--${popoverId}-anchor top), calc(anchor(--${popoverId}-body-anchor bottom) - var(--arrow-min-offset)))`,
+              bottom: `clamp(calc(anchor(--${popoverId}-body-anchor bottom) + var(--arrow-min-offset)), anchor(--${popoverId}-anchor bottom), calc(anchor(--${popoverId}-body-anchor top) - var(--arrow-min-offset)))`,
+            } as React.CSSProperties
+          }
+        />
       </div>
     </>
   )

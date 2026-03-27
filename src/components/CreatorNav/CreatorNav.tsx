@@ -21,7 +21,9 @@ export default function CreatorNav() {
         <ReverseIcon />
       </NavButton>
       <NavButton onClick={redo || noop} disabled={!redo}>
-        <ReverseIcon transform="scale(-1, 1)" />
+        <ReverseIcon
+          style={{ transform: 'scale(-1, 1)' /* transform attribute didn't work on iOS */ }}
+        />
       </NavButton>
       <NavItem href="/questions" className="ml-auto">
         <QuestionMarkIcon />

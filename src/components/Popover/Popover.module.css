@@ -80,19 +80,6 @@
   border: inherit;
   visibility: hidden;
 
-  align-self: anchor-center;
-  right: anchor(--popover-body right);
-  top: clamp(
-    calc(anchor(--popover-body top) + var(--arrow-min-offset)),
-    anchor(--popover-trigger top),
-    calc(anchor(--popover-body bottom) - var(--arrow-min-offset))
-  );
-  bottom: clamp(
-    calc(anchor(--popover-body bottom) + var(--arrow-min-offset)),
-    anchor(--popover-trigger bottom),
-    calc(anchor(--popover-body top) - var(--arrow-min-offset))
-  );
-
   &:after {
     content: '';
 

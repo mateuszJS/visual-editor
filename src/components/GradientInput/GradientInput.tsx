@@ -7,10 +7,11 @@ import { toHex } from '@/utils/hex'
 import React from 'react'
 import { Gradient } from './types'
 
-interface Props<T extends Gradient>
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value' | 'onChange'> {
+interface Props<T extends Gradient> {
   value: T
   onChange: (value: T, commit: boolean) => void
+  ariaLabel: string
+  className?: string
 }
 
 function getGradientCSS(value: Gradient): React.CSSProperties {
@@ -44,13 +45,20 @@ function getGradientCSS(value: Gradient): React.CSSProperties {
   }
 }
 
-export default function GradientInput<T extends Gradient>({ value, onChange, ...rest }: Props<T>) {
+export default function GradientInput<T extends Gradient>({
+  value,
+  onChange,
+  className,
+  ariaLabel,
+}: Props<T>) {
   return (
     <Popover
       trigger={() => <div style={getGradientCSS(value)} />}
       popoverClassName={styles.popover}
-      {...rest}
-      className={cn(styles.colorPicker, numberInputStyles.input, rest.className)}
+      className={cn(styles.colorPicker, numberInputStyles.input, className)}
+      variant="ghost"
+      noHover
+      aria-label={ariaLabel}
     >
       <GradientSelection<T> value={value} onChange={onChange} />
     </Popover>

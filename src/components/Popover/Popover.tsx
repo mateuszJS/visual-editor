@@ -2,9 +2,9 @@ import { ToggleEventHandler, useState } from 'react'
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
 import cn from 'classnames'
 import styles from './Popover.module.css'
-import Button from '../Button/Button'
+import Button, { Props as ButtonProps } from '../Button/Button'
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type Props = ButtonProps & {
   trigger: () => React.ReactNode
   children: React.ReactNode
   popoverClassName?: string
@@ -23,9 +23,7 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
   return (
     <>
       <Button
-        variant="ghost"
         {...rest}
-        iconOnly
         popoverTarget={popoverId}
         style={{ 'anchor-name': `--${popoverId}-anchor` } as React.CSSProperties}
       >

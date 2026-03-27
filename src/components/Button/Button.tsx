@@ -1,13 +1,14 @@
 import styles from './Button.module.css'
 import cn from 'classnames'
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary' | 'ghost'
   children: React.ReactNode
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   expand?: boolean
   className?: string
   iconOnly?: boolean
+  noHover?: boolean
 }
 
 export default function Button({
@@ -17,6 +18,7 @@ export default function Button({
   children,
   onClick,
   iconOnly,
+  noHover,
   ...rest
 }: Props) {
   const classNames = cn(styles.button, className, {
@@ -25,6 +27,7 @@ export default function Button({
     [styles.ghost]: variant === 'ghost',
     [styles.expand]: expand,
     [styles.onlyIcon]: iconOnly,
+    [styles.noHover]: noHover,
   })
 
   return (

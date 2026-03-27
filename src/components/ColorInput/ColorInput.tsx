@@ -32,6 +32,8 @@ export default function ColorInput({ label, value, onChange, ...rest }: Props) {
         className={cn(styles.colorPicker, numberInputStyles.input, rest.className, {
           [styles.withLabel]: !!label,
         })}
+        variant="ghost"
+        noHover
       >
         <ColorSelection
           initialValue={hex}

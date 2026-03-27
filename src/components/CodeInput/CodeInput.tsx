@@ -19,6 +19,8 @@ export default function CodeInput({ value, onChange, error, className }: Props) 
         trigger={() => <CodeSymbol />}
         className={cn(styles.triggerBtn, className)}
         aria-label="Open code editor"
+        variant="ghost"
+        noHover
       >
         <EditorWrapper value={value} onChange={onChange} error={error} />
         {error && (

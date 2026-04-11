@@ -18,6 +18,7 @@ describe('TextTool', () => {
   })
 
   it('clicks causes creator to update the tool to Text', async () => {
+    const { result } = renderHook(useCreator)
     const user = userEvent.setup()
     render(<TextTool />)
 
@@ -27,11 +28,6 @@ describe('TextTool', () => {
       })
     )
 
-    expect(
-      await screen.findByRole('button', {
-        description: /add text/i,
-        pressed: true,
-      })
-    ).toBeInTheDocument()
+    expect(result.current.creator.addText).toHaveBeenCalledTimes(1)
   })
 })

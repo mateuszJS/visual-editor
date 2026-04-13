@@ -23,3 +23,12 @@ export type ApiUserBasic = {
   name: string | null
   photo: string | null
 }
+
+export type ApiStorageItem = {
+  id: string
+  storageId: string
+  type: string
+  updatedAt: string
+  public: boolean
+  ownerId: string
+}

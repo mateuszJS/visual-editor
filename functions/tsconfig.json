@@ -19,6 +19,7 @@
     "./types.d.ts",
     "../vitest.config.mts",
     "../src/utils/getUserAgent.ts",
-    "../apiTypes.ts"
+    "../apiTypes.ts",
+    "../apiConsts.ts"
   ]
 }

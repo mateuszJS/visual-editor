@@ -5,7 +5,7 @@ export default function uploadMiniature(canvas: HTMLCanvasElement, projectId: st
     if (!blob) return
 
     try {
-      await nativeFetcher(`/api/project-uploads/${projectId}/miniature`, {
+      await nativeFetcher(`/api/projects/${projectId}/miniature`, {
         method: 'PUT',
         body: blob,
         options: {

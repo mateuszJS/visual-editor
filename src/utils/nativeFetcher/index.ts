@@ -25,7 +25,7 @@ type EnrichedResponse<Json, Error> = Omit<Response, 'json'> &
  */
 export default async function nativeFetcher<
   Json extends Record<string, unknown> | Array<unknown> = never,
-  Error = { error: string }
+  Error = { error: string },
 >(
   url: string,
   {
@@ -55,7 +55,9 @@ export default async function nativeFetcher<
       const broadcast = new BroadcastChannel('sync-data')
       broadcast.postMessage('CLEAR_PROJECT')
       broadcast.close()
-      window.location.replace('/login')
+      if (window.location.pathname !== '/login') {
+        window.location.replace('/login')
+      }
       /* app reload is used to clear all JS memory data, hide all modals(like new project modal) */
       throw new Error('User is not authorized.')
     }

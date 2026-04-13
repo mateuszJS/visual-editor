@@ -1,7 +1,7 @@
 import { ApiAsset, ApiProjectContent, ApiProjectMetaData } from '../../apiTypes'
 
 export type DB = {
-  id: number
+  id: string
   width: number
   height: number
   owner_id: number
@@ -42,7 +42,7 @@ export function sanitizeMetaData(
   }
 
   return {
-    id: data.id.toString(),
+    id: data.id,
     name: data.name,
     createdAt: data.created_at,
     updatedAt: data.updated_at,

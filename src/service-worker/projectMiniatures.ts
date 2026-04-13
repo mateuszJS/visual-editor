@@ -1,11 +1,12 @@
 /* eslint-disable no-restricted-syntax */
 import { cacheFirst, deleteCachedItem, getCachedKeys, putUniqueInCache } from './cacheUtils'
+import { getIsMiniature } from './utils'
 
 async function getMiniatureCachedKeys() {
   const cachedKeys = await getCachedKeys()
   return cachedKeys.filter((req) => {
     const { pathname } = new URL(req.url)
-    return pathname.startsWith('/api/project-uploads/') && pathname.includes('/miniature')
+    return getIsMiniature(pathname)
   })
 }
 

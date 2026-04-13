@@ -1,7 +1,7 @@
 import { ApiUserBasic } from '../../apiTypes'
 
 export type DB = {
-  id: number
+  id: string
   name: string | null
   photo: string | null
   email: string
@@ -29,7 +29,7 @@ export function sanitizeBasic(
   }
 
   return {
-    id: data.id.toString(),
+    id: data.id,
     email: data.email,
     name: data.name,
     photo: data.photo,

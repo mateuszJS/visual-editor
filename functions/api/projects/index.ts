@@ -1,3 +1,4 @@
+import generateId from '@/utils/generateId'
 import * as Project from '../../types/project'
 import withError from '../../utils/error'
 import getResponseError from '../../utils/getResponseError'
@@ -21,11 +22,12 @@ export const onRequestPost = withSession(async (ctx, session) => {
   const [project, err] = await withError(async () => {
     const project = await ctx.env.db
       .prepare(
-        `INSERT INTO projects (width, height, assets, owner_id)
-         VALUES (?, ?, ?, ?)
+        `INSERT INTO projects (id, width, height, assets, owner_id)
+         VALUES (?, ?, ?, ?, ?)
          RETURNING id, width, height, assets, updated_at`
       )
       .bind(
+        generateId('project'),
         sanitizedChanges.width,
         sanitizedChanges.height,
         sanitizedChanges.assets,

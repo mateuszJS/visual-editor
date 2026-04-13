@@ -1,36 +1,16 @@
--- Migration number: 0005 	 2026-03-24T22:20:34.689Z
+
+ALTER TABLE users RENAME COLUMN last_login TO last_login_at;
+
+INSERT INTO users (email, name, is_bot, login_method, oidc_google_id)
+VALUES
+  ('test@test.com', 'Test User', false, 'google', '1234567890');
+
+
+
+-- https://www.sqlite.org/lang_altertable.html
+-- 7. Making Other Kinds Of Table Schema Changes
 
 PRAGMA defer_foreign_keys = on;
-
-CREATE TABLE new_users (
-  id INTEGER PRIMARY KEY,
-  name TEXT,
-  photo TEXT,
-  email TEXT UNIQUE NOT NULL, -- added NOT NULL
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  language TEXT,
-  country TEXT,
-  browser TEXT,
-  login_method TEXT NOT NULL,
-  oidc_google_id TEXT UNIQUE,
-  last_login TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  region TEXT,
-  device_model TEXT,
-  device_type TEXT,
-  device_vendor TEXT,
-  os TEXT,
-  os_version TEXT
-) STRICT;
-
-INSERT INTO new_users SELECT * FROM users;
-
-DROP TABLE users;
-
-ALTER TABLE new_users RENAME TO users;
-
-
-
-
 
 CREATE TABLE new_projects (
   id INTEGER PRIMARY KEY,
@@ -52,5 +32,8 @@ DROP TABLE projects;
 
 ALTER TABLE new_projects RENAME TO projects;
 
-
 PRAGMA defer_foreign_keys = off;
+
+-- A common naming format for indexes is idx_TABLE_NAME_COLUMN_NAMES
+-- CREATE INDEX IF NOT EXISTS idx_users_oidc_google_id ON users(oidc_google_id)
+-- https://developers.cloudflare.com/d1/best-practices/use-indexes/

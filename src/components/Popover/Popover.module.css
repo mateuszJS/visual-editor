@@ -104,4 +104,8 @@
 
     rotate: 45deg;
   }
+
+  @supports (font: -apple-system-body) {
+    display: none;
+  }
 }

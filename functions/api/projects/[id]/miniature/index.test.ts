@@ -4,12 +4,12 @@ import getContext from '@/test/getContext'
 import { aliceSessionToken } from '@/setup'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
-describe('GET /api/project-uploads/[projectId]/[uploadId]', () => {
+describe('GET /api/proejcts/[id]/miniature', () => {
   it('redirects if everything is correct (project exists, user is the owner, signed url generated with no errors)', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
     })
-    const response = await onRequestGet(getContext(request, { projectId: '1', uploadId: '1' }))
+    const response = await onRequestGet(getContext(request, { id: '1' }))
 
     expect(response.status).toBe(307)
     expect(response.headers.get('Location')).toBe(
@@ -21,7 +21,7 @@ describe('GET /api/project-uploads/[projectId]/[uploadId]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
     })
-    const response = await onRequestGet(getContext(request, { projectId: '-1', uploadId: '1' }))
+    const response = await onRequestGet(getContext(request, { id: '-1' }))
 
     expect(response.status).toBe(403)
     const json = await response.json()
@@ -34,7 +34,7 @@ describe('GET /api/project-uploads/[projectId]/[uploadId]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
     })
-    const response = await onRequestGet(getContext(request, { projectId: '3', uploadId: '1' }))
+    const response = await onRequestGet(getContext(request, { id: '1' }))
 
     expect(response.status).toBe(403)
     expect(await response.json()).toEqual({ error: 'Failed to generate signed URL.' })
@@ -46,7 +46,7 @@ describe('GET /api/project-uploads/[projectId]/[uploadId]', () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
     })
-    const response = await onRequestGet(getContext(request, { projectId: '1', uploadId: '1' }))
+    const response = await onRequestGet(getContext(request, { id: '1' }))
 
     expect(response.status).toBe(403)
     const json = await response.json()
@@ -56,9 +56,7 @@ describe('GET /api/project-uploads/[projectId]/[uploadId]', () => {
   })
 
   it('returns error if user is not signed in', async () => {
-    const response = await onRequestGet(
-      getContext(new Request('x:'), { projectId: '1', uploadId: '1' })
-    )
+    const response = await onRequestGet(getContext(new Request('x:'), { id: '1' }))
 
     expect(response.status).toBe(401)
     const json = await response.json()
@@ -68,7 +66,7 @@ describe('GET /api/project-uploads/[projectId]/[uploadId]', () => {
 
 const file = new File(['image-data'], 'image-blob.png', { type: 'image/png' })
 
-describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
+describe('PUT /api/projects/[id]/miniature', () => {
   it('if everything is correct redirects to cloud provider url', async () => {
     const request = new Request('x:', {
       headers: {
@@ -78,14 +76,12 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(
-      getContext(request, { projectId: '1', uploadId: 'upload-id' })
-    )
+    const response = await onRequestPut(getContext(request, { id: 'upload-id' }))
 
     expect(response.status).toBe(307)
     const locationHeader = response.headers.get('Location')
     expect(locationHeader).toEqual(
-      'https://storage-provider.com/signed-url?bucket=user-uploads-preview&key=1/upload-id&expiredsIn=300&contentLength=1024'
+      'https://storage-provider.com/signed-url?bucket=user-uploads-preview&key=upload-id&expiredsIn=300&contentLength=1024'
     )
   })
 
@@ -95,9 +91,7 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(
-      getContext(request, { projectId: '-1', uploadId: 'upload-id' })
-    )
+    const response = await onRequestPut(getContext(request, { id: 'upload-id' }))
 
     const json = await response.json()
 
@@ -116,9 +110,7 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(
-      getContext(request, { projectId: '1', uploadId: 'upload-id' })
-    )
+    const response = await onRequestPut(getContext(request, { id: 'upload-id' }))
 
     expect(response.status).toBe(403)
     const json = await response.json()
@@ -133,9 +125,7 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(
-      getContext(request, { projectId: '1', uploadId: 'upload-id' })
-    )
+    const response = await onRequestPut(getContext(request, { id: 'upload-id' }))
 
     expect(response.status).toBe(403)
     const json = await response.json()
@@ -150,9 +140,7 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(
-      getContext(request, { projectId: '1', uploadId: 'upload-id' })
-    )
+    const response = await onRequestPut(getContext(request, { id: 'upload-id' }))
 
     expect(response.status).toBe(403)
     const json = await response.json()
@@ -167,18 +155,14 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(
-      getContext(request, { projectId: '1', uploadId: 'upload-id' })
-    )
+    const response = await onRequestPut(getContext(request, { id: 'upload-id' }))
 
     expect(response.status).toBe(403)
     expect(await response.json()).toEqual({ error: 'Failed to generate signed URL.' })
   })
 
   it('returns error if user is not signed in', async () => {
-    const response = await onRequestPut(
-      getContext(new Request('x:'), { projectId: '1', uploadId: 'upload-id' })
-    )
+    const response = await onRequestPut(getContext(new Request('x:'), { id: 'upload-id' }))
 
     expect(response.status).toBe(401)
     const json = await response.json()
@@ -195,9 +179,7 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(
-      getContext(request, { projectId: '1', uploadId: 'upload-id' })
-    )
+    const response = await onRequestPut(getContext(request, { id: 'upload-id' }))
 
     expect(response.status).toBe(307)
     const locationHeader = response.headers.get('Location')
@@ -216,9 +198,7 @@ describe('PUT /api/project-uploads/[projectId]/[uploadId]', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(
-      getContext(request, { projectId: '1', uploadId: 'miniature' })
-    )
+    const response = await onRequestPut(getContext(request, { id: 'miniature' }))
 
     expect(response.status).toBe(403)
     expect(await response.json()).toEqual({ error: 'Failed to generate signed URL.' })

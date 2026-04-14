@@ -35,7 +35,9 @@ CREATE TABLE projects (
 CREATE TABLE storage (
   id TEXT PRIMARY KEY,
   storage_id TEXT NOT NULL,
+  preview_id TEXT NOT NULL,
   size INTEGER NOT NULL,
+  hash TEXT NOT NULL,
   type TEXT NOT NULL,
   name TEXT,
   public INT NOT NULL DEFAULT 0,

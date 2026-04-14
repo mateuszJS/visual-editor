@@ -30,6 +30,7 @@
       "binding": "userUploads",
       "bucket_name": "user-uploads-preview",
       "preview_bucket_name": "user-uploads-preview",
+      "remote": true, // Only because local R2 doesn't expose endpoint for S3 client
       // "remote": true // not supported currently for pages.
       // In this case we have to test generating miniatures in preview env because:
       // - cannot use local R2 because AWS signed urls don't work locally
@@ -41,6 +42,7 @@
       "binding": "projectMiniatures",
       "bucket_name": "project-miniatures-preview",
       "preview_bucket_name": "project-miniatures-preview",
+      "remote": true, // Only because local R2 doesn't expose endpoint for S3 client
     },
   ],
   "env": {

@@ -9,7 +9,8 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "apiConsts": ["../apiConsts.ts"]
     }
   },
   "include": [

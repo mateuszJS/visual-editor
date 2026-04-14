@@ -383,4 +383,14 @@ describe('useCreator', () => {
     expect(req.headers.get('x-amz-meta-updated-at')).toBe('2020-01-01T00:00:00.000Z')
     expect(await req.blob()).toEqual(new Blob(['canvas-blob'], { type: 'image/png' }))
   })
+
+  it('whole history is updated when texture url updates after upload', async () => {
+    /*
+    1. Create Project
+    2. Add texture
+    3. Trigger like 3 snapshots
+    4. Get url update for the texture
+    5. Assest that all hsitory entries got updated, you can use "undo" button for it
+    */
+  })
 })

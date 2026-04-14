@@ -1,7 +1,7 @@
 import getS3Client from '@/clients/s3'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import { MAX_FILE_SIZE } from '@/api/consts'
+import { MAX_FILE_SIZE } from 'apiConsts'
 
 export default async function getMiniatureUploadUrl(
   ctx: EventContext<Env, 'id', never>
@@ -33,6 +33,7 @@ export default async function getMiniatureUploadUrl(
       Bucket: ctx.env.PROJECT_MINIATURES_BUCKET,
       Key: projectId,
       ContentLength: contentLength,
+      ContentType: 'image/png',
       Metadata: { 'updated-at': generatedAt },
     }),
     {

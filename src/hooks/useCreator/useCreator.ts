@@ -9,7 +9,7 @@ import type {
   CreatorAPI,
 } from '@mateuszjs/magic-render/types'
 import { proxy, ref, useSnapshot } from 'valtio'
-import onTextureUpload from './getOnTextureUpload'
+import { uploadTexture } from './uploadTexture'
 import uploadMiniature from './uploadMiniature'
 import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
@@ -108,7 +108,29 @@ function useCreator() {
         initialProjectWidth: project.width,
         initialProjectHeight: project.height,
         canvas,
-        uploadTexture: onTextureUpload,
+        onExternalTextureCreation: async (url, setNewUrl) => {
+          if (!url.startsWith('blob:')) return
+          const newUrl = await uploadTexture(url)
+          if (newUrl === null) return
+
+          setNewUrl(newUrl)
+          creatorState.historySnapshots.forEach((snapshot) => {
+            snapshot.assets.forEach((asset) => {
+              if ('url' in asset && asset.url === url) {
+                asset.url = newUrl
+              }
+            })
+          })
+
+          const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
+
+          updateProject(project.id, {
+            width: snapshot.width,
+            height: snapshot.height,
+            assets: serializeAssets(snapshot.assets),
+            updatedAt: new Date().toISOString(),
+          })
+        },
         onSnapshotUpdate: (snapshot, commit) => {
           updateSelectedAssetStore(snapshot, creatorState.selectedAssetId)
 

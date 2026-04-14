@@ -10,7 +10,7 @@ import getResponseError from '@/utils/getResponseError'
 
 const URL_LIFETIME_SECONDS = 60 * 60 * 24 * 7 // 7d, in seconds
 
-async function getStorageItemId(ctx: EventContext<Env, 'id', never>, userId: string) {
+async function getS3Id(ctx: EventContext<Env, 'id', never>, userId: string) {
   const storageItem = await ctx.env.db
     .prepare(
       `SELECT storage_id
@@ -31,7 +31,7 @@ async function getStorageItemId(ctx: EventContext<Env, 'id', never>, userId: str
 
 export const onRequestGet = withSession<'id'>(async (ctx, session) => {
   const [url, err] = await withError(async () => {
-    const storageItemId = await getStorageItemId(ctx, session.userId)
+    const storageItemId = await getS3Id(ctx, session.userId)
 
     return getSignedUrl(
       getS3Client(),

@@ -152,10 +152,19 @@ beforeEach(async () => {
 
   await env.db
     .prepare(
-      `INSERT INTO storage (id, storage_id, preview_id, size, hash, type, owner_id)
-			 VALUES (?, ?, ?, ?, ?, ?, ?)`
+      `INSERT INTO storage (id, storage_id, preview_id, size, hash, type, owner_id, updated_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
     )
-    .bind('si_1', 's3_blob_1', 's3_preview_1', 3, '1_hash', 'media', '2')
+    .bind(
+      'si_1',
+      's3_blob_1',
+      's3_preview_1',
+      3,
+      '1_hash',
+      'media',
+      '2',
+      '2026-01-01T00:00:00.000Z'
+    )
     .run()
 })
 

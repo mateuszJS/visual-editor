@@ -112,7 +112,6 @@ export const onRequestGet = withSession(async (ctx, session) => {
   })
 
   if (err) {
-    console.log('Failed to retrieve storage items', err)
     return getResponseError('Failed to retrieve storage items.', 503)
   }
 

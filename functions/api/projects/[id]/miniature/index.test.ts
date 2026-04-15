@@ -4,8 +4,8 @@ import getContext from '@/test/getContext'
 import { aliceSessionToken } from '@/setup'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
-describe('GET /api/proejcts/[id]/miniature', () => {
-  it('redirects if everything is correct (project exists, user is the owner, signed url generated with no errors)', async () => {
+describe('GET /api/projects/[id]/miniature', () => {
+  it('redirects if project exists, user is the owner, signed url generated with no errors', async () => {
     const request = new Request('x:', {
       headers: { Cookie: `session=${aliceSessionToken}` },
     })

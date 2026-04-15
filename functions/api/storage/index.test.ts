@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { onRequestPut } from '.'
+import { onRequestPut, onRequestGet } from '.'
 import getContext from '@/test/getContext'
 import { aliceSessionToken } from '@/setup'
 
@@ -113,7 +113,7 @@ describe('PUT /api/storage', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(getContext(request, { projectId: '1' }))
+    const response = await onRequestPut(getContext(request))
 
     expect(response.status).toBe(400)
     expect(await response.json()).toEqual({
@@ -131,7 +131,7 @@ describe('PUT /api/storage', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(getContext(request, { projectId: '1' }))
+    const response = await onRequestPut(getContext(request))
 
     expect(response.status).toBe(400)
     expect(await response.json()).toEqual({
@@ -149,14 +149,43 @@ describe('PUT /api/storage', () => {
       method: 'PUT',
       body: file,
     })
-    const response = await onRequestPut(getContext(request, { projectId: '1' }))
+    const response = await onRequestPut(getContext(request))
 
     expect(response.status).toBe(400)
     expect(await response.json()).toEqual({ error: 'Max file size is 3 MB.' })
   })
 
   it('returns error if user is not signed in', async () => {
-    const response = await onRequestPut(getContext(new Request('x:'), { projectId: '1' }))
+    const response = await onRequestPut(getContext(new Request('x:')))
+
+    expect(response.status).toBe(401)
+    const json = await response.json()
+    expect(json).toEqual({ error: 'Unauthorized' })
+  })
+})
+
+describe('GET /api/storage', () => {
+  it('returns list of storage items', async () => {
+    const request = new Request('x:', {
+      headers: { Cookie: `session=${aliceSessionToken}` },
+    })
+    const response = await onRequestGet(getContext(request))
+
+    expect(await response.json()).toEqual([
+      {
+        id: 'si_1',
+        name: null,
+        public: false,
+        updatedAt: '2026-01-01T00:00:00.000Z',
+        size: 3,
+        hash: '1_hash',
+        type: 'media',
+      },
+    ])
+  })
+
+  it('returns error if user is not signed in', async () => {
+    const response = await onRequestGet(getContext(new Request('x:')))
 
     expect(response.status).toBe(401)
     const json = await response.json()

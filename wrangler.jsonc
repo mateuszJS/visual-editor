@@ -15,8 +15,8 @@
   "d1_databases": [
     {
       "binding": "db",
-      "database_name": "preview",
-      "database_id": "efa65b41-8d07-46ac-824c-e525641545af",
+      "database_name": "visual-editor-preview",
+      "database_id": "d652821e-86bd-4b9a-8a6a-de580db51ceb",
     },
   ],
   "vars": {
@@ -51,8 +51,8 @@
       "d1_databases": [
         {
           "binding": "db",
-          "database_name": "production",
-          "database_id": "a0e211cf-8461-4fd3-8cd7-df009d934e5c",
+          "database_name": "visual-editor-production",
+          "database_id": "45182d2d-d0b3-44f3-8888-9c08aa0ea2a6",
         },
       ],
       "vars": {

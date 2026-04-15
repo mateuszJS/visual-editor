@@ -88,11 +88,11 @@ to apply:
 ```bash
 npx wrangler d1 migrations apply <DATABASE_NAME> [OPTIONS]
 
-npx wrangler d1 migrations apply preview --local
+npx wrangler d1 migrations apply visual-editor-preview --local
 
-npx wrangler d1 migrations apply preview --remote
+npx wrangler d1 migrations apply visual-editor-preview --remote
 
-npx wrangler d1 migrations apply production --remote --env=production
+npx wrangler d1 migrations apply visual-editor-production --remote --env=production
 ```
 
 To erase local D1 (you have to apply migrations after that):

@@ -22,7 +22,7 @@ export const onRequestPut = withSession(async (ctx, session) => {
   if (Number.isNaN(contentLength) || contentLength <= 0 || contentLength > MAX_FILE_SIZE) {
     return getResponseError('Max file size is 3 MB.')
   }
-
+  console.log('contentType', contentType)
   if (!contentType || !allowedContentType.includes(contentType)) {
     return getResponseError('Invalid content type.')
   }
@@ -53,7 +53,6 @@ export const onRequestPut = withSession(async (ctx, session) => {
     return getResponseError('Upload has failed.', 500)
   }
 
-  console.log(`object etag: ${s3Object.etag}, httpEtag: ${s3Object.httpEtag}`)
   // return Response.json({
   //   key: object.key,
   //   size: object.size,

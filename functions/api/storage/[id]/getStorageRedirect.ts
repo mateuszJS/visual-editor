@@ -13,19 +13,14 @@ async function getS3Id(
   userId: string,
   redirectIdField: 'storage_id' | 'preview_id'
 ) {
-  const sql =
-    redirectIdField === 'storage_id'
-      ? `SELECT storage_id
-        FROM storage
-        WHERE id = ? AND owner_id = ?`
-      : `SELECT preview_id
-        FROM storage
-        WHERE id = ? AND owner_id = ?`
-
   const storageItem = await ctx.env.db
-    .prepare(sql)
+    .prepare(
+      `SELECT storage_id, preview_id
+        FROM storage
+        WHERE id = ? AND owner_id = ?`
+    )
     .bind(ctx.params.id, userId)
-    .first<Pick<StorageItem.DB, 'storage_id'>>()
+    .first<Pick<StorageItem.DB, 'storage_id' | 'preview_id'>>()
 
   if (!storageItem) {
     throw Error(
@@ -33,7 +28,7 @@ async function getS3Id(
     )
   }
 
-  return storageItem.storage_id
+  return redirectIdField === 'storage_id' ? storageItem.storage_id : storageItem.preview_id
 }
 
 export default function getStorageRedirect(redirectIdField: 'storage_id' | 'preview_id') {
@@ -54,7 +49,6 @@ export default function getStorageRedirect(redirectIdField: 'storage_id' | 'prev
     })
 
     if (err) {
-      console.error('Error generating signed URL:', err)
       return getResponseError('Failed to generate signed URL.', 403)
     }
 

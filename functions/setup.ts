@@ -9,6 +9,8 @@ import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 // https://github.com/cloudflare/workers-sdk/pull/11632/changes
 // https://blog.cloudflare.com/workers-vitest-integration/
 
+let cryptoRandomBytes = 0
+
 beforeAll(async () => {
   await applyD1Migrations(env.db, env.TEST_MIGRATIONS)
 
@@ -91,12 +93,6 @@ beforeAll(async () => {
     }
   })
 
-  vi.mock('uuid', async () => {
-    return {
-      v4: () => 'uuid-generated-id',
-    }
-  })
-
   vi.mock('node:crypto', () => {
     return {
       randomBytes: () => ({
@@ -104,11 +100,16 @@ beforeAll(async () => {
       }),
     }
   })
+
+  crypto.randomUUID = () =>
+    ('random-uuid-' + cryptoRandomBytes++) as `${string}-${string}-${string}-${string}-${string}`
 })
 
 beforeEach(async () => {
+  await env.db.prepare('DELETE FROM storage').run()
   await env.db.prepare('DELETE FROM projects').run()
   await env.db.prepare('DELETE FROM users').run()
+  cryptoRandomBytes = 0
   // await env.userUploads.list().then(({ objects }) => {
   //   return Promise.all(
   //     objects.map((obj) => {
@@ -127,7 +128,7 @@ beforeEach(async () => {
     )
     .bind(
       '2', 'alice@example.com', 'Alice', 'https://example.com/alice.png', 'google', '1', // alice
-      '3', 'bob@example.com', 'Alice', 'https://example.com/bob.png', 'google', '2' // bob
+      '3', 'bob@example.com', 'Bob', 'https://example.com/bob.png', 'google', '2' // bob
     )
     .run()
 
@@ -147,7 +148,15 @@ beforeEach(async () => {
   })
 
   // object representing just a user's upload
-  await env.userUploads.put('1/upload-id', new Uint8Array([1, 2, 3]))
+  await env.userUploads.put('s3_1', new Uint8Array([1, 2, 3]))
+
+  await env.db
+    .prepare(
+      `INSERT INTO storage (id, storage_id, preview_id, size, hash, type, owner_id)
+			 VALUES (?, ?, ?, ?, ?, ?, ?)`
+    )
+    .bind('si_1', 's3_blob_1', 's3_preview_1', 3, '1_hash', 'media', '2')
+    .run()
 })
 
 // to receive those session value just call await encrypt({ userId: '23891542398' }) in session.ts

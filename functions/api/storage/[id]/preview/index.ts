@@ -1,3 +1,3 @@
 import getStorageRedirect from '../getStorageRedirect'
 
-export const onRequestGet = getStorageRedirect('storage_id')
+export const onRequestGet = getStorageRedirect('preview_id')

@@ -108,7 +108,7 @@ describe('Service worker', () => {
 
     it('makes request if there is nothing in cache', async () => {
       const blob = new Blob(['network-image-data'], { type: 'image/png' })
-      global.fetch = () => Promise.resolve(new Response(blob))
+      globalThis.fetch = () => Promise.resolve(new Response(blob))
       await import('./sw')
       await self.caches.open('v0') // otherwise cache is not being used
 
@@ -158,7 +158,7 @@ describe('Service worker', () => {
       const broadcast = new BroadcastChannel('sync-data')
 
       const networkRequest = new Promise<Request>((resolve) => {
-        global.fetch = async (reqInput, reqOptions) => {
+        globalThis.fetch = async (reqInput, reqOptions) => {
           resolve(new Request(reqInput, reqOptions))
           return new Response(null, { status: 204 })
         }
@@ -193,7 +193,7 @@ describe('Service worker', () => {
       const broadcast = new BroadcastChannel('sync-data')
 
       const networkRequest = new Promise<void>((resolve) => {
-        global.fetch = async () => {
+        globalThis.fetch = async () => {
           resolve()
           throw Error('Network error')
         }
@@ -239,7 +239,7 @@ describe('Service worker', () => {
 
     it('when GET /api/project/1 is sent while data is in the IndexedDB, network request is made anyway to get the most recent version (IDB or network)', async () => {
       const networkRequestOldVersion = new Promise<void>((resolve) => {
-        global.fetch = async () => {
+        globalThis.fetch = async () => {
           resolve()
           return Response.json({
             assets: [],
@@ -259,7 +259,7 @@ describe('Service worker', () => {
       })
 
       const networkRequestNewVersion = new Promise<void>((resolve) => {
-        global.fetch = async () => {
+        globalThis.fetch = async () => {
           resolve()
           return Response.json({
             assets: [],
@@ -282,7 +282,7 @@ describe('Service worker', () => {
       it('sends PATCH request when there is data in IndexedDB and clears out the IDB', async () => {
         const broadcast = new BroadcastChannel('sync-data')
         const patchRequest = new Promise<Request>((resolve) => {
-          global.fetch = async (reqInput, reqOptions) => {
+          globalThis.fetch = async (reqInput, reqOptions) => {
             resolve(new Request(reqInput, reqOptions))
             return new Response(null, { status: 204 })
           }
@@ -304,7 +304,7 @@ describe('Service worker', () => {
       it('does not erase records from IndexedDB when sync fails', async () => {
         const broadcast = new BroadcastChannel('sync-data')
         const networkRequest = new Promise<void>((resolve) => {
-          global.fetch = async () => {
+          globalThis.fetch = async () => {
             resolve()
             throw Error('Network error')
           }

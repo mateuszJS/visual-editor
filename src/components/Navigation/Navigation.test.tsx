@@ -4,7 +4,7 @@ import { initUserStore } from '@/hooks/userStore/userStore'
 
 jest.mock('next/navigation', () => ({
   usePathname() {
-    return '/explore'
+    return '/storage'
   },
   useRouter() {},
 }))

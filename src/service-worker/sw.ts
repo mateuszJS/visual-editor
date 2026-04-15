@@ -66,7 +66,10 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
     const projectId = pathname.split('/')[3]
     return projectRoute(request, projectId, event)
   }
-  return fetch(event.request)
+
+  const promise = await fetch(event.request)
+
+  return promise
 }
 
 // If you already know ahead of time where certain content should be fetched from,

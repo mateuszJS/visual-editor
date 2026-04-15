@@ -9,7 +9,7 @@ import type {
   CreatorAPI,
 } from '@mateuszjs/magic-render/types'
 import { proxy, ref, useSnapshot } from 'valtio'
-import { uploadTexture } from './uploadTexture'
+import uploadTexture from './uploadTexture'
 import uploadMiniature from './uploadMiniature'
 import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
@@ -111,6 +111,7 @@ function useCreator() {
         onExternalTextureCreation: async (url, setNewUrl) => {
           if (!url.startsWith('blob:')) return
           const newUrl = await uploadTexture(url)
+
           if (newUrl === null) return
 
           setNewUrl(newUrl)

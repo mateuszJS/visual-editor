@@ -3,6 +3,7 @@ import initCreator from '@mateuszjs/magic-render'
 
 let onSelectAssetCallback: (assetId: [number, number, number, number]) => void
 let onPreviewUpdateCallback: (canvas: HTMLCanvasElement) => void
+let onExternalTextureCreationCallback: (url: string, setNewUrl: (url: string) => void) => void
 
 /** this mock is created since currently github actions do not support GPU.
  * For WebGPU physical GPU is required, so far there is no way to simulate with CPU */
@@ -12,6 +13,7 @@ const initMagicRenderMock: typeof initCreator = function ({
   onPreviewUpdate,
   onSnapshotUpdate,
   onUpdateTool,
+  onExternalTextureCreation,
 }: CreatorProps): Promise<CreatorAPI> {
   if (canvas.getAttribute('data-magic-render-linked') === 'true') {
     // on purpose we do not compare lastCanvas to canvas to do not introduce any more logic to this mock
@@ -21,6 +23,7 @@ const initMagicRenderMock: typeof initCreator = function ({
   canvas.setAttribute('data-magic-render-linked', 'true')
   onSelectAssetCallback = onAssetSelect
   onPreviewUpdateCallback = onPreviewUpdate
+  onExternalTextureCreationCallback = onExternalTextureCreation
 
   return Promise.resolve({
     addImages: jest.fn(),
@@ -53,6 +56,10 @@ export function __triggerSelectAsset(assetId: [number, number, number, number]) 
 
 export function __triggerPreviewUpdate(canvas: HTMLCanvasElement) {
   onPreviewUpdateCallback(canvas)
+}
+
+export function __triggerExternalTextureCreation(url: string, setNewUrl: (url: string) => void) {
+  onExternalTextureCreationCallback(url, setNewUrl)
 }
 
 export default initMagicRenderMock

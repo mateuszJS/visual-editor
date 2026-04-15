@@ -1,31 +1,9 @@
-import getOnTextureUpload from './uploadTexture'
+import uploadTexture from './uploadTexture'
 import errorStore from '@/stores/error'
-import { server } from 'test/server'
+import { interceptRequest, server } from 'test/server'
 import { http, HttpResponse } from 'msw'
 
-describe('getOnTextureUpload', () => {
-  const mockSetNewUrl = jest.fn()
-
-  beforeEach(() => {
-    jest.clearAllMocks()
-    errorStore.message = null
-  })
-
-  it('should not call endpoint when URL does not start with "blob:"', async () => {
-    const regularUrl = 'https://example.com/image.jpg'
-
-    server.use(
-      http.post('https://example.com/image.jpg', () => {
-        throw Error('API should not have been called')
-      })
-    )
-
-    await getOnTextureUpload(regularUrl, mockSetNewUrl)
-
-    expect(mockSetNewUrl).not.toHaveBeenCalled()
-    expect(errorStore.message).toBeNull()
-  })
-
+describe('uploadTexture', () => {
   it('should handle failure coming from fetching blob', async () => {
     const blobUrl = 'blob:http://localhost:3000/blob-uuid'
 
@@ -35,18 +13,58 @@ describe('getOnTextureUpload', () => {
       })
     )
 
-    await getOnTextureUpload(blobUrl, mockSetNewUrl)
+    const newUrl = await uploadTexture(blobUrl)
 
-    expect(mockSetNewUrl).not.toHaveBeenCalled()
+    expect(newUrl).toBeNull()
+    expect(errorStore.message).toBe('Failed to upload file.')
+  })
+
+  it('returns null and sets error message is blob is too big', async () => {
+    const blobUrl = 'blob:http://localhost:3000/blob-uuid'
+
+    server.use(
+      http.get(/blob-uuid/, () => {
+        const threeMB = 3 * 1024 * 1024 // 3MB
+        const mockBlobData = new Uint8Array(Array(threeMB + 1).fill(1))
+        return HttpResponse.arrayBuffer(mockBlobData.buffer)
+      })
+    )
+
+    const newUrl = await uploadTexture(blobUrl)
+
+    expect(newUrl).toBeNull()
+    expect(errorStore.message).toBe('Max file size is 3 MB.')
+  })
+
+  it('throws error if no x-storage-item-id header was returned', async () => {
+    const reqPromise = interceptRequest('/api/storage', 'PUT')
+    await uploadTexture('blob:http://localhost:3000/blob-uuid')
+    const req = await reqPromise
+
+    expect(req.headers.get('x-hash')).toBe('mock-hash')
+  })
+
+  it('throws error if no x-storage-item-id header was returned', async () => {
+    const blobUrl = 'blob:http://localhost:3000/blob-uuid'
+
+    server.use(
+      http.put('/api/storage', () => {
+        return new HttpResponse(null, { status: 200 })
+      })
+    )
+
+    const newUrl = await uploadTexture(blobUrl)
+
+    expect(newUrl).toBeNull()
     expect(errorStore.message).toBe('Failed to upload file.')
   })
 
   it('should successfully obtain blob and upload to server', async () => {
     const blobUrl = 'blob:http://localhost:3000/blob-uuid'
 
-    await getOnTextureUpload(blobUrl, mockSetNewUrl)
+    const newUrl = await uploadTexture(blobUrl)
 
-    expect(mockSetNewUrl).toHaveBeenCalledWith(`/api/storage/si_new-upload-uuid`)
+    expect(newUrl).toBe('/api/storage/storage-item-id')
     expect(errorStore.message).toBeNull()
   })
 
@@ -59,9 +77,9 @@ describe('getOnTextureUpload', () => {
       })
     )
 
-    await getOnTextureUpload(blobUrl, mockSetNewUrl)
+    const newUrl = await uploadTexture(blobUrl)
 
-    expect(mockSetNewUrl).not.toHaveBeenCalled()
+    expect(newUrl).toBeNull()
     expect(errorStore.message).toBe('Failed to upload file.')
   })
 })

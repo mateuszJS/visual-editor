@@ -3,7 +3,7 @@ import nativeFetcher from '@/utils/nativeFetcher'
 import getImageDataHash from './getImageDataHash'
 import { MAX_FILE_SIZE } from 'apiConsts'
 
-export async function uploadTexture(url: string): Promise<string | null> {
+export default async function uploadTexture(url: string): Promise<string | null> {
   try {
     const fileRes = await nativeFetcher(url)
 

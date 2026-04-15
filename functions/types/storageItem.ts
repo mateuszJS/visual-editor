@@ -3,14 +3,18 @@ import { ApiStorageItem } from '../../apiTypes'
 export type DB = {
   id: string
   storage_id: string
+  preview_id: string
+  size: number
+  hash: string
   type: string
+  name: string | null
   owner_id: string
   updated_at: string
   public: number
 }
 
 export function toAPI(
-  data: Pick<DB, 'id' | 'storage_id' | 'type' | 'updated_at' | 'public' | 'owner_id'> | null
+  data: Pick<DB, 'id' | 'size' | 'hash' | 'type' | 'updated_at' | 'public' | 'name'> | null
 ): ApiStorageItem {
   if (!data) {
     throw new Error('No data was found.')
@@ -18,11 +22,12 @@ export function toAPI(
 
   return {
     id: data.id,
-    storageId: data.storage_id,
     type: data.type,
     updatedAt: data.updated_at,
     public: Boolean(data.public),
-    ownerId: data.owner_id,
+    size: data.size,
+    hash: data.hash,
+    name: data.name,
   }
 }
 

@@ -1,20 +1,10 @@
 'use client'
 
 import useProjectsList from '@/hooks/useProjectsList/useProjectsList'
-import styles from './page.module.css'
+import styles from '@/components/shared/imagePanel.module.css'
 import ProjectPanel from '@/components/ProjectPanel/ProjectPanel'
 import Navigation from '@/components/Navigation/Navigation'
-
-const formatter = new Intl.DateTimeFormat(undefined, {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-})
-
-function formatDate(time: string) {
-  const date = new Date(time)
-  return formatter.format(date)
-}
+import formatDate from '@/utils/formatDate'
 
 export default function MyProjects() {
   const { loading, projectsList } = useProjectsList()

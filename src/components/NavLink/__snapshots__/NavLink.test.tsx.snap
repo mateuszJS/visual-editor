@@ -5,7 +5,7 @@ exports[`<NavLink> should add class active when is active 1`] = `
   <a
     aria-current="page"
     class="navItem"
-    href="/explore"
+    href="/storage"
   >
     <svg />
     Content
@@ -17,7 +17,7 @@ exports[`<NavLink> should render icon and text 1`] = `
 <div>
   <a
     class="navItem"
-    href="/explore"
+    href="/storage"
   >
     <svg />
     Content

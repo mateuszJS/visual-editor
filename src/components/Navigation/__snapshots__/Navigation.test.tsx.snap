@@ -17,10 +17,10 @@ exports[`<Navigation> should render five standard links for unauthenticated user
     <a
       aria-current="page"
       class="navItem"
-      href="/explore"
+      href="/storage"
     >
       <svg />
-      Explore
+      Storage
     </a>
     <button
       class="button createButton ghost onlyIcon"

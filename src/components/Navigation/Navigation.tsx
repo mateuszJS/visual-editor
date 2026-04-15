@@ -19,9 +19,9 @@ export default function Navigation() {
         <span>Home</span>
       </NavItem>
 
-      <NavItem href="/explore">
+      <NavItem href="/storage">
         <CompassIcon />
-        Explore
+        Storage
       </NavItem>
 
       <CreateButton />

@@ -14,11 +14,11 @@ describe('Service worker', () => {
     })
   }
 
-  describe('miniatures - PUT /api/project-uploads/1/miniature', () => {
+  describe('miniatures - PUT /api/projects/1/miniature', () => {
     it('throws error if content-type header is missing', async () => {
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
       await import('./sw')
-      const putRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const putRequest = new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: blob,
         headers: {
@@ -32,7 +32,7 @@ describe('Service worker', () => {
     it('throws error if x-amz-meta-updated-at header is missing', async () => {
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
       await import('./sw')
-      const putRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const putRequest = new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: blob,
         headers: {
@@ -48,7 +48,7 @@ describe('Service worker', () => {
     it('caches response', async () => {
       await import('./sw')
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
-      const putRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const putRequest = new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: blob,
         headers: {
@@ -63,7 +63,7 @@ describe('Service worker', () => {
       await self.caches.open('v0')
       const cache = self.snapshot().caches.v0
 
-      expect(cache['x:/api/project-uploads/1/miniature']).toMatchObject({
+      expect(cache['x:/api/projects/1/miniature']).toMatchObject({
         bodyUsed: false,
         body: blob,
         status: 200,
@@ -79,11 +79,11 @@ describe('Service worker', () => {
     })
   })
 
-  describe('miniatures - GET /api/project-uploads/1/miniature', () => {
+  describe('miniatures - GET /api/projects/1/miniature', () => {
     it('receives cached blob if there is any', async () => {
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
       await import('./sw')
-      const putRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const putRequest = new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: blob,
         headers: {
@@ -95,7 +95,7 @@ describe('Service worker', () => {
 
       await self.caches.open('v0') // otherwise cache is not being used
 
-      const getRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const getRequest = new Request('x:/api/projects/1/miniature', {
         method: 'GET',
       })
       const response = await self.trigger('fetch', getRequest)
@@ -112,7 +112,7 @@ describe('Service worker', () => {
       await import('./sw')
       await self.caches.open('v0') // otherwise cache is not being used
 
-      const getRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const getRequest = new Request('x:/api/projects/1/miniature', {
         method: 'GET',
       })
       const response = await self.trigger('fetch', getRequest)
@@ -130,7 +130,7 @@ describe('Service worker', () => {
       await import('./sw')
       await self.trigger(
         'fetch',
-        new Request('x:/api/project-uploads/1/miniature', {
+        new Request('x:/api/projects/1/miniature', {
           method: 'PUT',
           body: blobA,
           headers: {
@@ -143,7 +143,7 @@ describe('Service worker', () => {
       const blobB = new Blob(['local-image-data'], { type: 'image/png' })
       await self.trigger(
         'fetch',
-        new Request('x:/api/project-uploads/1/miniature', {
+        new Request('x:/api/projects/1/miniature', {
           method: 'PUT',
           body: blobB,
           headers: {
@@ -166,7 +166,7 @@ describe('Service worker', () => {
 
       broadcast.postMessage('SYNC_PROJECT_MINIATURE_START')
       expect(await networkRequest).toMatchObject({
-        url: 'x:/api/project-uploads/1/miniature',
+        url: 'x:/api/projects/1/miniature',
         method: 'PUT',
         body: blobB,
       })
@@ -179,7 +179,7 @@ describe('Service worker', () => {
     it('does not clear out the cache when sync fails', async () => {
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
       await import('./sw')
-      const putRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const putRequest = new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: blob,
         headers: {
@@ -336,7 +336,7 @@ describe('Service worker', () => {
     // Add miniature to cache
     await self.trigger(
       'fetch',
-      new Request('x:/api/project-uploads/1/miniature', {
+      new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: new Blob(['local-image-data'], { type: 'image/png' }),
         headers: {

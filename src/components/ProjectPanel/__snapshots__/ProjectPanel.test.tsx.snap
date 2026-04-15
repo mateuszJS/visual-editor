@@ -4,9 +4,9 @@ exports[`<ProjectPanel> should render a project details link with provided text 
 <div>
   <a
     aria-label="Go to project name project details"
-    class="projectPanel"
+    class="imagePanel"
     href="/project/0"
-    style="background-image: url(/api/projects/0/miniature);"
+    style="--background-url: url(/api/projects/0/miniature);"
   >
     <p>
       project name

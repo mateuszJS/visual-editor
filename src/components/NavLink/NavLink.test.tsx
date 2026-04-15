@@ -11,7 +11,7 @@ jest.mock('next/navigation', () => ({
 describe('<NavLink>', () => {
   it('should render icon and text', () => {
     const { container } = render(
-      <NavLink href="/explore">
+      <NavLink href="/storage">
         <>
           <HomeIcon />
           Content
@@ -22,9 +22,9 @@ describe('<NavLink>', () => {
   })
 
   it('should add class active when is active', () => {
-    mockUsePathname.mockImplementationOnce(() => '/explore')
+    mockUsePathname.mockImplementationOnce(() => '/storage')
     const { container } = render(
-      <NavLink href="/explore">
+      <NavLink href="/storage">
         <>
           <HomeIcon />
           Content

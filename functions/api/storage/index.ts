@@ -100,13 +100,13 @@ export const onRequestGet = withSession(async (ctx, session) => {
     // TODO: handle case when storage item is public
     const { results } = await ctx.env.db
       .prepare(
-        `SELECT id, storage_id, type, owner_id, updated_at, public
+        `SELECT id, size, hash, type, updated_at, public, name
         FROM storage
         WHERE owner_id = ?`
       )
       .bind(session.userId)
       .run<
-        Pick<StorageItem.DB, 'id' | 'storage_id' | 'type' | 'owner_id' | 'updated_at' | 'public'>
+        Pick<StorageItem.DB, 'id' | 'size' | 'hash' | 'type' | 'updated_at' | 'public' | 'name'>
       >()
 
     return results.map((item) => StorageItem.toAPI(item))

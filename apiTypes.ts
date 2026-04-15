@@ -26,9 +26,10 @@ export type ApiUserBasic = {
 
 export type ApiStorageItem = {
   id: string
-  storageId: string
+  size: number
+  hash: string
   type: string
   updatedAt: string
   public: boolean
-  ownerId: string
+  name: string | null
 }

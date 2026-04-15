@@ -1,6 +1,12 @@
 import '@testing-library/jest-dom'
 import { server } from './server'
 import { _resetUniqueIdCounter } from '@/hooks/useUniqueId/useUniqueId'
+import errorStore from '@/stores/error'
+
+jest.mock('../src/hooks/useCreator/getImageDataHash', () => ({
+  __esModule: true,
+  default: jest.fn().mockResolvedValue('mock-hash'),
+}))
 
 beforeAll(() => {
   server.listen({
@@ -33,6 +39,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   _resetUniqueIdCounter()
+  errorStore.message = null
 
   // creator is used in almost half of all tests, because of that
   // we add canvas element before each test by default

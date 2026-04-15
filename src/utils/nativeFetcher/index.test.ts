@@ -79,6 +79,7 @@ describe('nativeFetcher', () => {
 
     expect(windowReplace).toHaveBeenCalledWith('/login')
     windowReplace.mockRestore()
+    broadcast.close()
   })
 
   it('should not redirect on 401 status if disableAuth401Redirect is true', async () => {

@@ -48,6 +48,7 @@ describe('<InitializeData />', () => {
 
     expect(receivedDataSync).toBe(true)
     expect(receivedMiniatureSync).toBe(true)
+    broadcast.close()
   })
 
   it('should initialize user store on mount', async () => {

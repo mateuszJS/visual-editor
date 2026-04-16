@@ -33,6 +33,10 @@ describe('useProjectsList', () => {
 
     const { result } = renderHook(() => useProjectsList())
 
+    await act(() => {
+      // allow to compelte micro-tasks
+    })
+
     expect(result.current).toMatchObject({
       loading: true,
       error: null,

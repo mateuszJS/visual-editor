@@ -7,6 +7,7 @@ import {
   projectMiniatureRoute,
   syncProjectMiniatures,
 } from './projectMiniatures'
+import { getIsMiniature } from './utils'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -14,7 +15,7 @@ declare const self: ServiceWorkerGlobalScope
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const resources = self.__WB_MANIFEST // this is just to satisfy workbox
 
-const version = 24
+const version = 25
 
 const isTestEnv = 'resetSwEnv' in self
 if (!isTestEnv) {
@@ -55,7 +56,7 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
   const { request } = event
   const { pathname } = new URL(request.url)
 
-  if (pathname.startsWith('/api/project-uploads/') && pathname.endsWith('/miniature')) {
+  if (getIsMiniature(pathname)) {
     return projectMiniatureRoute(request, event)
   }
 
@@ -65,7 +66,10 @@ async function handleFetch(event: FetchEvent): Promise<Response> {
     const projectId = pathname.split('/')[3]
     return projectRoute(request, projectId, event)
   }
-  return fetch(event.request)
+
+  const promise = await fetch(event.request)
+
+  return promise
 }
 
 // If you already know ahead of time where certain content should be fetched from,

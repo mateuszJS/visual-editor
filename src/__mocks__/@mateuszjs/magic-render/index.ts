@@ -1,22 +1,20 @@
-import { CreatorAPI, CreatorTool, ProjectSnapshot } from '@mateuszjs/magic-render/types'
+import { CreatorAPI, CreatorProps } from '@mateuszjs/magic-render/types'
 import initCreator from '@mateuszjs/magic-render'
 
 let onSelectAssetCallback: (assetId: [number, number, number, number]) => void
 let onPreviewUpdateCallback: (canvas: HTMLCanvasElement) => void
+let onExternalTextureCreationCallback: (url: string, setNewUrl: (url: string) => void) => void
 
 /** this mock is created since currently github actions do not support GPU.
  * For WebGPU physical GPU is required, so far there is no way to simulate with CPU */
-const initMagicRenderMock: typeof initCreator = function (
-  width: number,
-  height: number,
-  canvas: HTMLCanvasElement,
-  uploadTexture: (url: string, onNewUrl: (newUrl: string) => void) => void,
-  onSnapshotUpdate: (snapshot: ProjectSnapshot, commit: boolean) => void,
-  onAssetSelect: (assetId: [number, number, number, number]) => void,
-  onProcessingUpdate: (inProgress: boolean) => void,
-  onPreviewUpdate: (canvas: HTMLCanvasElement) => void,
-  onUpdateTool: (tool: CreatorTool) => void
-): Promise<CreatorAPI> {
+const initMagicRenderMock: typeof initCreator = function ({
+  canvas,
+  onAssetSelect,
+  onPreviewUpdate,
+  onSnapshotUpdate,
+  onUpdateTool,
+  onExternalTextureCreation,
+}: CreatorProps): Promise<CreatorAPI> {
   if (canvas.getAttribute('data-magic-render-linked') === 'true') {
     // on purpose we do not compare lastCanvas to canvas to do not introduce any more logic to this mock
     throw new Error('WebGPU error when canvas was already linked with device')
@@ -25,6 +23,7 @@ const initMagicRenderMock: typeof initCreator = function (
   canvas.setAttribute('data-magic-render-linked', 'true')
   onSelectAssetCallback = onAssetSelect
   onPreviewUpdateCallback = onPreviewUpdate
+  onExternalTextureCreationCallback = onExternalTextureCreation
 
   return Promise.resolve({
     addImages: jest.fn(),
@@ -46,6 +45,8 @@ const initMagicRenderMock: typeof initCreator = function (
     updateAssetTypoProps: jest.fn(),
     INFINITE_DISTANCE_THRESHOLD: 10000,
     INFINITE_DISTANCE: 100000,
+    addText: jest.fn(),
+    download: jest.fn(),
   })
 }
 
@@ -55,6 +56,10 @@ export function __triggerSelectAsset(assetId: [number, number, number, number]) 
 
 export function __triggerPreviewUpdate(canvas: HTMLCanvasElement) {
   onPreviewUpdateCallback(canvas)
+}
+
+export function __triggerExternalTextureCreation(url: string, setNewUrl: (url: string) => void) {
+  onExternalTextureCreationCallback(url, setNewUrl)
 }
 
 export default initMagicRenderMock

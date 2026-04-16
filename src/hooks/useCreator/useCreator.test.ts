@@ -2,9 +2,10 @@ import { act, renderHook } from '@testing-library/react'
 import useCreator from './useCreator'
 import { __triggerPreviewUpdate } from '@mateuszjs/magic-render'
 import useProject from '@/hooks/useProject/useProject'
-import { getRequest, server } from 'test/server'
+import { interceptRequest, server } from 'test/server'
 import { http } from 'msw'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
+import { __triggerExternalTextureCreation } from '@mateuszjs/magic-render'
 
 const project = getSanitizedProject()
 
@@ -206,7 +207,7 @@ describe('useCreator', () => {
         result.current.undo?.()
       })
 
-      let updateProjectReq = getRequest('/api/projects/1', 'PATCH')
+      let updateProjectReq = interceptRequest('/api/projects/1', 'PATCH')
 
       // do first change to cut history
       await act(async () => {
@@ -220,7 +221,7 @@ describe('useCreator', () => {
         assets: [{ url: '1' }, { url: '2' }, { url: '4' }],
       })
 
-      updateProjectReq = getRequest('/api/projects/1', 'PATCH')
+      updateProjectReq = interceptRequest('/api/projects/1', 'PATCH')
 
       await act(async () => {
         result.current.undo?.()
@@ -230,7 +231,7 @@ describe('useCreator', () => {
         assets: [{ url: '1' }, { url: '2' }],
       })
 
-      updateProjectReq = getRequest('/api/projects/1', 'PATCH')
+      updateProjectReq = interceptRequest('/api/projects/1', 'PATCH')
 
       await act(async () => {
         result.current.undo?.()
@@ -310,7 +311,7 @@ describe('useCreator', () => {
 
       const { result } = renderHook(useCreator)
 
-      const updateProjectRequest = getRequest('/api/projects/1', 'PATCH')
+      const updateProjectRequest = interceptRequest('/api/projects/1', 'PATCH')
 
       const assets = ['blob:http://localhost/image-1', 'blob:http://localhost/image-2']
       await act(async () => {
@@ -369,7 +370,7 @@ describe('useCreator', () => {
     const { result } = renderHook(useCreator)
     await act(async () => result.current.init(window.creatorCanvas, project))
 
-    const putRequest = getRequest('/api/project-uploads/1/miniature', 'PUT')
+    const reqPromise = interceptRequest('/api/projects/1/miniature', 'PUT')
 
     await act(async () => {
       __triggerPreviewUpdate({
@@ -379,8 +380,129 @@ describe('useCreator', () => {
       })
     })
 
-    const req = await putRequest
-    expect(req.headers.get('x-amz-meta-updated-at')).toBe('2020-01-01T00:00:00.000Z')
+    const req = await reqPromise
+    expect(req.headers.get('x-amz-meta-captured-at')).toBe('2020-01-01T00:00:00.000Z')
     expect(await req.blob()).toEqual(new Blob(['canvas-blob'], { type: 'image/png' }))
   })
+
+  it('whole history is updated when texture url updates after upload', async () => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'))
+
+    // PATCH requests won't be sent if proejct doesn't exists in local storage already
+    const { result: projectHookResult } = renderHook(() => useProject())
+    await act(() => {
+      projectHookResult.current.createProject(100, 100, () => {})
+    })
+
+    const { result } = renderHook(useCreator)
+    const blobUrl = 'blob:http://localhost:3000/blob-uuid'
+
+    await act(async () => {
+      await result.current.init(window.creatorCanvas, project)
+    })
+
+    await act(async () => {
+      result.current.creator.setSnapshot(
+        { width: 100, height: 100, assets: [{ url: '1' }, { url: blobUrl }] },
+        true
+      )
+    })
+
+    let updateProjectRequest = interceptRequest('/api/projects/1', 'PATCH')
+
+    await act(async () => {
+      result.current.creator.setSnapshot(
+        { width: 200, height: 100, assets: [{ url: '1' }, { url: blobUrl }] },
+        true
+      )
+    })
+
+    // still contains blob, onExternalTextureCreation was not yet triggered by magic-render
+    await expect((await updateProjectRequest).json()).resolves.toEqual({
+      width: 200,
+      height: 100,
+      assets: [{ url: '1' }, { url: blobUrl }],
+      updatedAt: '2020-01-01T00:00:00.000Z',
+    })
+
+    updateProjectRequest = interceptRequest('/api/projects/1', 'PATCH')
+
+    const setNewUrl = jest.fn()
+    __triggerExternalTextureCreation(blobUrl, setNewUrl)
+
+    const storageUrl = '/api/storage/storage-item-id'
+
+    await expect((await updateProjectRequest).json()).resolves.toEqual({
+      width: 200,
+      height: 100,
+      assets: [{ url: '1' }, { url: storageUrl }],
+      updatedAt: '2020-01-01T00:00:00.000Z',
+    })
+
+    expect(setNewUrl).toHaveBeenCalledWith(storageUrl)
+
+    updateProjectRequest = interceptRequest('/api/projects/1', 'PATCH')
+
+    // verify that previosu entries in histor ywere also updated
+    await act(async () => {
+      result.current.undo?.()
+    })
+
+    await expect((await updateProjectRequest).json()).resolves.toEqual({
+      width: 100,
+      height: 100,
+      assets: [{ url: '1' }, { url: storageUrl }],
+      updatedAt: '2020-01-01T00:00:00.000Z',
+    })
+  })
+
+  it('onExternalTextureCreation does not trigger upload is url does not start with blob:', async () => {
+    // PATCH requests won't be sent if proejct doesn't exists in local storage already
+    const { result: projectHookResult } = renderHook(() => useProject())
+    await act(() => {
+      projectHookResult.current.createProject(100, 100, () => {})
+    })
+
+    const { result } = renderHook(useCreator)
+    const textureUrl = 'http://cloud-provder/storage-item-id'
+
+    await act(async () => {
+      await result.current.init(window.creatorCanvas, project)
+    })
+
+    await act(async () => {
+      result.current.creator.setSnapshot(
+        { width: 100, height: 100, assets: [{ url: '1' }, { url: textureUrl }] },
+        true
+      )
+    })
+
+    const updateProjectRequest = interceptRequest('/api/projects/1', 'PATCH')
+
+    const setNewUrl = jest.fn()
+    __triggerExternalTextureCreation(textureUrl, setNewUrl)
+
+    expect(setNewUrl).not.toHaveBeenCalled()
+
+    await expect(
+      // Create a race to verify that promise is pending(request has not been made)
+      Promise.race([updateProjectRequest.then(() => 'resolved'), Promise.resolve('pending')])
+    ).resolves.toBe('pending')
+  })
+
+  // it('should not call endpoint when URL does not start with "blob:"', async () => {
+  //   // TODO: test if blob calls updateTexture,m and non-block urs avoids it
+  //   const regularUrl = 'https://example.com/image.jpg'
+
+  //   server.use(
+  //     http.post(regularUrl, () => {
+  //       throw Error('API should not have been called')
+  //     })
+  //   )
+
+  //   const newUrl = await uploadTexture(regularUrl)
+
+  //   expect(mockSetNewUrl).not.toHaveBeenCalled()
+  //   expect(errorStore.message).toBeNull()
+  // })
 })

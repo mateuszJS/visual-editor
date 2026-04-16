@@ -22,7 +22,8 @@ export default defineConfig({
       const assetsPath = path.join(__dirname, './out')
 
       return {
-        wrangler: { configPath: './wrangler.jsonc' },
+        // solution suggested by CLAUDE, I don't like having a copy of my config
+        wrangler: { configPath: './wrangler.test.jsonc' },
         miniflare: {
           bindings: {
             TEST_MIGRATIONS: migrations,

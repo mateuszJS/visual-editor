@@ -9,7 +9,7 @@ import type {
   CreatorAPI,
 } from '@mateuszjs/magic-render/types'
 import { proxy, ref, useSnapshot } from 'valtio'
-import getOnTextureUpload from './getOnTextureUpload'
+import uploadTexture from './uploadTexture'
 import uploadMiniature from './uploadMiniature'
 import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
@@ -104,12 +104,35 @@ function useCreator() {
 
       canvas.setAttribute('data-connected', '')
       const initMagicRender = (await import('@mateuszjs/magic-render')).default
-      const creator = await initMagicRender(
-        project.width,
-        project.height,
+      const creator = await initMagicRender({
+        initialProjectWidth: project.width,
+        initialProjectHeight: project.height,
         canvas,
-        getOnTextureUpload(project.id),
-        (snapshot, commit) => {
+        onExternalTextureCreation: async (url, setNewUrl) => {
+          if (!url.startsWith('blob:')) return
+          const newUrl = await uploadTexture(url)
+
+          if (newUrl === null) return
+
+          setNewUrl(newUrl)
+          creatorState.historySnapshots.forEach((snapshot) => {
+            snapshot.assets.forEach((asset) => {
+              if ('url' in asset && asset.url === url) {
+                asset.url = newUrl
+              }
+            })
+          })
+
+          const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
+
+          updateProject(project.id, {
+            width: snapshot.width,
+            height: snapshot.height,
+            assets: serializeAssets(snapshot.assets),
+            updatedAt: new Date().toISOString(),
+          })
+        },
+        onSnapshotUpdate: (snapshot, commit) => {
           updateSelectedAssetStore(snapshot, creatorState.selectedAssetId)
 
           if (!commit) return
@@ -132,7 +155,7 @@ function useCreator() {
 
           bypassInitialSnapshotRequest.current = false
         },
-        (assetId) => {
+        onAssetSelect: (assetId) => {
           creatorState.selectedAssetId = assetId[0] || null
           const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
 
@@ -140,16 +163,18 @@ function useCreator() {
             updateSelectedAssetStore(snapshot, creatorState.selectedAssetId)
           }
         },
-        () => {},
-        (miniCanvas) => uploadMiniature(miniCanvas, project.id),
-        (tool) => {
+        onIsProcessingFlagUpdate: () => {},
+        onPreviewUpdate: (miniCanvas) => uploadMiniature(miniCanvas, project.id),
+        onUpdateTool: (tool) => {
           creatorState.tool = tool
         },
-        function getFontUrl(id: number) {
+        getFontUrl: (id: number) => {
           // This link is for development purposes only. In production, fonts should be served from a proper storage.
           return `https://pub-dca9f88586314ce2a8a165d963769bf0.r2.dev/${id}.woff`
-        }
-      )
+        },
+        isTest: false,
+        disableMinaitures: false,
+      })
 
       // verify if canvas is still connected to DOM after creator promise is resolved
       if (canvas.isConnected) {

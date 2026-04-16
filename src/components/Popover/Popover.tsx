@@ -25,7 +25,7 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
       <Button
         {...rest}
         popoverTarget={popoverId}
-        style={{ 'anchor-name': `--${popoverId}-anchor` } as React.CSSProperties}
+        style={{ anchorName: `--${popoverId}-anchor` } as React.CSSProperties}
       >
         {trigger()}
       </Button>
@@ -40,8 +40,8 @@ export default function Popover({ trigger, children, popoverClassName, ...rest }
         style={
           {
             position: 'fixed',
-            'anchor-name': `--${popoverId}-body-anchor`,
-            'position-anchor': `--${popoverId}-anchor`,
+            anchorName: `--${popoverId}-body-anchor`,
+            positionAnchor: `--${popoverId}-anchor`,
           } as React.CSSProperties
         }
       >

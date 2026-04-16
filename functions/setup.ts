@@ -9,106 +9,109 @@ import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 // https://github.com/cloudflare/workers-sdk/pull/11632/changes
 // https://blog.cloudflare.com/workers-vitest-integration/
 
+let cryptoRandomBytes = 0
+
+vi.mock('google-auth-library/build/src/auth/oauth2client', () => {
+  return {
+    OAuth2Client: vi.fn(function () {
+      return {
+        verifyIdToken: vi.fn(function ({ idToken }: { idToken: string }) {
+          return {
+            getPayload: vi.fn(function () {
+              if (idToken === 'new-token') {
+                return {
+                  email: 'test@example.com',
+                  given_name: 'John Doe',
+                  picture: 'https://example.com/avatar.png',
+                  iss: 'https://accounts.google.com',
+                  sub: '2660163898',
+                  aud: '',
+                  iat: 1704067200,
+                  exp: 4859740800,
+                } satisfies TokenPayload
+              } else if (idToken === 'existing-token') {
+                return {
+                  email: 'alicewe@example.com',
+                  given_name: 'Alice',
+                  picture: 'https://example.com/alice.png',
+                  iss: 'https://accounts.google.com',
+                  sub: '1', // Alice mock user,
+                  aud: '',
+                  iat: 1704067200,
+                  exp: 4859740800,
+                } satisfies TokenPayload
+              } else if (idToken === 'no-email-token') {
+                return {
+                  given_name: 'John Doe',
+                  picture: 'https://example.com/avatar.png',
+                  iss: 'https://accounts.google.com',
+                  sub: '2660163898',
+                  aud: '',
+                  iat: 1704067200,
+                  exp: 4859740800,
+                } satisfies TokenPayload
+              } else if (idToken === 'error-token') {
+                throw new Error('Invalid ID token')
+              } else if (idToken === 'invalid-token') {
+                return undefined
+              }
+
+              throw Error('Unhandled token type: ' + idToken)
+            }),
+          }
+        }),
+      }
+    }),
+  }
+})
+
+vi.mock('@aws-sdk/s3-request-presigner', () => {
+  return {
+    getSignedUrl: vi
+      .fn()
+      .mockImplementation(
+        (
+          s3Client,
+          command: GetObjectCommand | PutObjectCommand,
+          options: { expiresIn: number }
+        ) => {
+          if (command instanceof PutObjectCommand) {
+            return `https://storage-provider.com/signed-url?bucket=${command.input.Bucket}&key=${command.input.Key}&expiredsIn=${options.expiresIn}&contentLength=${command.input.ContentLength}`
+          }
+
+          // this is not REAL signed url, we just use it to verify if all the information was passed correctly to signed url generator
+          return `https://storage-provider.com/signed-url?bucket=${command.input.Bucket}&key=${command.input.Key}&expiredsIn=${options.expiresIn}`
+        }
+      ),
+  }
+})
+
+vi.mock('node:crypto', () => {
+  return {
+    randomBytes: () => ({
+      toString: () => 'node-crypto-random-bytes',
+    }),
+  }
+})
+
+crypto.randomUUID = () => {
+  return ('random-uuid-' +
+    cryptoRandomBytes++) as `${string}-${string}-${string}-${string}-${string}`
+}
+
 beforeAll(async () => {
   await applyD1Migrations(env.db, env.TEST_MIGRATIONS)
 
   vi.useFakeTimers()
   const date = Date.UTC(2000, 0)
   vi.setSystemTime(date)
-
-  vi.mock('google-auth-library/build/src/auth/oauth2client', () => {
-    return {
-      OAuth2Client: vi.fn(function () {
-        return {
-          verifyIdToken: vi.fn(function ({ idToken }: { idToken: string }) {
-            return {
-              getPayload: vi.fn(function () {
-                if (idToken === 'new-token') {
-                  return {
-                    email: 'test@example.com',
-                    given_name: 'John Doe',
-                    picture: 'https://example.com/avatar.png',
-                    iss: 'https://accounts.google.com',
-                    sub: '2660163898',
-                    aud: '',
-                    iat: 1704067200,
-                    exp: 4859740800,
-                  } satisfies TokenPayload
-                } else if (idToken === 'existing-token') {
-                  return {
-                    email: 'alicewe@example.com',
-                    given_name: 'Alice',
-                    picture: 'https://example.com/alice.png',
-                    iss: 'https://accounts.google.com',
-                    sub: '1', // Alice mock user,
-                    aud: '',
-                    iat: 1704067200,
-                    exp: 4859740800,
-                  } satisfies TokenPayload
-                } else if (idToken === 'no-email-token') {
-                  return {
-                    given_name: 'John Doe',
-                    picture: 'https://example.com/avatar.png',
-                    iss: 'https://accounts.google.com',
-                    sub: '2660163898',
-                    aud: '',
-                    iat: 1704067200,
-                    exp: 4859740800,
-                  } satisfies TokenPayload
-                } else if (idToken === 'error-token') {
-                  throw new Error('Invalid ID token')
-                } else if (idToken === 'invalid-token') {
-                  return undefined
-                }
-
-                throw Error('Unhandled token type: ' + idToken)
-              }),
-            }
-          }),
-        }
-      }),
-    }
-  })
-
-  vi.mock('@aws-sdk/s3-request-presigner', () => {
-    return {
-      getSignedUrl: vi
-        .fn()
-        .mockImplementation(
-          (
-            s3Client,
-            command: GetObjectCommand | PutObjectCommand,
-            options: { expiresIn: number }
-          ) => {
-            if (command instanceof PutObjectCommand) {
-              return `https://storage-provider.com/signed-url?bucket=${command.input.Bucket}&key=${command.input.Key}&expiredsIn=${options.expiresIn}&contentLength=${command.input.ContentLength}`
-            }
-
-            // this is not REAL signed url, we just use it to verify if all the information was passed correctly to signed url generator
-            return `https://storage-provider.com/signed-url?bucket=${command.input.Bucket}&key=${command.input.Key}&expiredsIn=${options.expiresIn}`
-          }
-        ),
-    }
-  })
-
-  vi.mock('uuid', async () => {
-    return {
-      v4: () => 'uuid-generated-id',
-    }
-  })
-
-  vi.mock('node:crypto', () => {
-    return {
-      randomBytes: () => ({
-        toString: () => 'node-crypto-random-bytes',
-      }),
-    }
-  })
 })
 
 beforeEach(async () => {
+  await env.db.prepare('DELETE FROM storage').run()
   await env.db.prepare('DELETE FROM projects').run()
   await env.db.prepare('DELETE FROM users').run()
+  cryptoRandomBytes = 0
   // await env.userUploads.list().then(({ objects }) => {
   //   return Promise.all(
   //     objects.map((obj) => {
@@ -127,27 +130,50 @@ beforeEach(async () => {
     )
     .bind(
       '2', 'alice@example.com', 'Alice', 'https://example.com/alice.png', 'google', '1', // alice
-      '3', 'bob@example.com', 'Alice', 'https://example.com/bob.png', 'google', '2' // bob
+      '3', 'bob@example.com', 'Bob', 'https://example.com/bob.png', 'google', '2' // bob
     )
     .run()
 
+  // prettier-ignore
   await env.db
     .prepare(
       `INSERT INTO projects (id, width, height, assets, owner_id)
-			 VALUES (?, ?, ?, ?, ?)`
+			 VALUES
+        (?, ?, ?, ?, ?),
+        (?, ?, ?, ?, ?)`
     )
-    .bind(aliceProjectId, 100, 200, '[]', '2')
+    .bind(
+      aliceProjectId, 100, 200, '[]', '2', // alice's project
+      aliceProjectIdWithoutMiniature, 300, 50, '[]', '2' // alice's project
+    )
     .run()
 
-  // put an object with updated-at metadata
-  await env.userUploads.put('1/miniature', new Uint8Array([1, 2, 3]), {
+  // put an object with captured-at metadata
+  await env.projectMiniatures.put('1', new Uint8Array([1, 2, 3]), {
     customMetadata: {
-      'updated-at': '2025-01-01T00:00:00.000Z',
+      'captured-at': '2025-01-01T00:00:00.000Z',
     },
   })
 
   // object representing just a user's upload
-  await env.userUploads.put('1/upload-id', new Uint8Array([1, 2, 3]))
+  await env.userUploads.put('s3_1', new Uint8Array([1, 2, 3]))
+
+  await env.db
+    .prepare(
+      `INSERT INTO storage (id, storage_id, preview_id, size, hash, type, owner_id, updated_at)
+			 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    )
+    .bind(
+      'si_1',
+      's3_blob_1',
+      's3_preview_1',
+      3,
+      '1_hash',
+      'media',
+      '2',
+      '2026-01-01T00:00:00.000Z'
+    )
+    .run()
 })
 
 // to receive those session value just call await encrypt({ userId: '23891542398' }) in session.ts
@@ -161,11 +187,16 @@ export const bobSessionToken =
   'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIzIiwiaWF0Ijo5NDY2ODQ4MDAsImV4cCI6OTQ3Mjg5NjAwfQ.twc4OheHNODBz0ayq5CX46uXjHBEssPK7YyYdmgENG8'
 
 // id 4
+export const carolSessionToken =
+  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIzIiwiaWF0Ijo5NDY2ODQ4MDAsImV4cCI6OTQ3Mjg5NjAwfQ.twc4OheHNODBz0ayq5CX46uXjHBEssPK7YyYdmgENG8'
+
+// id us_random-uuid-0
 export const nextUserSessionToken =
-  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI0IiwiaWF0Ijo5NDY2ODQ4MDAsImV4cCI6OTQ3Mjg5NjAwfQ.UlYpmMlXP1pw6Fc9BQZBPe8C2-yoENkAmJMl3m0I_jE'
+  'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ1c19yYW5kb20tdXVpZC0wIiwiaWF0Ijo5NDY2ODQ4MDAsImV4cCI6OTQ3Mjg5NjAwfQ.FOclf4mg-mNPZvoB_gZl12lh0c2tNOHd2dMnlLfwjLk'
 
 // id 23891542398
 export const nonExistingUserSessionToken =
   'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIyMzg5MTU0MjM5OCIsImlhdCI6OTQ2Njg0ODAwLCJleHAiOjk0NzI4OTYwMH0.dmW-Hmr6dBD8kEuAr3zuAM5iCYRodZ_NpSVZSkDVJnc'
 
 export const aliceProjectId = '1'
+export const aliceProjectIdWithoutMiniature = '2'

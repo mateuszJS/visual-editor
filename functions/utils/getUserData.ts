@@ -3,6 +3,7 @@ import * as User from '../types/user'
 import type { UserAgentInfo } from '../../src/utils/getUserAgent'
 import { ApiUserBasic } from '../../apiTypes'
 import { ErrorMsg } from './error'
+import generateId from './generateId'
 
 // This function can throw!
 export default async function getUserData(
@@ -30,11 +31,12 @@ export default async function getUserData(
 
   const createdUser = await db
     .prepare(
-      `INSERT INTO users (email, name, photo, login_method, oidc_google_id, country, region, browser, device_model, device_type, device_vendor, os, os_version, language)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO users (id, email, name, photo, login_method, oidc_google_id, country, region, browser, device_model, device_type, device_vendor, os, os_version, language)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        RETURNING id, email, name, photo`
     )
     .bind(
+      generateId('user'),
       payload.email,
       payload.given_name,
       payload.picture,

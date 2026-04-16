@@ -9,7 +9,7 @@ const meta = {
     nextjs: {
       appDirectory: true,
       navigation: {
-        pathname: '/explore',
+        pathname: '/storage',
       },
     },
     docs: {

@@ -18,11 +18,11 @@
         "name": "next"
       }
     ],
-    "baseUrl": "./src", // not "src" because we want to acces "public" folder by alias, which is outside of "src"
     "paths": {
-      "@/*": ["./*"],
-      "assets/*": ["../public/*"],
-      "test/*": ["../test/*"]
+      "@/*": ["./src/*"],
+      "assets/*": ["./public/*"],
+      "test/*": ["./test/*"],
+      "apiConsts": ["./apiConsts.ts"]
     }
   },
   "include": [

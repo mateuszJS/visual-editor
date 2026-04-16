@@ -18,8 +18,7 @@ class TrackedBroadcastChannel extends OriginalBroadcastChannel {
 }
 global.BroadcastChannel = TrackedBroadcastChannel as typeof BroadcastChannel
 
-beforeEach(() => {
-  // Close and clear all BroadcastChannel instances from previous tests
+afterEach(() => {
   activeBroadcastChannels.forEach((channel) => {
     try {
       channel.close()
@@ -28,7 +27,9 @@ beforeEach(() => {
     }
   })
   activeBroadcastChannels.clear()
+})
 
+beforeEach(() => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { BroadcastChannel, indexedDB, ...env } = makeServiceWorkerEnv() as ReturnType<
     typeof makeServiceWorkerEnv

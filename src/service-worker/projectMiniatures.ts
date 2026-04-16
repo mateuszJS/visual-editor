@@ -1,23 +1,24 @@
 /* eslint-disable no-restricted-syntax */
 import { cacheFirst, deleteCachedItem, getCachedKeys, putUniqueInCache } from './cacheUtils'
+import { getIsMiniature } from './utils'
 
 async function getMiniatureCachedKeys() {
   const cachedKeys = await getCachedKeys()
   return cachedKeys.filter((req) => {
     const { pathname } = new URL(req.url)
-    return pathname.startsWith('/api/project-uploads/') && pathname.includes('/miniature')
+    return getIsMiniature(pathname)
   })
 }
 
 function getHeaders(source: Request | Response): HeadersInit {
-  const updatedAt = source.headers.get('x-amz-meta-updated-at')
-  if (!updatedAt) throw new Error('Missing x-amz-meta-updated-at header')
+  const capturedAt = source.headers.get('x-amz-meta-captured-at')
+  if (!capturedAt) throw new Error('Missing x-amz-meta-captured-at header')
 
   const contentType = source.headers.get('Content-Type')
   if (!contentType) throw new Error('Missing Content-Type header')
 
   return {
-    'x-amz-meta-updated-at': updatedAt,
+    'x-amz-meta-captured-at': capturedAt,
     'Content-Type': contentType,
   }
 }

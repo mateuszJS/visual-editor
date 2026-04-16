@@ -1,6 +1,7 @@
 .root {
   grid-area: panels;
   width: 200px;
+  overflow-y: auto;
 
   & > *:not(:last-child) {
     margin-block-end: 10px;

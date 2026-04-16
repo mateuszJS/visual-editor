@@ -17,7 +17,7 @@ describe('GET /auth/login/google', () => {
     const response = await onRequestPost(getContext(request))
 
     expect(await response.json()).toEqual({
-      id: '4',
+      id: 'us_random-uuid-0',
       email: 'test@example.com',
       name: 'John Doe',
       photo: 'https://example.com/avatar.png',

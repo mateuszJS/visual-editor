@@ -15,26 +15,34 @@
   "d1_databases": [
     {
       "binding": "db",
-      "database_name": "preview",
-      "database_id": "efa65b41-8d07-46ac-824c-e525641545af"
+      "database_name": "visual-editor-preview",
+      "database_id": "d652821e-86bd-4b9a-8a6a-de580db51ceb"
     }
   ],
   "vars": {
     "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "145503046459-m2ibp14nc5ngbuiabbbsal0elmig37ui.apps.googleusercontent.com",
     "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39",
-    "USER_UPLOADS_BUCKET": "user-uploads-preview" // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
+    "USER_UPLOADS_BUCKET": "user-uploads-preview", // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
+    "PROJECT_MINIATURES_BUCKET": "project-miniatures-preview" // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
   },
   "r2_buckets": [
     {
       "binding": "userUploads",
       "bucket_name": "user-uploads-preview",
-      "preview_bucket_name": "user-uploads-preview"
+      "preview_bucket_name": "user-uploads-preview",
+      "remote": true // Only because local R2 doesn't expose endpoint for S3 client
       // "remote": true // not supported currently for pages.
       // In this case we have to test generating miniatures in preview env because:
       // - cannot use local R2 because AWS signed urls don't work locally
       // - cannot use remote setup for local because again, r2 remote doesnt work for pages
       // Locally we can partially test, by filling bucket manually
       // npx wrangler r2 object put user-uploads-preview/5/img-sample --file="IMG_7265.jpg"
+    },
+    {
+      "binding": "projectMiniatures",
+      "bucket_name": "project-miniatures-preview",
+      "preview_bucket_name": "project-miniatures-preview",
+      "remote": true // Only because local R2 doesn't expose endpoint for S3 client
     }
   ],
   "env": {
@@ -43,19 +51,24 @@
       "d1_databases": [
         {
           "binding": "db",
-          "database_name": "production",
-          "database_id": "a0e211cf-8461-4fd3-8cd7-df009d934e5c"
+          "database_name": "visual-editor-production",
+          "database_id": "45182d2d-d0b3-44f3-8888-9c08aa0ea2a6"
         }
       ],
       "vars": {
         "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "145503046459-m2ibp14nc5ngbuiabbbsal0elmig37ui.apps.googleusercontent.com",
         "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39",
-        "USER_UPLOADS_BUCKET": "user-uploads" // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
+        "USER_UPLOADS_BUCKET": "user-uploads", // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
+        "PROJECT_MINIATURES_BUCKET": "project-miniatures-preview" // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
       },
       "r2_buckets": [
         {
           "binding": "userUploads",
           "bucket_name": "user-uploads"
+        },
+        {
+          "binding": "projectMiniatures",
+          "bucket_name": "project-miniatures"
         }
       ]
     }

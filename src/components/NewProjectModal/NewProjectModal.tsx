@@ -4,7 +4,7 @@ import TikTokIcon from 'assets/tiktok-logo.svg'
 import InstagramIcon from 'assets/instagram-logo.svg'
 import YouTubeIcon from 'assets/youtube-logo.svg'
 import styles from './NewProjectModal.module.css'
-import UploadTextures from '@/components/UploadTextures/UploadTextures'
+// import UploadTextures from '@/components/UploadTextures/UploadTextures'
 import { useRouter } from 'next/navigation'
 import OverlayLoader from '../OverlayLoader/OverlayLoader'
 import ActionSheets from '../ActionSheets/ActionSheets'
@@ -12,6 +12,7 @@ import useProject from '@/hooks/useProject/useProject'
 import useCreator from '@/hooks/useCreator/useCreator'
 import getSizeFromImages from './getSizeFromImages'
 import Button from '../Button/Button'
+import StorageModal from '../StorageModal/StorageModal'
 
 const blankCanvasSizes = [
   { width: 2, height: 3.3, label: 'TikTok', icon: TikTokIcon },
@@ -48,8 +49,9 @@ export default function NewProjectModal() {
   return (
     <ActionSheets title="Start new project" id="new-project-modal">
       <OverlayLoader loading={loading} />
-      <UploadTextures onUpload={(urls) => createProjectFrom(500, 500, urls)} />
-      <p className={styles.divider}>Or</p>
+
+      {/* <UploadTextures onUpload={(urls) => createProjectFrom(500, 500, urls)} /> */}
+
       <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with desired size</h3>
       <div className={styles.listFadeout}>
         <ul className={styles.blankCanvasList}>
@@ -72,6 +74,11 @@ export default function NewProjectModal() {
           ))}
         </ul>
       </div>
+      <p className={styles.divider}>Or</p>
+      <Button commandfor="storage-modal" command="show-modal">
+        Select item from yoru storage
+      </Button>
+      <StorageModal />
     </ActionSheets>
   )
 }

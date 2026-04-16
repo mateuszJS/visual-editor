@@ -14,25 +14,25 @@ describe('Service worker', () => {
     })
   }
 
-  describe('miniatures - PUT /api/project-uploads/1/miniature', () => {
+  describe('miniatures - PUT /api/projects/1/miniature', () => {
     it('throws error if content-type header is missing', async () => {
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
       await import('./sw')
-      const putRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const putRequest = new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: blob,
         headers: {
-          'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+          'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
         },
       })
 
       await expect(self.trigger('fetch', putRequest)).rejects.toThrow('Missing Content-Type header')
     })
 
-    it('throws error if x-amz-meta-updated-at header is missing', async () => {
+    it('throws error if x-amz-meta-captured-at header is missing', async () => {
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
       await import('./sw')
-      const putRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const putRequest = new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: blob,
         headers: {
@@ -41,19 +41,19 @@ describe('Service worker', () => {
       })
 
       await expect(self.trigger('fetch', putRequest)).rejects.toThrow(
-        'Missing x-amz-meta-updated-at header'
+        'Missing x-amz-meta-captured-at header'
       )
     })
 
     it('caches response', async () => {
       await import('./sw')
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
-      const putRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const putRequest = new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: blob,
         headers: {
           'Content-Type': 'image/png',
-          'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+          'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
         },
       })
 
@@ -63,14 +63,14 @@ describe('Service worker', () => {
       await self.caches.open('v0')
       const cache = self.snapshot().caches.v0
 
-      expect(cache['x:/api/project-uploads/1/miniature']).toMatchObject({
+      expect(cache['x:/api/projects/1/miniature']).toMatchObject({
         bodyUsed: false,
         body: blob,
         status: 200,
         statusText: 'OK',
         headers: {
           _map: new Map([
-            ['x-amz-meta-updated-at', expect.any(String)],
+            ['x-amz-meta-captured-at', expect.any(String)],
             ['content-type', 'image/png'],
           ]),
         },
@@ -79,23 +79,23 @@ describe('Service worker', () => {
     })
   })
 
-  describe('miniatures - GET /api/project-uploads/1/miniature', () => {
+  describe('miniatures - GET /api/projects/1/miniature', () => {
     it('receives cached blob if there is any', async () => {
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
       await import('./sw')
-      const putRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const putRequest = new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: blob,
         headers: {
           'Content-Type': 'image/png',
-          'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+          'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
         },
       })
       await self.trigger('fetch', putRequest)
 
       await self.caches.open('v0') // otherwise cache is not being used
 
-      const getRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const getRequest = new Request('x:/api/projects/1/miniature', {
         method: 'GET',
       })
       const response = await self.trigger('fetch', getRequest)
@@ -108,11 +108,11 @@ describe('Service worker', () => {
 
     it('makes request if there is nothing in cache', async () => {
       const blob = new Blob(['network-image-data'], { type: 'image/png' })
-      global.fetch = () => Promise.resolve(new Response(blob))
+      globalThis.fetch = () => Promise.resolve(new Response(blob))
       await import('./sw')
       await self.caches.open('v0') // otherwise cache is not being used
 
-      const getRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const getRequest = new Request('x:/api/projects/1/miniature', {
         method: 'GET',
       })
       const response = await self.trigger('fetch', getRequest)
@@ -130,12 +130,12 @@ describe('Service worker', () => {
       await import('./sw')
       await self.trigger(
         'fetch',
-        new Request('x:/api/project-uploads/1/miniature', {
+        new Request('x:/api/projects/1/miniature', {
           method: 'PUT',
           body: blobA,
           headers: {
             'Content-Type': 'image/png',
-            'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+            'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
           },
         })
       )
@@ -143,12 +143,12 @@ describe('Service worker', () => {
       const blobB = new Blob(['local-image-data'], { type: 'image/png' })
       await self.trigger(
         'fetch',
-        new Request('x:/api/project-uploads/1/miniature', {
+        new Request('x:/api/projects/1/miniature', {
           method: 'PUT',
           body: blobB,
           headers: {
             'Content-Type': 'image/png',
-            'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+            'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
           },
         })
       )
@@ -158,7 +158,7 @@ describe('Service worker', () => {
       const broadcast = new BroadcastChannel('sync-data')
 
       const networkRequest = new Promise<Request>((resolve) => {
-        global.fetch = async (reqInput, reqOptions) => {
+        globalThis.fetch = async (reqInput, reqOptions) => {
           resolve(new Request(reqInput, reqOptions))
           return new Response(null, { status: 204 })
         }
@@ -166,7 +166,7 @@ describe('Service worker', () => {
 
       broadcast.postMessage('SYNC_PROJECT_MINIATURE_START')
       expect(await networkRequest).toMatchObject({
-        url: 'x:/api/project-uploads/1/miniature',
+        url: 'x:/api/projects/1/miniature',
         method: 'PUT',
         body: blobB,
       })
@@ -179,12 +179,12 @@ describe('Service worker', () => {
     it('does not clear out the cache when sync fails', async () => {
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
       await import('./sw')
-      const putRequest = new Request('x:/api/project-uploads/1/miniature', {
+      const putRequest = new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: blob,
         headers: {
           'Content-Type': 'image/png',
-          'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+          'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
         },
       })
       await self.trigger('fetch', putRequest)
@@ -193,7 +193,7 @@ describe('Service worker', () => {
       const broadcast = new BroadcastChannel('sync-data')
 
       const networkRequest = new Promise<void>((resolve) => {
-        global.fetch = async () => {
+        globalThis.fetch = async () => {
           resolve()
           throw Error('Network error')
         }
@@ -239,7 +239,7 @@ describe('Service worker', () => {
 
     it('when GET /api/project/1 is sent while data is in the IndexedDB, network request is made anyway to get the most recent version (IDB or network)', async () => {
       const networkRequestOldVersion = new Promise<void>((resolve) => {
-        global.fetch = async () => {
+        globalThis.fetch = async () => {
           resolve()
           return Response.json({
             assets: [],
@@ -259,7 +259,7 @@ describe('Service worker', () => {
       })
 
       const networkRequestNewVersion = new Promise<void>((resolve) => {
-        global.fetch = async () => {
+        globalThis.fetch = async () => {
           resolve()
           return Response.json({
             assets: [],
@@ -282,7 +282,7 @@ describe('Service worker', () => {
       it('sends PATCH request when there is data in IndexedDB and clears out the IDB', async () => {
         const broadcast = new BroadcastChannel('sync-data')
         const patchRequest = new Promise<Request>((resolve) => {
-          global.fetch = async (reqInput, reqOptions) => {
+          globalThis.fetch = async (reqInput, reqOptions) => {
             resolve(new Request(reqInput, reqOptions))
             return new Response(null, { status: 204 })
           }
@@ -304,7 +304,7 @@ describe('Service worker', () => {
       it('does not erase records from IndexedDB when sync fails', async () => {
         const broadcast = new BroadcastChannel('sync-data')
         const networkRequest = new Promise<void>((resolve) => {
-          global.fetch = async () => {
+          globalThis.fetch = async () => {
             resolve()
             throw Error('Network error')
           }
@@ -336,12 +336,12 @@ describe('Service worker', () => {
     // Add miniature to cache
     await self.trigger(
       'fetch',
-      new Request('x:/api/project-uploads/1/miniature', {
+      new Request('x:/api/projects/1/miniature', {
         method: 'PUT',
         body: new Blob(['local-image-data'], { type: 'image/png' }),
         headers: {
           'Content-Type': 'image/png',
-          'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+          'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
         },
       })
     )

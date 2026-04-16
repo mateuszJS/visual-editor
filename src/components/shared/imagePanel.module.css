@@ -1,0 +1,22 @@
+.imagePanel {
+  display: flex;
+  align-items: flex-end;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: #555555;
+  padding: 10px;
+  word-break: break-word;
+  text-shadow:
+    0 0 3px #000,
+    0 0 5px #000;
+  background-size: cover;
+  background-position: center;
+  background-image: linear-gradient(transparent 70%, #0008 90%), var(--background-url);
+}
+
+.list {
+  display: grid;
+  --panel-min-size: min(40vw, 200px);
+  grid-template-columns: repeat(auto-fill, minmax(var(--panel-min-size), 1fr));
+  gap: 16px;
+}

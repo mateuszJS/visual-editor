@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "visual-editor",
+  "compatibility_date": "2025-06-17",
+  "compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"],
+  "pages_build_output_dir": "out",
+  "d1_databases": [
+    {
+      "binding": "db",
+      "database_name": "visual-editor-preview",
+      "database_id": "d652821e-86bd-4b9a-8a6a-de580db51ceb"
+    }
+  ],
+  "vars": {
+    "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "145503046459-m2ibp14nc5ngbuiabbbsal0elmig37ui.apps.googleusercontent.com",
+    "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39",
+    "USER_UPLOADS_BUCKET": "user-uploads-preview",
+    "PROJECT_MINIATURES_BUCKET": "project-miniatures-preview"
+  },
+  "r2_buckets": [
+    {
+      "binding": "userUploads",
+      "bucket_name": "user-uploads-preview"
+    },
+    {
+      "binding": "projectMiniatures",
+      "bucket_name": "project-miniatures-preview"
+    }
+  ]
+}

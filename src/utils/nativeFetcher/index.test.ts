@@ -1,11 +1,11 @@
 import { HttpResponse, http } from 'msw'
 import nativeFetcher from './index'
-import { getRequest, server } from 'test/server'
+import { interceptRequest, server } from 'test/server'
 import { act } from '@testing-library/react'
 
 describe('nativeFetcher', () => {
   it('should make a GET request and return the response', async () => {
-    const reqPromise = getRequest('/api/me', 'GET')
+    const reqPromise = interceptRequest('/api/me', 'GET')
 
     const response = await nativeFetcher('/api/me')
 
@@ -20,7 +20,7 @@ describe('nativeFetcher', () => {
 
   it('should include JSON body and Content-Type header for POST requests', async () => {
     server.use(http.post('/api/me', () => new HttpResponse()))
-    const reqPromise = getRequest('/api/me', 'POST')
+    const reqPromise = interceptRequest('/api/me', 'POST')
 
     const jsonBody = { key: 'value' }
     const response = await nativeFetcher('/api/me', {
@@ -38,7 +38,7 @@ describe('nativeFetcher', () => {
 
   it('should include CSRF token in headers if provided', async () => {
     server.use(http.post('/api/me', () => new HttpResponse()))
-    const reqPromise = getRequest('/api/me', 'POST')
+    const reqPromise = interceptRequest('/api/me', 'POST')
 
     const response = await nativeFetcher('/api/me', {
       method: 'POST',
@@ -79,6 +79,7 @@ describe('nativeFetcher', () => {
 
     expect(windowReplace).toHaveBeenCalledWith('/login')
     windowReplace.mockRestore()
+    broadcast.close()
   })
 
   it('should not redirect on 401 status if disableAuth401Redirect is true', async () => {

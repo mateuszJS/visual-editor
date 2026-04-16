@@ -28,21 +28,29 @@ export default [
   http.patch('/api/projects/:id', () => {
     return new HttpResponse(null, { status: 204 })
   }),
-  http.put('/api/project-uploads/:projectId', () => {
-    // jsdom fetch does not follow 307 redirects, so I hade to use 303 instead
-    return HttpResponse.redirect('https://storage-provider.com/projectId/new-upload-id', 303)
+  http.put('/api/storage', () => {
+    return new HttpResponse(null, {
+      status: 200,
+      headers: {
+        'x-storage-item-id': 'storage-item-id',
+      },
+    })
   }),
   // TODO: once we get rid of jest & jsdom, lets change this get to put to actually replicate how prod works
-  http.get('https://storage-provider.com/projectId/new-upload-id', () => {
+  http.get('https://storage-provider.com/new-upload-uuid', () => {
     return new HttpResponse(null, { status: 204 })
   }),
-  http.get('/api/project-uploads/:projectId/:uploadId', () => {
+  http.get('/api/storage/:storageItemId', () => {
     return new HttpResponse(file, { status: 204 })
   }),
   http.get(/blob-uuid/, () => {
     return HttpResponse.arrayBuffer(mockBlobData.buffer)
   }),
-  http.put('/api/project-uploads/:projectId/miniature', async () => {
-    return new HttpResponse(null, { status: 204 })
+  http.put('/api/projects/:projectId/miniature', async () => {
+    // jsdom fetch does not follow 307 redirects, so I hade to use 303 instead
+    return HttpResponse.redirect('https://storage-provider.com/new-upload-uuid', 303)
+  }),
+  http.get('/api/storage', () => {
+    return HttpResponse.json([{ id: '1' }, { id: '2' }], { status: 200 })
   }),
 ]

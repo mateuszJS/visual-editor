@@ -22,14 +22,14 @@ describe('Service worker', () => {
         method: 'PUT',
         body: blob,
         headers: {
-          'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+          'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
         },
       })
 
       await expect(self.trigger('fetch', putRequest)).rejects.toThrow('Missing Content-Type header')
     })
 
-    it('throws error if x-amz-meta-updated-at header is missing', async () => {
+    it('throws error if x-amz-meta-captured-at header is missing', async () => {
       const blob = new Blob(['local-image-data'], { type: 'image/png' })
       await import('./sw')
       const putRequest = new Request('x:/api/projects/1/miniature', {
@@ -41,7 +41,7 @@ describe('Service worker', () => {
       })
 
       await expect(self.trigger('fetch', putRequest)).rejects.toThrow(
-        'Missing x-amz-meta-updated-at header'
+        'Missing x-amz-meta-captured-at header'
       )
     })
 
@@ -53,7 +53,7 @@ describe('Service worker', () => {
         body: blob,
         headers: {
           'Content-Type': 'image/png',
-          'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+          'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
         },
       })
 
@@ -70,7 +70,7 @@ describe('Service worker', () => {
         statusText: 'OK',
         headers: {
           _map: new Map([
-            ['x-amz-meta-updated-at', expect.any(String)],
+            ['x-amz-meta-captured-at', expect.any(String)],
             ['content-type', 'image/png'],
           ]),
         },
@@ -88,7 +88,7 @@ describe('Service worker', () => {
         body: blob,
         headers: {
           'Content-Type': 'image/png',
-          'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+          'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
         },
       })
       await self.trigger('fetch', putRequest)
@@ -135,7 +135,7 @@ describe('Service worker', () => {
           body: blobA,
           headers: {
             'Content-Type': 'image/png',
-            'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+            'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
           },
         })
       )
@@ -148,7 +148,7 @@ describe('Service worker', () => {
           body: blobB,
           headers: {
             'Content-Type': 'image/png',
-            'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+            'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
           },
         })
       )
@@ -184,7 +184,7 @@ describe('Service worker', () => {
         body: blob,
         headers: {
           'Content-Type': 'image/png',
-          'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+          'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
         },
       })
       await self.trigger('fetch', putRequest)
@@ -341,7 +341,7 @@ describe('Service worker', () => {
         body: new Blob(['local-image-data'], { type: 'image/png' }),
         headers: {
           'Content-Type': 'image/png',
-          'x-amz-meta-updated-at': '2023-10-10T10:00:00.000Z',
+          'x-amz-meta-captured-at': '2023-10-10T10:00:00.000Z',
         },
       })
     )

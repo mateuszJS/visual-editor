@@ -20,7 +20,7 @@ describe('POST /api/projects', () => {
     expect(response.status).toBe(201)
     const json = await response.json()
     expect(json).toEqual({
-      id: '2',
+      id: 'pr_random-uuid-0',
       updatedAt: expect.any(String),
       width: 600,
       height: 400,
@@ -179,6 +179,12 @@ describe('GET /api/projects', () => {
         id: '1',
         updatedAt: expect.any(String),
         name: null,
+      },
+      {
+        createdAt: expect.any(String),
+        id: '2',
+        name: null,
+        updatedAt: expect.any(String),
       },
     ])
   })

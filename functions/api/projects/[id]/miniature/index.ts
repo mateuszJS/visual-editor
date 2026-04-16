@@ -58,7 +58,7 @@ export const onRequestGet = withSession<'id'>(async (ctx, session) => {
 export const onRequestPut = withSession<'id'>(async (ctx, session) => {
   const [url, err] = await withError(async () => {
     await assestOwner(ctx, session.userId)
-    return getMiniatureUploadUrl(ctx)
+    return await getMiniatureUploadUrl(ctx)
   })
 
   if (err) {

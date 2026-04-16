@@ -8,7 +8,7 @@ export const server = setupServer(...handlers)
  * @example
  * const requestPromise = interceptRequest('/api/projects/1/miniature', 'PUT')
  * const req = await requestPromise
- * expect(req.headers.get('x-amz-meta-updated-at')).toBe('2020-01-01T00:00:00.000Z')
+ * expect(req.headers.get('x-amz-meta-captured-at')).toBe('2020-01-01T00:00:00.000Z')
  * expect(await req.blob()).toEqual(new Blob(['canvas-blob'], { type: 'image/png' }))
  * @param url which we listen to
  * @param method which we listen to

@@ -10,7 +10,7 @@ export default function uploadMiniature(canvas: HTMLCanvasElement, projectId: st
         body: blob,
         options: {
           headers: {
-            'x-amz-meta-updated-at': new Date().toISOString(),
+            'x-amz-meta-captured-at': new Date().toISOString(),
           },
         },
       })

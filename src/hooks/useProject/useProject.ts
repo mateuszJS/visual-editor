@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import useFetcher from '../useFetcher/useFetcher'
+import useFetcher from '@/hooks/useFetcher/useFetcher'
 import nativeFetcher from '@/utils/nativeFetcher'
 import { proxyMap } from 'valtio/utils'
 import { ref, useSnapshot } from 'valtio'

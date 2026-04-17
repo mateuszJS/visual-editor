@@ -29,7 +29,7 @@ export default function HomeWrapper() {
           <>
             <h2 className="subtitle">Recent Project</h2>
             <HorizontalList>
-              {projects.projectsList.entries().map(([, project]) => (
+              {Array.from(projects.projectsList).map(([, project]) => (
                 <li key={project.id}>
                   <Link
                     className={cn(imagePanelStyles.imagePanel, styles.panel)}

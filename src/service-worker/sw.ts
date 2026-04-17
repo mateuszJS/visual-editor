@@ -15,15 +15,33 @@ declare const self: ServiceWorkerGlobalScope
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const resources = self.__WB_MANIFEST // this is just to satisfy workbox
 
-const version = 25
+const version = 28
 
 const isTestEnv = 'resetSwEnv' in self
 if (!isTestEnv) {
   console.log(`Service Worker: Version ${version} loaded`)
 }
 
-self.addEventListener('install', () => {
+type InstallEvent = ExtendableEvent & {
+  // https://developer.mozilla.org/en-US/docs/Web/API/InstallEvent/addRoutes
+  // This type is not accure, is too narrow/restrictive but is enough for our case
+  addRoutes: (routerRules: {
+    condition: {
+      urlPattern: string
+    }
+    source: 'fetch-event'
+  }) => void
+}
+
+self.addEventListener('install', (event) => {
   console.log(`================INSTALL V${version}=====================`)
+  ;(event as InstallEvent).addRoutes({
+    condition: {
+      urlPattern: '/api/projects/*',
+    },
+    source: 'fetch-event',
+  })
+
   self.skipWaiting()
 })
 

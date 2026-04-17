@@ -14,7 +14,7 @@ export default function Explore() {
       <main>
         <h1 className="page-title">Library</h1>
         <ul className={styles.list}>
-          {items.entries().map(([, item]) => (
+          {Array.from(items).map(([, item]) => (
             <li
               key={item.id}
               className={styles.imagePanel}

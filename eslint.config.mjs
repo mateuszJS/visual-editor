@@ -23,6 +23,11 @@ const eslintConfig = [
               message:
                 'Importing from __mocks__ directories will create another module and import from there, not from the file with mock used by jest. Import directly from the file you are mocking.',
             },
+            {
+              group: ['next/link'],
+              message:
+                'Use @/components/Link component instead of next/link to provide better experience on iphone',
+            },
           ],
         },
       ],

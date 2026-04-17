@@ -28,7 +28,7 @@ export default function StorageModal({ onSelect }: Props) {
       <h3>Storage</h3>
       <UploadTextures onUpload={onUploadMedia} />
       <ul>
-        {Array.from(items).map(([, item]) => (
+        {items.entries().map(([, item]) => (
           <li key={item.id} style={{ backgroundImage: `url(/api/storage/${item.id})` }}>
             <p>{item.updatedAt}</p>
           </li>

@@ -1,0 +1,22 @@
+.root {
+  position: relative;
+  isolation: isolate;
+
+  > *:not(.link) {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.link {
+  position: absolute;
+  inset: 0;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding-inline: 3px;
+  font-size: var(--16px);
+}

@@ -13,6 +13,7 @@ import useCreator from '@/hooks/useCreator/useCreator'
 import getSizeFromImages from './getSizeFromImages'
 import Button from '../Button/Button'
 import StorageModal from '../StorageModal/StorageModal'
+import HorizontalList from '../HorizontalList/HorizontalList'
 
 const blankCanvasSizes = [
   { width: 2, height: 3.3, label: 'TikTok', icon: TikTokIcon },
@@ -53,27 +54,25 @@ export default function NewProjectModal() {
       {/* <UploadTextures onUpload={(urls) => createProjectFrom(500, 500, urls)} /> */}
 
       <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with desired size</h3>
-      <div className={styles.listFadeout}>
-        <ul className={styles.blankCanvasList}>
-          {blankCanvasSizes.map((size) => (
-            <li key={size.label}>
-              <Button
-                variant="ghost"
-                className={styles.blankCanvasOption}
-                onClick={() => createProjectFrom(size.width * 500, size.height * 500, [])}
+      <HorizontalList>
+        {blankCanvasSizes.map((size) => (
+          <li key={size.label}>
+            <Button
+              variant="ghost"
+              className={styles.blankCanvasOption}
+              onClick={() => createProjectFrom(size.width * 500, size.height * 500, [])}
+            >
+              <div
+                className={styles.screen}
+                style={{ width: size.width + 'rem', height: size.height + 'rem' }}
               >
-                <div
-                  className={styles.screen}
-                  style={{ width: size.width + 'rem', height: size.height + 'rem' }}
-                >
-                  {size.icon && <size.icon />}
-                </div>
-                <p>{size.label}</p>
-              </Button>
-            </li>
-          ))}
-        </ul>
-      </div>
+                {size.icon && <size.icon />}
+              </div>
+              <p>{size.label}</p>
+            </Button>
+          </li>
+        ))}
+      </HorizontalList>
       <p className={styles.divider}>Or</p>
       <Button commandfor="storage-modal" command="show-modal">
         Select item from yoru storage

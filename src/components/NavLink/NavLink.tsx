@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/Link/Link'
 import styles from './NavLink.module.css'
 import { usePathname } from 'next/navigation'
 import cn from 'classnames'

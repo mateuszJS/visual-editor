@@ -1,6 +1,7 @@
 .createButton {
-  flex: 0 0 var(--40px);
-  height: var(--40px);
+  --size: 3rem;
+  flex: 0 0 var(--size);
+  height: var(--size);
   background-color: #8731dc;
   border-radius: 50%;
   color: white;
@@ -8,4 +9,46 @@
   justify-content: center;
   align-items: center;
   font-size: var(--18px);
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+
+  svg {
+    z-index: 1;
+    filter: drop-shadow(0 0 4px #0008);
+  }
+}
+
+.color {
+  border-radius: 50%;
+  filter: blur(12px);
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  transition: all var(--duration) ease;
+}
+
+.cyan {
+  background: cyan;
+  translate: 50% -70%;
+  opacity: 0.9;
+}
+
+.magenta {
+  background: magenta;
+  translate: -50% -70%;
+}
+
+.orange {
+  background: orange;
+  translate: 0% 50%;
+  opacity: 0.9;
+}
+
+.roundedGradient {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(closest-side, #0000 70% 85%, #0005 100%);
+  z-index: 20;
+  border-radius: 0;
 }

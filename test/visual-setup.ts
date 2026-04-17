@@ -22,7 +22,10 @@ beforeAll(async () => {
     }
   })
   await page.setViewport({ width: 1280, height: 720 })
-  await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'dark' }])
+  await page.emulateMediaFeatures([
+    { name: 'prefers-color-scheme', value: 'dark' },
+    { name: 'prefers-reduced-motion', value: 'reduce' },
+  ])
 }, 20000)
 
 /**
@@ -36,7 +39,6 @@ export default async function visualSetup(
   options: {
     width?: number
     beforeTest?: (page: Page) => Promise<void>
-    beforeNavigation?: (page: Page) => Promise<void>
   } = {}
 ) {
   if (options.width) {
@@ -47,10 +49,6 @@ export default async function visualSetup(
   const screenshotsDir = path.join(dirname, '__image_snapshots__')
   if (!fs.existsSync(screenshotsDir)) {
     fs.mkdirSync(screenshotsDir, { recursive: true })
-  }
-
-  if (options.beforeNavigation) {
-    await options.beforeNavigation(page)
   }
 
   await page.goto(

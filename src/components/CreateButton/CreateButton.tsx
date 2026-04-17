@@ -23,6 +23,9 @@ export default function CreateButton() {
   useEffect(() => {
     import('@/components/NewProjectModal/NewProjectModal')
 
+    // Optional only becaise JSDom doesn't implement matchMedia
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+
     const updatePosition = () => {
       refCyan.current!.style = getRandomTransform(1.7)
       refMagenta.current!.style = getRandomTransform(1.7)

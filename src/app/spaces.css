@@ -1,87 +1,89 @@
-.mt-2 {
-  margin-block-start: 2px;
-}
-.mt-4 {
-  margin-block-start: 4px;
-}
-.mt-8 {
-  margin-block-start: 8px;
-}
-.mt-16 {
-  margin-block-start: 16px;
-}
-.mt-32 {
-  margin-block-start: 32px;
-}
-.mt-64 {
-  margin-block-start: 64px;
-}
-.mt-auto {
-  margin-block-start: auto;
-}
+@layer utilities {
+  .mt-2 {
+    margin-block-start: 2px;
+  }
+  .mt-4 {
+    margin-block-start: 4px;
+  }
+  .mt-8 {
+    margin-block-start: 8px;
+  }
+  .mt-16 {
+    margin-block-start: 16px;
+  }
+  .mt-32 {
+    margin-block-start: 32px;
+  }
+  .mt-64 {
+    margin-block-start: 64px;
+  }
+  .mt-auto {
+    margin-block-start: auto;
+  }
 
-.mr-2 {
-  margin-inline-end: 2px;
-}
-.mr-4 {
-  margin-inline-end: 4px;
-}
-.mr-8 {
-  margin-inline-end: 8px;
-}
-.mr-16 {
-  margin-inline-end: 16px;
-}
-.mr-32 {
-  margin-inline-end: 32px;
-}
-.mr-64 {
-  margin-inline-end: 64px;
-}
-.mr-auto {
-  margin-inline-end: auto;
-}
+  .mr-2 {
+    margin-inline-end: 2px;
+  }
+  .mr-4 {
+    margin-inline-end: 4px;
+  }
+  .mr-8 {
+    margin-inline-end: 8px;
+  }
+  .mr-16 {
+    margin-inline-end: 16px;
+  }
+  .mr-32 {
+    margin-inline-end: 32px;
+  }
+  .mr-64 {
+    margin-inline-end: 64px;
+  }
+  .mr-auto {
+    margin-inline-end: auto;
+  }
 
-.mb-2 {
-  margin-block-end: 2px;
-}
-.mb-4 {
-  margin-block-end: 4px;
-}
-.mb-8 {
-  margin-block-end: 8px;
-}
-.mb-16 {
-  margin-block-end: 16px;
-}
-.mb-32 {
-  margin-block-end: 32px;
-}
-.mb-64 {
-  margin-block-end: 64px;
-}
-.mb-auto {
-  margin-block-end: auto;
-}
+  .mb-2 {
+    margin-block-end: 2px;
+  }
+  .mb-4 {
+    margin-block-end: 4px;
+  }
+  .mb-8 {
+    margin-block-end: 8px;
+  }
+  .mb-16 {
+    margin-block-end: 16px;
+  }
+  .mb-32 {
+    margin-block-end: 32px;
+  }
+  .mb-64 {
+    margin-block-end: 64px;
+  }
+  .mb-auto {
+    margin-block-end: auto;
+  }
 
-.ml-2 {
-  margin-inline-start: 2px;
-}
-.ml-4 {
-  margin-inline-start: 4px;
-}
-.ml-8 {
-  margin-inline-start: 8px;
-}
-.ml-16 {
-  margin-inline-start: 16px;
-}
-.ml-32 {
-  margin-inline-start: 32px;
-}
-.ml-64 {
-  margin-inline-start: 64px;
-}
-.ml-auto {
-  margin-inline-start: auto;
+  .ml-2 {
+    margin-inline-start: 2px;
+  }
+  .ml-4 {
+    margin-inline-start: 4px;
+  }
+  .ml-8 {
+    margin-inline-start: 8px;
+  }
+  .ml-16 {
+    margin-inline-start: 16px;
+  }
+  .ml-32 {
+    margin-inline-start: 32px;
+  }
+  .ml-64 {
+    margin-inline-start: 64px;
+  }
+  .ml-auto {
+    margin-inline-start: auto;
+  }
 }

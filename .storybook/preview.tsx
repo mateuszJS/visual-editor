@@ -2,7 +2,11 @@ import type { Preview } from '@storybook/nextjs'
 import { sb } from 'storybook/test'
 import { themes } from 'storybook/theming'
 import localFont from 'next/font/local'
-import '../src/app/globals.css'
+import '../src/app/order.css'
+import '../src/app/reset.css'
+import '../src/app/spaces.css'
+import '../src/app/theme.css'
+import '../src/app/utilities.css'
 
 const outfit = localFont({
   src: '../local-outfit.woff2',
@@ -15,6 +19,9 @@ const preview: Preview = {
   parameters: {
     docs: {
       theme: themes.dark,
+    },
+    nextjs: {
+      appDirectory: true,
     },
   },
   decorators: [

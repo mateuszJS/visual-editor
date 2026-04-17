@@ -23,7 +23,11 @@ export default function CreateButton() {
   useEffect(() => {
     import('@/components/NewProjectModal/NewProjectModal')
 
+    const key = 'NODE_ENV' // bypass for screenshot testing
+    if (process.env[key] === 'test') return // to avoid random animation diff
+
     const updatePosition = () => {
+      console.log('update position')
       refCyan.current!.style = getRandomTransform(1.7)
       refMagenta.current!.style = getRandomTransform(1.7)
       refOrange.current!.style = getRandomTransform(2.7)

@@ -30,12 +30,15 @@ exports[`<Navigation> should render five standard links for unauthenticated user
       <svg />
       <div
         class="color cyan"
+        style=""
       />
       <div
         class="color magenta"
+        style=""
       />
       <div
         class="color orange"
+        style=""
       />
       <div
         class="roundedGradient"

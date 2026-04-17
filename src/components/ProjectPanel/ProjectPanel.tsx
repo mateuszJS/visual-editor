@@ -30,10 +30,6 @@ export default function ProjectPanel({ id, text }: Props) {
         aria-label={`Go to ${text} project details`}
         className={styles.link}
       ></Link>
-      {/* <Button variant="ghost" className={cn('ml-auto', styles.menu)} iconOnly>
-        <VerticalMenu />
-      </Button> */}
-
       <Popover
         variant="ghost"
         className={cn('ml-auto', styles.menu)}

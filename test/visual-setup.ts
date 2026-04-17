@@ -33,7 +33,11 @@ export default async function visualSetup(
   storyId: string,
   dirname: string,
   failureThreshold: number,
-  options: { width?: number; beforeTest?: (page: Page) => Promise<void> } = {}
+  options: {
+    width?: number
+    beforeTest?: (page: Page) => Promise<void>
+    beforeNavigation?: (page: Page) => Promise<void>
+  } = {}
 ) {
   if (options.width) {
     await page.setViewport({ width: options.width, height: 720 })
@@ -43,6 +47,10 @@ export default async function visualSetup(
   const screenshotsDir = path.join(dirname, '__image_snapshots__')
   if (!fs.existsSync(screenshotsDir)) {
     fs.mkdirSync(screenshotsDir, { recursive: true })
+  }
+
+  if (options.beforeNavigation) {
+    await options.beforeNavigation(page)
   }
 
   await page.goto(

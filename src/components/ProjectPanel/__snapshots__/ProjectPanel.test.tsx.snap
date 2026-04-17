@@ -2,15 +2,39 @@
 
 exports[`<ProjectPanel> should render a project details link with provided text 1`] = `
 <div>
-  <a
-    aria-label="Go to project name project details"
-    class="imagePanel"
-    href="/project/0"
+  <div
+    class="root imagePanel"
     style="--background-url: url(/api/projects/0/miniature);"
   >
-    <p>
+    <a
+      aria-label="Go to project name project details"
+      class="link"
+      href="/project/0"
+    />
+    <button
+      class="button ml-auto menu ghost onlyIcon"
+      popovertarget="id-0"
+    >
+      <svg />
+    </button>
+    <div
+      aria-modal="true"
+      class="popover popover"
+      id="id-0"
+      popover="auto"
+      role="dialog"
+      style="position: fixed;"
+    >
+      <div
+        class="arrow"
+        style="align-self: anchor-center;"
+      />
+    </div>
+    <p
+      class="mt-auto"
+    >
       project name
     </p>
-  </a>
+  </div>
 </div>
 `;

@@ -62,7 +62,6 @@ export const onRequestPut = withSession<'id'>(async (ctx, session) => {
   })
 
   if (err) {
-    console.error(err)
     return getResponseError('Failed to generate signed URL.', 403)
   }
 

@@ -10,20 +10,22 @@ import { ApiProjectContent } from '../../../apiTypes'
 export const projectsStore = proxyMap<string, ApiProjectContent>()
 
 async function updateProject(id: string, project: Omit<Partial<ApiProjectContent>, 'id'>) {
+  console.log('projectsStore', projectsStore.get('1'))
   if (!projectsStore.has(id)) {
     throw Error(`Project with id ${id} does not exist in the store`)
   }
 
   try {
+    console.log('SETN REQUEST', id)
     const res = await nativeFetcher(`/api/projects/${id}`, {
       method: 'PATCH',
       json: project,
     })
 
+    console.log('jsut updated', project)
     if (!res.ok) {
       throw Error('Failed to update project.')
     }
-
     projectsStore.set(
       id,
       ref({

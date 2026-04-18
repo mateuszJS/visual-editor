@@ -5,14 +5,11 @@ export type ApiAsset = Omit<Asset, 'id' | 'texture_id' | 'cache_texture_id' | 's
 export type ApiProjectMetaData = {
   id: string
   name: string | null
-  createdAt: string
   updatedAt: string
 }
 
-export type ApiProjectContent = {
-  id: string
+export type ApiProjectContent = ApiProjectMetaData & {
   assets: ApiAsset[]
-  updatedAt: string
   width: number
   height: number
 }

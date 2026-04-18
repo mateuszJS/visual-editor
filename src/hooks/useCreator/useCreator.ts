@@ -15,6 +15,7 @@ import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
 import { useRef } from 'react'
 import { resetAssetStore, updateSelectedAssetStore } from '@/stores/asset'
+import { invalidateStorage } from '@/hooks/useStorage/useStorage'
 
 // we extract this part to a separate hook since not all components using useCreator need this data
 // and this data is going to be updated quite frequently
@@ -114,6 +115,8 @@ function useCreator() {
 
           if (newUrl === null) return
 
+          invalidateStorage()
+
           setNewUrl(newUrl)
           creatorState.historySnapshots.forEach((snapshot) => {
             snapshot.assets.forEach((asset) => {
@@ -191,14 +194,26 @@ function useCreator() {
       const initialSnapshot: ProjectSnapshot = {
         width: project.width,
         height: project.height,
-        assets: hasInitialAssets
-          ? initialAssets.assetUrls.map((url) => ({ url }))
-          : (project.assets as Asset[]), // those two types are same
-        // just TS cannot infer that
+        assets: [],
+      }
+
+      creator.setSnapshot(initialSnapshot, true)
+
+      if (hasInitialAssets) {
+        // TODO: avoid entry in history
+        creator.addImages(initialAssets.assetUrls)
+      } else {
+        creator.setSnapshot(
+          {
+            width: project.width,
+            height: project.height,
+            assets: project.assets as Asset[],
+          },
+          true
+        )
       }
 
       creatorState.initialAssets = null
-      creator.setSnapshot(initialSnapshot, true)
     },
     setProjectSize(width: number, height: number) {
       const creator = stateSnapshot.creator

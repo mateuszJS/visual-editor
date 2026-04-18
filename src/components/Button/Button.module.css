@@ -54,4 +54,10 @@
     width: 100%;
     justify-content: center;
   }
+
+  .small {
+    font-weight: 300;
+    font-size: 14px;
+    padding: 4px 6px;
+  }
 }

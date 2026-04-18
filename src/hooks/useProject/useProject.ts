@@ -7,7 +7,7 @@ import { proxyMap } from 'valtio/utils'
 import { ref, useSnapshot } from 'valtio'
 import { ApiProjectContent } from '../../../apiTypes'
 
-const projectsStore = proxyMap<string, ApiProjectContent>()
+export const projectsStore = proxyMap<string, ApiProjectContent>()
 
 async function updateProject(id: string, project: Omit<Partial<ApiProjectContent>, 'id'>) {
   if (!projectsStore.has(id)) {

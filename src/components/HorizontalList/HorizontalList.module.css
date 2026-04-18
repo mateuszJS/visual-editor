@@ -1,0 +1,58 @@
+.root {
+  position: relative;
+  margin-inline: calc(-1 * var(--padding-x));
+
+  ul {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+
+    padding-inline: var(--padding-x);
+
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    scroll-timeline: --list-scroll inline;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* NOTE: if you need to implement horizontla scroll that works on wheel
+  https://css-tricks.com/pure-css-horizontal-scrolling/ */
+
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      height: 100%;
+      width: calc(6 * var(--padding-x));
+      opacity: 0;
+      left: 0;
+      background: linear-gradient(270deg, transparent 0%, var(--background) 100%);
+      pointer-events: none;
+      animation: fade;
+      animation-timeline: --list-scroll;
+      animation-range: 0px 100px;
+      animation-fill-mode: both;
+    }
+
+    &:after {
+      left: auto;
+      right: 0;
+      scale: -1;
+      animation-direction: reverse;
+      animation-range: calc(100% - 100px) 100%;
+    }
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -22,7 +22,10 @@ beforeAll(async () => {
     }
   })
   await page.setViewport({ width: 1280, height: 720 })
-  await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'dark' }])
+  await page.emulateMediaFeatures([
+    { name: 'prefers-color-scheme', value: 'dark' },
+    { name: 'prefers-reduced-motion', value: 'reduce' },
+  ])
 }, 20000)
 
 /**
@@ -33,7 +36,10 @@ export default async function visualSetup(
   storyId: string,
   dirname: string,
   failureThreshold: number,
-  options: { width?: number; beforeTest?: (page: Page) => Promise<void> } = {}
+  options: {
+    width?: number
+    beforeTest?: (page: Page) => Promise<void>
+  } = {}
 ) {
   if (options.width) {
     await page.setViewport({ width: options.width, height: 720 })

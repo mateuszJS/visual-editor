@@ -4,14 +4,15 @@ import useStorage from '@/hooks/useStorage/useStorage'
 import styles from '@/components/shared/imagePanel.module.css'
 import formatDate from '@/utils/formatDate'
 import formatSize from '@/utils/formatSize'
+import EmptyState from '@/components/EmptyState/EmptyState'
 
 export default function Explore() {
-  const { items } = useStorage()
+  const { loading, items } = useStorage()
 
   return (
     <div className="page">
       <main>
-        <h1 className="page-title">Storage</h1>
+        <h1 className="page-title">Library</h1>
         <ul className={styles.list}>
           {Array.from(items).map(([, item]) => (
             <li
@@ -32,6 +33,13 @@ export default function Explore() {
             </li>
           ))}
         </ul>
+        {!loading && items.size === 0 && (
+          <EmptyState title="Library">
+            <p className="text-balance">
+              Manage your images, fonts & brand files across all projects.
+            </p>
+          </EmptyState>
+        )}
       </main>
       <Navigation />
     </div>

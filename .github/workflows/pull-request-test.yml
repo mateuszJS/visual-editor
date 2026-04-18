@@ -152,7 +152,7 @@ jobs:
             // Add each image to the comment
             diffFiles.forEach(file => {
               const storybookId = file.split('-diff.png')[0];
-              const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branchName}/${diffDir}/${file}`;
+              const imageUrl = `https://github.com/${owner}/${repo}/blob/${branchName}/${diffDir}/${file}?raw=true`;
               commentBody += `### ${storybookId}\n![${file}](${imageUrl})\n\n`;
             });
 

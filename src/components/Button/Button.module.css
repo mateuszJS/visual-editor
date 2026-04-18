@@ -1,55 +1,57 @@
-.button {
-  --hover-background: transparent;
+@layer elements {
+  .button {
+    --hover-background: transparent;
 
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  font-weight: 600;
-  border-radius: 5px;
-  transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: background 0.2s ease;
 
-  @media (hover: hover) {
-    /* to avoid using hover effect when click on mobile */
-    &:not(.noHover):hover {
-      background: var(--hover-background);
+    @media (hover: hover) {
+      /* to avoid using hover effect when click on mobile */
+      &:not(.noHover):hover {
+        background: var(--hover-background);
+      }
     }
   }
-}
 
-.onlyIcon {
-  --hover-background: rgba(var(--primary-rgb), 0.15);
-  padding: 8px;
-  font-size: var(--13px);
-  flex-shrink: 0;
+  .onlyIcon {
+    --hover-background: rgba(var(--primary-rgb), 0.15);
+    padding: 8px;
+    font-size: var(--13px);
+    flex-shrink: 0;
 
-  & svg {
-    display: block; /* to avoid extra spacing from inline reserved for tails of g,q,y etc. */
+    & svg {
+      display: block; /* to avoid extra spacing from inline reserved for tails of g,q,y etc. */
+    }
   }
-}
 
-.primary {
-  background: var(--primary);
-  color: var(--background);
-  --hover-background: rgba(var(--primary-rgb), 0.9);
-}
+  .primary {
+    background: var(--primary);
+    color: var(--background);
+    --hover-background: rgba(var(--primary-rgb), 0.9);
+  }
 
-.secondary {
-  --border-width: 2px;
-  border: var(--border-width) solid;
-  color: var(--primary);
-  background: transparent;
-  padding: calc(12px - var(--border-width)) calc(14px - var(--border-width));
-}
+  .secondary {
+    --border-width: 2px;
+    border: var(--border-width) solid;
+    color: var(--primary);
+    background: transparent;
+    padding: calc(12px - var(--border-width)) calc(14px - var(--border-width));
+  }
 
-.ghost {
-}
+  .ghost {
+  }
 
-/* .danger {
+  /* .danger {
   color: var(--danger);
 } */
 
-.expand {
-  width: 100%;
-  justify-content: center;
+  .expand {
+    width: 100%;
+    justify-content: center;
+  }
 }

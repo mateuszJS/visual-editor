@@ -1,7 +1,7 @@
 'use client'
 
 import HomeIcon from 'assets/home-icon.svg'
-import CompassIcon from 'assets/compass-icon.svg'
+import StackIcon from 'assets/stack.svg'
 import FolderIcon from 'assets/folder-icon.svg'
 import ProfileIcon from 'assets/profile-icon.svg'
 import userStore from '@/hooks/userStore/userStore'
@@ -19,16 +19,16 @@ export default function Navigation() {
         <span>Home</span>
       </NavItem>
 
-      <NavItem href="/storage">
-        <CompassIcon />
-        Storage
+      <NavItem href="/my-projects">
+        <FolderIcon />
+        Projects
       </NavItem>
 
       <CreateButton />
 
-      <NavItem href="/my-projects">
-        <FolderIcon />
-        Projects
+      <NavItem href="/storage">
+        <StackIcon />
+        &nbsp;Library
       </NavItem>
 
       <NavItem href={user ? '/profile' : '/login'}>

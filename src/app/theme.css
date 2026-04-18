@@ -1,0 +1,68 @@
+@layer reset {
+  :root {
+    --background-rgb: 255, 255, 255;
+    --background: rgb(var(--background-rgb));
+    /*
+    better naming for colors proposal:
+    bg-dark
+    bg
+    bg-light
+    dark/light applies same way to light and dark mode
+
+    highlight, ighlight-muted
+
+    text(dont make it at 100% bightness, do hsl(0, 0, 95) to do not be so sharp
+    text-muted
+
+  */
+
+    --primary-rgb: 17, 17, 17;
+    --primary: rgb(var(--primary-rgb));
+
+    --secondary-rgb: 177, 177, 177;
+    --secondary: rgb(var(--secondary-rgb));
+
+    --secondary-accent-rgb: 10, 10, 100;
+    --secondary-accent: rgb(var(--secondary-accent-rgb));
+
+    --global-padding-x: 20px;
+    --global-padding-y: 10px;
+
+    --danger: #f8504d;
+
+    --raised-background: rgb(60, 60, 60);
+
+    /* font sizes to avoid fighting with rem */
+    --8px: 0.5rem;
+    --9px: 0.5625rem;
+    --10px: 0.625rem;
+    --11px: 0.6875rem;
+    --12px: 0.75rem;
+    --13px: 0.8125rem;
+    --14px: 0.875rem;
+    --15px: 0.9375rem;
+    --16px: 1rem;
+    --17px: 1.0625rem;
+    --18px: 1.125rem;
+    --19px: 1.1875rem;
+    --20px: 1.25rem;
+    --28px: 1.75rem;
+    --40px: 2.5rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-rgb: 17, 17, 17;
+      --primary-rgb: 255, 255, 255;
+      --secondary-accent-rgb: 90, 110, 200;
+    }
+
+    html {
+      color-scheme: dark;
+    }
+
+    .logo {
+      filter: invert();
+    }
+  }
+}

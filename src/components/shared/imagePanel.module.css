@@ -1,6 +1,6 @@
 .imagePanel {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   aspect-ratio: 1;
   border-radius: 8px;
   background: #555555;
@@ -11,7 +11,11 @@
     0 0 5px #000;
   background-size: cover;
   background-position: center;
-  background-image: linear-gradient(transparent 70%, #0008 90%), var(--background-url);
+  background-image: var(--background-url);
+
+  &:not(:empty) {
+    background-image: linear-gradient(transparent 70%, #0008 90%), var(--background-url);
+  }
 }
 
 .list {
@@ -19,4 +23,74 @@
   --panel-min-size: min(40vw, 200px);
   grid-template-columns: repeat(auto-fill, minmax(var(--panel-min-size), 1fr));
   gap: 16px;
+}
+
+.skeleton {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  opacity: 0.5;
+  background-image: linear-gradient(45deg, #333 0%, #555 50% 80%, #333 110%);
+  /* box-shadow: 0 0 10px 10px inset #0002; */
+  animation: --fade 2s ease infinite;
+
+  &:nth-child(1) {
+    animation-delay: 0.3s;
+  }
+  &:nth-child(2) {
+    animation-delay: 0.6s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.9s;
+  }
+  &:nth-child(4) {
+    animation-delay: 1.2s;
+  }
+  &:nth-child(5) {
+    animation-delay: 1.5s;
+  }
+  &:nth-child(6) {
+    animation-delay: 1.8s;
+  }
+  &:nth-child(7) {
+    animation-delay: 2.1s;
+  }
+  &:nth-child(8) {
+    animation-delay: 2.4s;
+  }
+  &:nth-child(9) {
+    animation-delay: 2.7s;
+  }
+  &:nth-child(10) {
+    animation-delay: 3s;
+  }
+  &:nth-child(11) {
+    animation-delay: 3.3s;
+  }
+  &:nth-child(12) {
+    animation-delay: 3.6s;
+  }
+  &:nth-child(13) {
+    animation-delay: 3.9s;
+  }
+  &:nth-child(14) {
+    animation-delay: 4.2s;
+  }
+  &:nth-child(15) {
+    animation-delay: 4.5s;
+  }
+  &:nth-child(16) {
+    animation-delay: 4.8s;
+  }
+}
+
+@keyframes --fade {
+  0% {
+    opacity: 0.5;
+  }
+  20% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0.5;
+  }
 }

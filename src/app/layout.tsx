@@ -1,8 +1,11 @@
 import '@total-typescript/ts-reset'
 import type { Metadata } from 'next'
 import { Outfit } from 'next/font/google'
-import './globals.css'
+import './order.css'
+import './reset.css'
 import './spaces.css'
+import './theme.css'
+import './utilities.css'
 import InitializeData from '@/components/InitializeData/InitializeData'
 import GlobalErrors from '@/components/GlobalErrors/GlobalErrors'
 

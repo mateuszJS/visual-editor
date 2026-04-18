@@ -14,7 +14,7 @@ export const storageStore = proxy({
   items: proxyMap<string, ApiStorageItem>(),
 })
 
-export function invalidateStorage() {
+export function invalidateStorageItems() {
   storageStore.initializedAt = 0
 }
 

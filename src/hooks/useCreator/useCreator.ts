@@ -15,7 +15,7 @@ import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
 import { useRef } from 'react'
 import { resetAssetStore, updateSelectedAssetStore } from '@/stores/asset'
-import { invalidateStorage } from '@/hooks/useStorage/useStorage'
+import { invalidateStorageItems } from '@/hooks/useStorage/useStorage'
 
 // we extract this part to a separate hook since not all components using useCreator need this data
 // and this data is going to be updated quite frequently
@@ -115,7 +115,7 @@ function useCreator() {
 
           if (newUrl === null) return
 
-          invalidateStorage()
+          invalidateStorageItems()
 
           setNewUrl(newUrl)
           creatorState.historySnapshots.forEach((snapshot) => {

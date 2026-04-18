@@ -13,7 +13,7 @@ export default function useDeleteProject() {
     projectsListStore.projects.delete(id)
 
     const onError = () => {
-      errorStore.message = 'An erorr has occured whiel rmeovign the project. Please try again.'
+      errorStore.message = 'An error has occured while removing the project. Please try again.'
 
       if (safeCopyDetails) {
         projectsStore.set(id, safeCopyDetails)

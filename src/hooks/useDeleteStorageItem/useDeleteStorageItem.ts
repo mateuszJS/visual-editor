@@ -10,7 +10,7 @@ export default function useDeleteStorageItem() {
     storageStore.items.delete(id)
 
     const onError = () => {
-      errorStore.message = 'An erorr has occured while removing the asset. Please try again.'
+      errorStore.message = 'An error has occured while removing the asset. Please try again.'
       if (safeCopy) {
         storageStore.items.set(id, safeCopy)
       }

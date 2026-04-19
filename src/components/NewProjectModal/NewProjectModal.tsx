@@ -16,6 +16,7 @@ import StorageModal from '../StorageModal/StorageModal'
 import HorizontalList from '../HorizontalList/HorizontalList'
 import UploadTextures from '../UploadTextures/UploadTextures'
 import { projectsListStore } from '@/hooks/useProjectsList/useProjectsList'
+import CustomSizeModal from '@/components/CustomSizeModal/CustomSizeModal'
 
 const blankCanvasSizes = [
   { width: 2, height: 3.3, label: 'TikTok', icon: TikTokIcon },
@@ -25,7 +26,7 @@ const blankCanvasSizes = [
   { width: 2.5, height: 2.5, label: '1:1' },
   { width: 2, height: 3, label: '4:5' },
   { width: 3, height: 3, label: 'Custom' },
-]
+] as const
 
 export default function NewProjectModal() {
   const router = useRouter()
@@ -45,7 +46,6 @@ export default function NewProjectModal() {
     createProject(width, height, (project) => {
       setInitialAssets(project.id, textureUrls)
       projectsListStore.projects.set(project.id, project)
-      close()
       router.push(`/project/${project.id}`)
     })
   }
@@ -63,13 +63,19 @@ export default function NewProjectModal() {
             <Button
               variant="ghost"
               className={styles.blankCanvasOption}
-              onClick={() => createProjectFrom(size.width * 500, size.height * 500, [])}
+              commandfor={size.label === 'Custom' ? 'custom-size-project-modal' : undefined}
+              command={size.label === 'Custom' ? 'show-modal' : undefined}
+              onClick={
+                size.label !== 'Custom'
+                  ? () => createProjectFrom(size.width * 500, size.height * 500, [])
+                  : undefined
+              }
             >
               <div
                 className={styles.screen}
                 style={{ width: size.width + 'rem', height: size.height + 'rem' }}
               >
-                {size.icon && <size.icon />}
+                {'icon' in size && <size.icon />}
               </div>
               <p>{size.label}</p>
             </Button>
@@ -79,6 +85,7 @@ export default function NewProjectModal() {
       <p className={styles.divider}>Or</p>
       <UploadTextures onUpload={(urls) => createProjectFrom(0, 0, urls)} />
       <StorageModal />
+      <CustomSizeModal setSize={(width, height) => createProjectFrom(width, height, [])} />
     </ActionSheets>
   )
 }

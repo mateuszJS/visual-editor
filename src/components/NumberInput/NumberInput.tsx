@@ -9,6 +9,7 @@ interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onCha
   value: number
   unit?: string
   roundDecimals?: boolean
+  large?: boolean
   onChange: (value: number, commit: boolean) => void
 }
 
@@ -19,6 +20,7 @@ export default function NumberInput({
   unit = '',
   roundDecimals = true,
   className,
+  large,
   ...rest
 }: Props) {
   const value = roundDecimals ? decimals(rawValue) : rawValue
@@ -77,10 +79,14 @@ export default function NumberInput({
 
   return (
     <>
-      <label className={styles.label} htmlFor={inputId} suppressHydrationWarning>
+      <label
+        className={cn(styles.label, large && styles.labelLarge)}
+        htmlFor={inputId}
+        suppressHydrationWarning
+      >
         {label}
       </label>
-      <div className={cn(styles.resizableWrapper, className)}>
+      <div className={cn(styles.resizableWrapper, className, large && styles.wrapperLarge)}>
         <input
           type="text"
           value={tempVal}

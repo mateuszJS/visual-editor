@@ -2,12 +2,11 @@
   /* children passed via props are using those vars */
   --padding-x: 16px;
   --background: var(--raised-background);
-  --safe-transition-padding: 100px;
   /* we exagurate durign aniamtion, and we dont want emtpy space on the bototm */
   border: none;
   align-self: flex-end;
   background: var(--background);
-  padding: 16px var(--padding-x) calc(var(--safe-transition-padding) + 32px);
+  padding: 16px var(--padding-x) 32px;
   width: 100%;
   max-width: initial;
   border-radius: 8px 8px 0 0;
@@ -15,7 +14,9 @@
   transition-duration: 0.3s;
   transition-behavior: allow-discrete;
   transition-timing-function: ease-in;
+  /* transition-timing-function: ease-in; */
   bottom: 0;
+  min-height: 50dvh;
 
   box-shadow: 0 0 20px 10px #0005;
   /* when white button is displayed behind the action sheet,
@@ -51,7 +52,7 @@
   }
 
   &[open] {
-    translate: 0 var(--safe-transition-padding);
+    translate: 0 0;
     transition-timing-function: ease-out;
 
     @starting-style {

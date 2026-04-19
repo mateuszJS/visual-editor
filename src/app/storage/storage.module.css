@@ -1,0 +1,15 @@
+.progressBar {
+  border-radius: 100vw;
+  background: #555;
+  margin-top: 3px;
+  margin-bottom: 30px;
+
+  &::after {
+    display: block;
+    content: '';
+    border-radius: 100vw;
+    background: var(--secondary-accent);
+    height: 1rem;
+    width: calc(var(--progress) * 100%);
+  }
+}

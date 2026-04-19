@@ -3,7 +3,6 @@
 import { useEffect } from 'react'
 import useProject from '@/hooks/useProject/useProject'
 import OverlayLoader from '@/components/OverlayLoader/OverlayLoader'
-import styles from './ProjectPage.module.css'
 import CreatorView from '@/components/CreatorView/CreatorView'
 import CreatorNav from '@/components/CreatorNav/CreatorNav'
 import CreatorToolbox from '@/components/CreatorToolbox/CreatorToolbox'
@@ -40,12 +39,12 @@ export default function Project() {
   }, [])
 
   return (
-    <main className={styles.page}>
+    <>
       <OverlayLoader loading={loading} />
       <CreatorNav />
       {project && <CreatorView project={project} />}
       <CreatorToolbox />
       <CreatorPanels />
-    </main>
+    </>
   )
 }

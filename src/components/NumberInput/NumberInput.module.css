@@ -1,8 +1,17 @@
 .resizableWrapper {
   display: inline-grid;
+  font-size: var(--12px);
 
   & > * {
     grid-area: 1 / 1;
+  }
+
+  &.wrapperLarge {
+    font-size: var(--18px);
+
+    .input {
+      background: #000;
+    }
   }
 }
 
@@ -15,6 +24,11 @@
   font-size: var(--12px);
   cursor: pointer;
   align-self: center;
+
+  &.labelLarge {
+    font-size: var(--18px);
+    margin-right: 5px;
+  }
 }
 
 .input {
@@ -32,7 +46,7 @@
 .input {
   width: auto;
   min-width: 1em;
-  font-size: var(--12px);
+  font-size: inherit;
   padding: 0.3em 0.5em;
 }
 

@@ -1,3 +1,7 @@
+.projectsList {
+  --padding-x: var(--global-padding-x);
+}
+
 .panel {
   aspect-ratio: 1;
   border-radius: 8px;

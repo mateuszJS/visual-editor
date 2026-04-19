@@ -1,0 +1,54 @@
+@layer components {
+  .page {
+    /* display: grid;
+    grid-template-rows: 1fr auto; */
+
+    display: grid;
+    grid-template: auto 1fr auto / auto;
+    grid-template-areas:
+      'header'
+      'main'
+      'navigation';
+    justify-items: stretch;
+    align-items: stretch;
+    padding: 0;
+
+    @media (min-width: 800px) {
+      grid-template: auto 1fr auto / auto 1fr;
+      grid-template-areas:
+        'header header header'
+        'navigation main panels';
+    }
+  }
+
+  .page main {
+    grid-area: main;
+    overflow-y: auto;
+    padding: var(--global-padding-y) var(--global-padding-x);
+  }
+
+  .navigation-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 8px 11px;
+    grid-area: navigation;
+
+    button {
+      position: relative;
+    }
+
+    &:not(.navigation-bar-horizontal) {
+      @media (min-width: 800px) {
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 20px;
+        padding: 11px 8px;
+
+        button {
+          width: auto;
+        }
+      }
+    }
+  }
+}

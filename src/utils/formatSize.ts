@@ -1,4 +1,4 @@
-export default function formatSize(bytes: number, si = true, decimal = 0) {
+export default function formatSize(bytes: number, decimal = 0, si = true) {
   const thresh = si ? 1000 : 1024
 
   if (Math.abs(bytes) < thresh) {

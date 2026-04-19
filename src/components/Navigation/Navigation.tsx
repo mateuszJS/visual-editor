@@ -8,9 +8,13 @@ import userStore from '@/hooks/userStore/userStore'
 import NavItem from '@/components/NavLink/NavLink'
 import CreateButton from '@/components/CreateButton/CreateButton'
 import { useSnapshot } from 'valtio'
+import { usePathname } from 'next/navigation'
 
 export default function Navigation() {
   const { user } = useSnapshot(userStore)
+  const pathname = usePathname()
+
+  if (pathname.startsWith('/project/')) return null
 
   return (
     <nav className="navigation-bar">

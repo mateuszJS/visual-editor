@@ -49,8 +49,6 @@ export const onRequestPut = withSession(async (ctx, session) => {
   })
 
   if (s3Error) {
-    console.log(s3Error)
-    console.log(s3Error.message)
     return getResponseError('Upload has failed.', 500)
   }
 

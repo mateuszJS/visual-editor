@@ -1,41 +1,45 @@
-.navItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 7px;
-  line-height: 1;
+@layer elements {
+  .navItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    line-height: 1;
 
-  width: calc(62rem / 16);
-  /* absolute width, otherwise font-weight changes(on hover)
+    width: calc(62rem / 16);
+    /* absolute width, otherwise font-weight changes(on hover)
   impacts the width of button and all elements start moving */
-  padding: var(--8px);
+    padding: var(--8px);
 
-  font-size: var(--13px);
-  font-weight: 300;
+    font-size: var(--13px);
+    font-weight: 300;
 
-  transition: color 0.2s ease, background 0.2s ease;
+    transition:
+      color 0.2s ease,
+      background 0.2s ease;
 
-  color: rgba(var(--primary-rgb), 0.5);
-  user-select: none;
-  border-radius: 5px;
+    color: rgba(var(--primary-rgb), 0.5);
+    user-select: none;
+    border-radius: 5px;
 
-  @media (hover: hover) {
-    &:hover:not([disabled]) {
-      background: rgba(var(--primary-rgb), 0.15);
+    @media (hover: hover) {
+      &:hover:not([disabled]) {
+        background: rgba(var(--primary-rgb), 0.15);
+      }
+    }
+
+    &:is([aria-current='page'], [aria-pressed='true']) {
+      color: rgba(var(--primary-rgb), 1);
+      font-weight: 500;
     }
   }
 
-  &:is([aria-current='page'], [aria-pressed='true']) {
-    color: rgba(var(--primary-rgb), 1);
-    font-weight: 500;
+  .navItem svg {
+    line-height: var(--20px);
   }
-}
 
-.navItem svg {
-  line-height: var(--20px);
-}
-
-.navItem[disabled] {
-  cursor: not-allowed;
-  color: rgba(var(--primary-rgb), 0.3);
+  .navItem[disabled] {
+    cursor: not-allowed;
+    color: rgba(var(--primary-rgb), 0.3);
+  }
 }

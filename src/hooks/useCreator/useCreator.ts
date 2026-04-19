@@ -68,7 +68,7 @@ function useCreator() {
   function setHistoricSnapshot(snapshotIndex: number) {
     creatorState.historySnapshotIndex = snapshotIndex
     const historySnapshot = stateSnapshot.historySnapshots[snapshotIndex]
-    console.log('setHistoricSnapshot')
+
     updateProject(stateSnapshot.projectId!, {
       width: historySnapshot.width,
       height: historySnapshot.height,
@@ -127,7 +127,6 @@ function useCreator() {
           })
 
           const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
-          console.log('onExternalTextureCreation')
           updateProject(project.id, {
             width: snapshot.width,
             height: snapshot.height,
@@ -136,7 +135,6 @@ function useCreator() {
           })
         },
         onSnapshotUpdate: (snapshot, commit) => {
-          console.log('snapshot', snapshot)
           updateSelectedAssetStore(snapshot, creatorState.selectedAssetId)
 
           if (!commit) return
@@ -149,7 +147,6 @@ function useCreator() {
           creatorState.historySnapshotIndex = creatorState.historySnapshots.length - 1
 
           if (!bypassInitialSnapshotRequest.current) {
-            console.log('DA FUCK')
             updateProject(project.id, {
               width: snapshot.width,
               height: snapshot.height,
@@ -203,7 +200,6 @@ function useCreator() {
 
       if (hasInitialAssets) {
         // TODO: avoid entry in history
-        console.log('Add images', initialAssets.assetUrls)
         creator.addImages(initialAssets.assetUrls)
       }
 

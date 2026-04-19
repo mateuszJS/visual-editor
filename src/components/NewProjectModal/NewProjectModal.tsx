@@ -14,6 +14,8 @@ import getSizeFromImages from './getSizeFromImages'
 import Button from '../Button/Button'
 import StorageModal from '../StorageModal/StorageModal'
 import HorizontalList from '../HorizontalList/HorizontalList'
+import UploadTextures from '../UploadTextures/UploadTextures'
+import { projectsListStore } from '@/hooks/useProjectsList/useProjectsList'
 
 const blankCanvasSizes = [
   { width: 2, height: 3.3, label: 'TikTok', icon: TikTokIcon },
@@ -42,6 +44,7 @@ export default function NewProjectModal() {
     )
     createProject(width, height, (project) => {
       setInitialAssets(project.id, textureUrls)
+      projectsListStore.projects.set(project.id, project)
       close()
       router.push(`/project/${project.id}`)
     })
@@ -74,9 +77,7 @@ export default function NewProjectModal() {
         ))}
       </HorizontalList>
       <p className={styles.divider}>Or</p>
-      <Button commandfor="storage-modal" command="show-modal">
-        Select item from yoru storage
-      </Button>
+      <UploadTextures onUpload={(urls) => createProjectFrom(0, 0, urls)} />
       <StorageModal />
     </ActionSheets>
   )

@@ -16,15 +16,15 @@ export default function MyProjects() {
       <main>
         <h1 className="page-title">Projects</h1>
         <ul className={imagePanelStyles.list}>
-          {[...projectsList.values()].map((project) => (
-            <li key={project.id}>
-              <ProjectPanel id={project.id} text={formatDate(project.updatedAt)} />
-            </li>
-          ))}
-          {loading &&
-            Array.from({ length: 16 }, (_, index) => (
-              <li key={index} className={imagePanelStyles.skeleton}></li>
-            ))}
+          {loading
+            ? Array.from({ length: 16 }, (_, index) => (
+                <li key={index} className={imagePanelStyles.skeleton}></li>
+              ))
+            : [...projectsList.values()].map((project) => (
+                <li key={project.id}>
+                  <ProjectPanel id={project.id} text={formatDate(project.updatedAt)} />
+                </li>
+              ))}
         </ul>
         {!loading && projectsList.size === 0 && (
           <EmptyState title="Your creative journey starts here">

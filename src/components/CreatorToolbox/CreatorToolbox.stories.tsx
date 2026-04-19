@@ -25,6 +25,7 @@ type Story = StoryObj<typeof meta>
 
 const project: ApiProjectContent = {
   id: '1',
+  name: '',
   assets: [],
   updatedAt: new Date().toISOString(),
   width: 500,

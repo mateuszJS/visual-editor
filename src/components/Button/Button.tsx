@@ -9,6 +9,7 @@ export type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   className?: string
   iconOnly?: boolean
   noHover?: boolean
+  small?: boolean
 }
 
 export default function Button({
@@ -19,6 +20,7 @@ export default function Button({
   onClick,
   iconOnly,
   noHover,
+  small,
   ...rest
 }: Props) {
   const classNames = cn(styles.button, className, {
@@ -28,6 +30,7 @@ export default function Button({
     [styles.expand]: expand,
     [styles.onlyIcon]: iconOnly,
     [styles.noHover]: noHover,
+    [styles.small]: small,
   })
 
   return (

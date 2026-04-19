@@ -15,6 +15,7 @@ import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
 import { useRef } from 'react'
 import { resetAssetStore, updateSelectedAssetStore } from '@/stores/asset'
+import { invalidateStorageItems } from '@/hooks/useStorage/useStorage'
 
 // we extract this part to a separate hook since not all components using useCreator need this data
 // and this data is going to be updated quite frequently
@@ -67,7 +68,7 @@ function useCreator() {
   function setHistoricSnapshot(snapshotIndex: number) {
     creatorState.historySnapshotIndex = snapshotIndex
     const historySnapshot = stateSnapshot.historySnapshots[snapshotIndex]
-
+    console.log('setHistoricSnapshot')
     updateProject(stateSnapshot.projectId!, {
       width: historySnapshot.width,
       height: historySnapshot.height,
@@ -114,6 +115,8 @@ function useCreator() {
 
           if (newUrl === null) return
 
+          invalidateStorageItems()
+
           setNewUrl(newUrl)
           creatorState.historySnapshots.forEach((snapshot) => {
             snapshot.assets.forEach((asset) => {
@@ -124,7 +127,7 @@ function useCreator() {
           })
 
           const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
-
+          console.log('onExternalTextureCreation')
           updateProject(project.id, {
             width: snapshot.width,
             height: snapshot.height,
@@ -133,6 +136,7 @@ function useCreator() {
           })
         },
         onSnapshotUpdate: (snapshot, commit) => {
+          console.log('snapshot', snapshot)
           updateSelectedAssetStore(snapshot, creatorState.selectedAssetId)
 
           if (!commit) return
@@ -145,6 +149,7 @@ function useCreator() {
           creatorState.historySnapshotIndex = creatorState.historySnapshots.length - 1
 
           if (!bypassInitialSnapshotRequest.current) {
+            console.log('DA FUCK')
             updateProject(project.id, {
               width: snapshot.width,
               height: snapshot.height,
@@ -191,14 +196,18 @@ function useCreator() {
       const initialSnapshot: ProjectSnapshot = {
         width: project.width,
         height: project.height,
-        assets: hasInitialAssets
-          ? initialAssets.assetUrls.map((url) => ({ url }))
-          : (project.assets as Asset[]), // those two types are same
-        // just TS cannot infer that
+        assets: project.assets as Asset[],
+      }
+
+      creator.setSnapshot(initialSnapshot, true)
+
+      if (hasInitialAssets) {
+        // TODO: avoid entry in history
+        console.log('Add images', initialAssets.assetUrls)
+        creator.addImages(initialAssets.assetUrls)
       }
 
       creatorState.initialAssets = null
-      creator.setSnapshot(initialSnapshot, true)
     },
     setProjectSize(width: number, height: number) {
       const creator = stateSnapshot.creator

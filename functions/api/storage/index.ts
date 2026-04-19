@@ -29,7 +29,8 @@ export const onRequestPut = withSession(async (ctx, session) => {
   const s3Id = generateId('s3')
 
   const [s3Object, s3Error] = await withError(async () => {
-    const s3Obj = await ctx.env.userUploads.put(s3Id, ctx.request.body, {
+    const body = await ctx.request.arrayBuffer()
+    const s3Obj = await ctx.env.userUploads.put(s3Id, body, {
       httpMetadata: {
         contentType,
       },
@@ -48,6 +49,8 @@ export const onRequestPut = withSession(async (ctx, session) => {
   })
 
   if (s3Error) {
+    console.log(s3Error)
+    console.log(s3Error.message)
     return getResponseError('Upload has failed.', 500)
   }
 

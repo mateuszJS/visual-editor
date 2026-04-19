@@ -1,6 +1,5 @@
 'use client'
 
-import userStore from '@/hooks/userStore/userStore'
 import Button from '@/components/Button/Button'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
 import ExitIcon from 'assets/exit-icon.svg'
@@ -16,7 +15,7 @@ export default function Logout() {
         method: 'DELETE',
       },
       () => {
-        userStore.user = null
+        // TODO: use BroadcastChannel to send data and clear data here?????
         window.location.reload()
       }
     )

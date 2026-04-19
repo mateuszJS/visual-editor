@@ -19,7 +19,7 @@ describe('Logout component', () => {
     const logoutButton = screen.getByRole('button', { name: /logout/i })
     await user.click(logoutButton)
 
-    expect(userStore.user).toBeNull()
+    expect(userStore.user).toBeUndefined()
     expect(windowReload).toHaveBeenCalled()
     windowReload.mockRestore()
   })

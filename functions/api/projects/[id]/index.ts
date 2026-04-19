@@ -2,17 +2,18 @@ import { withSession } from '@/wrappers/session'
 import * as Project from '@/types/project'
 import getResponseError from '@/utils/getResponseError'
 import withError from '@/utils/error'
+import { waitUntil } from 'cloudflare:workers'
 
 export const onRequestGet: Handler<'id'> = withSession(async (ctx, session) => {
   const [project, err] = await withError(async () => {
     const project = await ctx.env.db
       .prepare(
-        `SELECT id, assets, updated_at, width, height
+        `SELECT id, assets, updated_at, width, height, name
           FROM projects
           WHERE id = ? AND owner_id = ?`
       )
       .bind(ctx.params.id, session.userId)
-      .first<Pick<Project.DB, 'id' | 'assets' | 'updated_at' | 'width' | 'height'>>()
+      .first<Pick<Project.DB, 'id' | 'assets' | 'updated_at' | 'width' | 'height' | 'name'>>()
 
     return Project.sanitizeContent(project)
   })
@@ -61,6 +62,26 @@ export const onRequestPatch: Handler<'id'> = withSession(async (ctx, session) =>
   if (!updatedRow) {
     return getResponseError('Project does not exist.', 404)
   }
+
+  return new Response(null, { status: 204 })
+})
+
+export const onRequestDelete: Handler<'id'> = withSession(async (ctx, session) => {
+  const [, err] = await withError(async () => {
+    await ctx.env.db
+      .prepare(
+        `DELETE FROM projects
+          WHERE id = ? AND owner_id = ?`
+      )
+      .bind(ctx.params.id, session.userId)
+      .run()
+  })
+
+  if (err) {
+    return getResponseError('Project does not exist.', 404)
+  }
+
+  waitUntil(ctx.env.projectMiniatures.delete(ctx.params.id))
 
   return new Response(null, { status: 204 })
 })

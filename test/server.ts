@@ -14,11 +14,17 @@ export const server = setupServer(...handlers)
  * @param method which we listen to
  * @returns request object which was send on provided url and method
  */
-export function interceptRequest(url: string, method: string) {
+export function interceptRequest(url: string, method: string, nth = 1) {
+  let currNth = 1
   return new Promise<Request>((resolve) => {
     server.events.on('request:start', async ({ request }) => {
+      console.log(request.url, request.method, currNth, nth)
       if (request.url === `http://localhost${url}` && request.method === method) {
-        resolve(request.clone())
+        if (currNth === nth) {
+          resolve(request.clone())
+        } else {
+          currNth++
+        }
       }
     })
   })

@@ -12,7 +12,7 @@ export type DB = {
 }
 
 export function sanitizeContent(
-  data: Pick<DB, 'id' | 'assets' | 'updated_at' | 'width' | 'height'> | null
+  data: Pick<DB, 'id' | 'assets' | 'updated_at' | 'width' | 'height' | 'name'> | null
 ): ApiProjectContent {
   if (!data) {
     throw new Error('No data was found.')
@@ -31,11 +31,12 @@ export function sanitizeContent(
     updatedAt: data.updated_at,
     width: data.width,
     height: data.height,
+    name: data.name,
   }
 }
 
 export function sanitizeMetaData(
-  data: Pick<DB, 'id' | 'name' | 'created_at' | 'updated_at'> | null
+  data: Pick<DB, 'id' | 'name' | 'updated_at'> | null
 ): ApiProjectMetaData {
   if (!data) {
     throw new Error('No data was found.')
@@ -44,7 +45,6 @@ export function sanitizeMetaData(
   return {
     id: data.id,
     name: data.name,
-    createdAt: data.created_at,
     updatedAt: data.updated_at,
   }
 }

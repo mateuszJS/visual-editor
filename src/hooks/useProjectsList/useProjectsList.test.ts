@@ -5,6 +5,7 @@ import { server } from 'test/server'
 
 const waitForever = () => new Promise<never>(() => {})
 
+// TODO: update tests to match new features of refreshing data after an hour
 describe('useProjectsList', () => {
   it('return list of projects', async () => {
     const { result } = renderHook(() => useProjectsList())

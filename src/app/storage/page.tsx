@@ -5,9 +5,14 @@ import styles from '@/components/shared/imagePanel.module.css'
 import formatDate from '@/utils/formatDate'
 import formatSize from '@/utils/formatSize'
 import EmptyState from '@/components/EmptyState/EmptyState'
+import Popover from '@/components/Popover/Popover'
+import VerticalMenu from 'assets/vertical-menu.svg'
+import Button from '@/components/Button/Button'
+import useDeleteStorageItem from '@/hooks/useDeleteStorageItem/useDeleteStorageItem'
 
 export default function Explore() {
   const { loading, items } = useStorage()
+  const deleteStorageItem = useDeleteStorageItem()
 
   return (
     <div className="page">
@@ -24,7 +29,18 @@ export default function Explore() {
                 } as React.CSSProperties
               }
             >
-              <p className="flex w-full">
+              <Popover
+                variant="ghost"
+                className={styles.menu}
+                iconOnly
+                trigger={() => <VerticalMenu />}
+                popoverClassName={styles.popover}
+              >
+                <Button onClick={() => deleteStorageItem(item.id)} variant="ghost" small>
+                  Delete Asset
+                </Button>
+              </Popover>
+              <p className="flex w-full mt-auto">
                 <span className="text-ellipsis mr-auto">
                   {item.name || formatDate(item.updatedAt)}
                 </span>

@@ -3,12 +3,14 @@ import RemoveAsset from './RemoveAsset'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { getSanitizedProject } from '@/test/getSanitizedProject'
 import userEvent from '@testing-library/user-event'
+import { projectsStore } from '@/hooks/useProject/useProject'
 
 const project = getSanitizedProject()
 
 describe('RemoveAsset', () => {
   beforeEach(async () => {
     const { result } = renderHook(useCreator)
+    projectsStore.set(project.id, project)
     await act(() => result.current.init(window.creatorCanvas, project))
   })
 

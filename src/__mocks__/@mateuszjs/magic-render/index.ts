@@ -1,9 +1,15 @@
-import { CreatorAPI, CreatorProps } from '@mateuszjs/magic-render/types'
+import { CreatorAPI, CreatorProps, ProjectSnapshot } from '@mateuszjs/magic-render/types'
 import initCreator from '@mateuszjs/magic-render'
 
 let onSelectAssetCallback: (assetId: [number, number, number, number]) => void
 let onPreviewUpdateCallback: (canvas: HTMLCanvasElement) => void
 let onExternalTextureCreationCallback: (url: string, setNewUrl: (url: string) => void) => void
+
+let currentSnapshot: ProjectSnapshot = {
+  width: 0,
+  height: 0,
+  assets: [] as Array<{ url: string }>, // for now we need only images mock for testing
+}
 
 /** this mock is created since currently github actions do not support GPU.
  * For WebGPU physical GPU is required, so far there is no way to simulate with CPU */
@@ -26,11 +32,16 @@ const initMagicRenderMock: typeof initCreator = function ({
   onExternalTextureCreationCallback = onExternalTextureCreation
 
   return Promise.resolve({
-    addImages: jest.fn(),
+    addImages: jest.fn((urls) => {
+      currentSnapshot.assets = [...currentSnapshot.assets, ...urls.map((url) => ({ url }))]
+      onSnapshotUpdate(currentSnapshot, true)
+      return Promise.resolve()
+    }),
     removeAsset: jest.fn(),
     setSnapshot: jest.fn(async (snapshot, withSnapshot) => {
       if (withSnapshot) {
-        onSnapshotUpdate(snapshot, withSnapshot)
+        currentSnapshot = snapshot
+        onSnapshotUpdate(currentSnapshot, withSnapshot)
       }
     }),
     setTool: jest.fn((tool) => {

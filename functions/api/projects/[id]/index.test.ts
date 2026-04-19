@@ -13,6 +13,7 @@ describe('GET /api/projects/[id]', () => {
     expect(response.status).toBe(200)
     expect(await response.json()).toEqual({
       id: '1',
+      name: null,
       assets: [],
       height: 200,
       width: 100,

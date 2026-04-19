@@ -1,22 +1,39 @@
 import { useEffect } from 'react'
 import useFetcher from '../useFetcher/useFetcher'
 import { proxyMap } from 'valtio/utils'
-import { useSnapshot } from 'valtio'
+import { proxy, useSnapshot } from 'valtio'
 import { ApiProjectMetaData } from '../../../apiTypes'
 import errorStore from '@/stores/error'
 
-const projectsListStore = proxyMap<string, ApiProjectMetaData>()
+const PROJECTS_LIST_TTL = 1000 * 60 * 60 * 1 // 1 hour
+
+export const projectsListStore = proxy({
+  initializedAt: 0,
+  isRequesting: false,
+  projects: proxyMap<string, ApiProjectMetaData>(),
+})
 
 export default function useProjectsList() {
-  const { error, loading, fetcher } = useFetcher<ApiProjectMetaData[]>()
+  const { error, fetcher } = useFetcher<ApiProjectMetaData[]>()
   const projectsList = useSnapshot(projectsListStore)
 
+  console.log(projectsList.projects.size)
+
   useEffect(() => {
-    fetcher(`/api/projects`, (projects) => {
-      projects.forEach((project) => {
-        projectsListStore.set(project.id, project)
+    const isOutdated = Date.now() - projectsList.initializedAt > PROJECTS_LIST_TTL
+
+    if (isOutdated && !projectsList.isRequesting) {
+      projectsListStore.isRequesting = true
+
+      fetcher(`/api/projects`, (projects) => {
+        projects.forEach((project) => {
+          projectsListStore.projects.set(project.id, project)
+        })
+
+        projectsListStore.initializedAt = Date.now()
+        projectsListStore.isRequesting = false
       })
-    })
+    }
   }, [])
 
   useEffect(() => {
@@ -24,8 +41,8 @@ export default function useProjectsList() {
   }, [error])
 
   return {
-    loading: loading && projectsList.size === 0,
+    loading: !error && projectsList.initializedAt === 0,
     error,
-    projectsList,
+    projectsList: projectsList.projects,
   }
 }

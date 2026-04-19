@@ -17,8 +17,6 @@ export default function useProjectsList() {
   const { error, fetcher } = useFetcher<ApiProjectMetaData[]>()
   const projectsList = useSnapshot(projectsListStore)
 
-  console.log(projectsList.projects.size)
-
   useEffect(() => {
     const isOutdated = Date.now() - projectsList.initializedAt > PROJECTS_LIST_TTL
 

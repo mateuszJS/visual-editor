@@ -1,6 +1,7 @@
 .resizableWrapper {
   display: inline-grid;
   font-size: var(--12px);
+  anchor-scope: --error;
 
   & > * {
     grid-area: 1 / 1;
@@ -36,6 +37,7 @@
   background: var(--background);
   border-radius: 3px;
   field-sizing: content;
+  anchor-name: --error;
 
   &:focus {
     outline: solid 4px var(--secondary-accent);

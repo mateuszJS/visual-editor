@@ -2,6 +2,7 @@ import { useState } from 'react'
 import NumberInput from '@/components/NumberInput/NumberInput'
 import ActionSheets from '@/components/ActionSheets/ActionSheets'
 import Button from '@/components/Button/Button'
+import { MAX_PROJECT_SIZE, MIN_PROJECT_SIZE } from '@/consts'
 
 type Props = {
   setSize: (width: number, height: number) => void
@@ -27,6 +28,8 @@ export default function CustomSizeModal({ setSize }: Props) {
               unit="px"
               value={width}
               onChange={(v) => setWidth(v)}
+              min={MIN_PROJECT_SIZE}
+              max={MAX_PROJECT_SIZE}
             />
           </div>
           <div>
@@ -36,6 +39,8 @@ export default function CustomSizeModal({ setSize }: Props) {
               unit="px"
               value={height}
               onChange={(v) => setHeight(v)}
+              min={MIN_PROJECT_SIZE}
+              max={MAX_PROJECT_SIZE}
             />
           </div>
         </div>

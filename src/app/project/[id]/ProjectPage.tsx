@@ -26,15 +26,35 @@ export default function Project() {
       2 * 60 * 1000
     ) // every 2 minutes
 
-    return () => {
-      clearInterval(intervalId)
+    const triggerSync = () => {
       broadcast.postMessage('SYNC_PROJECT_DATA_START')
       broadcast.postMessage('SYNC_PROJECT_MINIATURE_START')
-      broadcast.close()
 
       // handle case when there was no service worker
       alternativeMiniatureUpdate()
       alternativeProjectUpdate()
+    }
+
+    const abortCtrl = new AbortController()
+
+    // beforeunload doesn't always trigger, is unreliable, epsecially on mobile when user view different app tha browser and then clsoes browser
+    // thats why visibilitychange is used as well
+    window.addEventListener('beforeunload', triggerSync, { signal: abortCtrl.signal })
+    window.addEventListener(
+      'visibilitychange',
+      () => {
+        if (document.visibilityState === 'hidden') {
+          triggerSync()
+        }
+      },
+      { signal: abortCtrl.signal }
+    )
+
+    return () => {
+      clearInterval(intervalId)
+      triggerSync()
+      broadcast.close()
+      abortCtrl.abort()
     }
   }, [])
 

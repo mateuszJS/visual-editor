@@ -1,6 +1,5 @@
 'use client'
 
-import cn from 'classnames'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
 import useCreator from '@/hooks/useCreator/useCreator'
 import RemoveAsset from './components/RemoveAsset/RemoveAsset'
@@ -9,7 +8,6 @@ import SelectNodeTool from './components/SelectNodeTool/SelectNodeTool'
 import UploadTexture from './components/UploadImage/UploadTexture'
 import ShapeTool from './components/ShapeTool/ShapeTool'
 import TextTool from './components/TextTool/TextTool'
-import styles from './CreatorToolbox.module.css'
 import OverlayLoader from '../OverlayLoader/OverlayLoader'
 
 function getDesktopItems() {
@@ -46,7 +44,7 @@ export default function CreatorToolbox() {
   const isMobile = useIsMobile()
 
   return (
-    <nav className={cn('navigation-bar', styles.nav)}>
+    <nav className="navigation-bar gap-2 justify-start">
       {isMobile ? getMobileItems(selectedAssetId) : getDesktopItems()}
       <OverlayLoader loading={!isReady} />
     </nav>

@@ -1,14 +1,22 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './NumberInput.module.css'
 import decimals from '@/utils/decimals'
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
 import cn from 'classnames'
+import ErrorTooltip from '../ErrorTooltip/ErrorTooltip'
 
-interface Props extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+interface Props extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'onChange' | 'min' | 'max'
+> {
   label: string
   value: number
   unit?: string
   roundDecimals?: boolean
+  large?: boolean
+  tooltipSide?: 'bottom' | 'left'
+  min?: number
+  max?: number
   onChange: (value: number, commit: boolean) => void
 }
 
@@ -19,12 +27,16 @@ export default function NumberInput({
   unit = '',
   roundDecimals = true,
   className,
+  large,
+  tooltipSide = 'bottom',
+  min,
+  max,
   ...rest
 }: Props) {
   const value = roundDecimals ? decimals(rawValue) : rawValue
   const [tempVal, setTempVal] = useState(value.toString())
-  const pressedKeys = useRef<Record<string, boolean>>({})
   const inputId = useUniqueId()
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const tempStringifiedValue =
@@ -35,58 +47,77 @@ export default function NumberInput({
     }
   }, [value])
 
+  // accepts string isntead of nubmer to avoid parsin "-.5" -> "-0.5"
+  const onNewValue = (val: string, commit: boolean) => {
+    const numVal = Number(val) // avoid parseFloat -> allows non-numerical characters at the end
+
+    if (!Number.isNaN(numVal) && Math.abs(numVal) !== Infinity) {
+      setTempVal(val)
+
+      if (min !== undefined && numVal < min) {
+        setError(`Value cannot be smaller than ${min}${unit}`)
+        return
+      }
+
+      if (max !== undefined && numVal > max) {
+        setError(`Value cannot be grater than ${max}${unit}`)
+        return
+      }
+
+      onChange(numVal, commit)
+      if (error) {
+        setError('')
+      }
+    }
+  }
+
   const onBlur = () => {
-    setTempVal(value.toString()) // reset to last valid value
-    onChange(value, true)
+    onNewValue(value.toString(), true) // reset to last valid value
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
 
-    if (val === '-' || val === '-.') {
+    if (val === '-' || val === '-.' || val === '') {
       // Number('-') returns NaN
       setTempVal(val)
-      onChange(0, false)
+      // onChange(0, false)
       return
     }
 
-    const num = Number(val) // avoid parseFloat -> allows non-numerical characters at the end
-    if (!Number.isNaN(num) && Math.abs(num) !== Infinity) {
-      setTempVal(val)
-      onChange(num, false)
-    }
+    onNewValue(val, false)
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (pressedKeys.current[e.key]) return
-    pressedKeys.current[e.key] = true
+    let mod = e.key === 'ArrowUp' ? 1 : e.key === 'ArrowDown' ? -1 : 0
 
-    const mod = e.key === 'ArrowUp' ? 1 : e.key === 'ArrowDown' ? -1 : 0
+    if (e.shiftKey) {
+      mod *= 10
+    } else if (e.metaKey) {
+      mod *= 100
+    }
+
     if (mod !== 0) {
       e.preventDefault()
-      const newValue = Math.round(value + mod)
-      onChange(newValue, true)
-    }
-  }
-
-  const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      pressedKeys.current[e.key] = false
+      onNewValue(Math.round(value + mod).toString(), true)
     }
   }
 
   return (
     <>
-      <label className={styles.label} htmlFor={inputId} suppressHydrationWarning>
+      <label
+        className={cn(styles.label, large && styles.labelLarge)}
+        htmlFor={inputId}
+        suppressHydrationWarning
+      >
         {label}
       </label>
-      <div className={cn(styles.resizableWrapper, className)}>
+      <div className={cn(styles.resizableWrapper, className, large && styles.wrapperLarge)}>
         <input
           type="text"
           value={tempVal}
           onChange={handleChange}
           onKeyDown={onKeyDown}
-          onKeyUp={onKeyUp}
           size={
             1
           } /* it's a solution for browser which does not support field-sizing: content; yet */
@@ -96,12 +127,15 @@ export default function NumberInput({
           id={inputId}
           suppressHydrationWarning
           className={styles.input}
+          aria-invalid={!!error}
         />
         <span className={styles.suffix}>
           <span className={styles.invisible}>{tempVal}</span>
           &nbsp;
           {unit}
         </span>
+
+        <ErrorTooltip inputId={inputId} msg={error} tooltipSide={tooltipSide} />
       </div>
     </>
   )

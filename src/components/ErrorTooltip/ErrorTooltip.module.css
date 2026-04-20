@@ -1,0 +1,80 @@
+@property --error-offset {
+  syntax: '<length>';
+  initial-value: 5px;
+  inherits: true;
+}
+
+.error {
+  --bg-color: #ab1322;
+  position: fixed;
+  position-anchor: --error;
+  display: none;
+  top: calc(anchor(100%) + var(--error-offset));
+  left: anchor(50%);
+  translate: -50% 0;
+  background: var(--bg-color);
+  color: var(--bg);
+  font-size: 14px;
+  padding: 0.5em;
+  width: fit-content;
+  max-width: 25ch;
+  border-radius: 4px;
+  transition:
+    --error-offset ease,
+    opacity,
+    display allow-discrete;
+  transition-duration: 0.2s;
+  opacity: 0;
+  z-index: 1;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    translate: -50% -100%;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent var(--bg-color) transparent;
+    pointer-events: none;
+  }
+
+  &[data-side='right'] {
+    left: calc(anchor(100%) + var(--error-offset));
+    top: anchor(50%);
+    translate: 0 -50%;
+
+    &::after {
+      top: 50%;
+      left: 0;
+      translate: -100% -50%;
+      border-color: transparent var(--bg-color) transparent transparent;
+    }
+  }
+
+  &[data-side='left'] {
+    left: initial;
+    right: calc(anchor(0%) + var(--error-offset));
+    top: anchor(50%);
+    translate: 0 -50%;
+
+    &::after {
+      top: 50%;
+      left: initial;
+      right: 0;
+      translate: +100% -50%;
+      border-color: transparent transparent transparent var(--bg-color);
+    }
+  }
+}
+
+.active {
+  display: block;
+  opacity: 1;
+  --error-offset: 10px;
+
+  @starting-style {
+    --error-offset: initial;
+    opacity: 0;
+  }
+}

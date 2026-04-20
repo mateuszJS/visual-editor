@@ -5,7 +5,6 @@ import styles from './page.module.css'
 import TestAccountLogin from '@/components/auth/TestAccountLogin/TestAccountLogin'
 import { useRouter } from 'next/navigation'
 import useGuestOnly from '@/hooks/useGuestOnly/useGuestOnly'
-import Navigation from '@/components/Navigation/Navigation'
 
 export default function Login() {
   useGuestOnly()
@@ -16,15 +15,12 @@ export default function Login() {
   }
 
   return (
-    <div className="page">
-      <main className={styles.page}>
-        <div className={styles.contentWrapper}>
-          <h1 className="mb-16">Sign in</h1>
-          <GoogleLogin onSuccess={homeRedirect} />
-          <TestAccountLogin onSuccess={homeRedirect} />
-        </div>
-      </main>
-      <Navigation />
-    </div>
+    <main className={styles.page}>
+      <div className={styles.contentWrapper}>
+        <h1 className="mb-16">Sign in</h1>
+        <GoogleLogin onSuccess={homeRedirect} />
+        <TestAccountLogin onSuccess={homeRedirect} />
+      </div>
+    </main>
   )
 }

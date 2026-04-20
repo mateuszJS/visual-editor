@@ -51,7 +51,7 @@ describe('NumberInput', () => {
       expect(onChange).toHaveBeenLastCalledWith(1, true)
     })
 
-    it('when type "-" should display "-" and call onChange with 0 when typing "-"', async () => {
+    it('when type "-" should display "-" and avoid calling onChange', async () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
@@ -63,7 +63,7 @@ describe('NumberInput', () => {
       await user.type(input, '-')
 
       expect(input).toHaveValue('-')
-      expect(onChange).toHaveBeenLastCalledWith(0, false)
+      expect(onChange).not.toHaveBeenCalled()
     })
 
     it('when type "-.5" should display "-.5" and call onChange with "-0.5" value when typing "-.5"', async () => {
@@ -139,7 +139,7 @@ describe('NumberInput', () => {
       await user.paste('Infinity')
 
       expect(input).toHaveValue('')
-      expect(onChange.mock.calls.length).toBe(1) // clear
+      expect(onChange.mock.calls.length).toBe(0) // clear
     })
 
     it('should not update displayed value nor call onChange when pasting "NaN"', async () => {
@@ -154,7 +154,7 @@ describe('NumberInput', () => {
       await user.paste('NaN')
 
       expect(input).toHaveValue('')
-      expect(onChange.mock.calls.length).toBe(1) // clear
+      expect(onChange.mock.calls.length).toBe(0) // clear
     })
 
     it('should not update displayed value nor call onChange when pasting "-Infinity"', async () => {
@@ -169,7 +169,7 @@ describe('NumberInput', () => {
       await user.paste('-Infinity')
 
       expect(input).toHaveValue('')
-      expect(onChange.mock.calls.length).toBe(1) // clear
+      expect(onChange.mock.calls.length).toBe(0) // clear
     })
   })
 
@@ -188,7 +188,7 @@ describe('NumberInput', () => {
       expect(onChange).toHaveBeenCalledWith(7, true)
     })
 
-    it('pressing key for longer should increase value by 1. Another increase happens after releasing and pressing key again.', async () => {
+    it('pressing key for longer should increase value by nubmer of events.', async () => {
       const user = userEvent.setup()
       const onChange = jest.fn()
 
@@ -199,12 +199,54 @@ describe('NumberInput', () => {
       await user.click(input)
 
       await user.keyboard('{ArrowUp>10/}')
-      expect(onChange).toHaveBeenCalledTimes(1)
-      expect(onChange).toHaveBeenLastCalledWith(2, true)
+      expect(onChange).toHaveBeenCalledTimes(10)
+      expect(onChange).toHaveBeenLastCalledWith(11, true)
 
+      await user.keyboard('{ArrowUp>5/}')
+      expect(onChange).toHaveBeenCalledTimes(15)
+      expect(onChange).toHaveBeenLastCalledWith(16, true)
+    })
+
+    it('pressing key + shift for longer should increase value by nubmer of events * 10.', async () => {
+      const user = userEvent.setup()
+      const onChange = jest.fn()
+
+      render(<TestableComponent initialValue={1} onChange={onChange} />)
+
+      const input = screen.getByRole('textbox', { name: /test label/i })
+
+      await user.click(input)
+
+      await user.keyboard('{Shift>}')
       await user.keyboard('{ArrowUp>10/}')
-      expect(onChange).toHaveBeenCalledTimes(2)
-      expect(onChange).toHaveBeenLastCalledWith(3, true)
+      expect(onChange).toHaveBeenCalledTimes(10)
+      expect(onChange).toHaveBeenLastCalledWith(101, true)
+
+      await user.keyboard('{/Shift}')
+      await user.keyboard('{ArrowUp>5/}')
+      expect(onChange).toHaveBeenCalledTimes(15)
+      expect(onChange).toHaveBeenLastCalledWith(106, true)
+    })
+
+    it('pressing key + Meta key for longer should increase value by nubmer of events * 10.', async () => {
+      const user = userEvent.setup()
+      const onChange = jest.fn()
+
+      render(<TestableComponent initialValue={1} onChange={onChange} />)
+
+      const input = screen.getByRole('textbox', { name: /test label/i })
+
+      await user.click(input)
+
+      await user.keyboard('{Meta>}')
+      await user.keyboard('{ArrowUp>10/}')
+      expect(onChange).toHaveBeenCalledTimes(10)
+      expect(onChange).toHaveBeenLastCalledWith(1001, true)
+
+      await user.keyboard('{/Meta}')
+      await user.keyboard('{ArrowUp>5/}')
+      expect(onChange).toHaveBeenCalledTimes(15)
+      expect(onChange).toHaveBeenLastCalledWith(1006, true)
     })
 
     it('should round decimal value and decrease by 1 when pressing ArrowDown', async () => {

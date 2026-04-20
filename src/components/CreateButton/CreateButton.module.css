@@ -2,6 +2,7 @@
   --size: 3rem;
   flex: 0 0 var(--size);
   height: var(--size);
+  aspect-ratio: 1;
   background-color: #8731dc;
   border-radius: 50%;
   color: white;

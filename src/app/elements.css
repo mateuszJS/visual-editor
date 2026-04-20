@@ -1,0 +1,13 @@
+@layer elements {
+  .page-title {
+    font-size: var(--14px);
+    text-align: center;
+    font-weight: 200;
+    padding-bottom: 15px;
+
+    @media (min-width: 800px) {
+      text-align: initial;
+      font-size: 30px;
+    }
+  }
+}

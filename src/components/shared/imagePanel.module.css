@@ -22,7 +22,6 @@
     isolation: isolate;
 
     > *:not(.coverLink) {
-      position: relative;
       z-index: 1;
     }
   }
@@ -109,7 +108,7 @@
   position: absolute;
   right: 0;
   top: 0;
-  padding-inline: 5px;
+  padding: 11px 6px;
   font-size: var(--16px);
   margin-left: auto;
   background: radial-gradient(closest-side, #0005 40%, transparent);

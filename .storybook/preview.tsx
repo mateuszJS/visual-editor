@@ -7,6 +7,8 @@ import '../src/app/reset.css'
 import '../src/app/spaces.css'
 import '../src/app/theme.css'
 import '../src/app/utilities.css'
+import '../src/app/components.css'
+import '../src/app/elements.css'
 
 const outfit = localFont({
   src: '../local-outfit.woff2',

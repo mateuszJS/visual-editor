@@ -13,7 +13,7 @@ export default function CreatorNav() {
   const { undo, redo } = useCreator()
 
   return (
-    <nav className={cn(styles.root, 'navigation-bar')}>
+    <nav className={cn(styles.root, 'navigation-bar', 'navigation-bar-horizontal')}>
       <NavItem href="/">
         <HomeIcon />
       </NavItem>

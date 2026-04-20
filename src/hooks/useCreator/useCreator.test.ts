@@ -392,23 +392,23 @@ describe('useCreator', () => {
     await act(async () => {
       await result.current.init(window.creatorCanvas, project)
     })
-    console.log(1)
+
     await act(async () => {
       result.current.creator.setSnapshot(
         { width: 100, height: 100, assets: [{ url: '1' }, { url: blobUrl }] },
         true
       )
     })
-    console.log(2)
+
     let updateProjectRequest = interceptRequest('/api/projects/1', 'PATCH')
-    console.log(3)
+
     await act(async () => {
       result.current.creator.setSnapshot(
         { width: 200, height: 100, assets: [{ url: '1' }, { url: blobUrl }] },
         true
       )
     })
-    console.log(4)
+
     // still contains blob, onExternalTextureCreation was not yet triggered by magic-render
     await expect((await updateProjectRequest).json()).resolves.toEqual({
       width: 200,
@@ -416,17 +416,16 @@ describe('useCreator', () => {
       assets: [{ url: '1' }, { url: blobUrl }],
       updatedAt: '2020-01-01T00:00:00.000Z',
     })
-    console.log(5)
+
     updateProjectRequest = interceptRequest('/api/projects/1', 'PATCH')
 
     const setNewUrl = jest.fn()
     __triggerExternalTextureCreation(blobUrl, setNewUrl)
-    console.log(6)
+
     const storageUrl = '/api/storage/storage-item-id'
 
     await act(async () => {})
 
-    console.log(7)
     await expect((await updateProjectRequest).json()).resolves.toEqual({
       width: 200,
       height: 100,
@@ -435,21 +434,20 @@ describe('useCreator', () => {
     })
 
     expect(setNewUrl).toHaveBeenCalledWith(storageUrl)
-    console.log(8)
+
     updateProjectRequest = interceptRequest('/api/projects/1', 'PATCH')
 
     // verify that previosu entries in histor ywere also updated
     await act(async () => {
       result.current.undo?.()
     })
-    console.log(9)
+
     await expect((await updateProjectRequest).json()).resolves.toEqual({
       width: 100,
       height: 100,
       assets: [{ url: '1' }, { url: storageUrl }],
       updatedAt: '2020-01-01T00:00:00.000Z',
     })
-    console.log(10)
   })
 
   it('onExternalTextureCreation does not trigger upload is url does not start with blob:', async () => {

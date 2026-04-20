@@ -6,8 +6,11 @@ import './reset.css'
 import './spaces.css'
 import './theme.css'
 import './utilities.css'
+import './components.css'
+import './elements.css'
 import InitializeData from '@/components/InitializeData/InitializeData'
 import GlobalErrors from '@/components/GlobalErrors/GlobalErrors'
+import Navigation from '@/components/Navigation/Navigation'
 
 const outfit = Outfit({
   variable: '--font-outfit',
@@ -28,7 +31,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${outfit.variable}`}>
         <InitializeData />
-        {children}
+        <div className="page">
+          {children}
+          <Navigation />
+        </div>
         <GlobalErrors />
       </body>
     </html>

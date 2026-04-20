@@ -21,6 +21,7 @@ export default function ActionSheets({ id, children, title }: Props) {
       e.clientY > dialogDimensions.bottom
     ) {
       e.currentTarget.close()
+      e.stopPropagation()
     }
   }
 

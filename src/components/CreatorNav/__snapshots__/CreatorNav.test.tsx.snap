@@ -3,7 +3,7 @@
 exports[`<CreatorNav /> should render navigation items 1`] = `
 <div>
   <nav
-    class="root navigation-bar"
+    class="root navigation-bar navigation-bar-horizontal"
   >
     <a
       aria-current="page"

@@ -47,21 +47,24 @@ export default function NumberInput({
     }
   }, [value])
 
-  const onNewValue = (val: number, commit: boolean) => {
-    if (!Number.isNaN(val) && Math.abs(val) !== Infinity) {
-      setTempVal(val.toString())
+  // accepts string isntead of nubmer to avoid parsin "-.5" -> "-0.5"
+  const onNewValue = (val: string, commit: boolean) => {
+    const numVal = Number(val) // avoid parseFloat -> allows non-numerical characters at the end
 
-      if (min !== undefined && val < min) {
+    if (!Number.isNaN(numVal) && Math.abs(numVal) !== Infinity) {
+      setTempVal(val)
+
+      if (min !== undefined && numVal < min) {
         setError(`Value cannot be smaller than ${min}${unit}`)
         return
       }
 
-      if (max !== undefined && val > max) {
+      if (max !== undefined && numVal > max) {
         setError(`Value cannot be grater than ${max}${unit}`)
         return
       }
 
-      onChange(val, commit)
+      onChange(numVal, commit)
       if (error) {
         setError('')
       }
@@ -69,7 +72,7 @@ export default function NumberInput({
   }
 
   const onBlur = () => {
-    onNewValue(value, true) // reset to last valid value
+    onNewValue(value.toString(), true) // reset to last valid value
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,8 +85,7 @@ export default function NumberInput({
       return
     }
 
-    const num = Number(val) // avoid parseFloat -> allows non-numerical characters at the end
-    onNewValue(num, false)
+    onNewValue(val, false)
   }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -97,8 +99,7 @@ export default function NumberInput({
 
     if (mod !== 0) {
       e.preventDefault()
-      const newValue = Math.round(value + mod)
-      onNewValue(newValue, true)
+      onNewValue(Math.round(value + mod).toString(), true)
     }
   }
 

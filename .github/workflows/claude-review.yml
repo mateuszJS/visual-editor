@@ -22,7 +22,6 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-
-          prompt: '/review-pr REPO: ${{ github.repository }} PR_NUMBER: ${{ github.event.pull_request.number }}'
-          claude_args: |
-            --model "claude-opus-4-6"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: '/review'
+          claude_args: --model claude-opus-4-6

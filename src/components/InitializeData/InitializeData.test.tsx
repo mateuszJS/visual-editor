@@ -1,7 +1,7 @@
 import InitializeData from './InitializeData'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import userStore from '@/hooks/userStore/userStore'
-import registerServiceWorker from './hooks/useServiceWorker/registerServiceWorker'
+import registerServiceWorker from './initServiceWorker/registerServiceWorker'
 
 jest.mock('./hooks/useServiceWorker/registerServiceWorker')
 const registerServiceWorkerMock = registerServiceWorker as jest.Mock

@@ -1,22 +1,17 @@
-import { useEffect } from 'react'
 import registerServiceWorker from './registerServiceWorker'
 
-const setupServiceWorker = async () => {
+export async function initServiceWorker() {
   try {
     await registerServiceWorker()
-    const broadcast = new BroadcastChannel('sync-data')
 
     window.addEventListener('pagehide', () => {
+      const broadcast = new BroadcastChannel('sync-data')
+
       broadcast.postMessage('SYNC_PROJECT_DATA_START')
       broadcast.postMessage('SYNC_PROJECT_MINIATURE_START')
+      console.log('SYNC_PROJECT_MINIATURE_START pagehide useServiceWorker')
     })
   } catch (error) {
     console.error(`Registration failed with ${error}`)
   }
-}
-
-export default function useServiceWorker() {
-  useEffect(() => {
-    setupServiceWorker()
-  }, [])
 }

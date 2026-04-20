@@ -1,8 +1,9 @@
 Tradeoffs:
-  - Currently if you quickly introduce a change in the project and do force refresh (shift + cmd + R), the following flow happens:
-      - Start registering service worker
-      - Fetch to get project data occures
-      - Service worker is installed AFTER fetch is made,
-It is possible to fix it, but at same time it's unnecessary complexity, for example:
-Solution A - Delay fetch until service worker is active(will delay display project)
-Solution B - Store in sync storage(local storage/cookies) time of latest update, if latest update is more recent then one coming from server, then it means it's outdated data and we should wait for SW to return frech data
+
+- Currently if you quickly introduce a change in the project and do force refresh (shift + cmd + R), the following flow happens: - Start registering service worker - Fetch to get project data occures - Service worker is installed AFTER fetch is made,
+  It is possible to fix it, but at same time it's unnecessary complexity, for example:
+  Solution A - Delay fetch until service worker is active(will delay display project)
+  Solution B - Store in sync storage(local storage/cookies) time of latest update, if latest update is more recent then one coming from server, then it means it's outdated data and we should wait for SW to return frech data
+
+known issue: Service worker is no registered if tow tabs open and one of thsoe do hard refresh.
+For now we leave it as it is, it's not a common scenario

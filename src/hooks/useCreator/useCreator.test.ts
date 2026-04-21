@@ -10,6 +10,20 @@ import { __triggerExternalTextureCreation } from '@mateuszjs/magic-render'
 const project = getSanitizedProject()
 
 describe('useCreator', () => {
+  beforeAll(() => {
+    Object.defineProperty(navigator.serviceWorker, 'controller', {
+      value: {},
+      configurable: true,
+    })
+  })
+
+  afterAll(() => {
+    Object.defineProperty(navigator.serviceWorker, 'controller', {
+      value: null,
+      configurable: true,
+    })
+  })
+
   it('creator is ready only after initialization', async () => {
     const { result } = renderHook(useCreator)
 
@@ -216,6 +230,7 @@ describe('useCreator', () => {
           true
         )
       })
+
       // verify the cut
       await expect((await updateProjectReq).json()).resolves.toMatchObject({
         assets: [{ url: '1' }, { url: '2' }, { url: '4' }],

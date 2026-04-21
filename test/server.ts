@@ -18,7 +18,6 @@ export function interceptRequest(url: string, method: string, nth = 1) {
   let currNth = 1
   return new Promise<Request>((resolve) => {
     server.events.on('request:start', async ({ request }) => {
-      console.log(request.url, request.method, currNth, nth)
       if (request.url === `http://localhost${url}` && request.method === method) {
         if (currNth === nth) {
           resolve(request.clone())

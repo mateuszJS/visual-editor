@@ -2,12 +2,12 @@
 
 import { useEffect, useRef } from 'react'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
-import { proxyMap } from 'valtio/utils'
+import { proxyMap, proxySet } from 'valtio/utils'
 import { ref, useSnapshot } from 'valtio'
 import { ApiProjectContent } from '../../../apiTypes'
 
 export const projectsStore = proxyMap<string, ApiProjectContent>()
-export const loadingProject = new Set()
+export const loadersStore = proxySet<string>()
 
 export default function useProject(id?: string) {
   const newProjId = useRef<string | undefined>(undefined)
@@ -15,11 +15,12 @@ export default function useProject(id?: string) {
   const { error, loading, fetcher } = useFetcher<ApiProjectContent>()
 
   useEffect(() => {
-    if (id && !projectsStore.has(id) && !loadingProject.has(id)) {
-      loadingProject.add(id)
+    if (id && !projectsStore.has(id) && !loadersStore.has(id)) {
+      loadersStore.add(id)
+
       fetcher(`/api/projects/${id}`, (project) => {
         projectsStore.set(id, ref(project))
-        loadingProject.delete(id)
+        loadersStore.delete(id)
       })
     }
   }, [id])

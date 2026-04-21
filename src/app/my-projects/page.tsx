@@ -4,7 +4,6 @@ import useProjectsList from '@/hooks/useProjectsList/useProjectsList'
 import imagePanelStyles from '@/components/shared/imagePanel.module.css'
 import styles from './my-projects.module.css'
 import ProjectPanel from '@/components/ProjectPanel/ProjectPanel'
-import formatDate from '@/utils/formatDate'
 import EmptyState from '@/components/EmptyState/EmptyState'
 
 export default function MyProjects() {
@@ -20,7 +19,7 @@ export default function MyProjects() {
             ))
           : [...projectsList.values()].map((project) => (
               <li key={project.id}>
-                <ProjectPanel id={project.id} text={formatDate(project.updatedAt)} />
+                <ProjectPanel id={project.id} updatedAt={project.updatedAt} />
               </li>
             ))}
       </ul>

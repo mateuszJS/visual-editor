@@ -15,7 +15,7 @@ declare const self: ServiceWorkerGlobalScope
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const resources = self.__WB_MANIFEST // this is just to satisfy workbox
 
-const version = 34
+const version = 35
 
 const isTestEnv = 'resetSwEnv' in self
 if (!isTestEnv) {
@@ -59,9 +59,6 @@ self.addEventListener('activate', (event) => {
   console.log(`====================ACTIVE V${version}=====================`)
   event.waitUntil(self.registration?.navigationPreload.enable())
   event.waitUntil(self.clients.claim())
-
-  event.waitUntil(syncProjectData())
-  event.waitUntil(syncProjectMiniatures())
 })
 
 const broadcast = new BroadcastChannel('sync-data')

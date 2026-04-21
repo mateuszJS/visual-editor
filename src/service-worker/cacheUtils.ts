@@ -25,7 +25,10 @@ export const deleteCachedItem = async (key: Request) => {
 export const cacheFirst = async (cacheKey: Request, event: FetchEvent) => {
   const request = event.request
   // First try to get the resource from the cache
-  const responseFromCache = await caches.match(cacheKey)
+  const urlNoQueryParam = new URL(cacheKey.url)
+  urlNoQueryParam.search = ''
+  // passing URL should be enough but JSDOM again have problems so throws an error
+  const responseFromCache = await caches.match(new Request(urlNoQueryParam))
   if (responseFromCache) {
     return responseFromCache
   }
@@ -36,6 +39,7 @@ export const cacheFirst = async (cacheKey: Request, event: FetchEvent) => {
     // event.waitUntil(putInCache(cacheKey, responseFromNetwork.clone()))
     return responseFromNetwork
   } catch (error) {
+    console.log(error)
     return new Response('Network error happened', {
       status: 408,
       headers: { 'Content-Type': 'text/plain' },

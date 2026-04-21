@@ -33,8 +33,6 @@ export function uploadMinaiture(canvas: HTMLCanvasElement, projectId: string) {
 
     const capturedAt = new Date().toISOString()
 
-    console.log('uploadMinaiture', navigator.serviceWorker.controller)
-
     if (navigator.serviceWorker.controller) {
       sendBlob(blob, projectId, capturedAt)
       previewToUpdate = null

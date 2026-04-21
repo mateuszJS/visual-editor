@@ -7,6 +7,7 @@ import useCreator from '@/hooks/useCreator/useCreator'
 import Tooltip from '@/components/Tooltip/Tooltip'
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
 import { CreatorTool } from '@mateuszjs/magic-render/types'
+import posthog from 'posthog-js'
 
 const UploadModal = lazy(() => import('./UploadModal'))
 
@@ -18,6 +19,7 @@ export default function UploadTexture() {
 
   function addTextures(textureUrls: string[]) {
     creatorApi.creator.addImages(textureUrls)
+    posthog.capture('image_uploaded', { image_count: textureUrls.length })
     document.querySelector<HTMLDialogElement>('#upload-image-modal')?.close()
   }
 

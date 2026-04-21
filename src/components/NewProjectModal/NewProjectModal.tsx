@@ -17,6 +17,7 @@ import HorizontalList from '../HorizontalList/HorizontalList'
 import UploadTextures from '../UploadTextures/UploadTextures'
 import { projectsListStore } from '@/hooks/useProjectsList/useProjectsList'
 import CustomSizeModal from '@/components/CustomSizeModal/CustomSizeModal'
+import posthog from 'posthog-js'
 
 const blankCanvasSizes = [
   { width: 2, height: 3.3, label: 'TikTok', icon: TikTokIcon },
@@ -46,6 +47,11 @@ export default function NewProjectModal() {
     createProject(width, height, (project) => {
       setInitialAssets(project.id, textureUrls)
       projectsListStore.projects.set(project.id, project)
+      posthog.capture('project_created', {
+        width,
+        height,
+        source: textureUrls.length > 0 ? 'image_upload' : 'blank_canvas',
+      })
       router.push(`/project/${project.id}`)
     })
   }

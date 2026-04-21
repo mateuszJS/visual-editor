@@ -2,6 +2,7 @@ import type { NextConfig } from 'next'
 import webpackConfig from './webpack.config'
 import { ip } from 'address'
 import path from 'path'
+import { withPostHogConfig } from '@posthog/nextjs-config'
 
 const nextConfig: NextConfig = {
   output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
@@ -32,4 +33,8 @@ const nextConfig: NextConfig = {
   devIndicators: false,
 }
 
-export default nextConfig
+export default withPostHogConfig(nextConfig, {
+  personalApiKey: process.env.POSTHOG_API_KEY, // Personal API Key
+  projectId: process.env.POSTHOG_PROJECT_ID, // Project ID
+  host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+})

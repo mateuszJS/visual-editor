@@ -1,6 +1,5 @@
 'use client'
 
-import useProject from '@/hooks/useProject/useProject'
 import type {
   CreatorTool,
   ProjectSnapshot,
@@ -10,12 +9,13 @@ import type {
 } from '@mateuszjs/magic-render/types'
 import { proxy, ref, useSnapshot } from 'valtio'
 import uploadTexture from './uploadTexture'
-import uploadMiniature from './uploadMiniature'
 import { ApiProjectContent } from '../../../apiTypes'
 import serializeAssets from './serializeAsset'
 import { useRef } from 'react'
 import { resetAssetStore, updateSelectedAssetStore } from '@/stores/asset'
 import { invalidateStorageItems } from '@/hooks/useStorage/useStorage'
+import { uploadMinaiture } from './uploadMiniature'
+import { updateProject } from './updateProject'
 
 // we extract this part to a separate hook since not all components using useCreator need this data
 // and this data is going to be updated quite frequently
@@ -58,7 +58,6 @@ const creatorState = proxy<CreatorStore>({
 */
 function useCreator() {
   const stateSnapshot = useSnapshot(creatorState)
-  const { updateProject } = useProject()
   const bypassInitialSnapshotRequest = useRef(true)
   // do not send initial snapshot if not needed (the request should be send only when initial assets provided)
 
@@ -166,7 +165,7 @@ function useCreator() {
           }
         },
         onIsProcessingFlagUpdate: () => {},
-        onPreviewUpdate: (miniCanvas) => uploadMiniature(miniCanvas, project.id),
+        onPreviewUpdate: (miniCanvas) => uploadMinaiture(miniCanvas, project.id),
         onUpdateTool: (tool) => {
           creatorState.tool = tool
         },

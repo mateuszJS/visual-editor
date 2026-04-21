@@ -9,12 +9,15 @@ import CreatorToolbox from '@/components/CreatorToolbox/CreatorToolbox'
 import CreatorPanels from '@/components/CreatorPanels/CreatorPanels'
 import useProjectId from '@/hooks/useProjectId/useProjectId'
 import disablePageZoom from '@/utils/disablePageZoom'
+import { alternativeMiniatureUpdate } from '@/hooks/useCreator/uploadMiniature'
+import { alternativeProjectUpdate } from '@/hooks/useCreator/updateProject'
 
 export default function Project() {
   const id = useProjectId()
   const { loading, project } = useProject(id)
 
   useEffect(() => {
+    // we could avoid it when SW doens't exist, but it's nearly 0 cost
     const broadcast = new BroadcastChannel('sync-data')
     const intervalId = setInterval(
       () => {
@@ -23,11 +26,35 @@ export default function Project() {
       2 * 60 * 1000
     ) // every 2 minutes
 
-    return () => {
-      clearInterval(intervalId)
+    const triggerSync = () => {
       broadcast.postMessage('SYNC_PROJECT_DATA_START')
       broadcast.postMessage('SYNC_PROJECT_MINIATURE_START')
+
+      // handle case when there was no service worker
+      alternativeMiniatureUpdate()
+      alternativeProjectUpdate()
+    }
+
+    const abortCtrl = new AbortController()
+
+    // beforeunload doesn't always trigger, is unreliable, epsecially on mobile when user view different app tha browser and then clsoes browser
+    // thats why visibilitychange is used as well
+    window.addEventListener('beforeunload', triggerSync, { signal: abortCtrl.signal })
+    window.addEventListener(
+      'visibilitychange',
+      () => {
+        if (document.visibilityState === 'hidden') {
+          triggerSync()
+        }
+      },
+      { signal: abortCtrl.signal }
+    )
+
+    return () => {
+      clearInterval(intervalId)
+      triggerSync()
       broadcast.close()
+      abortCtrl.abort()
     }
   }, [])
 

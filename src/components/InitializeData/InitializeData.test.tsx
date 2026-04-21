@@ -1,9 +1,9 @@
 import InitializeData from './InitializeData'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import userStore from '@/hooks/userStore/userStore'
-import registerServiceWorker from './hooks/useServiceWorker/registerServiceWorker'
+import registerServiceWorker from './initServiceWorker/registerServiceWorker'
 
-jest.mock('./hooks/useServiceWorker/registerServiceWorker')
+jest.mock('./initServiceWorker/registerServiceWorker')
 const registerServiceWorkerMock = registerServiceWorker as jest.Mock
 
 describe('<InitializeData />', () => {
@@ -19,36 +19,6 @@ describe('<InitializeData />', () => {
     })
 
     expect(registerServiceWorkerMock).toHaveBeenCalledTimes(1)
-  })
-
-  it('sends a message to the service worker when the page is hidden', async () => {
-    const broadcast = new BroadcastChannel('sync-data')
-    let receivedDataSync = false
-    let receivedMiniatureSync = false
-
-    const messagesReceivedPromise = new Promise<void>((resolve) => {
-      broadcast.onmessage = (event) => {
-        if (event.data === 'SYNC_PROJECT_DATA_START') {
-          receivedDataSync = true
-        }
-        if (event.data === 'SYNC_PROJECT_MINIATURE_START') {
-          receivedMiniatureSync = true
-        }
-        if (receivedDataSync && receivedMiniatureSync) {
-          resolve()
-        }
-      }
-    })
-
-    render(<InitializeData />)
-
-    fireEvent(window, new Event('pagehide', { bubbles: true }))
-
-    await act(() => messagesReceivedPromise)
-
-    expect(receivedDataSync).toBe(true)
-    expect(receivedMiniatureSync).toBe(true)
-    broadcast.close()
   })
 
   it('should initialize user store on mount', async () => {

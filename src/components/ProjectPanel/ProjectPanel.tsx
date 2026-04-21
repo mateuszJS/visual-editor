@@ -5,22 +5,29 @@ import cn from 'classnames'
 import Popover from '@/components/Popover/Popover'
 import Button from '@/components/Button/Button'
 import useDeleteProject from '@/hooks/useDeleteProject/useDeleteProject'
+import formatDate from '@/utils/formatDate'
 
 interface Props {
   id: string
-  text: string
+  updatedAt: string
 }
-export default function ProjectPanel({ id, text }: Props) {
+export default function ProjectPanel({ id, updatedAt }: Props) {
   const deleteProject = useDeleteProject()
+
+  const formattedUpdatedAt = formatDate(updatedAt)
 
   return (
     <div
       className={cn(imagePanelStyles.imagePanel)}
-      style={{ '--background-url': `url(/api/projects/${id}/miniature)` } as React.CSSProperties} // Fetch miniature from API
+      style={
+        {
+          '--background-url': `url(/api/projects/${id}/miniature?t=${updatedAt})`,
+        } as React.CSSProperties
+      } // Fetch miniature from API
     >
       <Link
         href={`/project/${id}`}
-        aria-label={`Go to ${text} project details`}
+        aria-label={`Go to ${formattedUpdatedAt} project details`}
         className={imagePanelStyles.coverLink}
       ></Link>
       <Popover
@@ -34,7 +41,7 @@ export default function ProjectPanel({ id, text }: Props) {
         </Button>
       </Popover>
 
-      <p className="mt-auto">{text}</p>
+      <p className="mt-auto">{formattedUpdatedAt}</p>
     </div>
   )
 }

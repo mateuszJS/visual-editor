@@ -15,7 +15,7 @@ declare const self: ServiceWorkerGlobalScope
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const resources = self.__WB_MANIFEST // this is just to satisfy workbox
 
-const version = 32
+const version = 35
 
 const isTestEnv = 'resetSwEnv' in self
 if (!isTestEnv) {

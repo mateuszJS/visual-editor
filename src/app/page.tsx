@@ -33,7 +33,7 @@ export default function HomeWrapper() {
                   href={`/project/${project.id}`}
                   style={
                     {
-                      '--background-url': `url(/api/projects/${project.id}/miniature)`,
+                      '--background-url': `url(/api/projects/${project.id}/miniature?t=${project.updatedAt})`,
                     } as React.CSSProperties
                   } // Fetch miniature from API
                 ></Link>

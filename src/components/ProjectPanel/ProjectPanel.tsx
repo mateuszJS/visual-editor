@@ -6,6 +6,7 @@ import Popover from '@/components/Popover/Popover'
 import Button from '@/components/Button/Button'
 import useDeleteProject from '@/hooks/useDeleteProject/useDeleteProject'
 import formatDate from '@/utils/formatDate'
+import posthog from 'posthog-js'
 
 interface Props {
   id: string
@@ -15,6 +16,11 @@ export default function ProjectPanel({ id, updatedAt }: Props) {
   const deleteProject = useDeleteProject()
 
   const formattedUpdatedAt = formatDate(updatedAt)
+
+  const onDeleteProject = () => {
+    deleteProject(id)
+    posthog.capture('project_deleted')
+  }
 
   return (
     <div
@@ -36,7 +42,7 @@ export default function ProjectPanel({ id, updatedAt }: Props) {
         iconOnly
         trigger={() => <VerticalMenu />}
       >
-        <Button onClick={() => deleteProject(id)} variant="ghost" small>
+        <Button onClick={onDeleteProject} variant="ghost" small>
           Delete Project
         </Button>
       </Popover>

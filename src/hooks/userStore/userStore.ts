@@ -5,6 +5,7 @@ import nativeFetcher from '@/utils/nativeFetcher'
 import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
 import { proxy } from 'valtio'
 import { ApiUserBasic } from '../../../apiTypes'
+import { captureError } from '@/utils/captureError'
 
 export interface UserStore {
   user: ApiUserBasic | null | undefined // null if not logged in, undefined if request is pending and we don't yet know
@@ -26,6 +27,7 @@ export async function initUserStore() {
       userStore.user = null
     }
   } catch (error) {
+    captureError(error)
     userStore.user = null
     errorStore.message = 'Error fetching user data: ' + getErrorMessage(error)
   }

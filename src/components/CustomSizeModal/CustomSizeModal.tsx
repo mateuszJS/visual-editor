@@ -2,7 +2,7 @@ import { useState } from 'react'
 import NumberInput from '@/components/NumberInput/NumberInput'
 import ActionSheets from '@/components/ActionSheets/ActionSheets'
 import Button from '@/components/Button/Button'
-import { MAX_PROJECT_SIZE, MIN_PROJECT_SIZE } from '@/consts'
+import { MAX_PROJECT_SIZE, MIN_PROJECT_SIZE, MODALS } from '@/consts'
 
 type Props = {
   setSize: (width: number, height: number) => void
@@ -18,7 +18,7 @@ export default function CustomSizeModal({ setSize }: Props) {
   }
 
   return (
-    <ActionSheets title="Set custom size" id="custom-size-project-modal">
+    <ActionSheets title="Set custom size" id={MODALS.customSizeProjectModal}>
       <form onSubmit={onSubmit}>
         <div className="flex justify-center w-full">
           <div className="mr-16">

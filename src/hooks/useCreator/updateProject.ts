@@ -5,6 +5,7 @@ import { ref } from 'valtio'
 import { ApiProjectContent } from '../../../apiTypes'
 import { projectsStore } from '../useProject/useProject'
 import throttle from '@/utils/throttle'
+import { captureError } from '@/utils/captureError'
 
 type ProjectData = Omit<Partial<ApiProjectContent>, 'id'>
 
@@ -30,7 +31,7 @@ async function sendRequest(id: string, project: ProjectData) {
       })
     )
   } catch (err) {
-    throw Error(`Failed to update project with id ${id}: ${err}`)
+    captureError(err)
   }
 }
 

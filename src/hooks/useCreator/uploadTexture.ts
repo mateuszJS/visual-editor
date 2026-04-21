@@ -2,6 +2,7 @@ import errorStore from '@/stores/error'
 import nativeFetcher from '@/utils/nativeFetcher'
 import getImageDataHash from './getImageDataHash'
 import { MAX_FILE_SIZE } from 'apiConsts'
+import { captureError } from '@/utils/captureError'
 
 export default async function uploadTexture(url: string): Promise<string | null> {
   try {
@@ -42,6 +43,7 @@ export default async function uploadTexture(url: string): Promise<string | null>
 
     return '/api/storage/' + storageItemId
   } catch (err) {
+    captureError(err)
     errorStore.message = 'Failed to upload file.'
   }
 

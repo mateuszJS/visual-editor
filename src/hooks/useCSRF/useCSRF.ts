@@ -1,6 +1,6 @@
 import errorStore from '@/stores/error'
+import { captureError } from '@/utils/captureError'
 import nativeFetcher from '@/utils/nativeFetcher'
-import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
 import { useEffect } from 'react'
 
 let token = ''
@@ -20,7 +20,7 @@ async function getCSRFToken() {
     const { csrfToken } = await response.json()
     token = csrfToken
   } catch (error) {
-    console.error('Error fetching CSRF token' + getErrorMessage(error))
+    captureError(error)
     errorStore.message = 'Something went wrong. Please enter this view again.'
   } finally {
     tokenPromise = null

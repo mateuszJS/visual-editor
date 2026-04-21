@@ -39,7 +39,6 @@ export const onRequestPost = withSession(async (ctx, session) => {
   })
 
   if (err) {
-    // console.error(err)
     return getResponseError('Failed to create a project.')
   }
 

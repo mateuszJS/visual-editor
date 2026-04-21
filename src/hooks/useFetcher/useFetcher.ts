@@ -1,4 +1,5 @@
 import errorStore from '@/stores/error'
+import { captureError } from '@/utils/captureError'
 import nativeFetcher, { FetcherOptions } from '@/utils/nativeFetcher'
 import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
 import { useEffect, useRef, useState } from 'react'
@@ -65,6 +66,7 @@ export default function useFetcher<T extends Record<string, unknown> | Array<unk
       }
       return undefined
     } catch (err) {
+      captureError(err)
       setError(getErrorMessage(err))
       return undefined
       // would be nice to return some error code from BE, so component na read that code and assign it to the correct error msg

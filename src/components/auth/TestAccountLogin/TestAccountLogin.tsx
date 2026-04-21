@@ -27,7 +27,7 @@ export default function GoogleLogin({ onSuccess }: Props) {
       (user) => {
         userStore.user = user
         posthog.identify(user.id.toString(), { email: user.email })
-        posthog.capture('user_logged_in_test_account', { method: 'test_account' })
+        posthog.capture('user_logged_in', { method: 'test_account' })
         onSuccess()
       }
     )

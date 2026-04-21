@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useRef } from 'react'
 import Button from '@/components/Button/Button'
 import styles from './CreateButton.module.css'
 import cn from 'classnames'
+import { MODALS } from '@/consts'
 
 const TRANSITION_DURATION_MS = 2000
 
@@ -44,7 +45,7 @@ export default function CreateButton() {
         iconOnly
         className={styles.createButton}
         variant="ghost"
-        commandfor="new-project-modal"
+        commandfor={MODALS.newProjectModal}
         command="show-modal"
         style={{ '--duration': TRANSITION_DURATION_MS + 'ms' } as React.CSSProperties}
       >

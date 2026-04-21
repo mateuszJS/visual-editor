@@ -1,3 +1,4 @@
+import { captureError } from '@/utils/captureError'
 import nativeFetcher from '@/utils/nativeFetcher'
 import throttle from '@/utils/throttle'
 
@@ -13,7 +14,7 @@ const sendBlob = async (blob: Blob, projectId: string, capturedAt: string) => {
       },
     })
   } catch (err) {
-    // console.error('Failed to upload miniature:', err) capture this log in the future
+    captureError(err)
   }
 }
 

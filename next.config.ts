@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
 }
 
 export default withPostHogConfig(nextConfig, {
-  personalApiKey: process.env.POSTHOG_API_KEY, // Personal API Key
+  personalApiKey: process.env.POSTHOG_API_KEY as string, // Personal API Key
   projectId: process.env.POSTHOG_PROJECT_ID, // Project ID
   host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
 })

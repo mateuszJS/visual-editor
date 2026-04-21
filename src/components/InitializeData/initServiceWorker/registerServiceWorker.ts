@@ -95,6 +95,7 @@ export default async function registerServiceWorker(tryOnlyOnce = false) {
     }
   }
 
+  // Worker is controlling and active, we’re good folks!
   return serviceWorker
 }
 

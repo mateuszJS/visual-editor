@@ -6,8 +6,9 @@ import styles from './CreatorView.module.css'
 import useCreator from '@/hooks/useCreator/useCreator'
 import { ApiProjectContent } from '../../../apiTypes'
 import { captureError } from '@/utils/captureError'
-import { isWebGpuSupported } from './isWebGpuSupported'
 import Link from '@/components/Link/Link'
+import posthog from 'posthog-js'
+import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
 
 interface Props {
   project: ApiProjectContent
@@ -30,6 +31,17 @@ export default function CreatorView({ project }: Props) {
       try {
         await creator.init(canvas, project)
       } catch (err) {
+        const unsupportedWebGPU = getErrorMessage(err).startsWith('X-WEBGPU')
+
+        if (unsupportedWebGPU) {
+          posthog.capture('no-webgpu')
+          setError({
+            title: 'Sorry, the creator is not supported by your browser/device',
+            text: 'Make sure your browser is updated to the latest version or try on a different device.',
+          })
+          return
+        }
+
         setError(
           (err) =>
             err || {
@@ -40,15 +52,6 @@ export default function CreatorView({ project }: Props) {
         captureError(err, { webgpu: true })
       }
     })()
-
-    isWebGpuSupported().then((isSupported) => {
-      if (!isSupported) {
-        setError({
-          title: 'Sorry, the creator is not supported by your browser/device',
-          text: 'Make sure your browser is updated to the latest version or try on a different device.',
-        })
-      }
-    })
 
     return creator.destroy.bind(null, canvas)
   }, [])

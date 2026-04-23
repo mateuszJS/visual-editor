@@ -23,7 +23,7 @@
     "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "145503046459-m2ibp14nc5ngbuiabbbsal0elmig37ui.apps.googleusercontent.com",
     "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39",
     "USER_UPLOADS_BUCKET": "user-uploads-preview", // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
-    "PROJECT_MINIATURES_BUCKET": "project-miniatures-preview", // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
+    "PROJECT_MINIATURES_BUCKET": "project-miniatures-preview" // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
   },
   "r2_buckets": [
     {

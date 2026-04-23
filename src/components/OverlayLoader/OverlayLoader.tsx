@@ -35,6 +35,7 @@ export default function OverlayLoader({ loading, small }: Props) {
 
   return (
     <div
+      data-testid="loader"
       style={style}
       className={cn(classNamesOverlay.overlay, {
         [classNamesOverlay.overlayOpen]: loading,

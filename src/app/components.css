@@ -33,6 +33,7 @@
     align-items: center;
     padding: 3px 8px 11px;
     grid-area: navigation;
+    position: relative; /* so for creator toolbox we can display loading overlay */
 
     button {
       position: relative;

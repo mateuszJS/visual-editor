@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 
 interface Props {
   loading: boolean
+  small?: boolean
 }
 
 const TRANSITION_TIME_MS = 300
@@ -14,7 +15,7 @@ const style = {
   '--transition-time': `${TRANSITION_TIME_MS}ms`,
 } as React.CSSProperties
 
-export default function OverlayLoader({ loading }: Props) {
+export default function OverlayLoader({ loading, small }: Props) {
   const [isVisible, setIsVisible] = useState(loading)
   const shouldRender = isVisible || loading
 
@@ -39,7 +40,7 @@ export default function OverlayLoader({ loading }: Props) {
         [classNamesOverlay.overlayOpen]: loading,
       })}
     >
-      Loading...
+      {!small && 'Loading...'}
     </div>
   )
 }

@@ -16,6 +16,7 @@ const style = {
 
 export default function OverlayLoader({ loading }: Props) {
   const [isVisible, setIsVisible] = useState(loading)
+  const shouldRender = isVisible || loading
 
   useEffect(() => {
     if (loading) {
@@ -29,7 +30,7 @@ export default function OverlayLoader({ loading }: Props) {
     return () => clearTimeout(timeoutId)
   }, [loading])
 
-  if (!isVisible && !loading) return null
+  if (!shouldRender) return null
 
   return (
     <div

@@ -16,6 +16,7 @@ import { resetAssetStore, updateSelectedAssetStore } from '@/stores/asset'
 import { invalidateStorageItems } from '@/hooks/useStorage/useStorage'
 import { uploadMinaiture } from './uploadMiniature'
 import { updateProject } from './updateProject'
+import { captureError } from '@/utils/captureError'
 
 // we extract this part to a separate hook since not all components using useCreator need this data
 // and this data is going to be updated quite frequently
@@ -173,6 +174,7 @@ function useCreator() {
           // This link is for development purposes only. In production, fonts should be served from a proper storage.
           return `https://pub-dca9f88586314ce2a8a165d963769bf0.r2.dev/${id}.woff`
         },
+        captureError: (err) => captureError(err, { webgpu: true }),
         isTest: false,
         disableMinaitures: false,
       })

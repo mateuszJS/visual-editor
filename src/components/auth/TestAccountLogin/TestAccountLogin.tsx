@@ -5,6 +5,7 @@ import Button from '@/components/Button/Button'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
 import { ApiUserBasic } from '../../../../apiTypes'
+import posthog from 'posthog-js'
 
 interface Props {
   onSuccess: VoidFunction
@@ -25,6 +26,8 @@ export default function GoogleLogin({ onSuccess }: Props) {
       },
       (user) => {
         userStore.user = user
+        posthog.identify(user.id.toString(), { email: user.email })
+        posthog.capture('user_logged_in', { method: 'test_account' })
         onSuccess()
       }
     )

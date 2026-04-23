@@ -17,6 +17,8 @@ import HorizontalList from '../HorizontalList/HorizontalList'
 import UploadTextures from '../UploadTextures/UploadTextures'
 import { projectsListStore } from '@/hooks/useProjectsList/useProjectsList'
 import CustomSizeModal from '@/components/CustomSizeModal/CustomSizeModal'
+import posthog from 'posthog-js'
+import { MODALS } from '@/consts'
 
 const blankCanvasSizes = [
   { width: 2, height: 3.3, label: 'TikTok', icon: TikTokIcon },
@@ -46,12 +48,17 @@ export default function NewProjectModal() {
     createProject(width, height, (project) => {
       setInitialAssets(project.id, textureUrls)
       projectsListStore.projects.set(project.id, project)
+      posthog.capture('project_created', {
+        width,
+        height,
+        source: textureUrls.length > 0 ? 'image_upload' : 'blank_canvas',
+      })
       router.push(`/project/${project.id}`)
     })
   }
 
   return (
-    <ActionSheets title="Start new project" id="new-project-modal">
+    <ActionSheets title="Start new project" id={MODALS.newProjectModal}>
       <OverlayLoader loading={loading} />
 
       {/* <UploadTextures onUpload={(urls) => createProjectFrom(500, 500, urls)} /> */}
@@ -63,7 +70,7 @@ export default function NewProjectModal() {
             <Button
               variant="ghost"
               className={styles.blankCanvasOption}
-              commandfor={size.label === 'Custom' ? 'custom-size-project-modal' : undefined}
+              commandfor={size.label === 'Custom' ? MODALS.customSizeProjectModal : undefined}
               command={size.label === 'Custom' ? 'show-modal' : undefined}
               onClick={
                 size.label !== 'Custom'

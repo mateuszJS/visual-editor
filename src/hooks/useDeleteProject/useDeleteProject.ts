@@ -1,6 +1,7 @@
 import { projectsStore } from '@/hooks/useProject/useProject'
 import { projectsListStore } from '@/hooks/useProjectsList/useProjectsList'
 import errorStore from '@/stores/error'
+import { captureError } from '@/utils/captureError'
 import nativeFetcher from '@/utils/nativeFetcher'
 
 export default function useDeleteProject() {
@@ -29,6 +30,7 @@ export default function useDeleteProject() {
         onError()
       }
     } catch (err) {
+      captureError(err)
       onError()
     }
   }

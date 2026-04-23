@@ -46,7 +46,7 @@ export default function CreatorToolbox() {
   return (
     <nav className="navigation-bar gap-2 justify-start">
       {isMobile ? getMobileItems(selectedAssetId) : getDesktopItems()}
-      <OverlayLoader loading={!isReady} />
+      <OverlayLoader loading={!isReady} small />
     </nav>
   )
 }

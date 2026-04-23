@@ -23,7 +23,7 @@ export function toAPI(
   return {
     id: data.id,
     type: data.type,
-    updatedAt: data.updated_at,
+    updatedAt: new Date(data.updated_at).toISOString(),
     public: Boolean(data.public),
     size: data.size,
     hash: data.hash,

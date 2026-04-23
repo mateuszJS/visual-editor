@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import userStore from '@/hooks/userStore/userStore'
 import Script from 'next/script'
+import posthog from 'posthog-js'
 import Button from '@/components/Button/Button'
 import GoogleIcon from 'assets/google-logo.svg'
 import styles from './GoogleLogin.module.css'
@@ -42,6 +43,8 @@ export default function GoogleLogin({ onSuccess }: Props) {
           },
           (user) => {
             userStore.user = user
+            posthog.identify(user.id.toString(), { email: user.email })
+            posthog.capture('user_logged_in', { method: 'google' })
             onSuccess()
           }
         )

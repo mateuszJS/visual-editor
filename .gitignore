@@ -51,3 +51,4 @@ certificates
 
 public/sw.js
 public/sw.js.LICENSE.txt
+.env.local

@@ -1,3 +1,4 @@
+import { isoToSqlTimestamp } from '@/utils/isoToSqlTimestamp'
 import { ApiAsset, ApiProjectContent, ApiProjectMetaData } from '../../apiTypes'
 
 export type DB = {
@@ -28,7 +29,7 @@ export function sanitizeContent(
   return {
     id: data.id.toString(),
     assets,
-    updatedAt: data.updated_at,
+    updatedAt: new Date(data.updated_at).toISOString(),
     width: data.width,
     height: data.height,
     name: data.name,
@@ -45,7 +46,7 @@ export function sanitizeMetaData(
   return {
     id: data.id,
     name: data.name,
-    updatedAt: data.updated_at,
+    updatedAt: new Date(data.updated_at).toISOString(),
   }
 }
 
@@ -106,7 +107,7 @@ export function sanitizeProjectPayload(
 
   if (typeof payload.updatedAt === 'string') {
     try {
-      changes.updated_at = new Date(payload.updatedAt).toISOString()
+      changes.updated_at = isoToSqlTimestamp(payload.updatedAt)
     } catch (err) {
       throw Error('Invalid updatedAt date')
     }

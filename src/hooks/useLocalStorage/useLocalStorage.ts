@@ -1,3 +1,4 @@
+import { captureError } from '@/utils/captureError'
 import { useState } from 'react'
 
 export default function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
@@ -9,7 +10,7 @@ export default function useLocalStorage<T>(key: string, initialValue: T): [T, (v
       const item = window.localStorage.getItem(key)
       return item ? (JSON.parse(item) as T) : initialValue
     } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error)
+      captureError(error)
       return initialValue
     }
   })
@@ -19,7 +20,7 @@ export default function useLocalStorage<T>(key: string, initialValue: T): [T, (v
       setStoredValue(value)
       window.localStorage.setItem(key, JSON.stringify(value))
     } catch (error) {
-      console.warn(`Error setting localStorage key "${key}":`, error)
+      captureError(error)
     }
   }
 

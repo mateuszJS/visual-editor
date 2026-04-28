@@ -25,11 +25,6 @@ describe('<InitializeData />', () => {
     expect(userStore.user).toBeUndefined()
     render(<InitializeData />)
 
-    await waitFor(() =>
-      expect(userStore.user).toEqual({
-        firstName: 'John',
-        lastName: 'Smith',
-      })
-    )
+    await waitFor(() => expect(userStore.user).toEqual({ id: '1', email: 'alice@test.com' }))
   })
 })

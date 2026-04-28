@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
-import useProjectsList from './useProjectsList'
+import useProjectsList, { initializeProjectsList } from './useProjectsList'
 import { server } from 'test/server'
 
 const waitForever = () => new Promise<never>(() => {})
@@ -8,11 +8,11 @@ const waitForever = () => new Promise<never>(() => {})
 // TODO: update tests to match new features of refreshing data after an hour
 describe('useProjectsList', () => {
   it('return list of projects', async () => {
-    const { result } = renderHook(() => useProjectsList())
-
-    await act(() => {
-      // allow the micro-tasks
+    await act(async () => {
+      initializeProjectsList()
     })
+
+    const { result } = renderHook(() => useProjectsList())
 
     expect(result.current).toMatchObject({
       loading: false,
@@ -32,11 +32,10 @@ describe('useProjectsList', () => {
       })
     )
 
-    const { result } = renderHook(() => useProjectsList())
-
-    await act(() => {
-      // allow to compelte micro-tasks
+    await act(async () => {
+      initializeProjectsList()
     })
+    const { result } = renderHook(() => useProjectsList())
 
     expect(result.current).toMatchObject({
       loading: true,
@@ -52,11 +51,10 @@ describe('useProjectsList', () => {
       )
     )
 
-    const { result } = renderHook(() => useProjectsList())
-
-    await act(() => {
-      // allow the micro-tasks
+    await act(async () => {
+      initializeProjectsList()
     })
+    const { result } = renderHook(() => useProjectsList())
 
     expect(result.current).toMatchObject({
       loading: false,

@@ -6,8 +6,9 @@ import { ApiProjectContent } from '../../../apiTypes'
 import { projectsStore } from '../useProject/useProject'
 import throttle from '@/utils/throttle'
 import { captureError } from '@/utils/captureError'
+import { projectsListStore } from '../useProjectsList/useProjectsList'
 
-type ProjectData = Omit<Partial<ApiProjectContent>, 'id'>
+type ProjectData = Omit<ApiProjectContent, 'id' | 'name'>
 
 async function sendRequest(id: string, project: ProjectData) {
   if (!projectsStore.has(id)) {
@@ -52,5 +53,10 @@ export function updateProject(id: string, data: ProjectData) {
   } else {
     projectToUpdate = { id, data }
     throttleProjectUpdate()
+  }
+
+  const projectList = projectsListStore.projects.get(id)
+  if (projectList) {
+    projectList.updatedAt = data.updatedAt
   }
 }

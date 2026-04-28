@@ -46,7 +46,7 @@ export default function CreatorView({ project }: Props) {
           (err) =>
             err || {
               title: 'Sorry, there is an error with this project',
-              text: 'We have been informed, the issue will be resolved as soon as possible. Please try again later or open a different project.',
+              text: 'We have been informed, we are working on this issue. Please open this project later or try a different one.',
             }
         ) // ensure we don't override webgpu error
         captureError(err, { webgpu: true })

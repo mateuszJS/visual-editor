@@ -5,13 +5,13 @@ const mockBlobData = new Uint8Array([1, 2, 3, 4])
 
 export default [
   http.get('/api/me', () => {
-    return HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
+    return HttpResponse.json({ id: '1', email: 'alice@test.com' }, { status: 200 })
   }),
   http.delete('/api/auth/logout', () => {
     return new HttpResponse(null, { status: 204 })
   }),
   http.post('/api/auth/login/google', () => {
-    return HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
+    return HttpResponse.json({ id: '1', email: 'alice@test.com' }, { status: 200 })
   }),
   http.get('/api/csrf', () => {
     return HttpResponse.json({ csrfToken: 'csrf-token' }, { status: 200 })

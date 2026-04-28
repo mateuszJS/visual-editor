@@ -2,9 +2,10 @@
 
 import useProjectsList from '@/hooks/useProjectsList/useProjectsList'
 import imagePanelStyles from '@/components/shared/imagePanel.module.css'
-import styles from './my-projects.module.css'
 import ProjectPanel from '@/components/ProjectPanel/ProjectPanel'
 import EmptyState from '@/components/EmptyState/EmptyState'
+import Button from '@/components/Button/Button'
+import { MODALS } from '@/consts'
 
 export default function MyProjects() {
   const { loading, projectsList } = useProjectsList()
@@ -25,9 +26,9 @@ export default function MyProjects() {
       </ul>
       {!loading && projectsList.size === 0 && (
         <EmptyState title="Your creative journey starts here">
-          <p className="text-balance">
-            Click the <span className={styles.plus}>+</span> button below to start a new project!
-          </p>
+          <Button commandfor={MODALS.newProjectModal} command="show-modal" className="mx-auto">
+            Create Project
+          </Button>
         </EmptyState>
       )}
     </main>

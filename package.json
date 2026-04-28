@@ -82,7 +82,7 @@
     "vite": "^8.0.8",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.0",
-    "wrangler": "^4.83.0"
+    "wrangler": "^4.86.0"
   },
   "eslintConfig": {
     "extends": [

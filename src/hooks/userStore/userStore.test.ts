@@ -12,7 +12,7 @@ describe('userStore', () => {
 
     await act(() => initUserStore())
 
-    expect(result.current.user).toEqual({ firstName: 'John', lastName: 'Smith' })
+    expect(result.current.user).toEqual({ id: '1', email: 'alice@test.com' })
   })
 
   it('updates user data once failed fetch with no user details is completed', async () => {

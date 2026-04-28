@@ -9,7 +9,11 @@ describe('nativeFetcher', () => {
 
     const response = await nativeFetcher('/api/me')
 
-    expect(response).toBeInstanceOf(Response)
+    expect(response).toBeInstanceOf(Object)
+    expect(response.headers).toBeInstanceOf(Headers)
+    expect(response.ok).toBe(true)
+    expect(response.json).toEqual({ id: '1', email: 'alice@test.com' })
+
     const req = await reqPromise
     expect(req.method).toBe('GET')
     expect(req.url).toBe('http://localhost/api/me')
@@ -83,8 +87,25 @@ describe('nativeFetcher', () => {
   })
 
   it('should not redirect on 401 status if disableAuth401Redirect is true', async () => {
-    const requestPromise = nativeFetcher('/api/me', { disableAuth401Redirect: true })
-    await expect(requestPromise).resolves.toBeInstanceOf(Response)
+    server.use(
+      http.get('/api/me', () => {
+        return HttpResponse.json(null, { status: 401 })
+      })
+    )
+
+    const implSymbol = Reflect.ownKeys(window.location).find((i) => typeof i === 'symbol')!
+    const windowReplace = jest
+      .spyOn(
+        (window.location as unknown as { [key: symbol]: { replace: VoidFunction } })[implSymbol],
+        'replace'
+      )
+      .mockImplementation(() => {})
+
+    await nativeFetcher('/api/me', { disableAuth401Redirect: true })
+
+    await act(async () => {})
+
+    expect(windowReplace).not.toHaveBeenCalled()
   })
 
   it('should throw an error if fetch fails', async () => {

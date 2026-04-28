@@ -8,9 +8,9 @@ import Button from '@/components/Button/Button'
 import GoogleIcon from 'assets/google-logo.svg'
 import styles from './GoogleLogin.module.css'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
-import useFetcher from '@/hooks/useFetcher/useFetcher'
 import getUserAgent from '@/utils/getUserAgent'
 import { ApiUserBasic } from '../../../../apiTypes'
+import nativeFetcher from '@/utils/nativeFetcher'
 
 interface Props {
   onSuccess: VoidFunction
@@ -19,7 +19,6 @@ interface Props {
 export default function GoogleLogin({ onSuccess }: Props) {
   const googleWrapper = useRef<HTMLDivElement>(null)
   const getCsrfToken = useCSRF()
-  const { fetcher } = useFetcher<ApiUserBasic>()
 
   const initGooglBtn = () => {
     // Migration docs: https://developers.google.com/identity/gsi/web/guides/migration
@@ -34,19 +33,17 @@ export default function GoogleLogin({ onSuccess }: Props) {
       // since I receive my jwt token directly, there is no redirect
       callback: async ({ credential }) => {
         const csrfToken = await getCsrfToken()
-        fetcher(
-          '/api/auth/login/google',
-          {
-            method: 'POST',
-            csrfToken,
-            json: { idToken: credential, userAgent: getUserAgent() },
-          },
-          (user) => {
-            setUser(user)
-            posthog.capture('user_logged_in', { method: 'google' })
-            onSuccess()
-          }
-        )
+        const response = await nativeFetcher<ApiUserBasic>('/api/auth/login/google', {
+          method: 'POST',
+          csrfToken,
+          json: { idToken: credential, userAgent: getUserAgent() },
+        })
+
+        if (response.ok) {
+          setUser(response.json)
+          posthog.capture('user_logged_in', { method: 'google' })
+          onSuccess()
+        }
       },
     })
     google.accounts.id.renderButton(

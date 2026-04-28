@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import useProject from './useProject'
 import { server } from 'test/server'
+import errorStore from '@/stores/error'
 
 const waitForever = () => new Promise<never>(() => {})
 
@@ -17,7 +18,6 @@ describe('useProject', () => {
       // make sure project is already fetched
       expect(result.current).toMatchObject({
         loading: false,
-        error: null,
         project: { id: '1' },
       })
 
@@ -41,7 +41,6 @@ describe('useProject', () => {
 
       expect(result.current).toMatchObject({
         loading: false,
-        error: null,
         project: { id: '1' },
       })
     })
@@ -58,7 +57,6 @@ describe('useProject', () => {
 
       expect(result.current).toMatchObject({
         loading: true,
-        error: null,
         project: null,
       })
     })
@@ -74,9 +72,10 @@ describe('useProject', () => {
 
       await act(() => {})
 
+      expect(errorStore.message).toBe('No project found.')
+
       expect(result.current).toMatchObject({
         loading: false,
-        error: 'No project found.',
         project: null,
       })
     })
@@ -88,7 +87,6 @@ describe('useProject', () => {
 
       expect(result.current).toMatchObject({
         loading: false,
-        error: null,
         project: null,
       })
     })
@@ -109,7 +107,6 @@ describe('useProject', () => {
 
       expect(result.current).toMatchObject({
         loading: true,
-        error: null,
         project: null,
       })
     })
@@ -127,9 +124,10 @@ describe('useProject', () => {
         result.current.createProject(100, 100, () => {})
       })
 
+      expect(errorStore.message).toBe('Invalid width')
+
       expect(result.current).toMatchObject({
         loading: false,
-        error: 'Invalid width',
         project: null,
       })
     })
@@ -145,7 +143,6 @@ describe('useProject', () => {
 
       expect(result.current).toMatchObject({
         loading: false,
-        error: null,
         project: { id: '1' },
       })
     })

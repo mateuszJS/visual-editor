@@ -3,9 +3,9 @@
 import { setUser } from '@/hooks/userStore/userStore'
 import Button from '@/components/Button/Button'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
-import useFetcher from '@/hooks/useFetcher/useFetcher'
 import { ApiUserBasic } from '../../../../apiTypes'
 import posthog from 'posthog-js'
+import nativeFetcher from '@/utils/nativeFetcher'
 
 interface Props {
   onSuccess: VoidFunction
@@ -13,23 +13,20 @@ interface Props {
 
 export default function GoogleLogin({ onSuccess }: Props) {
   const getCsrfToken = useCSRF()
-  const { fetcher } = useFetcher<ApiUserBasic>()
 
   async function googleLogin() {
     const csrfToken = await getCsrfToken()
-    fetcher(
-      '/api/auth/login/google',
-      {
-        method: 'POST',
-        csrfToken,
-        json: { idToken: 'test-account' },
-      },
-      (user) => {
-        setUser(user)
-        posthog.capture('user_logged_in', { method: 'test_account' })
-        onSuccess()
-      }
-    )
+    const response = await nativeFetcher<ApiUserBasic>('/api/auth/login/google', {
+      method: 'POST',
+      csrfToken,
+      json: { idToken: 'test-account' },
+    })
+
+    if (response.ok) {
+      setUser(response.json)
+      posthog.capture('user_logged_in', { method: 'test_account' })
+      onSuccess()
+    }
   }
 
   return (

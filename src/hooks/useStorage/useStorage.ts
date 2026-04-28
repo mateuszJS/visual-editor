@@ -25,7 +25,7 @@ export async function initializeStorage() {
   const response = await nativeFetcher<ApiStorageItem[]>('/api/storage')
 
   if (response.ok) {
-    response.json.forEach((item) => {
+    response.json.toSorted(sortStorageItemByUpdatedAt).forEach((item) => {
       storageStore.items.set(item.id, item)
     })
     storageStore.error = null
@@ -83,4 +83,10 @@ export default function useStorage() {
     items,
     upload,
   }
+}
+
+function sortStorageItemByUpdatedAt(a: ApiStorageItem, b: ApiStorageItem) {
+  if (a.updatedAt < b.updatedAt) return 1
+  if (a.updatedAt > b.updatedAt) return -1
+  return 0
 }

@@ -2,7 +2,7 @@
 
 import useStorage from '@/hooks/useStorage/useStorage'
 import imagePanelStyles from '@/components/shared/imagePanel.module.css'
-import formatDate from '@/utils/formatDate'
+
 import formatSize from '@/utils/formatSize'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import Popover from '@/components/Popover/Popover'
@@ -10,6 +10,7 @@ import VerticalMenu from 'assets/vertical-menu.svg'
 import Button from '@/components/Button/Button'
 import useDeleteStorageItem from '@/hooks/useDeleteStorageItem/useDeleteStorageItem'
 import styles from './storage.module.css'
+import { timeAgo } from '@/utils/timeAgo'
 
 const MAX_STORAGE = 1024 * 1024 * 5 // 5MB
 
@@ -57,7 +58,7 @@ export default function Explore() {
             </Popover>
             <p className="flex w-full mt-auto">
               <span className="text-ellipsis mr-auto">
-                {item.name || formatDate(item.updatedAt)}
+                {item.name || timeAgo(new Date(item.updatedAt))}
               </span>
               <span className="ml-16 text-nowrap">{formatSize(item.size)}</span>
             </p>

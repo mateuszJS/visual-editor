@@ -5,8 +5,8 @@ import cn from 'classnames'
 import Popover from '@/components/Popover/Popover'
 import Button from '@/components/Button/Button'
 import useDeleteProject from '@/hooks/useDeleteProject/useDeleteProject'
-import formatDate from '@/utils/formatDate'
 import posthog from 'posthog-js'
+import { timeAgo } from '@/utils/timeAgo'
 
 interface Props {
   id: string
@@ -15,7 +15,7 @@ interface Props {
 export default function ProjectPanel({ id, updatedAt }: Props) {
   const deleteProject = useDeleteProject()
 
-  const formattedUpdatedAt = formatDate(updatedAt)
+  const formattedUpdatedAt = timeAgo(new Date(updatedAt))
 
   const onDeleteProject = () => {
     deleteProject(id)

@@ -6,6 +6,9 @@ import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
 import { proxy } from 'valtio'
 import { ApiUserBasic } from '../../../apiTypes'
 import { captureError } from '@/utils/captureError'
+import posthog from 'posthog-js'
+import { initializeProjectsList } from '@/hooks/useProjectsList/useProjectsList'
+import { initializeStorage } from '../useStorage/useStorage'
 
 export interface UserStore {
   user: ApiUserBasic | null | undefined // null if not logged in, undefined if request is pending and we don't yet know
@@ -15,6 +18,16 @@ const userStore = proxy<UserStore>({
   user: undefined,
 })
 
+export async function setUser(user: null | ApiUserBasic) {
+  userStore.user = user
+
+  if (user) {
+    posthog.identify(user.id.toString(), { email: user.email })
+    initializeProjectsList()
+    initializeStorage()
+  }
+}
+
 export async function initUserStore() {
   try {
     const response = await nativeFetcher<ApiUserBasic>('/api/me', {
@@ -22,13 +35,13 @@ export async function initUserStore() {
     })
 
     if (response.ok) {
-      userStore.user = await response.json()
+      setUser(response.json)
     } else {
-      userStore.user = null
+      setUser(null)
     }
   } catch (error) {
     captureError(error)
-    userStore.user = null
+    setUser(null)
     errorStore.message = 'Error fetching user data: ' + getErrorMessage(error)
   }
 }

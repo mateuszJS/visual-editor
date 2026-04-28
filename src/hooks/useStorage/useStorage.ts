@@ -1,46 +1,65 @@
 import { useEffect } from 'react'
-import useFetcher from '../useFetcher/useFetcher'
 import { proxyMap } from 'valtio/utils'
 import { proxy, useSnapshot } from 'valtio'
 import { ApiStorageItem } from '../../../apiTypes'
 import errorStore from '@/stores/error'
-// import nativeFetcher from '@/utils/nativeFetcher'
-
-const PROJECTS_LIST_TTL = 1000 * 60 * 60 * 1 // 1 hour
+import nativeFetcher from '@/utils/nativeFetcher'
 
 export const storageStore = proxy({
-  initializedAt: 0,
-  isRequesting: false,
+  outdated: false,
+  loading: false,
+  error: null as null | string,
   items: proxyMap<string, ApiStorageItem>(),
 })
 
 export function invalidateStorageItems() {
-  storageStore.initializedAt = 0
+  storageStore.outdated = true
+}
+
+export async function initializeStorage() {
+  if (storageStore.loading) return
+
+  storageStore.loading = true
+  storageStore.error = null
+
+  const response = await nativeFetcher<ApiStorageItem[]>('/api/storage')
+
+  if (response.ok) {
+    response.json.forEach((item) => {
+      storageStore.items.set(item.id, item)
+    })
+    storageStore.error = null
+  } else {
+    storageStore.error = response.json?.error || 'Something went wrong.'
+  }
+
+  storageStore.outdated = false
+  storageStore.loading = false
 }
 
 export default function useStorage() {
-  const { error, fetcher } = useFetcher<ApiStorageItem[]>()
-  const storage = useSnapshot(storageStore)
+  const { error, loading, items, outdated } = useSnapshot(storageStore)
 
   useEffect(() => {
-    const isOutdated = Date.now() - storage.initializedAt > PROJECTS_LIST_TTL
-
-    if (isOutdated && !storage.isRequesting) {
-      storageStore.isRequesting = true
-
-      fetcher(`/api/storage`, (items) => {
-        items.forEach((item) => {
-          storageStore.items.set(item.id, item)
-        })
-
-        storageStore.initializedAt = Date.now()
-        storageStore.isRequesting = false
-      })
+    if (outdated) {
+      initializeStorage()
     }
-  }, [])
 
-  useEffect(() => {
-    errorStore.message = error
+    if (error) {
+      errorStore.message = error
+      storageStore.error = null
+    }
+
+    const intervalId = setInterval(
+      () => {
+        storageStore.outdated = true
+      },
+      1000 * 60 * 60 * 1 /* 12 hour */
+    )
+
+    return () => {
+      clearInterval(intervalId)
+    }
   }, [error])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,9 +78,9 @@ export default function useStorage() {
   }
 
   return {
-    loading: !error && storage.initializedAt === 0,
+    loading,
     error,
-    items: storage.items,
+    items,
     upload,
   }
 }

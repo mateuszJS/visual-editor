@@ -11,14 +11,12 @@ async function getCSRFToken() {
     const response = await nativeFetcher<{ csrfToken: string }>('/api/csrf')
 
     if (!response.ok) {
-      const { error } = await response.json()
-      console.error('Error fetching CSRF token', error)
+      console.error('Error fetching CSRF token', response.json?.error)
       errorStore.message = 'Something went wrong. Please enter this view again.'
       return
     }
 
-    const { csrfToken } = await response.json()
-    token = csrfToken
+    token = response.json.csrfToken
   } catch (error) {
     captureError(error)
     errorStore.message = 'Something went wrong. Please enter this view again.'

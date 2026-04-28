@@ -83,10 +83,7 @@ describe('useFetcher', () => {
 
     await act(async () =>
       fetcher('/api/me', (user) => {
-        expect(user).toEqual({
-          firstName: 'John',
-          lastName: 'Smith',
-        })
+        expect(user).toEqual({ id: '1', email: 'alice@test.com' })
       })
     )
 
@@ -94,10 +91,7 @@ describe('useFetcher', () => {
       loading: false,
       error: null,
       success: {
-        json: {
-          firstName: 'John',
-          lastName: 'Smith',
-        },
+        json: { id: '1', email: 'alice@test.com' },
       },
       fetcher: expect.any(Function),
     })
@@ -130,10 +124,7 @@ describe('useFetcher', () => {
 
       await act(async () =>
         fetcher('/api/me', (user) => {
-          expect(user).toEqual({
-            firstName: 'John',
-            lastName: 'Smith',
-          })
+          expect(user).toEqual({ id: '1', email: 'alice@test.com' })
         })
       )
 
@@ -142,10 +133,7 @@ describe('useFetcher', () => {
         loading: false,
         error: null,
         success: {
-          json: {
-            firstName: 'John',
-            lastName: 'Smith',
-          },
+          json: { id: '1', email: 'alice@test.com' },
         },
         fetcher: expect.any(Function),
       })
@@ -225,10 +213,7 @@ describe('useFetcher', () => {
 
       // just to make sure we test if first request was handled correctly
       expect(result.current.success).toEqual({
-        json: {
-          firstName: 'John',
-          lastName: 'Smith',
-        },
+        json: { id: '1', email: 'alice@test.com' },
       })
 
       // set different response
@@ -269,16 +254,13 @@ describe('useFetcher', () => {
 
       server.use(
         http.get('/api/me', () =>
-          HttpResponse.json({ firstName: 'John', lastName: 'Smith' }, { status: 200 })
+          HttpResponse.json({ id: '1', email: 'alice@test.com' }, { status: 200 })
         )
       )
 
       await act(async () => {
         await fetcher('/api/me', (user) => {
-          expect(user).toEqual({
-            firstName: 'John',
-            lastName: 'Smith',
-          })
+          expect(user).toEqual({ id: '1', email: 'alice@test.com' })
         })
       })
 
@@ -288,8 +270,8 @@ describe('useFetcher', () => {
         error: null,
         success: {
           json: {
-            firstName: 'John',
-            lastName: 'Smith',
+            id: '1',
+            email: 'alice@test.com',
           },
         },
         fetcher: expect.any(Function),

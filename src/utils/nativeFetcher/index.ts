@@ -7,15 +7,15 @@ export interface FetcherOptions {
   body?: FormData | Blob | File
 }
 
-type EnrichedResponse<Json, Error> = Omit<Response, 'json'> &
+type EnrichedResponse<Json, Error> = Pick<Response, 'status' | 'headers' | 'blob'> &
   (
     | {
         ok: false
-        json: () => Promise<Error>
+        json: Error | undefined
       }
     | {
         ok: true
-        json: () => Promise<Json>
+        json: Json
       }
   )
 
@@ -62,7 +62,17 @@ export default async function nativeFetcher<
       throw new Error('User is not authorized.')
     }
 
-    return response
+    if (response.headers.get('content-type') === 'application/json') {
+      const json = await response.json()
+      return {
+        status: response.status,
+        headers: response.headers,
+        ok: response.ok,
+        json,
+      } as EnrichedResponse<Json, Error>
+    }
+
+    return response as unknown as EnrichedResponse<Json, Error>
   } catch (err) {
     throw err
   }

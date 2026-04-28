@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
 }
 
+// do NOT use posthog config, their code injection for source maps breaks magic-render
 const config = process.env.POSTHOG_API_KEY
   ? withPostHogConfig(nextConfig, {
       personalApiKey: process.env.POSTHOG_API_KEY as string, // Personal API Key

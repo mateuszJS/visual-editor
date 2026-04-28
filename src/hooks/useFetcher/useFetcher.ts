@@ -48,16 +48,12 @@ export default function useFetcher<T extends Record<string, unknown> | Array<unk
 
       if (requestId.current !== newRequestId) return undefined // this is not the latest request
 
-      const contentType = response.headers.get('Content-Type')
-
       if (!response.ok) {
-        const json = contentType === 'application/json' ? await response.json() : null
-        setError(json?.error || DEFAULT_ERROR_MESSAGE)
+        setError(response.json?.error || DEFAULT_ERROR_MESSAGE)
       } else {
-        const json = contentType === 'application/json' ? await response.json() : null
-        if (json !== null) {
-          setSuccess({ json } as Success<T>) // should be infered by TS without "as"
-          successCallback?.(json)
+        if (response.json !== null) {
+          setSuccess({ json: response.json } as Success<T>) // should be infered by TS without "as"
+          successCallback?.(response.json)
           return undefined
         } else {
           setSuccess({} as Success<T>) // should be infered by TS without "as"

@@ -1,17 +1,16 @@
 import { act, renderHook } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
-import useStorage from './useStorage'
+import useStorage, { initializeStorage } from './useStorage'
 import { server } from 'test/server'
 
 const waitForever = () => new Promise<never>(() => {})
 
 describe('useStorage', () => {
   it('return list of storage items', async () => {
-    const { result } = renderHook(() => useStorage())
-
-    await act(() => {
-      // allow the micro-tasks
+    await act(async () => {
+      initializeStorage()
     })
+    const { result } = renderHook(() => useStorage())
 
     expect(result.current).toMatchObject({
       loading: false,
@@ -31,11 +30,10 @@ describe('useStorage', () => {
       })
     )
 
-    const { result } = renderHook(() => useStorage())
-
-    await act(() => {
-      // allow to compelte micro-tasks
+    await act(async () => {
+      initializeStorage()
     })
+    const { result } = renderHook(() => useStorage())
 
     expect(result.current).toMatchObject({
       loading: true,
@@ -51,11 +49,10 @@ describe('useStorage', () => {
       )
     )
 
-    const { result } = renderHook(() => useStorage())
-
-    await act(() => {
-      // allow the micro-tasks to complete
+    await act(async () => {
+      initializeStorage()
     })
+    const { result } = renderHook(() => useStorage())
 
     expect(result.current).toMatchObject({
       loading: false,

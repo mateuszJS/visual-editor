@@ -1,6 +1,6 @@
 'use client'
 
-import userStore from '@/hooks/userStore/userStore'
+import { setUser } from '@/hooks/userStore/userStore'
 import Button from '@/components/Button/Button'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
 import useFetcher from '@/hooks/useFetcher/useFetcher'
@@ -25,8 +25,7 @@ export default function GoogleLogin({ onSuccess }: Props) {
         json: { idToken: 'test-account' },
       },
       (user) => {
-        userStore.user = user
-        posthog.identify(user.id.toString(), { email: user.email })
+        setUser(user)
         posthog.capture('user_logged_in', { method: 'test_account' })
         onSuccess()
       }

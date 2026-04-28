@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
-import userStore from '@/hooks/userStore/userStore'
+import { setUser } from '@/hooks/userStore/userStore'
 import Script from 'next/script'
 import posthog from 'posthog-js'
 import Button from '@/components/Button/Button'
@@ -42,8 +42,7 @@ export default function GoogleLogin({ onSuccess }: Props) {
             json: { idToken: credential, userAgent: getUserAgent() },
           },
           (user) => {
-            userStore.user = user
-            posthog.identify(user.id.toString(), { email: user.email })
+            setUser(user)
             posthog.capture('user_logged_in', { method: 'google' })
             onSuccess()
           }

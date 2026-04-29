@@ -8,7 +8,7 @@ import { ApiProjectContent } from '../../../apiTypes'
 import { captureError } from '@/utils/captureError'
 import Link from '@/components/Link/Link'
 import posthog from 'posthog-js'
-import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
+import { getErrorMessage } from '@/utils/fetcher/getErrorMessage'
 
 interface Props {
   project: ApiProjectContent

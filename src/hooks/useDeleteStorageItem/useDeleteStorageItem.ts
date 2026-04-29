@@ -1,5 +1,5 @@
 import errorStore from '@/stores/error'
-import nativeFetcher from '@/utils/nativeFetcher'
+import fetcher from '@/utils/fetcher'
 import { storageStore } from '@/hooks/useStorage/useStorage'
 import { captureError } from '@/utils/captureError'
 import posthog from 'posthog-js'
@@ -18,14 +18,11 @@ export default function useDeleteStorageItem() {
       }
     }
 
-    try {
-      posthog.capture('storage_item_deleted')
-      const response = await nativeFetcher('/api/storage/' + id, { method: 'DELETE' })
-      if (!response.ok) {
-        onError()
-      }
-    } catch (err) {
-      captureError(err)
+    posthog.capture('storage_item_deleted')
+    const response = await fetcher('/api/storage/' + id, { method: 'DELETE' })
+
+    if ('err' in response) {
+      captureError(Error(response.err))
       onError()
     }
   }

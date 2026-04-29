@@ -3,7 +3,8 @@ import { proxyMap } from 'valtio/utils'
 import { proxy, useSnapshot } from 'valtio'
 import { ApiStorageItem } from '../../../apiTypes'
 import errorStore from '@/stores/error'
-import nativeFetcher from '@/utils/nativeFetcher'
+import fetcher from '@/utils/fetcher'
+import { captureError } from '@/utils/captureError'
 
 export const storageStore = proxy({
   outdated: false,
@@ -22,19 +23,20 @@ export async function initializeStorage() {
   storageStore.loading = true
   storageStore.error = null
 
-  const response = await nativeFetcher<ApiStorageItem[]>('/api/storage')
-
-  if (response.ok) {
-    response.json.toSorted(sortStorageItemByUpdatedAt).forEach((item) => {
-      storageStore.items.set(item.id, item)
-    })
-    storageStore.error = null
-  } else {
-    storageStore.error = response.json?.error || 'Something went wrong.'
-  }
-
+  const response = await fetcher<ApiStorageItem[]>('/api/storage')
   storageStore.outdated = false
   storageStore.loading = false
+
+  if ('err' in response) {
+    storageStore.error = "We couldn't fetch items from your storage."
+    captureError(Error(response.err))
+    return
+  }
+
+  response.json.toSorted(sortStorageItemByUpdatedAt).forEach((item) => {
+    storageStore.items.set(item.id, item)
+  })
+  storageStore.error = null
 }
 
 export default function useStorage() {

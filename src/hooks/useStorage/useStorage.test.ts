@@ -56,7 +56,7 @@ describe('useStorage', () => {
 
     expect(result.current).toMatchObject({
       loading: false,
-      error: 'No project found.',
+      error: "We couldn't fetch items from your storage.",
     })
     expect([...result.current.items.entries()]).toEqual([])
   })

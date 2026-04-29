@@ -23,7 +23,8 @@
       "assets/*": ["./public/*"],
       "test/*": ["./test/*"],
       "apiConsts": ["./apiConsts.ts"]
-    }
+    },
+    "types": ["google.accounts"]
   },
   "include": [
     "svgr.d.ts",

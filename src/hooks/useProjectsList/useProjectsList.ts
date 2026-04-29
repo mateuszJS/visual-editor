@@ -3,7 +3,8 @@ import { proxyMap } from 'valtio/utils'
 import { proxy, useSnapshot } from 'valtio'
 import { ApiProjectMetaData } from '../../../apiTypes'
 import errorStore from '@/stores/error'
-import nativeFetcher from '@/utils/nativeFetcher'
+import fetcher from '@/utils/fetcher'
+import { captureError } from '@/utils/captureError'
 
 export const projectsListStore = proxy({
   loading: false,
@@ -16,18 +17,19 @@ export async function initializeProjectsList() {
   projectsListStore.loading = true
   projectsListStore.error = null
 
-  const response = await nativeFetcher<ApiProjectMetaData[]>('/api/projects')
+  const response = await fetcher<ApiProjectMetaData[]>('/api/projects')
+  projectsListStore.loading = false
 
-  if (response.ok) {
-    response.json.toSorted(sortProjByUpdatedAt).forEach((project) => {
-      projectsListStore.projects.set(project.id, project)
-    })
-    projectsListStore.error = null
-  } else {
-    projectsListStore.error = response.json?.error || 'Something went wrong.'
+  if ('err' in response) {
+    projectsListStore.error = response.err || "Couldn't fetch your projects. Please try again."
+    captureError(response.err)
+    return
   }
 
-  projectsListStore.loading = false
+  response.json.toSorted(sortProjByUpdatedAt).forEach((project) => {
+    projectsListStore.projects.set(project.id, project)
+  })
+  projectsListStore.error = null
 }
 
 export default function useProjectsList() {

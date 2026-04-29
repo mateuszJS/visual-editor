@@ -16,7 +16,9 @@ describe('uploadTexture', () => {
     const newUrl = await uploadTexture(blobUrl)
 
     expect(newUrl).toBeNull()
-    expect(errorStore.message).toBe('Failed to upload file.')
+    expect(errorStore.message).toBe(
+      'File upload has failed. Please try again or choose a different file.'
+    )
   })
 
   it('returns null and sets error message is blob is too big', async () => {
@@ -33,7 +35,7 @@ describe('uploadTexture', () => {
     const newUrl = await uploadTexture(blobUrl)
 
     expect(newUrl).toBeNull()
-    expect(errorStore.message).toBe('Max file size is 3 MB.')
+    expect(errorStore.message).toBe('File cannot be larger than 3 MB.')
   })
 
   it('throws error if no x-storage-item-id header was returned', async () => {
@@ -56,7 +58,9 @@ describe('uploadTexture', () => {
     const newUrl = await uploadTexture(blobUrl)
 
     expect(newUrl).toBeNull()
-    expect(errorStore.message).toBe('Failed to upload file.')
+    expect(errorStore.message).toBe(
+      'File upload has failed. Please try again or choose a different file.'
+    )
   })
 
   it('should successfully obtain blob and upload to server', async () => {
@@ -80,6 +84,8 @@ describe('uploadTexture', () => {
     const newUrl = await uploadTexture(blobUrl)
 
     expect(newUrl).toBeNull()
-    expect(errorStore.message).toBe('Failed to upload file.')
+    expect(errorStore.message).toBe(
+      'File upload has failed. Please try again or choose a different file.'
+    )
   })
 })

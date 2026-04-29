@@ -2,7 +2,7 @@ import { projectsStore } from '@/hooks/useProject/useProject'
 import { projectsListStore } from '@/hooks/useProjectsList/useProjectsList'
 import errorStore from '@/stores/error'
 import { captureError } from '@/utils/captureError'
-import nativeFetcher from '@/utils/nativeFetcher'
+import fetcher from '@/utils/fetcher'
 
 export default function useDeleteProject() {
   const deleteProject = async (id: string) => {
@@ -24,13 +24,9 @@ export default function useDeleteProject() {
       }
     }
 
-    try {
-      const response = await nativeFetcher('/api/projects/' + id, { method: 'DELETE' })
-      if (!response.ok) {
-        onError()
-      }
-    } catch (err) {
-      captureError(err)
+    const response = await fetcher('/api/projects/' + id, { method: 'DELETE' })
+    if ('err' in response) {
+      captureError(Error(response.err))
       onError()
     }
   }

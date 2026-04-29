@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { proxyMap, proxySet } from 'valtio/utils'
 import { ref, useSnapshot } from 'valtio'
 import { ApiProjectContent } from '../../../apiTypes'
-import nativeFetcher from '@/utils/nativeFetcher'
+import fetcher from '@/utils/fetcher'
 import errorStore from '@/stores/error'
 
 export const projectsStore = proxyMap<string, ApiProjectContent>()
@@ -17,18 +17,23 @@ export default function useProject(id?: string) {
 
   useEffect(() => {
     if (id && !projectsStore.has(id) && !loadersStore.has(id)) {
-      loadersStore.add(id)
-      setLoading(true)
-      nativeFetcher(`/api/projects/${id}`).then((res) => {
-        if (res.ok) {
-          projectsStore.set(id, ref(res.json))
-          loadersStore.delete(id)
-        } else {
+      const sendRequest = async () => {
+        loadersStore.add(id)
+        setLoading(true)
+        const response = await fetcher(`/api/projects/${id}`)
+
+        if ('err' in response) {
           errorStore.message =
-            res.json?.error || 'Something went wrong while fetching the project. Please try again.'
+            response.err || 'Something went wrong while fetching the project. Please try again.'
+        } else {
+          projectsStore.set(id, ref(response.json))
+          loadersStore.delete(id)
         }
+
         setLoading(false)
-      })
+      }
+
+      sendRequest()
     }
   }, [id])
 
@@ -38,7 +43,7 @@ export default function useProject(id?: string) {
     successCallback: (project: ApiProjectContent) => void
   ) {
     setLoading(true)
-    const response = await nativeFetcher<ApiProjectContent>('/api/projects', {
+    const response = await fetcher<ApiProjectContent>('/api/projects', {
       method: 'POST',
       json: {
         width,
@@ -48,14 +53,14 @@ export default function useProject(id?: string) {
       },
     })
 
-    if (response.ok) {
+    if ('err' in response) {
+      errorStore.message =
+        response.err || 'Something went wrong while creating project. Please try again.'
+    } else {
       const project = response.json
       projectsStore.set(project.id, ref(project))
       newProjId.current = project.id
       successCallback(project)
-    } else {
-      errorStore.message =
-        response.json?.error || 'Something went wrong while creating project. Please try again.'
     }
     setLoading(false)
   }

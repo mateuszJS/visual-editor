@@ -10,7 +10,9 @@ import styles from './GoogleLogin.module.css'
 import useCSRF from '@/hooks/useCSRF/useCSRF'
 import getUserAgent from '@/utils/getUserAgent'
 import { ApiUserBasic } from '../../../../apiTypes'
-import nativeFetcher from '@/utils/nativeFetcher'
+import fetcher from '@/utils/fetcher'
+import { captureError } from '@/utils/captureError'
+import errorStore from '@/stores/error'
 
 interface Props {
   onSuccess: VoidFunction
@@ -33,17 +35,22 @@ export default function GoogleLogin({ onSuccess }: Props) {
       // since I receive my jwt token directly, there is no redirect
       callback: async ({ credential }) => {
         const csrfToken = await getCsrfToken()
-        const response = await nativeFetcher<ApiUserBasic>('/api/auth/login/google', {
+        const response = await fetcher<ApiUserBasic>('/api/auth/login/google', {
           method: 'POST',
           csrfToken,
           json: { idToken: credential, userAgent: getUserAgent() },
         })
 
-        if (response.ok) {
-          setUser(response.json)
-          posthog.capture('user_logged_in', { method: 'google' })
-          onSuccess()
+        if ('err' in response) {
+          captureError(Error(response.err))
+          errorStore.message =
+            'Failed to sign in with Google. Please try again or use a different sign in method.'
+          return
         }
+
+        setUser(response.json)
+        posthog.capture('user_logged_in', { method: 'google' })
+        onSuccess()
       },
     })
     google.accounts.id.renderButton(

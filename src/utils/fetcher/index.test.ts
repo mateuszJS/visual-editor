@@ -1,17 +1,20 @@
 import { HttpResponse, http } from 'msw'
-import nativeFetcher from './index'
+import fetcher from './index'
 import { interceptRequest, server } from 'test/server'
 import { act } from '@testing-library/react'
+import errorStore from '@/stores/error'
 
-describe('nativeFetcher', () => {
+describe('fetcher', () => {
   it('should make a GET request and return the response', async () => {
     const reqPromise = interceptRequest('/api/me', 'GET')
 
-    const response = await nativeFetcher('/api/me')
+    const response = await fetcher('/api/me')
 
-    expect(response).toBeInstanceOf(Object)
+    if ('err' in response) {
+      return fail('Expected success response, but got an error object.')
+    }
+
     expect(response.headers).toBeInstanceOf(Headers)
-    expect(response.ok).toBe(true)
     expect(response.json).toEqual({ id: '1', email: 'alice@test.com' })
 
     const req = await reqPromise
@@ -27,12 +30,15 @@ describe('nativeFetcher', () => {
     const reqPromise = interceptRequest('/api/me', 'POST')
 
     const jsonBody = { key: 'value' }
-    const response = await nativeFetcher('/api/me', {
+    const response = await fetcher('/api/me', {
       method: 'POST',
       json: jsonBody,
     })
 
-    expect(response).toBeInstanceOf(Response)
+    if ('err' in response) {
+      return fail('Expected success response, but got an error object.')
+    }
+
     const req = await reqPromise
     expect(req.method).toBe('POST')
     expect(req.url).toBe('http://localhost/api/me')
@@ -44,12 +50,15 @@ describe('nativeFetcher', () => {
     server.use(http.post('/api/me', () => new HttpResponse()))
     const reqPromise = interceptRequest('/api/me', 'POST')
 
-    const response = await nativeFetcher('/api/me', {
+    const response = await fetcher('/api/me', {
       method: 'POST',
       csrfToken: 'test-csrf-token',
     })
 
-    expect(response).toBeInstanceOf(Response)
+    if ('err' in response) {
+      return fail('Expected success response, but got an error object.')
+    }
+
     const req = await reqPromise
     expect(req.headers.get('x-csrf-token')).toBe('test-csrf-token')
   })
@@ -77,7 +86,16 @@ describe('nativeFetcher', () => {
         return HttpResponse.json(null, { status: 401 })
       })
     )
-    await expect(nativeFetcher('/api/me')).rejects.toThrow('User is not authorized.')
+
+    const response = await fetcher('/api/me')
+
+    if (!('err' in response)) {
+      return fail('Expected failed object, but got an success response.')
+    }
+
+    expect(errorStore.message).toBe('You need to firstly log in.')
+
+    await expect(response.err).toBeUndefined()
 
     await act(() => messagesReceivedPromise)
 
@@ -101,15 +119,15 @@ describe('nativeFetcher', () => {
       )
       .mockImplementation(() => {})
 
-    await nativeFetcher('/api/me', { disableAuth401Redirect: true })
+    await fetcher('/api/me', { disableAuth401Redirect: true })
 
     await act(async () => {})
 
     expect(windowReplace).not.toHaveBeenCalled()
   })
 
-  it('should throw an error if fetch fails', async () => {
+  it('should NOT throw an error if fetch fails', async () => {
     server.use(http.get('/api/me', () => HttpResponse.error()))
-    await expect(nativeFetcher('/api/me')).rejects.toThrow('Failed to fetch')
+    await expect(fetcher('/api/me')).resolves.toEqual({ err: undefined })
   })
 })

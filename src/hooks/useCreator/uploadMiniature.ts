@@ -1,20 +1,20 @@
 import { captureError } from '@/utils/captureError'
-import nativeFetcher from '@/utils/nativeFetcher'
+import fetcher from '@/utils/fetcher'
 import throttle from '@/utils/throttle'
 
 const sendBlob = async (blob: Blob, projectId: string, capturedAt: string) => {
-  try {
-    await nativeFetcher(`/api/projects/${projectId}/miniature`, {
-      method: 'PUT',
-      body: blob,
-      options: {
-        headers: {
-          'x-amz-meta-captured-at': capturedAt,
-        },
+  const response = await fetcher(`/api/projects/${projectId}/miniature`, {
+    method: 'PUT',
+    body: blob,
+    options: {
+      headers: {
+        'x-amz-meta-captured-at': capturedAt,
       },
-    })
-  } catch (err) {
-    captureError(err)
+    },
+  })
+
+  if ('err' in response) {
+    captureError(response.err)
   }
 }
 

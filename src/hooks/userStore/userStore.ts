@@ -1,8 +1,6 @@
 'use client'
 
-import errorStore from '@/stores/error'
-import nativeFetcher from '@/utils/nativeFetcher'
-import { getErrorMessage } from '@/utils/nativeFetcher/getErrorMessage'
+import fetcher from '@/utils/fetcher'
 import { proxy } from 'valtio'
 import { ApiUserBasic } from '../../../apiTypes'
 import { captureError } from '@/utils/captureError'
@@ -29,20 +27,18 @@ export async function setUser(user: null | ApiUserBasic) {
 }
 
 export async function initUserStore() {
-  try {
-    const response = await nativeFetcher<ApiUserBasic>('/api/me', {
-      disableAuth401Redirect: true,
-    })
+  const response = await fetcher<ApiUserBasic>('/api/me', {
+    disableAuth401Redirect: true,
+  })
 
-    if (response.ok) {
-      setUser(response.json)
-    } else {
-      setUser(null)
-    }
-  } catch (error) {
-    captureError(error)
+  if ('err' in response) {
     setUser(null)
-    errorStore.message = 'Error fetching user data: ' + getErrorMessage(error)
+    if (response.status !== 401) {
+      captureError(Error(response.err))
+      // let's silently fail, user can sign in again
+    }
+  } else {
+    setUser(response.json)
   }
 }
 

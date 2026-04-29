@@ -1,6 +1,6 @@
 'use client'
 
-import nativeFetcher from '@/utils/nativeFetcher'
+import fetcher from '@/utils/fetcher'
 import { ref } from 'valtio'
 import { ApiProjectContent } from '../../../apiTypes'
 import { projectsStore } from '../useProject/useProject'
@@ -12,28 +12,27 @@ type ProjectData = Omit<ApiProjectContent, 'id' | 'name'>
 
 async function sendRequest(id: string, project: ProjectData) {
   if (!projectsStore.has(id)) {
-    throw Error(`Project with id ${id} does not exist in the store`)
+    captureError(new Error(`Project with id ${id} does not exist in the store`))
   }
 
-  try {
-    const res = await nativeFetcher(`/api/projects/${id}`, {
-      method: 'PATCH',
-      json: project,
+  const response = await fetcher(`/api/projects/${id}`, {
+    method: 'PATCH',
+    json: project,
+  })
+
+  if ('err' in response) {
+    // We send many updates in the background, it's possible osme might fail, we don't have to notify user about it
+    captureError(new Error(response.err))
+    return
+  }
+
+  projectsStore.set(
+    id,
+    ref({
+      ...projectsStore.get(id)!,
+      ...project,
     })
-
-    if (!res.ok) {
-      throw Error('Failed to update project.')
-    }
-    projectsStore.set(
-      id,
-      ref({
-        ...projectsStore.get(id)!,
-        ...project,
-      })
-    )
-  } catch (err) {
-    captureError(err)
-  }
+  )
 }
 
 let projectToUpdate = null as { id: string; data: ProjectData } | null

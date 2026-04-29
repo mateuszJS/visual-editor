@@ -1,3 +1,6 @@
+import errorStore from '@/stores/error'
+import { captureError } from '../captureError'
+
 export interface FetcherOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT'
   json?: object | null
@@ -7,17 +10,9 @@ export interface FetcherOptions {
   body?: FormData | Blob | File
 }
 
-type EnrichedResponse<Json, Error> = Pick<Response, 'status' | 'headers' | 'blob'> &
-  (
-    | {
-        ok: false
-        json: Error | undefined
-      }
-    | {
-        ok: true
-        json: Json
-      }
-  )
+type EnrichedResponse<Json> = Pick<Response, 'status' | 'headers' | 'blob'> & {
+  json: Json
+}
 
 /**
  * A simple fetch wrapper that improves developer experience
@@ -25,7 +20,6 @@ type EnrichedResponse<Json, Error> = Pick<Response, 'status' | 'headers' | 'blob
  */
 export default async function nativeFetcher<
   Json extends Record<string, unknown> | Array<unknown> = never,
-  Error = { error: string },
 >(
   url: string,
   {
@@ -36,7 +30,7 @@ export default async function nativeFetcher<
     csrfToken,
     body,
   }: FetcherOptions = {}
-): Promise<EnrichedResponse<Json, Error>> {
+): Promise<EnrichedResponse<Json> | { err: string | undefined; status?: number }> {
   try {
     // This should be the only one place in the codebase where we use native fetch!
     // eslint-disable-next-line no-restricted-syntax
@@ -59,21 +53,42 @@ export default async function nativeFetcher<
         window.location.replace('/login')
       }
       /* app reload is used to clear all JS memory data, hide all modals(like new project modal) */
-      throw new Error('User is not authorized.')
+      errorStore.message = 'You need to firstly log in.'
+      throw new Error(errorStore.message)
     }
 
-    if (response.headers.get('content-type') === 'application/json') {
-      const json = await response.json()
+    const jsonRes = (
+      response.headers.get('content-type') === 'application/json' ? await response.json() : null
+    ) as Json
+
+    if (!response.ok) {
       return {
         status: response.status,
-        headers: response.headers,
-        ok: response.ok,
-        json,
-      } as EnrichedResponse<Json, Error>
+        err: getApiErrorMessage(jsonRes),
+      }
     }
 
-    return response as unknown as EnrichedResponse<Json, Error>
+    return {
+      status: response.status,
+      headers: response.headers,
+      json: jsonRes,
+      blob: response.blob, // TODO: consider handling it liek json
+    }
   } catch (err) {
-    throw err
+    captureError(err)
+    return {
+      err: undefined,
+    }
+  }
+}
+
+function getApiErrorMessage(resJson: unknown) {
+  if (
+    typeof resJson === 'object' &&
+    resJson !== null &&
+    'error' in resJson &&
+    typeof resJson.error === 'string'
+  ) {
+    return resJson.error
   }
 }

@@ -25,14 +25,14 @@ export default function MyProjects() {
                   className={cn(imagePanelStyles.skeleton, error && imagePanelStyles.errorSkeleton)}
                 ></li>
               ))
-            : [...projectsList.values()].map((project) => (
+            : projectsList.map((project) => (
                 <li key={project.id}>
                   <ProjectPanel id={project.id} updatedAt={project.updatedAt} />
                 </li>
               ))}
         </ul>
       </div>
-      {!error && !loading && projectsList.size === 0 && (
+      {!error && !loading && projectsList.length === 0 && (
         <EmptyState title="Your creative journey starts here">
           <Button commandfor={MODALS.newProjectModal} command="show-modal" className="mx-auto">
             Create Project

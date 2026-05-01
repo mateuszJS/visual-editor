@@ -47,7 +47,7 @@ export default function NewProjectModal() {
     )
     createProject(width, height, (project) => {
       setInitialAssets(project.id, textureUrls)
-      projectsListStore.projects.set(project.id, project)
+      projectsListStore.projects.unshift(project)
       posthog.capture('project_created', {
         width,
         height,

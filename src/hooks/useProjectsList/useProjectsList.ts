@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { proxyMap } from 'valtio/utils'
 import { proxy, useSnapshot } from 'valtio'
 import { ApiProjectMetaData } from '../../../apiTypes'
 import fetcher from '@/utils/fetcher'
@@ -9,7 +8,7 @@ export const projectsListStore = proxy({
   initialized: false,
   loading: false,
   error: null as null | string,
-  projects: proxyMap<string, ApiProjectMetaData>(),
+  projects: [] as ApiProjectMetaData[],
 })
 
 export async function initializeProjectsList() {
@@ -28,9 +27,7 @@ export async function initializeProjectsList() {
     return
   }
 
-  response.json.toSorted(sortProjByUpdatedAt).forEach((project) => {
-    projectsListStore.projects.set(project.id, project)
-  })
+  projectsListStore.projects = response.json.toSorted(sortProjByUpdatedAt)
   projectsListStore.error = null
 }
 

@@ -42,7 +42,7 @@ interface CreatorStore {
   fonts: Record<string, number>
 }
 
-const creatorState = proxy<CreatorStore>({
+const initialState = {
   creator: null,
   projectId: null,
   initialAssets: null,
@@ -51,7 +51,9 @@ const creatorState = proxy<CreatorStore>({
   historySnapshotIndex: 0,
   tool: 0, // CreatorTool.SelectAsset,
   fonts: DEFAULT_FONTS,
-})
+}
+
+const creatorState = proxy<CreatorStore>(structuredClone(initialState))
 
 /*
   Hook to be used whenever reference to the creator is needed, like in many Toolbox components.
@@ -223,11 +225,15 @@ function useCreator() {
       if (!canvas.isConnected) {
         // canvas is still rendered, mainly because react in strict mode calls useEffect twice
         creatorState.creator?.destroy()
-        creatorState.creator = null
-        creatorState.projectId = null
-        creatorState.selectedAssetId = null
-        creatorState.historySnapshots = []
-        creatorState.historySnapshotIndex = 0
+
+        const newState = structuredClone(initialState)
+        Object.keys(newState).forEach((key) => {
+          // Yet, this is the only way to make it work with TypeScript
+          ;(creatorState[key as keyof CreatorStore] as unknown) = newState[
+            key as keyof CreatorStore
+          ] as unknown
+        })
+
         canvas.removeAttribute('data-connected')
         resetAssetStore()
       }

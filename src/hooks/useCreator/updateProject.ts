@@ -54,8 +54,8 @@ export function updateProject(id: string, data: ProjectData) {
     throttleProjectUpdate()
   }
 
-  const projectList = projectsListStore.projects.get(id)
-  if (projectList) {
-    projectList.updatedAt = data.updatedAt
+  const project = projectsListStore.projects.find((proj) => proj.id === id)
+  if (project) {
+    project.updatedAt = data.updatedAt
   }
 }

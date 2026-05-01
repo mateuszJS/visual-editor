@@ -63,7 +63,7 @@ export default function NewProjectModal() {
 
       {/* <UploadTextures onUpload={(urls) => createProjectFrom(500, 500, urls)} /> */}
 
-      <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with desired size</h3>
+      <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with the desired size</h3>
       <HorizontalList>
         {blankCanvasSizes.map((size) => (
           <li key={size.label}>

@@ -76,7 +76,10 @@ function useCreator() {
       updatedAt: new Date().toISOString(),
     })
 
-    creatorState.creator!.setSnapshot(historySnapshot, false)
+    creatorState.creator!.setSnapshot(historySnapshot, {
+      produceSnapshot: false,
+      addHistoryEntry: true,
+    })
     updateSelectedAssetStore(
       creatorState.historySnapshots[creatorState.historySnapshotIndex],
       creatorState.selectedAssetId
@@ -172,7 +175,7 @@ function useCreator() {
         },
         getFontUrl: (id: number) => {
           // This link is for development purposes only. In production, fonts should be served from a proper storage.
-          return `https://pub-dca9f88586314ce2a8a165d963769bf0.r2.dev/${id}.woff`
+          return `${process.env.NEXT_PUBLIC_R2_ASSETS_BUCKET_URL}/fonts/${id}.woff`
         },
         captureError: (err) => captureError(err, { webgpu: true }),
         isTest: false,
@@ -197,7 +200,7 @@ function useCreator() {
         assets: project.assets as Asset[],
       }
 
-      creator.setSnapshot(initialSnapshot, true)
+      creator.setSnapshot(initialSnapshot, { produceSnapshot: true, addHistoryEntry: true })
 
       if (hasInitialAssets) {
         // TODO: avoid entry in history
@@ -211,7 +214,10 @@ function useCreator() {
       if (!creator) throw Error('Creator is not initialized')
 
       const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
-      creator.setSnapshot({ width, height, assets: snapshot.assets }, true)
+      creator.setSnapshot(
+        { width, height, assets: snapshot.assets },
+        { produceSnapshot: true, addHistoryEntry: true }
+      )
     },
     destroy(canvas: HTMLCanvasElement) {
       if (!canvas.isConnected) {

@@ -23,7 +23,8 @@
     "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "145503046459-m2ibp14nc5ngbuiabbbsal0elmig37ui.apps.googleusercontent.com",
     "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39",
     "USER_UPLOADS_BUCKET": "user-uploads-preview", // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
-    "PROJECT_MINIATURES_BUCKET": "project-miniatures-preview" // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
+    "PROJECT_MINIATURES_BUCKET": "project-miniatures-preview", // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
+    "NEXT_PUBLIC_R2_ASSETS_BUCKET_URL": "https://pub-a31654d2ab1e4d969944193c5df3fa5c.r2.dev"
   },
   "r2_buckets": [
     {
@@ -43,6 +44,12 @@
       "bucket_name": "project-miniatures-preview",
       "preview_bucket_name": "project-miniatures-preview",
       "remote": true // Only because local R2 doesn't expose endpoint for S3 client
+    },
+    {
+      "binding": "publicAssets",
+      "bucket_name": "public-assets-preview",
+      "preview_bucket_name": "public-assets-preview",
+      "remote": true // Only because local R2 doesn't expose endpoint for S3 client
     }
   ],
   "env": {
@@ -60,9 +67,11 @@
         "CF_ACCOUNT_ID": "e2a944561db9909ec049a1772b2e1a39",
         "USER_UPLOADS_BUCKET": "user-uploads", // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
         "PROJECT_MINIATURES_BUCKET": "project-miniatures", // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
+        "PUBLIC_ASSETS_BUCKET": "public-assets", // S3 client needs this, we cannot read the value of r2_buckets.bucket_name config
         "POSTHOG_PROJECT_ID": "163653",
         "NEXT_PUBLIC_POSTHOG_HOST": "https://eu.i.posthog.com",
-        "NEXT_PUBLIC_POSTHOG_KEY": "phc_nfXLN5qiT5pouqdRuPxwdazLxmcXf2GDXbBzxzJ8Lgkt"
+        "NEXT_PUBLIC_POSTHOG_KEY": "phc_nfXLN5qiT5pouqdRuPxwdazLxmcXf2GDXbBzxzJ8Lgkt",
+        "NEXT_PUBLIC_R2_ASSETS_BUCKET_URL": "https://pub-dca9f88586314ce2a8a165d963769bf0.r2.dev"
       },
       "r2_buckets": [
         {
@@ -72,6 +81,10 @@
         {
           "binding": "projectMiniatures",
           "bucket_name": "project-miniatures"
+        },
+        {
+          "binding": "publicAssets",
+          "bucket_name": "public-assets",
         }
       ]
     }

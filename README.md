@@ -81,7 +81,7 @@ to test:
 `npx wrangler d1 execute production --local --command="SELECT * FROM users"`
 
 ##Migrations
-to start: `npx wrangler d1 migrations create preview <migration brief description>`
+to start: `npx wrangler d1 migrations create visual-editor-preview <migration brief description>`
 
 to apply:
 
@@ -111,4 +111,15 @@ url to test upload:
 
 ```bash
 curl --request PUT "<URL>" --header "Content-Type: text/plain" --header "Content-Length: 10" --data "nagvsudXgvakgabdgdkfaxsuieg"
+```
+
+# Templates
+
+To create a template, you can simply open the frontend in browser and run the following code in browser console:
+
+```js
+fetch('/api/templates/{project-id}', {
+  method: 'POST',
+  body: JSON.stringify({ name: 'First template!', previewShape: 'SQUARE' }),
+})
 ```

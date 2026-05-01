@@ -7,3 +7,11 @@
   border-radius: 8px;
   width: 100px;
 }
+
+.templatesList {
+  display: grid;
+  /* ceil(100 / 26) = 3 columns at least */
+  --panel-min-size: min(26vw, 200px);
+  grid-template-columns: repeat(auto-fill, minmax(var(--panel-min-size), 1fr));
+  gap: 16px;
+}

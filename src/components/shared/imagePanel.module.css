@@ -29,7 +29,7 @@
 
 .list {
   display: grid;
-  --panel-min-size: min(40vw, 200px);
+  --panel-min-size: min(34vw, 200px);
   grid-template-columns: repeat(auto-fill, minmax(var(--panel-min-size), 1fr));
   gap: 16px;
 }
@@ -40,7 +40,10 @@
   opacity: 0.5;
   background-image: linear-gradient(45deg, #333 0%, #555 50% 80%, #333 110%);
   /* box-shadow: 0 0 10px 10px inset #0002; */
-  animation: --fade 2s ease infinite;
+
+  &:not(.errorSkeleton) {
+    animation: --fade 2s ease infinite;
+  }
 
   &:nth-child(1) {
     animation-delay: 0.3s;

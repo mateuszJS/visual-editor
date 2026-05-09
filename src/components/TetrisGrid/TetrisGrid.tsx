@@ -55,6 +55,7 @@ type PlacedShape = Item & {
 
 export function TetrisGrid() {
   const [tetris, setTetris] = useState<PlacedShape[]>([])
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cols, setCols] = useState(3)
 
   useEffect(() => {
@@ -113,6 +114,7 @@ export function TetrisGrid() {
     }
 
     window.addEventListener('resize', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const newCols = Math.round(window.innerWidth / 100)
       // setCols(newCols)
       // calculateTetrisLayout(newCols)

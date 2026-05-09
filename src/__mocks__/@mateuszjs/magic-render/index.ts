@@ -38,10 +38,11 @@ const initMagicRenderMock: typeof initCreator = function ({
       return Promise.resolve()
     }),
     removeAsset: jest.fn(),
-    setSnapshot: jest.fn(async (snapshot, withSnapshot) => {
-      if (withSnapshot) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setSnapshot: jest.fn(async (snapshot, { produceSnapshot, addHistoryEntry }) => {
+      if (produceSnapshot) {
         currentSnapshot = snapshot
-        onSnapshotUpdate(currentSnapshot, withSnapshot)
+        onSnapshotUpdate(currentSnapshot, produceSnapshot)
       }
     }),
     setTool: jest.fn((tool) => {

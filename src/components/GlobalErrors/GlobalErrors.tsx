@@ -4,8 +4,14 @@ import { useSnapshot } from 'valtio'
 import ErrorToast from '@/components/ErrorToast/ErrorToast'
 import errorStore from '@/stores/error'
 import { useEffect } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+
+export const ERR_MSG_PARAM = 'err_msg'
 
 export default function GlobalErrors() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const { message } = useSnapshot(errorStore)
 
   useEffect(() => {
@@ -16,6 +22,12 @@ export default function GlobalErrors() {
         errorStore.message =
           'An error occurred while syncing project data. Check your internet connection.'
       }
+    }
+
+    errorStore.message = searchParams.get(ERR_MSG_PARAM)
+
+    if (errorStore.message) {
+      router.replace(pathname)
     }
 
     return () => {

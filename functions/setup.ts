@@ -176,12 +176,21 @@ beforeEach(async () => {
     )
     .run()
 
+  // prettier-ignore
   await env.db
     .prepare(
       `INSERT INTO templates (id, name, preview_shape, assets, width, height)
-			 VALUES (?, ?, ?, ?, ?, ?)`
+			 VALUES
+        (?, ?, ?, ?, ?, ?),
+        (?, ?, ?, ?, ?, ?),
+        (?, ?, ?, ?, ?, ?)
+      `
     )
-    .bind('tp_1', 'Test Template', 'SQUARE', '[]', 500, 800)
+    .bind(
+      'tp_1', 'Test Template', 'SQUARE', '[]', 500, 800, // 1st template
+      'tp_2', 'Another Template', 'RECTANGLE', '[]', 600, 900, // 2nd template
+      'tp_3', 'Yet Another Template', 'CIRCLE', '[]', 700, 1000 // 3rd template
+    )
     .run()
 })
 

@@ -22,30 +22,32 @@ export async function projectRoute(
     // verify if we have a more recent version in IndexedDB
     // it's rare because normally once a browser/page/tab is closed, the update is sent to server
     // if we detect that local change is more recent, we send it to server in the background and return it to client
-    const [networkRes, localRes] = await Promise.all([
-      fetch(event.request).then((res) => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch project from server')
-        }
-        return res.json() as Promise<ApiProjectContent>
-      }),
+    const [networkResponse, localProj] = await Promise.all([
+      fetch(event.request),
       getProject(db, projectId),
     ])
 
-    if (localRes) {
+    if (!networkResponse.ok) {
+      // e.g. 401 from the server
+      return networkResponse
+    }
+
+    const networkProj = (await networkResponse.json()) as ApiProjectContent
+
+    if (localProj) {
       db.transaction(['projects'], 'readwrite').objectStore('projects').delete(projectId)
-      if (localRes.updatedAt > networkRes.updatedAt) {
+      if (localProj.updatedAt > networkProj.updatedAt) {
         const updateServerRequest = new Request(`/api/projects/${projectId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(localRes),
+          body: JSON.stringify(localProj),
         })
         event.waitUntil(fetch(updateServerRequest))
-        return Response.json(localRes, { status: 200 })
+        return Response.json(localProj, { status: 200 })
       }
     }
 
-    return Response.json(networkRes, { status: 200 })
+    return Response.json(networkProj, { status: 200 })
   }
 
   if (request.method === 'PATCH') {

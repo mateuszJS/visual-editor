@@ -1,4 +1,14 @@
 .root {
-  padding-block: 5px;
+  padding: 5px 10px;
   grid-area: header;
+  gap: 15px;
+
+  a,
+  button {
+    width: auto;
+  }
+}
+
+.exportBtn {
+  color: rgba(var(--primary-rgb), 0.75);
 }

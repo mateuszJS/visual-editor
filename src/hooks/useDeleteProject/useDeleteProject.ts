@@ -8,10 +8,10 @@ export default function useDeleteProject() {
   const deleteProject = async (id: string) => {
     // use in the case of optimistic repsonse failure
     const safeCopyDetails = projectsStore.get(id)
-    const safeCopyList = projectsListStore.projects.get(id)
+    const safeCopyList = projectsListStore.projects.find((p) => p.id === id)
 
     projectsStore.delete(id)
-    projectsListStore.projects.delete(id)
+    projectsListStore.projects = projectsListStore.projects.filter((p) => p.id !== id)
 
     const onError = () => {
       errorStore.message = 'An error has occured while removing the project. Please try again.'
@@ -20,7 +20,7 @@ export default function useDeleteProject() {
         projectsStore.set(id, safeCopyDetails)
       }
       if (safeCopyList) {
-        projectsListStore.projects.set(id, safeCopyList)
+        projectsListStore.projects.push(safeCopyList)
       }
     }
 

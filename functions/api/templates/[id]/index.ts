@@ -71,6 +71,6 @@ export const onRequestPost: Handler<'id'> = withSession(
     }
 
     return Response.json({ templateId }, { status: 201 })
-  }
-  // { adminOnly: true }
+  },
+  { adminOnly: true }
 )

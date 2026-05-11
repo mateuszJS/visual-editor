@@ -93,13 +93,14 @@ describe('fetcher', () => {
       return fail('Expected failed object, but got an success response.')
     }
 
-    expect(errorStore.message).toBe('You need to firstly log in.')
-
-    await expect(response.err).toBeUndefined()
+    expect(response.status).toBe(401)
+    expect(response.err).toBe('You need to firstly log in.')
 
     await act(() => messagesReceivedPromise)
 
-    expect(windowReplace).toHaveBeenCalledWith('/login')
+    expect(windowReplace).toHaveBeenCalledWith(
+      '/login?err_msg=You%20need%20to%20firstly%20log%20in.'
+    )
     windowReplace.mockRestore()
     broadcast.close()
   })

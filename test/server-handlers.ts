@@ -53,4 +53,7 @@ export default [
   http.get('/api/storage', () => {
     return HttpResponse.json([{ id: '1' }, { id: '2' }], { status: 200 })
   }),
+  http.get('/api/templates', () => {
+    return HttpResponse.json([{ id: '1' }, { id: '2' }], { status: 200 })
+  }),
 ]

@@ -1,0 +1,212 @@
+.gridContainer {
+  --gap: 10px;
+  --cols: 3;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  /* grid-auto-rows: 100px; */
+  gap: var(--gap);
+  position: relative;
+}
+
+.gridItem {
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+}
+
+/* 
+   REFINED LOGIC:
+   The total height of a y3 item is (3 * rowHeight) + (2 * gap).
+   To cut exactly above the bottom tile:
+   Split = (Total Height - 1 Row - 1 Gap) / Total Height.
+   In CSS terms for a y3 shape, 66.6% + (var(--gap) / 3) hits the bottom edge of the middle tile.
+*/
+
+/* --- L-1-y3 Series (2x3 Bounding Box) --- */
+
+.shape_L_1_y3 {
+  --x-split: calc(50% - (var(--gap) / 2));
+  /* Pull the cut down to the top edge of the bottom cell */
+  --y-split: calc(66.66% + (var(--gap) * 0.66));
+  clip-path: polygon(
+    0% 0%,
+    var(--x-split) 0%,
+    var(--x-split) var(--y-split),
+    100% var(--y-split),
+    100% 100%,
+    0% 100%
+  );
+}
+
+.shape_L_1_y3_reflected_both {
+  --x-split: calc(50% + (var(--gap) / 2));
+  /* Push the cut up to the bottom edge of the top cell */
+  --y-split: calc(33.33% - (var(--gap) / 3));
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% var(--y-split),
+    var(--x-split) var(--y-split),
+    var(--x-split) 100%,
+    0% 100%
+  );
+}
+
+.shape_L_1_y3_reflected_x {
+  --x-split: calc(50% + (var(--gap) / 2));
+  --y-split: calc(66.66% + (var(--gap) / 3));
+  clip-path: polygon(
+    var(--x-split) 0%,
+    100% 0%,
+    100% 100%,
+    0% 100%,
+    0% var(--y-split),
+    var(--x-split) var(--y-split)
+  );
+}
+
+.shape_L_1_y3_reflected_y {
+  --x-split: calc(50% - (var(--gap) / 2));
+  --y-split: calc(33.33% - (var(--gap) / 3));
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 100%,
+    var(--x-split) 100%,
+    var(--x-split) var(--y-split),
+    0% var(--y-split)
+  );
+}
+
+/* --- L-2-y3 Series (2x3 Bounding Box) --- */
+
+.shape_L_2_y3 {
+  --x-split: calc(50% + (var(--gap) / 2));
+  --y-split: calc(66.66% + (var(--gap) / 3));
+  clip-path: polygon(
+    var(--x-split) 0%,
+    100% 0%,
+    100% 100%,
+    0% 100%,
+    0% var(--y-split),
+    var(--x-split) var(--y-split)
+  );
+}
+
+.shape_L_2_y3_reflected_both {
+  --x-split: calc(50% - (var(--gap) / 2));
+  --y-split: calc(33.33% - (var(--gap) / 3));
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 100%,
+    var(--x-split) 100%,
+    var(--x-split) var(--y-split),
+    0% var(--y-split)
+  );
+}
+
+.shape_L_2_y3_reflected_x {
+  --x-split: calc(50% - (var(--gap) / 2));
+  --y-split: calc(66.66% + (var(--gap) / 3));
+  clip-path: polygon(
+    0% 0%,
+    var(--x-split) 0%,
+    var(--x-split) var(--y-split),
+    100% var(--y-split),
+    100% 100%,
+    0% 100%
+  );
+}
+
+.shape_L_2_y3_reflected_y {
+  --x-split: calc(50% + (var(--gap) / 2));
+  --y-split: calc(33.33% - (var(--gap) / 3));
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% var(--y-split),
+    var(--x-split) var(--y-split),
+    var(--x-split) 100%,
+    0% 100%
+  );
+}
+
+/* --- L-1-y2 & L-2-y2 Series (2x2 Bounding Box) --- */
+/* For y2, there is only 1 gap, so the center is exactly 50% +/- half the gap */
+
+.shape_L_1_y2 {
+  --x-split: calc(50% - (var(--gap) / 2));
+  --y-split: calc(50% + (var(--gap) / 2));
+  clip-path: polygon(
+    0% 0%,
+    var(--x-split) 0%,
+    var(--x-split) var(--y-split),
+    100% var(--y-split),
+    100% 100%,
+    0% 100%
+  );
+}
+
+.shape_L_2_y2 {
+  --x-split: calc(50% + (var(--gap) / 2));
+  --y-split: calc(50% + (var(--gap) / 2));
+  clip-path: polygon(
+    var(--x-split) 0%,
+    100% 0%,
+    100% 100%,
+    0% 100%,
+    0% var(--y-split),
+    var(--x-split) var(--y-split)
+  );
+}
+
+.shape_L_2_y2_reflected_both {
+  --x-split: calc(50% - (var(--gap) / 2));
+  --y-split: calc(50% - (var(--gap) / 2));
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 100%,
+    var(--x-split) 100%,
+    var(--x-split) var(--y-split),
+    0% var(--y-split)
+  );
+}
+
+.shape_L_2_y2_reflected_x {
+  --x-split: calc(50% - (var(--gap) / 2));
+  --y-split: calc(50% + (var(--gap) / 2));
+  clip-path: polygon(
+    0% 0%,
+    var(--x-split) 0%,
+    var(--x-split) var(--y-split),
+    100% var(--y-split),
+    100% 100%,
+    0% 100%
+  );
+}
+
+.shape_L_2_y2_reflected_y {
+  --x-split: calc(50% + (var(--gap) / 2));
+  --y-split: calc(50% - (var(--gap) / 2));
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% var(--y-split),
+    var(--x-split) var(--y-split),
+    var(--x-split) 100%,
+    0% 100%
+  );
+}
+
+/* --- Standard Rectangles --- */
+
+.shape_square,
+.shape_line_y2,
+.shape_line_y3,
+.shape_line_x2,
+.shape_line_x3 {
+  clip-path: inset(0);
+}

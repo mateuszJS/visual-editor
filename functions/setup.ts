@@ -108,6 +108,7 @@ beforeAll(async () => {
 })
 
 beforeEach(async () => {
+  await env.db.prepare('DELETE FROM templates').run()
   await env.db.prepare('DELETE FROM storage').run()
   await env.db.prepare('DELETE FROM projects').run()
   await env.db.prepare('DELETE FROM users').run()
@@ -172,6 +173,23 @@ beforeEach(async () => {
       'media',
       '2',
       '2026-01-01T00:00:00.000Z'
+    )
+    .run()
+
+  // prettier-ignore
+  await env.db
+    .prepare(
+      `INSERT INTO templates (id, name, preview_shape, assets, width, height)
+			 VALUES
+        (?, ?, ?, ?, ?, ?),
+        (?, ?, ?, ?, ?, ?),
+        (?, ?, ?, ?, ?, ?)
+      `
+    )
+    .bind(
+      'tp_1', 'Test Template', 'SQUARE', '[]', 500, 800, // 1st template
+      'tp_2', 'Another Template', 'RECTANGLE', '[]', 600, 900, // 2nd template
+      'tp_3', 'Yet Another Template', 'CIRCLE', '[]', 700, 1000 // 3rd template
     )
     .run()
 })

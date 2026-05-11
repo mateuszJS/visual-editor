@@ -1,5 +1,5 @@
-import errorStore from '@/stores/error'
 import { captureError } from '../captureError'
+import { ERR_MSG_PARAM } from '@/components/GlobalErrors/GlobalErrors'
 
 export interface FetcherOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT'
@@ -18,9 +18,7 @@ type EnrichedResponse<Json> = Pick<Response, 'status' | 'headers' | 'blob'> & {
  * A simple fetch wrapper that improves developer experience
  * Can throw errors in case of network error or unauthorized user 401
  */
-export default async function nativeFetcher<
-  Json extends Record<string, unknown> | Array<unknown> = never,
->(
+export default async function nativeFetcher<Json extends Record<string, unknown> | Array<unknown>>(
   url: string,
   {
     method = 'GET',
@@ -45,16 +43,19 @@ export default async function nativeFetcher<
       body: json ? JSON.stringify(json) : body,
     })
 
-    if (!disableAuth401Redirect && response.status === 401) {
+    if (response.status === 401) {
       const broadcast = new BroadcastChannel('sync-data')
       broadcast.postMessage('CLEAR_PROJECT')
       broadcast.close()
-      if (window.location.pathname !== '/login') {
-        window.location.replace('/login')
+      if (!disableAuth401Redirect && window.location.pathname !== '/login') {
+        window.location.replace(
+          `/login?${ERR_MSG_PARAM}=${encodeURIComponent('You need to firstly log in.')}`
+        )
+        return {
+          status: 401,
+          err: 'You need to firstly log in.',
+        }
       }
-      /* app reload is used to clear all JS memory data, hide all modals(like new project modal) */
-      errorStore.message = 'You need to firstly log in.'
-      throw new Error(errorStore.message)
     }
 
     const jsonRes = (

@@ -47,7 +47,7 @@ export default function NewProjectModal() {
     )
     createProject(width, height, (project) => {
       setInitialAssets(project.id, textureUrls)
-      projectsListStore.projects.set(project.id, project)
+      projectsListStore.projects.unshift(project)
       posthog.capture('project_created', {
         width,
         height,
@@ -63,7 +63,7 @@ export default function NewProjectModal() {
 
       {/* <UploadTextures onUpload={(urls) => createProjectFrom(500, 500, urls)} /> */}
 
-      <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with desired size</h3>
+      <h3 className={styles.blankCanvasTitle}>Choose a blank canvas with the desired size</h3>
       <HorizontalList>
         {blankCanvasSizes.map((size) => (
           <li key={size.label}>

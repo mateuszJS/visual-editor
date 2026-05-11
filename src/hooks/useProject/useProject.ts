@@ -20,11 +20,13 @@ export default function useProject(id?: string) {
       const sendRequest = async () => {
         loadersStore.add(id)
         setLoading(true)
-        const response = await fetcher(`/api/projects/${id}`)
+        const response = await fetcher<ApiProjectContent>(`/api/projects/${id}`)
 
         if ('err' in response) {
-          errorStore.message =
-            response.err || 'Something went wrong while fetching the project. Please try again.'
+          if (response.status !== 401) {
+            errorStore.message =
+              response.err || 'Something went wrong while fetching the project. Please try again.'
+          }
         } else {
           projectsStore.set(id, ref(response.json))
           loadersStore.delete(id)

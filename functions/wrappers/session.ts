@@ -63,16 +63,31 @@ async function decrypt(session = ''): Promise<SessionPayload | undefined | { err
 // same response to avoid sharing any detail of what exactly went wrong while authorization/obtaining user object
 export const getAuthErrorResponse = () => getResponseError('Unauthorized', 401)
 
+async function get404Response(env: EventContext<Env, never, unknown>['env']) {
+  const response = await env.ASSETS.fetch(new URL('http://any-valid-hostname/404.html'))
+  return new Response(response.body, {
+    status: 404,
+    headers: response.headers,
+  })
+}
+
+type Options = {
+  adminOnly?: boolean
+}
+
 export function withSession<Params extends string = never, Data = never>(
-  handler: SessionHandler<Params, Data>
+  handler: SessionHandler<Params, Data>,
+  options?: Options
 ): Handler<Params, Data> {
   return async (ctx) => {
     const cookie = parse(ctx.request.headers.get('Cookie') || '')
 
     if (!cookie.session) {
+      if (options?.adminOnly) {
+        return get404Response(ctx.env)
+      }
       return getAuthErrorResponse()
     }
-
     const session = await decrypt(cookie.session)
 
     if (session && 'error' in session) {
@@ -80,9 +95,19 @@ export function withSession<Params extends string = never, Data = never>(
     }
 
     if (!session || 'error' in session || !session?.userId) {
+      if (options?.adminOnly) {
+        return get404Response(ctx.env)
+      }
+
       const res = getAuthErrorResponse()
       removeSessionCookie(res)
       return res
+    }
+
+    if (options?.adminOnly) {
+      if (session.userId !== ctx.env.ADMIN_USER_ID) {
+        return get404Response(ctx.env)
+      }
     }
 
     return handler(ctx, session)

@@ -14,6 +14,19 @@ export type ApiProjectContent = ApiProjectMetaData & {
   height: number
 }
 
+export type ApiTemplateMetaData = {
+  id: string
+  name: string
+  createdAt: string
+  previewShape: 'SQUARE' | 'L' | '2v' | '3v' | '2h' | '3h'
+}
+
+export type ApiTemplateContent = ApiTemplateMetaData & {
+  assets: ApiAsset[]
+  width: number
+  height: number
+}
+
 export type ApiUserBasic = {
   id: string
   email: string

@@ -42,7 +42,7 @@ interface CreatorStore {
   fonts: Record<string, number>
 }
 
-const creatorState = proxy<CreatorStore>({
+const initialState = {
   creator: null,
   projectId: null,
   initialAssets: null,
@@ -51,7 +51,9 @@ const creatorState = proxy<CreatorStore>({
   historySnapshotIndex: 0,
   tool: 0, // CreatorTool.SelectAsset,
   fonts: DEFAULT_FONTS,
-})
+}
+
+const creatorState = proxy<CreatorStore>(structuredClone(initialState))
 
 /*
   Hook to be used whenever reference to the creator is needed, like in many Toolbox components.
@@ -76,7 +78,10 @@ function useCreator() {
       updatedAt: new Date().toISOString(),
     })
 
-    creatorState.creator!.setSnapshot(historySnapshot, false)
+    creatorState.creator!.setSnapshot(historySnapshot, {
+      produceSnapshot: false,
+      addHistoryEntry: true,
+    })
     updateSelectedAssetStore(
       creatorState.historySnapshots[creatorState.historySnapshotIndex],
       creatorState.selectedAssetId
@@ -172,7 +177,7 @@ function useCreator() {
         },
         getFontUrl: (id: number) => {
           // This link is for development purposes only. In production, fonts should be served from a proper storage.
-          return `https://pub-dca9f88586314ce2a8a165d963769bf0.r2.dev/${id}.woff`
+          return `${process.env.NEXT_PUBLIC_R2_ASSETS_BUCKET_URL}/fonts/${id}.woff`
         },
         captureError: (err) => captureError(err, { webgpu: true }),
         isTest: false,
@@ -197,7 +202,7 @@ function useCreator() {
         assets: project.assets as Asset[],
       }
 
-      creator.setSnapshot(initialSnapshot, true)
+      creator.setSnapshot(initialSnapshot, { produceSnapshot: true, addHistoryEntry: true })
 
       if (hasInitialAssets) {
         // TODO: avoid entry in history
@@ -211,17 +216,24 @@ function useCreator() {
       if (!creator) throw Error('Creator is not initialized')
 
       const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
-      creator.setSnapshot({ width, height, assets: snapshot.assets }, true)
+      creator.setSnapshot(
+        { width, height, assets: snapshot.assets },
+        { produceSnapshot: true, addHistoryEntry: true }
+      )
     },
     destroy(canvas: HTMLCanvasElement) {
       if (!canvas.isConnected) {
         // canvas is still rendered, mainly because react in strict mode calls useEffect twice
         creatorState.creator?.destroy()
-        creatorState.creator = null
-        creatorState.projectId = null
-        creatorState.selectedAssetId = null
-        creatorState.historySnapshots = []
-        creatorState.historySnapshotIndex = 0
+
+        const newState = structuredClone(initialState)
+        Object.keys(newState).forEach((key) => {
+          // Yet, this is the only way to make it work with TypeScript
+          ;(creatorState[key as keyof CreatorStore] as unknown) = newState[
+            key as keyof CreatorStore
+          ] as unknown
+        })
+
         canvas.removeAttribute('data-connected')
         resetAssetStore()
       }

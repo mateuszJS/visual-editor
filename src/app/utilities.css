@@ -33,6 +33,10 @@
     text-wrap: balance;
   }
 
+  .text-center {
+    text-align: center;
+  }
+
   .text-sm {
     font-weight: 200;
     font-size: 14px;
@@ -48,5 +52,9 @@
     font-size: var(--14px);
     font-weight: 300;
     padding-bottom: 5px;
+  }
+
+  .relative {
+    position: relative;
   }
 }

@@ -137,11 +137,11 @@ describe('useCreator', () => {
       await act(async () => {
         result.current.creator.setSnapshot(
           { width: 100, height: 100, assets: [{ url: '1' }] },
-          true
+          { produceSnapshot: true, addHistoryEntry: true }
         )
         result.current.creator.setSnapshot(
           { width: 100, height: 100, assets: [{ url: '1' }, { url: '2' }] },
-          true
+          { produceSnapshot: true, addHistoryEntry: true }
         )
       })
 
@@ -168,12 +168,12 @@ describe('useCreator', () => {
       await act(async () => {
         result.current.creator.setSnapshot(
           { width: 100, height: 100, assets: [{ url: '1' }] },
-          true
+          { produceSnapshot: true, addHistoryEntry: true }
         )
 
         result.current.creator.setSnapshot(
           { width: 100, height: 100, assets: [{ url: '1' }, { url: '2' }] },
-          true
+          { produceSnapshot: true, addHistoryEntry: true }
         )
       })
 
@@ -205,15 +205,15 @@ describe('useCreator', () => {
       await act(async () => {
         result.current.creator.setSnapshot(
           { width: 100, height: 100, assets: [{ url: '1' }] },
-          true
+          { produceSnapshot: true, addHistoryEntry: true }
         )
         result.current.creator.setSnapshot(
           { width: 100, height: 100, assets: [{ url: '1' }, { url: '2' }] },
-          true
+          { produceSnapshot: true, addHistoryEntry: true }
         )
         result.current.creator.setSnapshot(
           { width: 100, height: 100, assets: [{ url: '1' }, { url: '2' }, { url: '3' }] },
-          true
+          { produceSnapshot: true, addHistoryEntry: true }
         )
       })
 
@@ -227,7 +227,7 @@ describe('useCreator', () => {
       await act(async () => {
         result.current.creator.setSnapshot(
           { width: 100, height: 100, assets: [{ url: '1' }, { url: '2' }, { url: '4' }] },
-          true
+          { produceSnapshot: true, addHistoryEntry: true }
         )
       })
 
@@ -312,7 +312,7 @@ describe('useCreator', () => {
       expect(result.current.creator.setSnapshot).toHaveBeenNthCalledWith(
         1,
         { assets: [], height: 500, width: 500 },
-        true
+        { produceSnapshot: true, addHistoryEntry: true }
       )
     })
 
@@ -364,7 +364,7 @@ describe('useCreator', () => {
       expect(result.current.creator.setSnapshot).toHaveBeenNthCalledWith(
         1,
         { assets: [], height: 500, width: 500 },
-        true
+        { produceSnapshot: true, addHistoryEntry: true }
       )
 
       canvas.remove()
@@ -411,7 +411,7 @@ describe('useCreator', () => {
     await act(async () => {
       result.current.creator.setSnapshot(
         { width: 100, height: 100, assets: [{ url: '1' }, { url: blobUrl }] },
-        true
+        { produceSnapshot: true, addHistoryEntry: true }
       )
     })
 
@@ -420,7 +420,7 @@ describe('useCreator', () => {
     await act(async () => {
       result.current.creator.setSnapshot(
         { width: 200, height: 100, assets: [{ url: '1' }, { url: blobUrl }] },
-        true
+        { produceSnapshot: true, addHistoryEntry: true }
       )
     })
 
@@ -482,7 +482,7 @@ describe('useCreator', () => {
     await act(async () => {
       result.current.creator.setSnapshot(
         { width: 100, height: 100, assets: [{ url: '1' }, { url: textureUrl }] },
-        true
+        { produceSnapshot: true, addHistoryEntry: true }
       )
     })
 

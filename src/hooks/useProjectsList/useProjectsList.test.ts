@@ -18,10 +18,7 @@ describe('useProjectsList', () => {
       loading: false,
       error: null,
     })
-    expect([...result.current.projectsList.entries()]).toEqual([
-      ['1', { id: '1' }],
-      ['2', { id: '2' }],
-    ])
+    expect([...result.current.projectsList]).toEqual([{ id: '1' }, { id: '2' }])
   })
 
   it('set loading to true while requesting', async () => {

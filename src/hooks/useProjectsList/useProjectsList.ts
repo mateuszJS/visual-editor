@@ -1,19 +1,20 @@
 import { useEffect } from 'react'
-import { proxyMap } from 'valtio/utils'
 import { proxy, useSnapshot } from 'valtio'
 import { ApiProjectMetaData } from '../../../apiTypes'
-import errorStore from '@/stores/error'
 import fetcher from '@/utils/fetcher'
 import { captureError } from '@/utils/captureError'
 
 export const projectsListStore = proxy({
+  initialized: false,
   loading: false,
   error: null as null | string,
-  projects: proxyMap<string, ApiProjectMetaData>(),
+  projects: [] as ApiProjectMetaData[],
 })
 
 export async function initializeProjectsList() {
   if (projectsListStore.loading) return
+
+  projectsListStore.initialized = true
   projectsListStore.loading = true
   projectsListStore.error = null
 
@@ -26,31 +27,23 @@ export async function initializeProjectsList() {
     return
   }
 
-  response.json.toSorted(sortProjByUpdatedAt).forEach((project) => {
-    projectsListStore.projects.set(project.id, project)
-  })
+  projectsListStore.projects = response.json.toSorted(sortProjByUpdatedAt)
   projectsListStore.error = null
 }
 
 export default function useProjectsList() {
-  const { error, loading, projects } = useSnapshot(projectsListStore)
+  const { error, loading, projects, initialized } = useSnapshot(projectsListStore)
 
   useEffect(() => {
-    if (error) {
-      console.log('useEffect', error)
-      errorStore.message = error
-      projectsListStore.error = null
-    }
-
     const intervalId = setInterval(initializeProjectsList, 1000 * 60 * 60 * 12 /* every 12 horus */)
 
     return () => {
       clearInterval(intervalId)
     }
-  }, [error])
+  }, [])
 
   return {
-    loading,
+    loading: initialized === false || loading,
     error,
     projectsList: projects,
   }

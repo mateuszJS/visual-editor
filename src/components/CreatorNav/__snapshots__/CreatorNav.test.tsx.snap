@@ -26,12 +26,16 @@ exports[`<CreatorNav /> should render navigation items 1`] = `
         style="transform: scale(-1, 1);"
       />
     </button>
-    <a
+    <button
       class="navItem ml-auto"
-      href="/questions"
     >
       <svg />
-    </a>
+    </button>
+    <button
+      class="navItem"
+    >
+      <svg />
+    </button>
   </nav>
 </div>
 `;

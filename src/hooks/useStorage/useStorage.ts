@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 import { proxyMap } from 'valtio/utils'
 import { proxy, useSnapshot } from 'valtio'
 import { ApiStorageItem } from '../../../apiTypes'
-import errorStore from '@/stores/error'
 import fetcher from '@/utils/fetcher'
 import { captureError } from '@/utils/captureError'
 
 export const storageStore = proxy({
+  initialized: false,
   outdated: false,
   loading: false,
   error: null as null | string,
@@ -20,6 +20,7 @@ export function invalidateStorageItems() {
 export async function initializeStorage() {
   if (storageStore.loading) return
 
+  storageStore.initialized = true
   storageStore.loading = true
   storageStore.error = null
 
@@ -40,16 +41,11 @@ export async function initializeStorage() {
 }
 
 export default function useStorage() {
-  const { error, loading, items, outdated } = useSnapshot(storageStore)
+  const { error, loading, items, outdated, initialized } = useSnapshot(storageStore)
 
   useEffect(() => {
     if (outdated) {
       initializeStorage()
-    }
-
-    if (error) {
-      errorStore.message = error
-      storageStore.error = null
     }
 
     const intervalId = setInterval(
@@ -62,7 +58,7 @@ export default function useStorage() {
     return () => {
       clearInterval(intervalId)
     }
-  }, [error])
+  }, [])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const upload = async (blobUrl: string) => {
@@ -80,7 +76,7 @@ export default function useStorage() {
   }
 
   return {
-    loading,
+    loading: initialized === false || loading,
     error,
     items,
     upload,

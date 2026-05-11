@@ -1,0 +1,7 @@
+.root {
+  background: rgba(var(--background-rgb), 0.5);
+  position: absolute;
+  inset: 0;
+  padding: 150px 30px;
+  z-index: 1;
+}

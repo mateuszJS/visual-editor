@@ -84,7 +84,7 @@
         },
         {
           "binding": "publicAssets",
-          "bucket_name": "public-assets",
+          "bucket_name": "public-assets"
         }
       ]
     }

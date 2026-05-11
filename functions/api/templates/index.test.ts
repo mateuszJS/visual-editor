@@ -16,6 +16,18 @@ describe('GET /api/templates', () => {
         name: 'Test Template',
         previewShape: 'SQUARE',
       },
+      {
+        createdAt: expect.any(String),
+        id: 'tp_2',
+        name: 'Another Template',
+        previewShape: 'RECTANGLE',
+      },
+      {
+        createdAt: expect.any(String),
+        id: 'tp_3',
+        name: 'Yet Another Template',
+        previewShape: 'CIRCLE',
+      },
     ])
   })
 })

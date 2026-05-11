@@ -2,7 +2,6 @@ import { HttpResponse, http } from 'msw'
 import fetcher from './index'
 import { interceptRequest, server } from 'test/server'
 import { act } from '@testing-library/react'
-import errorStore from '@/stores/error'
 
 describe('fetcher', () => {
   it('should make a GET request and return the response', async () => {

@@ -1,15 +1,22 @@
+@use './knob' as *;
+
 .inputsWrapper {
-  --height: 1em;
-  --thumb-diameter: var(--height);
+  @include vars;
   --thumb-radius: calc(0.5 * var(--thumb-diameter));
   --useful-width: calc(100% - var(--thumb-diameter));
 
   display: grid;
-  grid-template-rows: var(--height);
+  grid-template-rows: var(--thumb-diameter);
   position: relative;
   align-items: center;
   justify-items: stretch;
   width: 100%;
+}
+
+.sliderIsolator {
+  anchor-scope: all;
+  grid-area: 1 / 1;
+  pointer-events: none; /* let clicks pass through */
 }
 
 .trackWrapper {
@@ -29,44 +36,50 @@
   clip-path: inset(50%);
 }
 
+@mixin track {
+  background: none; /* get rid of Firefox track background */
+  height: 100%;
+  width: 100%;
+  -webkit-appearance: none;
+}
+
 .slider {
-  grid-area: 1 / 1;
   background: none; /* get rid of white Chrome background */
   color: color-mix(in srgb, var(--secondary) 40%, var(--background) 60%);
   font: inherit; /* fix too small font-size in both Chrome & Firefox */
   margin: 0;
-  pointer-events: none; /* let clicks pass through */
   display: block;
   width: 100%;
   appearance: none;
 
   &::-webkit-slider-runnable-track {
-    background: none; /* get rid of Firefox track background */
-    height: 100%;
-    width: 100%;
-    -webkit-appearance: none;
+    @include track;
   }
   &::-moz-range-track {
-    background: none; /* get rid of Firefox track background */
-    height: 100%;
-    width: 100%;
+    @include track;
   }
 
   &::-webkit-slider-thumb {
-    background: currentcolor;
-    border: none;
-    pointer-events: auto; /* catch clicks */
-    width: var(--thumb-diameter);
-    height: var(--thumb-diameter);
-    cursor: pointer;
-    -webkit-appearance: none;
+    @include knob;
   }
+
   &::-moz-range-thumb {
-    background: currentcolor;
-    border: none;
-    pointer-events: auto; /* catch clicks */
-    width: var(--thumb-diameter);
-    height: var(--thumb-diameter);
-    cursor: pointer;
+    @include knob;
+  }
+}
+
+.removeBtn {
+  @include remove-button;
+}
+
+.sliderIsolator:focus-within {
+  .slider::-webkit-slider-thumb {
+    @include knob-focus;
+  }
+  .slider::-moz-range-thumb {
+    @include knob-focus;
+  }
+  .removeBtn {
+    display: block;
   }
 }

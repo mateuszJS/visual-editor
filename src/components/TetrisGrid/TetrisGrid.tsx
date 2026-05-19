@@ -148,7 +148,8 @@ export function TetrisGrid() {
             }}
           >
             {/* Optional: label for debugging */}
-            <span style={{ fontSize: '10px', color: 'black' }}>{item.previewShape}</span>
+            <p style={{ fontSize: '30px', color: 'black' }}>{index}</p>
+            <p style={{ fontSize: '16px', color: 'black' }}>{item.previewShape}</p>
           </div>
         )
       })}

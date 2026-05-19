@@ -1,30 +1,32 @@
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
-import styles from './Slider.module.css'
+import styles from './Slider.module.scss'
 import cn from 'classnames'
-import { Fragment } from 'react'
 import clamp from '@/utils/clamp'
 
 export interface Handle {
   label: string
   value: number
+  knobType?: string
   color?: string
+  removable?: boolean
 }
 
 interface Props {
   ariaLabel: string
-  handles: Handle[]
+  handles: Array<Handle | null>
   min: number
   max: number
-  onChange: (index: number, newValue: number, commit: boolean) => void
+  onChange: (index: number, newValue: number | null, commit: boolean) => void
   className?: string // className mainly to style handlers
   children?: React.ReactNode // track is transparent by default
   onFocusHandler?: (index: number) => void
+  getNewKnobValue: (index: number) => number
 }
 
 // created base on:
 // https://css-tricks.com/multi-thumb-sliders-particular-two-thumb-case/
 
-export default function RangeSlider({
+export default function Slider({
   ariaLabel,
   min,
   max,
@@ -33,6 +35,7 @@ export default function RangeSlider({
   className,
   children,
   onFocusHandler,
+  getNewKnobValue,
 }: Props) {
   const id = useUniqueId()
 
@@ -40,28 +43,41 @@ export default function RangeSlider({
     // label or fieldset is not used because grid on them doesn't work properly in Chrome
     <div className={cn(styles.inputsWrapper, className)} role="group" aria-label={ariaLabel}>
       <div className={styles.trackWrapper}>{children}</div>
-      {handles.map((handle, index) => (
-        <Fragment key={index}>
-          <label className={styles.srOnly} htmlFor={`slider-${id}-${index}`}>
-            {handle.label}
-          </label>
-          <input
-            id={`slider-${id}-${index}`}
-            type="range"
-            step={0.01}
-            min={min}
-            value={clamp(handle.value, min, max)}
-            max={max}
-            className={styles.slider}
-            onChange={(e) => {
-              onChange(index, Number(e.target.value), false)
-            }}
-            style={{ color: handle.color }}
-            onFocus={onFocusHandler && (() => onFocusHandler(index))}
-            onPointerUp={() => onChange(index, handles[index].value, true)}
-          />
-        </Fragment>
-      ))}
+      {handles.map((handle, index) =>
+        handle === null ? (
+          <button key={index} onClick={() => onChange(index, getNewKnobValue(index), true)}>
+            +
+          </button>
+        ) : (
+          <div className={styles.sliderIsolator} key={index}>
+            <label className={styles.srOnly} htmlFor={`slider-${id}-${index}`}>
+              {handle.label}
+            </label>
+            <input
+              id={`slider-${id}-${index}`}
+              type="range"
+              step={0.01}
+              min={min}
+              value={clamp(handle.value, min, max)}
+              max={max}
+              {...{ [`data-knob-${handle.knobType}`]: true }}
+              className={styles.slider}
+              onChange={(e) => {
+                onChange(index, Number(e.target.value), false)
+              }}
+              style={{ color: handle.color }}
+              onFocus={onFocusHandler && (() => onFocusHandler(index))}
+              onPointerUp={() => onChange(index, handle.value, true)}
+            />
+            {handle.removable && (
+              <button
+                className={styles.removeBtn}
+                onClick={() => onChange(index, null, true)}
+              ></button>
+            )}
+          </div>
+        )
+      )}
     </div>
   )
 }

@@ -1,59 +1,57 @@
-.root {
-  display: grid;
-  grid-template:
-    'fill-type fill-type fill-type remove' auto
-    'fill . . .' auto
-    'fill . . .' auto
-    'slider slider slider slider' auto
-    / 45px auto auto 1fr;
-  align-items: center;
-  justify-content: start;
-  gap: 5px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(var(--secondary-rgb), 0.5);
-}
-
 .fill {
-  grid-area: fill;
-  margin-inline-end: 3px;
   --hover-background: transparent;
+  margin-inline-end: 3px;
+  width: 50px;
+  aspect-ratio: 1;
 }
 
-.range {
-  grid-area: slider;
-  margin-block-start: 5px;
+.inputsList {
+  overflow: clip;
+  overflow-clip-margin: 15px;
 }
 
-.infinity {
-  justify-self: start;
-  background: var(--background);
-  border: 1px solid rgba(var(--secondary-rgb), 0.4);
-  border-radius: 3px;
-  padding-inline: 2px;
-  font-size: var(--20px);
-  line-height: 1;
+.input {
+  --adornment-width: 15px;
+  --color: var(--secondary);
 
-  &:hover {
-    background-color: rgba(var(--secondary-rgb), 0.1);
+  display: flex;
+  margin-left: calc(15px + var(--adornment-width));
+  margin-top: 16px;
+}
+
+.inputName {
+  position: relative;
+  margin-bottom: 4px;
+  --gap: 5px; /* gap between input name and center on circlular adornment */
+  --adornment-diameter: 3px;
+  --offset-y: 5px;
+}
+
+.inputAdornment {
+  &:before {
+    content: '';
+    display: block;
+    width: var(--adornment-width);
+    height: 100vh;
+    border-bottom-left-radius: 100vw;
+    border-left: 2px solid var(--color);
+    border-bottom: 2px solid var(--color);
+
+    position: absolute;
+    right: calc(100% + var(--gap) + var(--adornment-diameter));
+    bottom: calc(var(--adornment-diameter) + var(--offset-y));
   }
-}
 
-.grayout {
-  opacity: 0.5;
-}
+  &:after {
+    content: '';
+    display: block;
+    width: calc(2 * var(--adornment-diameter));
+    aspect-ratio: 1;
+    background: var(--color);
+    border-radius: 100vw;
 
-.remove {
-  grid-area: remove;
-  justify-self: end;
-  padding: 2px;
-  line-height: var(--8px);
-  opacity: 0.7;
-
-  &:hover {
-    background-color: rgba(var(--secondary-rgb), 0.2);
+    position: absolute;
+    right: calc(100% + var(--gap));
+    bottom: var(--offset-y);
   }
-}
-
-.fillType {
-  grid-area: fill-type;
 }

@@ -18,18 +18,18 @@
       color 0.2s ease,
       background 0.2s ease;
 
-    color: rgba(var(--primary-rgb), 0.5);
+    color: var(--neutral-5);
     user-select: none;
     border-radius: 5px;
 
     @media (hover: hover) {
       &:hover:not([disabled]) {
-        background: rgba(var(--primary-rgb), 0.15);
+        background: var(--neutral-8);
       }
     }
 
     &:is([aria-current='page'], [aria-pressed='true']) {
-      color: rgba(var(--primary-rgb), 1);
+      color: var(--neutral-1);
       font-weight: 500;
     }
   }
@@ -40,6 +40,6 @@
 
   .navItem[disabled] {
     cursor: not-allowed;
-    color: rgba(var(--primary-rgb), 0.3);
+    color: var(--neutral-7);
   }
 }

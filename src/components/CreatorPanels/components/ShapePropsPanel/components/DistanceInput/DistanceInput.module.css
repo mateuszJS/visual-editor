@@ -1,0 +1,59 @@
+.root {
+  display: grid;
+  grid-template:
+    'fill-type fill-type fill-type remove' auto
+    'fill . . .' auto
+    'fill . . .' auto
+    'slider slider slider slider' auto
+    / 45px auto auto 1fr;
+  align-items: center;
+  justify-content: start;
+  gap: 5px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--neutral-5);
+}
+
+.fill {
+  grid-area: fill;
+  margin-inline-end: 3px;
+  --hover-background: transparent;
+}
+
+.range {
+  grid-area: slider;
+  margin-block-start: 5px;
+}
+
+.infinity {
+  justify-self: start;
+  background: var(--background);
+  border: 1px solid var(--neutral-6);
+  border-radius: 3px;
+  padding-inline: 2px;
+  font-size: var(--20px);
+  line-height: 1;
+
+  &:hover {
+    background-color: var(--neutral-4);
+  }
+}
+
+.grayout {
+  opacity: 0.5;
+}
+
+.remove {
+  grid-area: remove;
+  justify-self: end;
+  padding: 2px;
+  line-height: var(--8px);
+  opacity: 0.7;
+
+  &:hover {
+    background-color: var(--neutral-7);
+  }
+}
+
+.fillType {
+  grid-area: fill-type;
+}

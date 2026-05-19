@@ -3,6 +3,10 @@
     display: flex;
   }
 
+  .grow {
+    flex-grow: 1;
+  }
+
   .space-between {
     justify-content: space-between;
   }

@@ -1,0 +1,107 @@
+@use '../Slider/knob' as *;
+
+.circle {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 100vw;
+  user-select: none;
+  -webkit-user-select: none;
+  border: 2px solid color-mix(in srgb, var(--secondary) 40%, var(--background) 60%);
+  place-content: center;
+}
+
+/*
+ * Tall, thin bar pinned to the top of the circle. Its bottom edge sits exactly
+ * at the circle's center, so rotating around `50% 100%` (bottom-center of the
+ * bar) pivots around the center of the circle.
+ */
+.arm {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 50%;
+  margin-left: -1px;
+  background: var(--secondary);
+  transform-origin: 50% 100%;
+  pointer-events: none; /* only the button initiates drags */
+  rotate: var(--rotate);
+
+  @include vars;
+
+  &:focus-within .removeBtn {
+    display: block;
+  }
+}
+
+/* The button sits on top of the bar — i.e. on the edge of the circle. */
+.handle {
+  @include knob;
+  position: absolute;
+  top: 0;
+  left: 50%;
+
+  translate: -50% -50%;
+  cursor: grab;
+
+  &:focus {
+    @include knob-focus;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.gearOffset {
+  border-radius: 100vw;
+  width: 50%;
+  height: 50%;
+  border: 10px solid red;
+  position: relative;
+  top: 25%;
+  left: 25%;
+}
+
+.removeBtn {
+  @include remove-button;
+  top: calc(anchor(top) + 1.875em);
+  rotate: calc(var(--rotate) * -1 + 45deg);
+}
+
+.gear {
+  --border-width: 20px;
+  width: calc(50% + 10px);
+  aspect-ratio: 1;
+  border: var(--border-width) solid var(--neutral-6);
+  border-radius: 100vw;
+  margin: auto;
+  display: block;
+  position: relative;
+
+  /*
+   * Radial tick marks to give the ring a gear-like look. 20 thin slices
+   * created with a repeating conic gradient, masked to a thin ring near
+   * the inner edge of the border so the lines never spill beyond the
+   * circle's boundary.
+   */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--border-width) + 2px);
+    border-radius: 100vw;
+    background: repeating-conic-gradient(var(--neutral-8) 0deg 8deg, transparent 8deg 18deg);
+    // background: radial-gradient(closest-side circle, #fff calc(100% - var(--border-width)), #000 0);
+    mask: radial-gradient(
+      closest-side circle,
+      transparent calc(100% - var(--border-width) + 4px),
+      #000 0
+    );
+    -webkit-mask: radial-gradient(
+      closest-side circle,
+      transparent calc(100% - var(--border-width) + 4px),
+      #000 0
+    );
+  }
+}

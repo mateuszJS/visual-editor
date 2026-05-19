@@ -25,7 +25,7 @@
 }
 
 .blankCanvasOption {
-  --hover-background: rgba(var(--primary-rgb), 0.1);
+  --hover-background: var(--neutral-9);
 
   display: flex;
   flex-direction: column;

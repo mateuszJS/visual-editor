@@ -15,12 +15,29 @@
     text-muted
 
   */
+    --neutral-1-rgb: 17, 17, 17;
+    --neutral-2-rgb: 46, 46, 46;
+    --neutral-3-rgb: 75, 75, 75;
+    --neutral-4-rgb: 104, 104, 104;
+    --neutral-5-rgb: 133, 133, 133;
+    --neutral-6-rgb: 161, 161, 161;
+    --neutral-7-rgb: 190, 190, 190;
+    --neutral-8-rgb: 219, 219, 219;
+    --neutral-9-rgb: 248, 248, 248;
 
-    --primary-rgb: 17, 17, 17;
-    --primary: rgb(var(--primary-rgb));
+    --neutral-1: rgb(var(--neutral-1-rgb));
+    --neutral-2: rgb(var(--neutral-2-rgb));
+    --neutral-3: rgb(var(--neutral-3-rgb));
+    --neutral-4: rgb(var(--neutral-4-rgb));
+    --neutral-5: rgb(var(--neutral-5-rgb));
+    --neutral-6: rgb(var(--neutral-6-rgb));
+    --neutral-7: rgb(var(--neutral-7-rgb));
+    --neutral-8: rgb(var(--neutral-8-rgb));
+    --neutral-9: rgb(var(--neutral-9-rgb));
 
-    --secondary-rgb: 177, 177, 177;
-    --secondary: rgb(var(--secondary-rgb));
+    --primary: rgb(var(--neutral-1-rgb));
+
+    --secondary: rgb(var(--neutral-5-rgb));
 
     --secondary-accent-rgb: 10, 10, 100;
     --secondary-accent: rgb(var(--secondary-accent-rgb));
@@ -53,8 +70,17 @@
   @media (prefers-color-scheme: dark) {
     :root {
       --background-rgb: 17, 17, 17;
-      --primary-rgb: 255, 255, 255;
       --secondary-accent-rgb: 90, 110, 200;
+
+      --neutral-1-rgb: 248, 248, 248;
+      --neutral-2-rgb: 219, 219, 219;
+      --neutral-3-rgb: 190, 190, 190;
+      --neutral-4-rgb: 161, 161, 161;
+      --neutral-5-rgb: 133, 133, 133;
+      --neutral-6-rgb: 104, 104, 104;
+      --neutral-7-rgb: 75, 75, 75;
+      --neutral-8-rgb: 46, 46, 46;
+      --neutral-9-rgb: 17, 17, 17;
     }
 
     html {

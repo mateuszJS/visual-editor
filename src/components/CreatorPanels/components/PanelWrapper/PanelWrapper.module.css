@@ -3,6 +3,7 @@
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  color: var(--neutral-2);
 
   user-select: none;
 
@@ -13,7 +14,7 @@
 }
 
 .details {
-  background: rgba(var(--secondary-rgb), 0.2);
+  background: var(--neutral-8);
   padding: 2px 8px;
 
   &[open] {
@@ -21,7 +22,7 @@
 
     .summary {
       padding-block-end: 3px;
-      border-block-end: 1px solid rgba(var(--primary-rgb), 0.15);
+      border-block-end: 1px solid var(--neutral-6);
       margin-block-end: 5px;
     }
 

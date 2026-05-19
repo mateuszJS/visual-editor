@@ -6,6 +6,6 @@
   font-weight: 300;
   color: var(--primary);
   border-radius: 8px;
-  background-color: rgba(var(--primary-rgb), 0.1);
+  background-color: var(--neutral-9);
   transition: background-color 0.2s ease-in-out;
 }

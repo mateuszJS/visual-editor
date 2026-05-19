@@ -1,5 +1,4 @@
 import useCreator from '@/hooks/useCreator/useCreator'
-import type { Effect } from '@mateuszjs/magic-render/types'
 import { useSnapshot } from 'valtio'
 import styles from './ShapePropsPanel.module.css'
 import NumberInput from '@/components/NumberInput/NumberInput'
@@ -7,36 +6,42 @@ import EffectPanel from './components/EffectPanel/EffectPanel'
 import PlusIcon from 'assets/plus-icon.svg'
 import { assetState } from '@/stores/asset'
 import PanelWrapper from '../PanelWrapper/PanelWrapper'
+import { Program, ProgramInputs } from '@mateuszjs/magic-render/types'
 
 export default function ShapePropsPanel() {
-  const { props, effects } = useSnapshot(assetState)
+  const { props, program, inputs, bounds } = useSnapshot(assetState)
   const creator = useCreator()
 
   function getOnChangeEffect(index: number) {
-    return (newEffect: Effect | null, commit: boolean) => {
-      if (!props) throw Error('No props available while modifying SDF effect!')
-      if (!effects) throw Error('You cannot modify effects of element that has no effects')
-
-      creator.creator.updateAssetEffects(
-        effects.map((effect, i) => (i === index ? newEffect : effect)).filter(Boolean),
+    if (!inputs) throw Error('Edit has happened while there is no inputs available')
+    return (newProgram: Program, modifiedInputRow: ProgramInputs['props'], commit: boolean) => {
+      creator.creator.updateAssetProgram(
+        newProgram,
+        {
+          id: inputs.id,
+          props: {
+            ...inputs.props,
+            ...modifiedInputRow,
+          },
+        },
         commit
       )
     }
   }
 
-  function addNewEffect() {
-    if (!props) throw Error('No props available while adding SDF effect!')
-    if (!effects) throw Error('You cannot modified effects of element that has no effects')
+  // function addNewEffect() {
+  //   if (!props) throw Error('No props available while adding SDF effect!')
+  //   if (!effects) throw Error('You cannot modified effects of element that has no effects')
 
-    const newEffect: Effect = {
-      fill: { solid: [1, 1, 1, 1] },
-      dist_start: 5,
-      dist_end: -5,
-    }
-    creator.creator.updateAssetEffects([...effects, newEffect], true)
-  }
+  //   const newEffect: Effect = {
+  //     fill: { solid: [1, 1, 1, 1] },
+  //     dist_start: 5,
+  //     dist_end: -5,
+  //   }
+  //   creator.creator.updateAssetEffects([...effects, newEffect], true)
+  // }
 
-  if (!props) {
+  if (!props || !bounds) {
     return null
   }
 
@@ -52,20 +57,28 @@ export default function ShapePropsPanel() {
     )
   }
 
+  const width = Math.hypot(bounds[0].y - bounds[1].y, bounds[0].x, -bounds[1].x)
+  const height = Math.hypot(bounds[0].y - bounds[3].y, bounds[0].x, -bounds[3].x)
+  const distance = Math.max(width, height) * 0.5
+
   return (
     <PanelWrapper id="shapeProps">
       <div>
-        <ol>
-          {effects?.map((effect, index) => (
-            <EffectPanel key={index} {...effect} onChange={getOnChangeEffect(index)} />
-          ))}
-        </ol>
-        <div>
+        {program && inputs && (
+          <EffectPanel
+            program={program}
+            inputs={inputs.props}
+            onChange={getOnChangeEffect(0)}
+            minDistance={-distance}
+            maxDistance={+distance}
+          />
+        )}
+        {/* <div>
           <button className={styles.button} onClick={addNewEffect}>
             <PlusIcon />
             Add Effect
           </button>
-        </div>
+        </div> */}
         {props.opacity !== undefined && (
           <NumberInput
             label="Opacity:"

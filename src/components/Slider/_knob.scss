@@ -1,0 +1,63 @@
+@mixin knob {
+  anchor-name: --slider-knob;
+  // background: currentcolor;
+  background: color(srgb 0.317647 0.317647 0.317647);
+  pointer-events: auto; /* catch clicks */
+  width: var(--thumb-diameter);
+  height: var(--thumb-diameter);
+  cursor: pointer;
+  -webkit-appearance: none;
+  border: 2px solid var(--border);
+  border-radius: var(--border-radius);
+
+  &:hover {
+    outline: 2px solid var(--secondary-accent);
+  }
+}
+
+@mixin knob-focus {
+  outline: 4px solid var(--secondary-accent);
+}
+
+@mixin vars {
+  --thumb-diameter: 1em;
+  --border: color-mix(in srgb, var(--secondary) 20%, var(--background) 80%);
+  --border-radius: 2px;
+
+  [data-knob-circle] {
+    --border-radius: 100vw;
+  }
+}
+
+@mixin remove-button {
+  position: absolute;
+  position-anchor: --slider-knob;
+  left: calc(anchor(left) - 3px);
+  top: calc(anchor(top) - 1.875em);
+  display: none;
+  border-radius: 100vw;
+  background: var(--background);
+  width: 1.3rem;
+  aspect-ratio: 1;
+  pointer-events: auto;
+
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+    width: 0.85rem;
+    height: 0.1rem;
+    position: absolute;
+    background: var(--primary);
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+  }
+  &:after {
+    rotate: 90deg;
+  }
+
+  &:hover {
+    scale: 1.1;
+  }
+}

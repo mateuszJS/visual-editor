@@ -19,7 +19,7 @@
   }
 
   .onlyIcon {
-    --hover-background: rgba(var(--primary-rgb), 0.15);
+    --hover-background: var(--neutral-8);
     padding: 8px;
     font-size: var(--13px);
     flex-shrink: 0;
@@ -32,7 +32,7 @@
   .primary {
     background: var(--primary);
     color: var(--background);
-    --hover-background: rgba(var(--primary-rgb), 0.9);
+    --hover-background: var(--neutral-2);
   }
 
   .secondary {

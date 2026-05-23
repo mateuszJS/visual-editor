@@ -1,25 +1,28 @@
-.triggerBtn {
-  aspect-ratio: 1;
-  border-radius: 5px;
-  border: 2px solid var(--neutral-6);
-  padding: 0.4em;
-  background: var(--background);
-  --hover-background: var(--background);
+@layer components {
+  .triggerBtn {
+    aspect-ratio: 1;
+    border-radius: 5px;
+    border: 1px solid var(--neutral-6);
+    padding: 0.3rem;
+    width: 2rem;
+    background: var(--background);
+    --hover-background: var(--background);
 
-  svg {
-    height: auto;
+    svg {
+      height: auto;
+    }
   }
-}
 
-.errorTitle {
-  font-size: var(--12px);
-  font-weight: 400;
-  color: red;
-  margin-block-start: 10px;
-}
+  .errorTitle {
+    font-size: var(--12px);
+    font-weight: 400;
+    color: red;
+    margin-block-start: 10px;
+  }
 
-.errorBody {
-  max-height: 8lh;
-  white-space: pre;
-  overflow-y: auto;
+  .errorBody {
+    max-height: 8lh;
+    white-space: pre;
+    overflow-y: auto;
+  }
 }

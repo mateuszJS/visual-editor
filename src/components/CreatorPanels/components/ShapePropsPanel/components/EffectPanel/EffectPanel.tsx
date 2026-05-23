@@ -9,6 +9,9 @@ import CodeInput from '@/components/CodeInput/CodeInput'
 import { DistanceInput } from '../DistanceInput/DistanceInput'
 import { SolidColorInput } from '../SolidColorInput/SolidColorInput'
 import { CircleSlider } from '@/components/CircleSlider/CircleSlider'
+import cn from 'classnames'
+import { useRef } from 'react'
+import { ProgramsModal } from '@/components/ProgramsModal/ProgramsModal'
 // import GradientInput from '@/components/GradientInput/GradientInput'
 
 interface Props {
@@ -26,11 +29,12 @@ export default function EffectPanel({
   minDistance,
   maxDistance,
 }: Props) {
+  const openSelectProgramModal = useRef<VoidFunction>(null)
+
   function renderInputControl(inputName: string, value: SoftVector4 | Vector4) {
     const prefix = inputName[0]
 
     const onChangeInput = (modifiedInput: ProgramInputs['props'][string], commit: boolean) => {
-      console.log(modifiedInput)
       onChange(program, { [inputName]: modifiedInput }, commit)
     }
 
@@ -54,8 +58,11 @@ export default function EffectPanel({
   }
 
   return (
-    // <li className={styles.root}>
     <li className={styles.root}>
+      <ProgramsModal
+        openModalRef={openSelectProgramModal}
+        onSelect={(code) => onChange({ code }, {}, true)}
+      />
       {/* <select className={styles.fillType} value={mapFillType(effect.fill)} onChange={onChangeType}>
         <option value="solid">Solid Fill</option>
         <option value="linear">Linear Gradient</option>
@@ -91,16 +98,27 @@ export default function EffectPanel({
           className={styles.fill}
         />
       )} */}
-      <CodeInput
-        value={program.code}
-        onChange={(code, commit) => onChange({ ...program, code }, inputs, commit)}
-        className={styles.fill}
-        error={
-          program
-            .errors?.[0] /* I don't think it's possible to have more than one compilation error in WGSL */
-          /* I think it's possible to have mroe than one compiclaiton error + we have have warnings */
-        }
-      />
+      <div className="flex">
+        <button
+          type="button"
+          className={cn(styles.programButton, 'text-ellipsis')}
+          onClick={() => openSelectProgramModal.current?.()}
+        >
+          <span className={styles.programName}>Custom</span>
+          <span className={styles.caret} aria-hidden="true">
+            ▾
+          </span>
+        </button>
+        <CodeInput
+          value={program.code}
+          onChange={(code, commit) => onChange({ ...program, code }, inputs, commit)}
+          error={
+            program
+              .errors?.[0] /* I don't think it's possible to have more than one compilation error in WGSL */
+            /* I think it's possible to have mroe than one compiclaiton error + we have have warnings */
+          }
+        />
+      </div>
       <ol className={styles.inputsList}>
         {Object.entries(inputs).map(([name, value]) => (
           <li key={name} className={styles.input}>

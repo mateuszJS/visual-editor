@@ -25,7 +25,7 @@
 }
 
 .blankCanvasOption {
-  --hover-background: var(--neutral-9);
+  --hover-background: var(--neutral-7);
 
   display: flex;
   flex-direction: column;
@@ -44,14 +44,14 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  border: 1px solid var(--secondary);
+  border: 1px solid var(--neutral-6);
   border-radius: 5px;
 
   background: linear-gradient(
     136deg,
-    rgba(var(--secondary-rgb), 0.25) 20%,
-    rgba(var(--secondary-rgb), 0.6) 65%,
-    rgba(var(--secondary-rgb), 0.25) 85%
+    var(--neutral-8) 20%,
+    var(--neutral-6) 65%,
+    var(--neutral-8) 85%
   );
 
   & svg {

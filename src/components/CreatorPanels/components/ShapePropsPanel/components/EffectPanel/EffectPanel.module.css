@@ -1,8 +1,36 @@
-.fill {
-  --hover-background: transparent;
-  margin-inline-end: 3px;
-  width: 50px;
-  aspect-ratio: 1;
+.programButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: var(--background, #2a2a2a);
+  color: inherit;
+  border: 1px solid #555;
+  border-radius: 3px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  flex: 1;
+  min-width: 0;
+  margin-right: 4px;
+}
+
+.programButton:focus-visible {
+  outline: solid 2px var(--secondary-accent, #4a90e2);
+}
+
+.programName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.caret {
+  flex-shrink: 0;
+  font-size: 1.1em;
+  line-height: 1;
 }
 
 .inputsList {
@@ -15,7 +43,7 @@
   --color: var(--secondary);
 
   display: flex;
-  margin-left: calc(15px + var(--adornment-width));
+  margin-left: calc(20px + var(--adornment-width));
   margin-top: 16px;
 }
 
@@ -52,6 +80,6 @@
 
     position: absolute;
     right: calc(100% + var(--gap));
-    bottom: var(--offset-y);
+    bottom: calc(var(--adornment-diameter) / 2 + var(--offset-y));
   }
 }

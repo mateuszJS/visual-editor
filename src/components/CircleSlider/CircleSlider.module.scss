@@ -104,4 +104,8 @@
       #000 0
     );
   }
+
+  &:active {
+    cursor: grabbing;
+  }
 }

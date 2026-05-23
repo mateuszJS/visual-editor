@@ -3,14 +3,21 @@
 import CloseIcon from 'assets/close-icon.svg'
 import styles from './ActionSheets.module.css'
 import Button from '../Button/Button'
+import { useImperativeHandle, useRef } from 'react'
 
 interface Props {
-  id: string
+  id?: string
   children: React.ReactNode
   title: string
+  dialogRef?: React.Ref<{
+    open: VoidFunction
+    close: VoidFunction
+  }>
 }
 
-export default function ActionSheets({ id, children, title }: Props) {
+export default function ActionSheets({ id, children, title, dialogRef }: Props) {
+  const dialogEl = useRef<HTMLDialogElement>(null)
+
   const handleClose = (e: React.MouseEvent<HTMLDialogElement>) => {
     // iOS does NOT support closing modal via click on backdrop currently.
     const dialogDimensions = e.currentTarget.getBoundingClientRect()
@@ -25,15 +32,23 @@ export default function ActionSheets({ id, children, title }: Props) {
     }
   }
 
+  useImperativeHandle(
+    dialogRef,
+    () => ({
+      open: () => dialogEl.current?.showModal(),
+      close: () => dialogEl.current?.close(),
+    }),
+    []
+  )
+
   return (
-    <dialog id={id} className={styles.dialog} onClick={handleClose}>
+    <dialog id={id} className={styles.dialog} onClick={handleClose} ref={dialogEl}>
       <div className={styles.header}>
         <Button
           iconOnly
           variant="ghost"
           className={styles.closeButton}
-          commandfor={id}
-          command="close"
+          onClick={() => dialogEl.current?.close()}
         >
           <CloseIcon />
         </Button>

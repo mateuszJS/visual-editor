@@ -4,7 +4,7 @@
   display: block;
   cursor: pointer;
   transition: background ease 0.2s;
-  background: var(--neutral-2);
+  background: var(--neutral-8);
   border-radius: var(--border-radius);
 }
 

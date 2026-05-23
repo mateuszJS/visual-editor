@@ -59,9 +59,12 @@ export default function SoftRangeSlider({
 
   const handles = softVecToHandles(linearValue)
 
-  const y = linearValue[1] === null ? linearValue[2] : linearValue[1]
+  // y component has to be LINEAR_MIN when [null, null, 0, null]
+  const unsafe_y =
+    linearValue[0] !== null && linearValue[1] === null ? linearValue[2] : linearValue[1]
+  const y = unsafe_y === null ? LINEAR_MAX : unsafe_y
   const z = linearValue[2] === null ? linearValue[1] : linearValue[2]
-  if (z == null || y == null) {
+  if (z == null) {
     throw Error(`in soft vec 4 y and z are null at once. ${linearValue}`)
   }
 

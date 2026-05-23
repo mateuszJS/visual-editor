@@ -7,4 +7,5 @@ export const MODALS = {
   uploadImageModal: 'upload-image-modal',
   newProjectModal: 'new-project-modal',
   customSizeProjectModal: 'custom-size-project-modal',
+  // programsModal: 'programs-modal',
 }

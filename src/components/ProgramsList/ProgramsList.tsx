@@ -1,10 +1,9 @@
 'use client'
 
-import { useImperativeHandle, useRef, useState } from 'react'
-import ActionSheets from '../ActionSheets/ActionSheets'
+import { useEffect, useRef, useState } from 'react'
 import imagePanelStyles from '@/components/shared/imagePanel.module.css'
-import styles from './ProgramsModal.module.css'
-import { SoftVector4, Vector4 } from '@mateuszjs/magic-render/types'
+import styles from './ProgramsList.module.css'
+import { Program, ProgramInputs, SoftVector4, Vector4 } from '@mateuszjs/magic-render/types'
 
 interface PredefinedPrograms {
   name: string
@@ -22,17 +21,20 @@ let angle = a_angle(s);
 color = vec4f(fill.rgb, fill.a * dist * angle);`,
     previewSrc: 'https://images.pexels.com/photos/13661207/pexels-photo-13661207.jpeg',
     inputs: {
-      a_angle: [1.4826521374313906, 2.180203890593174, 9.075500207999294, 3.295124411240022],
-      c_Color: [0.8588235294117647, 0.6980392156862745, 0.4823529411764706, 1],
-      d_distance: [146.3096374772175, 26.587809997903776, -30.27368997139314, -149.97186576942573],
+      a_angle: [1.4826521374313906, 2.180203890593174, 3.075500207999294, 3.295124411240022],
+      c_Color: [0.8588235294117647, 0, 0.4823529411764706, 1],
+      d_distance: [null, 10, -10, null],
     },
   },
   {
     name: 'Glow',
     code: `
-color = vec4f(0.5, 1, 0.5, 1);`,
+let dist = d_distance(s);
+color = vec4f(0.5, 1, 0.5, dist);`,
     previewSrc: 'https://images.pexels.com/photos/13649223/pexels-photo-13649223.jpeg',
-    inputs: {},
+    inputs: {
+      d_distance: [50, 0, 0, -50],
+    },
   },
   {
     name: 'Shadow',
@@ -41,30 +43,52 @@ let dist = d_distance(s);
 color = vec4f(fill.rgb, fill.a * dist);`,
     previewSrc: 'https://images.pexels.com/photos/6687532/pexels-photo-6687532.jpeg',
     inputs: {
-      c_Color: [0.1, 0.1, 0.1, 1],
+      c_Color: [0.1, 0.1, 0.9, 1],
       d_distance: [0, 0, 0, -150],
+    },
+  },
+  {
+    name: "Fading Shape's Stroke",
+    code: `let fill = c_Color(s);
+let progress = t_progress(s);
+let dist = d_distance(s);
+color = vec4f(fill.rgb, fill.a * progress * dist);`,
+    previewSrc: 'https://images.pexels.com/photos/32694153/pexels-photo-32694153.jpeg',
+    inputs: {
+      c_Color: [0.1, 0.1, 0.9, 1],
+      d_distance: [20, 10, -10, -20],
     },
   },
 ]
 
 interface Props {
-  onSelect: (code: string, inputs: Record<string, SoftVector4 | Vector4>) => void
-  openModalRef: React.Ref<VoidFunction>
+  initial: {
+    // this prop is captured only once, when component is rendered
+    program: Program
+    inputs: ProgramInputs['props']
+  }
+  onChange: (program: Program, inputs: ProgramInputs['props'], commit: boolean) => void
 }
 
-export function ProgramsModal({ onSelect, openModalRef }: Props) {
+export function ProgramsList({ initial, onChange }: Props) {
   const [filter, setFilter] = useState('')
-  const dialogRef = useRef<{ open: VoidFunction; close: VoidFunction }>(null)
+  const initialRef = useRef<Props['initial'] | null>(initial)
 
   const normalizedFilter = filter.trim().toLowerCase()
   const filteredPrograms = normalizedFilter
     ? PROGRAMS_LIST.filter((program) => program.name.toLowerCase().includes(normalizedFilter))
     : PROGRAMS_LIST
 
-  useImperativeHandle(openModalRef, () => () => dialogRef.current?.open(), [])
+  useEffect(() => {
+    return () => {
+      if (initialRef.current) {
+        onChange(initialRef.current.program, initialRef.current.inputs, false)
+      }
+    }
+  }, [])
 
   return (
-    <ActionSheets title="Select a program" dialogRef={dialogRef}>
+    <div className={styles.root}>
       <input
         type="search"
         value={filter}
@@ -100,7 +124,14 @@ export function ProgramsModal({ onSelect, openModalRef }: Props) {
           <li key={program.name}>
             <button
               type="button"
-              onClick={() => onSelect(program.code, program.inputs)}
+              // onMouseEnter={() => {
+              //   console.log('new', program.inputs)
+              //   onChange({ code: program.code }, program.inputs, false)
+              // }}
+              onClick={() => {
+                initialRef.current = null
+                onChange({ code: program.code }, program.inputs, true)
+              }}
               className={imagePanelStyles.imagePanel}
               style={
                 {
@@ -114,6 +145,6 @@ export function ProgramsModal({ onSelect, openModalRef }: Props) {
           </li>
         ))}
       </ul>
-    </ActionSheets>
+    </div>
   )
 }

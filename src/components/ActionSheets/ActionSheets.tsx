@@ -4,6 +4,7 @@ import CloseIcon from 'assets/close-icon.svg'
 import styles from './ActionSheets.module.css'
 import Button from '../Button/Button'
 import { useImperativeHandle, useRef } from 'react'
+import cn from 'classnames'
 
 interface Props {
   id?: string
@@ -47,7 +48,7 @@ export default function ActionSheets({ id, children, title, dialogRef }: Props) 
         <Button
           iconOnly
           variant="ghost"
-          className={styles.closeButton}
+          className={cn(styles.closeButton, 'cross')}
           onClick={() => dialogEl.current?.close()}
         >
           <CloseIcon />

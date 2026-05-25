@@ -86,4 +86,11 @@
       cursor: nesw-resize;
     }
   }
+
+  /* The whole slider is rotated 135deg, which would print the "+" sideways
+     (and as an "x"). Counter-rotate the add button content so it stays
+     upright while the layout position along the diagonal is preserved. */
+  [data-slider-add-btn] {
+    rotate: -135deg;
+  }
 }

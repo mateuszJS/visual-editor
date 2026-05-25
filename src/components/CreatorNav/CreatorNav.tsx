@@ -7,11 +7,37 @@ import styles from './CreatorNav.module.css'
 import ReverseIcon from 'assets/reverse-icon.svg'
 import NavButton from '@/components/NavButton/NavButton'
 import useCreator from '@/hooks/useCreator/useCreator'
+import { useEffect } from 'react'
 
 const noop = () => {}
 
 export default function CreatorNav() {
   const creatorApi = useCreator()
+
+  useEffect(() => {
+    const abortCtrl = new AbortController()
+    document.addEventListener(
+      'keydown',
+      (event) => {
+        const isInputFocused =
+          document.activeElement?.tagName === 'INPUT' ||
+          document.activeElement?.tagName === 'TEXTAREA'
+
+        if (isInputFocused) return
+
+        if (event.key === 'z' && event.metaKey) {
+          if (event.shiftKey) {
+            creatorApi.redo?.()
+          } else {
+            creatorApi.undo?.()
+          }
+        }
+      },
+      abortCtrl
+    )
+
+    return () => abortCtrl.abort()
+  }, [creatorApi.redo, creatorApi.undo])
 
   return (
     <nav className={cn(styles.root, 'navigation-bar', 'navigation-bar-horizontal')}>

@@ -1,16 +1,21 @@
-button.colorPicker {
+.colorPicker {
   min-width: var(--16px);
   aspect-ratio: 1;
   border-radius: 5px;
   overflow: hidden;
   padding: 0;
   background-color: #333;
-  background-image: linear-gradient(45deg, #888 25%, transparent 25%),
+  background-image:
+    linear-gradient(45deg, #888 25%, transparent 25%),
     linear-gradient(-45deg, #888 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, #888 75%),
     linear-gradient(-45deg, transparent 75%, #888 75%);
   background-size: 16px 16px;
-  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0px;
 
   div {
     width: 100%;
@@ -24,7 +29,7 @@ button.colorPicker {
   so part of the circle overflow popover */
 }
 
-button.withLabel {
+.withLabel {
   min-width: 2.5em;
   aspect-ratio: auto;
   margin-inline-start: 0.2em;

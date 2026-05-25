@@ -9,3 +9,5 @@ export const MODALS = {
   customSizeProjectModal: 'custom-size-project-modal',
   // programsModal: 'programs-modal',
 }
+
+export const TAU = Math.PI * 2

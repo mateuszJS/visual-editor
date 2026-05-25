@@ -10,8 +10,10 @@ import { DistanceInput } from '../DistanceInput/DistanceInput'
 import { SolidColorInput } from '../SolidColorInput/SolidColorInput'
 import { CircleSlider } from '@/components/CircleSlider/CircleSlider'
 import cn from 'classnames'
-import { useRef } from 'react'
-import { ProgramsModal } from '@/components/ProgramsModal/ProgramsModal'
+import { ProgramsList } from '@/components/ProgramsList/ProgramsList'
+import Popover from '@/components/Popover/Popover'
+import { TAU } from '@/consts'
+import { Trigger } from '../Trigger/Trigger'
 // import GradientInput from '@/components/GradientInput/GradientInput'
 
 interface Props {
@@ -29,8 +31,6 @@ export default function EffectPanel({
   minDistance,
   maxDistance,
 }: Props) {
-  const openSelectProgramModal = useRef<VoidFunction>(null)
-
   function renderInputControl(inputName: string, value: SoftVector4 | Vector4) {
     const prefix = inputName[0]
 
@@ -40,7 +40,32 @@ export default function EffectPanel({
 
     switch (prefix) {
       case 'a':
-        return <CircleSlider ariaLabel="Angle" value={value} onChange={onChangeInput} />
+        return (
+          <Popover
+            variant="secondary"
+            trigger={() => (
+              <Trigger name={inputName} type={prefix}>
+                A
+              </Trigger>
+            )}
+          >
+            <CircleSlider ariaLabel="Angle" value={value} onChange={onChangeInput} />
+          </Popover>
+        )
+      case 't':
+        return (
+          <CircleSlider
+            showStart
+            ariaLabel="Path Progress"
+            value={value.map((v) => (v === null ? null : v * TAU)) as SoftVector4}
+            onChange={(value, commit) =>
+              onChangeInput(
+                value.map((v) => (v === null ? null : ((v + TAU) % TAU) / TAU)) as SoftVector4,
+                commit
+              )
+            }
+          />
+        )
       case 'c':
         return <SolidColorInput value={value as Vector4} onChange={onChangeInput} />
       case 'd':
@@ -59,10 +84,6 @@ export default function EffectPanel({
 
   return (
     <li className={styles.root}>
-      <ProgramsModal
-        openModalRef={openSelectProgramModal}
-        onSelect={(code) => onChange({ code }, {}, true)}
-      />
       {/* <select className={styles.fillType} value={mapFillType(effect.fill)} onChange={onChangeType}>
         <option value="solid">Solid Fill</option>
         <option value="linear">Linear Gradient</option>
@@ -99,23 +120,27 @@ export default function EffectPanel({
         />
       )} */}
       <div className="flex">
-        <button
-          type="button"
+        <Popover
           className={cn(styles.programButton, 'text-ellipsis')}
-          onClick={() => openSelectProgramModal.current?.()}
+          trigger={() => (
+            <>
+              <span className={styles.programName}>Custom</span>
+              <span className={styles.caret} aria-hidden="true">
+                ▾
+              </span>
+            </>
+          )}
+          // popoverClassName={styles.popover}
         >
-          <span className={styles.programName}>Custom</span>
-          <span className={styles.caret} aria-hidden="true">
-            ▾
-          </span>
-        </button>
+          <ProgramsList onChange={onChange} initial={{ program, inputs }} />
+        </Popover>
+
         <CodeInput
           value={program.code}
           onChange={(code, commit) => onChange({ ...program, code }, inputs, commit)}
-          error={
+          compilationInfo={
             program
-              .errors?.[0] /* I don't think it's possible to have more than one compilation error in WGSL */
-            /* I think it's possible to have mroe than one compiclaiton error + we have have warnings */
+              .compilationInfo?.[0] /* Consider passing all of them, currently we do 1 jsut for simplicity */
           }
         />
       </div>
@@ -124,7 +149,7 @@ export default function EffectPanel({
           <li key={name} className={styles.input}>
             <div className="grow">
               <p className={styles.inputName}>
-                <div className={styles.inputAdornment} />
+                <span className={styles.inputAdornment} />
                 {name}
               </p>
               {renderInputControl(name, value)}

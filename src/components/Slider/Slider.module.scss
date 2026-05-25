@@ -17,6 +17,7 @@
   anchor-scope: all;
   grid-area: 1 / 1;
   pointer-events: none; /* let clicks pass through */
+  z-index: 1;
 }
 
 .trackWrapper {
@@ -70,6 +71,38 @@
 
 .removeBtn {
   @include remove-button;
+}
+
+.addBtn {
+  /* --position is a unitless fraction (0..1) that mirrors how the native
+     range input thumb is placed: at thumb-radius + fraction * useful-width
+     from the wrapper's left edge. */
+  --add-btn-size: calc(var(--thumb-diameter) * 1.1);
+
+  position: absolute;
+  grid-area: 1 / 1;
+  top: 50%;
+  left: calc(var(--thumb-radius) + var(--position, 0) * var(--useful-width));
+  translate: -50% -50%;
+  width: var(--add-btn-size);
+  height: var(--add-btn-size);
+  padding: 2px;
+
+  border: 1px solid var(--neutral-5);
+  border-radius: 100vw;
+  background: var(--neutral-8);
+  color: var(--neutral-4);
+  font-size: calc(var(--add-btn-size) * 0.9);
+  --cross-rotate: 45deg;
+
+  cursor: pointer;
+  pointer-events: auto;
+
+  &:hover {
+    opacity: 1;
+    border-color: var(--secondary-accent);
+    color: var(--secondary-accent);
+  }
 }
 
 .sliderIsolator:focus-within {

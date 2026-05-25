@@ -1,10 +1,10 @@
-import { Component, createRef, useEffect, useRef } from 'react'
-import cn from 'classnames'
+import { Component, createRef } from 'react'
 import styles from './CircleSlider.module.scss'
 import { SoftVector4 } from '@mateuszjs/magic-render/types'
 import { softVecToHandles } from '../CreatorPanels/components/ShapePropsPanel/components/utils'
 import { getConicGradient } from './getConicGradient'
 import { sanitizeOnChange } from './sanitizeChange'
+import { TAU } from '@/consts'
 
 export interface Handle {
   label: string
@@ -15,6 +15,7 @@ export interface Handle {
 interface Props {
   ariaLabel: string
   value: SoftVector4
+  showStart?: boolean
   onChange: (newValue: SoftVector4, commit: boolean) => void
   onFocusHandler?: (index: number) => void
 }
@@ -48,7 +49,6 @@ export class CircleSlider extends Component<Props> {
     const cy = rect.top + rect.height / 2
     // atan2 is measured from the +x axis; +90° rotates so 0° points up.
     const deg = Math.atan2(cy - clientY, clientX - cx)
-    const TAU = Math.PI * 2
     return ((deg % TAU) + TAU) % TAU
   }
 
@@ -60,6 +60,7 @@ export class CircleSlider extends Component<Props> {
     // Again, same issue as Before, "value" is stale, from previous render
     const newComponent = this.angleFromPointer(event.clientX, event.clientY)
     const newValue = sanitizeOnChange(this.props.value, index, newComponent)
+    console.log('onMouseMove', newValue)
     this.props.onChange(newValue, isMouseUp)
   }
 
@@ -132,13 +133,15 @@ export class CircleSlider extends Component<Props> {
   }
 
   render() {
-    const { value, ariaLabel } = this.props
+    const { value, ariaLabel, showStart } = this.props
 
     const y = value[1] === null ? value[2] : value[1]
     const z = value[2] === null ? value[1] : value[2]
     if (z == null || y == null) {
       throw Error(`in soft vec 4 y and z are null at once. ${value}`)
     }
+
+    console.log(value)
 
     const handles = softVecToHandles(value)
 
@@ -162,6 +165,12 @@ export class CircleSlider extends Component<Props> {
           style={{ rotate: this.state.gearCssRotation }}
           onMouseDown={(e) => this.onMouseDownGear(e)}
         ></button>
+        {showStart && (
+          <div className={styles.startAngle}>
+            <div>Start</div>
+            <div>End</div>
+          </div>
+        )}
         {handles.map((handle, index) =>
           handle === null ? null : (
             <div

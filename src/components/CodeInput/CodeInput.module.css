@@ -13,14 +13,39 @@
     }
   }
 
-  .errorTitle {
+  .popover {
+    /* The HTML [popover] UA default is `overflow: auto`, which would
+       scroll-clip our absolutely-positioned .infoSection back inside
+       the popover. Let it spill out instead. */
+    overflow: visible;
+  }
+
+  .infoSection {
+    /* Take the section out of the popover's flow so its size
+       doesn't affect the popover height (and therefore doesn't
+       shift the editor, which is centered against the trigger). */
+    position: absolute;
+    top: calc(100%);
+    left: 0;
+    right: 0;
+
+    padding: var(--padding);
+    background: var(--background);
+    border: var(--border-width) solid var(--neutral-7);
+    border-radius: 5px;
+  }
+
+  .infoTitle {
     font-size: var(--12px);
     font-weight: 400;
     color: red;
-    margin-block-start: 10px;
   }
 
-  .errorBody {
+  .warning {
+    color: gold;
+  }
+
+  .infoBody {
     max-height: 8lh;
     white-space: pre;
     overflow-y: auto;

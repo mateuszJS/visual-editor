@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react'
 import { Editor, PrismEditor } from 'prism-react-editor'
 import { BasicSetup } from 'prism-react-editor/setups'
-import { CustomProgramError } from '@mateuszjs/magic-render/types'
+import { ProgramCompilationInfo } from '@mateuszjs/magic-render/types'
 import onTokenize from './onTokenize'
 
 // Adding the WGSL grammar
@@ -22,15 +22,15 @@ import './overridePrismStyles.css'
 interface Props {
   value: string
   onChange: (value: string, commit: boolean) => void
-  error?: CustomProgramError
+  compilationInfo?: ProgramCompilationInfo
 }
 
-export default function EditorWrapper({ value, onChange, error }: Props) {
+export default function EditorWrapper({ value, onChange, compilationInfo }: Props) {
   const initialValue = useRef(value) /* changing value causes reset of the editor */
   const editorEl = useRef<PrismEditor>(null)
 
-  const errorRef = useRef(error) // to ensure onTokenzie always reads up to date errors
-  errorRef.current = error
+  const compInfoRef = useRef(compilationInfo) // to ensure onTokenzie always reads up to date errors
+  compInfoRef.current = compilationInfo
 
   const onUpdateCode = (code: string) => {
     if (value !== code) {
@@ -40,7 +40,7 @@ export default function EditorWrapper({ value, onChange, error }: Props) {
 
   useLayoutEffect(() => {
     editorEl.current?.update()
-  }, [error])
+  }, [compilationInfo])
 
   return (
     <>
@@ -49,7 +49,7 @@ export default function EditorWrapper({ value, onChange, error }: Props) {
         value={initialValue.current}
         onUpdate={onUpdateCode}
         wordWrap
-        onTokenize={(tokens) => onTokenize(errorRef.current, tokens)}
+        onTokenize={(tokens) => onTokenize(compInfoRef.current, tokens)}
         ref={editorEl}
       >
         {(editor) => <BasicSetup editor={editor} />}

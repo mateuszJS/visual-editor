@@ -53,9 +53,8 @@ export default function SoftRangeSlider({
     '--height': '0.35em',
   } as React.CSSProperties
 
-  const em1 = exponentialToLinear(16, min, max) // to align gradient perfectly with knobs
   const normalize = (value: number) =>
-    ((em1 * 0.25 + LINEAR_MAX - value) / (LINEAR_MAX - LINEAR_MIN + em1 * 0.5)) * 100 + '%'
+    ((LINEAR_MAX - value) / (LINEAR_MAX - LINEAR_MIN)) * 100 + '%'
 
   const handles = softVecToHandles(linearValue)
 
@@ -68,13 +67,38 @@ export default function SoftRangeSlider({
     throw Error(`in soft vec 4 y and z are null at once. ${linearValue}`)
   }
 
+  // Position null handles equally between the bracketing anchors. Anchors are
+  // either other non-null handle values or the slider's corners (LINEAR_MAX on
+  // the inner / bottom-left side, LINEAR_MIN on the outer / top-right side).
+  // For [null, null, 0, null] the two leading nulls split [LINEAR_MAX, 0] into
+  // thirds (positions at 1/3 and 2/3), and the trailing null sits at the
+  // midpoint between 0 and LINEAR_MIN.
   const getNewKnobValue = (index: number) => {
-    const prev = handles[index - 1] || handles[index - 2] || null
-    const next = handles[index + 1] || handles[index + 2] || null
-    const lower = prev !== null ? prev.value : max
-    const upper = next !== null ? next.value : min
+    let leftValue: number = LINEAR_MAX
+    let leftIdx = -1
+    for (let i = index - 1; i >= 0; i--) {
+      if (linearValue[i] !== null) {
+        leftValue = linearValue[i] as number
+        leftIdx = i
+        break
+      }
+    }
 
-    return (lower + upper) / 2
+    let rightValue: number = LINEAR_MIN
+    let rightIdx: number = linearValue.length
+    for (let i = index + 1; i < linearValue.length; i++) {
+      if (linearValue[i] !== null) {
+        rightValue = linearValue[i] as number
+        rightIdx = i
+        break
+      }
+    }
+
+    const totalSegments = rightIdx - leftIdx
+    const positionInGap = index - leftIdx
+    const fraction = positionInGap / totalSegments
+
+    return leftValue + (rightValue - leftValue) * fraction
   }
 
   return (

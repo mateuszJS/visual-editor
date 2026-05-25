@@ -43,12 +43,23 @@ export default function Slider({
     // label or fieldset is not used because grid on them doesn't work properly in Chrome
     <div className={cn(styles.inputsWrapper, className)} role="group" aria-label={ariaLabel}>
       <div className={styles.trackWrapper}>{children}</div>
-      {handles.map((handle, index) =>
-        handle === null ? (
-          <button key={index} onClick={() => onChange(index, getNewKnobValue(index), true)}>
-            +
-          </button>
-        ) : (
+      {handles.map((handle, index) => {
+        if (handle === null) {
+          const newValue = getNewKnobValue(index)
+          const fraction = (newValue - min) / (max - min)
+          return (
+            <button
+              key={index}
+              type="button"
+              data-slider-add-btn
+              className={cn(styles.addBtn, 'cross')}
+              style={{ '--position': fraction } as React.CSSProperties}
+              onClick={() => onChange(index, newValue, true)}
+              aria-label="Add handle"
+            ></button>
+          )
+        }
+        return (
           <div className={styles.sliderIsolator} key={index}>
             <label className={styles.srOnly} htmlFor={`slider-${id}-${index}`}>
               {handle.label}
@@ -77,7 +88,7 @@ export default function Slider({
             )}
           </div>
         )
-      )}
+      })}
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import cn from 'classnames'
 import CodeSymbol from 'assets/code-symbol.svg'
-import { CustomProgramError } from '@mateuszjs/magic-render/types'
+import { ProgramCompilationInfo } from '@mateuszjs/magic-render/types'
 import Popover from '@/components/Popover/Popover'
 import EditorWrapper from './components/EditorWrapper'
 import styles from './CodeInput.module.css'
@@ -8,26 +8,31 @@ import styles from './CodeInput.module.css'
 interface Props {
   value: string
   onChange: (value: string, commit: boolean) => void
-  error?: CustomProgramError
+  compilationInfo?: ProgramCompilationInfo
   className?: string
 }
 
-export default function CodeInput({ value, onChange, error, className }: Props) {
+export default function CodeInput({ value, onChange, compilationInfo, className }: Props) {
   return (
     <>
       <Popover
         trigger={() => <CodeSymbol />}
         className={cn(styles.triggerBtn, className)}
+        popoverClassName={styles.popover}
         aria-label="Open code editor"
         variant="ghost"
         noHover
       >
-        <EditorWrapper value={value} onChange={onChange} error={error} />
-        {error && (
-          <section>
-            <h4 className={styles.errorTitle}>Compilation Error:</h4>
-            <p className={styles.errorBody}>
-              Line {error.lineNum}:{error.linePos} {error.message}
+        <EditorWrapper value={value} onChange={onChange} compilationInfo={compilationInfo} />
+        {compilationInfo && (
+          <section className={styles.infoSection}>
+            <h4
+              className={cn(styles.infoTitle, compilationInfo.type === 'warning' && styles.warning)}
+            >
+              {compilationInfo.type === 'error' ? 'Compilation Error:' : 'Compilation Warning:'}
+            </h4>
+            <p className={styles.infoBody}>
+              Line {compilationInfo.lineNum}:{compilationInfo.linePos} {compilationInfo.message}
             </p>
           </section>
         )}

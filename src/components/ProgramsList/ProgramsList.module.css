@@ -1,3 +1,15 @@
+.root {
+  width: min(30vw, 300px);
+
+  ul {
+    --panel-min-size: 100px;
+
+    button:hover {
+      outline: 5px solid var(--secondary-accent);
+    }
+  }
+}
+
 .filter {
   width: 100%;
   padding: 10px 12px;

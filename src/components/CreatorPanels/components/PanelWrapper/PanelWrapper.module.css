@@ -16,6 +16,7 @@
 .details {
   background: var(--neutral-8);
   padding: 2px 8px;
+  overflow-x: clip;
 
   &[open] {
     padding-block-end: 5px;

@@ -29,7 +29,7 @@ export default function ColorInput({ label, value, onChange, ...rest }: Props) {
         popoverClassName={styles.popover}
         {...rest}
         id={inputId}
-        className={cn(styles.colorPicker, numberInputStyles.input, rest.className, {
+        className={cn(styles.colorPicker, rest.className, {
           [styles.withLabel]: !!label,
         })}
         variant="ghost"

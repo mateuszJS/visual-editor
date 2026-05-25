@@ -3,6 +3,7 @@
 .circle {
   position: relative;
   width: 100%;
+  min-width: 200px;
   aspect-ratio: 1;
   border-radius: 100vw;
   user-select: none;
@@ -107,5 +108,20 @@
 
   &:active {
     cursor: grabbing;
+  }
+}
+
+.startAngle {
+  --border-width: 2px;
+  font-size: 12px;
+  position: absolute;
+  top: calc(50% - 1lh - var(--border-width) * 0.5);
+  left: 50%;
+  width: 50%;
+  text-align: right;
+  pointer-events: none;
+
+  div:first-child {
+    border-bottom: var(--border-width) solid var(--neutral-2);
   }
 }

@@ -6,7 +6,7 @@
 
 .root {
   display: grid;
-  grid-template-columns: auto 1fr 5px auto 1fr;
+  grid-template-columns: auto 1fr 10px auto 1fr;
   gap: 5px 0;
 }
 

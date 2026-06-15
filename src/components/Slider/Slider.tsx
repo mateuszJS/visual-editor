@@ -52,7 +52,7 @@ export default function Slider({
               key={index}
               type="button"
               data-slider-add-btn
-              className={cn(styles.addBtn, 'cross')}
+              className={cn(styles.addBtn, styles.cross)}
               style={{ '--position': fraction } as React.CSSProperties}
               onClick={() => onChange(index, newValue, true)}
               aria-label="Add handle"

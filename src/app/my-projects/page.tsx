@@ -16,10 +16,12 @@ export default function MyProjects() {
   const { user } = useSnapshot(userStore)
   const { error, loading, projectsList } = useProjectsList()
 
+  const title = <h1 className="page-title">Projects</h1>
+
   if (user === null) {
     return (
       <main>
-        <h1 className="page-title">Projects</h1>
+        {title}
         <LoginCTA title="Sign in to view your projects" />
       </main>
     )
@@ -27,7 +29,7 @@ export default function MyProjects() {
 
   return (
     <main>
-      <h1 className="page-title">Projects</h1>
+      {title}
       <div className="relative">
         {error && <ErrorReloadButton listName="your projects" />}
         <ul className={imagePanelStyles.list}>

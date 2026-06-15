@@ -73,11 +73,35 @@
   @include remove-button;
 }
 
+.cross {
+  aspect-ratio: 1;
+  display: grid;
+  padding: 0;
+  align-self: start;
+  align-content: center;
+
+  &::before,
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 0.15em;
+    background: currentColor;
+    border-radius: 100vw;
+    grid-area: 1/1;
+    rotate: calc(45deg + var(--cross-rotate, 0));
+  }
+
+  &::after {
+    rotate: calc(-45deg + var(--cross-rotate, 0));
+  }
+}
+
 .addBtn {
   /* --position is a unitless fraction (0..1) that mirrors how the native
      range input thumb is placed: at thumb-radius + fraction * useful-width
      from the wrapper's left edge. */
-  --add-btn-size: calc(var(--thumb-diameter) * 1.1);
+  --add-btn-size: calc(var(--thumb-diameter) * 1.15);
 
   position: absolute;
   grid-area: 1 / 1;

@@ -21,15 +21,15 @@ const MAX_STORAGE = 1024 * 1024 * 5 // 5MB
 export default function Explore() {
   const { error, loading, items } = useStorage()
   const deleteStorageItem = useDeleteStorageItem()
-
   const usedStorage = Array.from(items).reduce((acc, [, item]) => acc + item.size, 0)
-
   const { user } = useSnapshot(userStore)
+
+  const title = <h1 className="page-title">Assets Library</h1>
 
   if (user === null) {
     return (
       <main>
-        <h1 className="page-title">Projects</h1>
+        {title}
         <LoginCTA title="Sign in to view your assets library" />
       </main>
     )
@@ -37,7 +37,7 @@ export default function Explore() {
 
   return (
     <main>
-      <h1 className="page-title">Library</h1>
+      {title}
       {!error && !loading && items.size > 0 && (
         <>
           <p className="flex space-between text-sm mx-2">
@@ -91,7 +91,7 @@ export default function Explore() {
         </ul>
       </div>
       {!error && !loading && items.size === 0 && (
-        <EmptyState title="Library">
+        <EmptyState title="Assets Library">
           <p className="text-balance">
             Manage your images, fonts & brand files across all projects.
           </p>

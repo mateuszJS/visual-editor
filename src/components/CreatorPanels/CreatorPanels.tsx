@@ -1,9 +1,11 @@
 import useIsMobile from '@/hooks/useIsMobile/useIsMobile'
 import BoundsPanel from './components/BoundsPanel/BoundsPanel'
-import ShapePropsPanel from './components/ShapePropsPanel/ShapePropsPanel'
+import { EffectsListPanel } from './components/EffectsListPanel/EffectsListPanel'
 import styles from './CreatorPanels.module.css'
 import ProjectPropsPanel from './components/ProjectPropsPanel/ProjectPropsPanel'
 import TypographyPanel from './components/TypographyPanel/TypographyPanel'
+import LayersPanel from './components/LayersPanel/LayersPanel'
+import { PropertiesPanel } from './components/PropertiesPanel/PropertiesPanel'
 
 export default function CreatorPanels() {
   const isMobile = useIsMobile()
@@ -15,8 +17,12 @@ export default function CreatorPanels() {
     <section className={styles.root}>
       <ProjectPropsPanel />
       <BoundsPanel />
-      <ShapePropsPanel />
+      <EffectsListPanel />
       <TypographyPanel />
+      <PropertiesPanel />
+      <div className="mt-auto mb-16">
+        <LayersPanel />
+      </div>
     </section>
   )
 }

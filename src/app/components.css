@@ -52,4 +52,17 @@
       }
     }
   }
+
+  .question-mark {
+    background: var(--neutral-3);
+    color: var(--neutral-8);
+    display: block;
+    border-radius: 100vw;
+    width: 22px;
+    height: 22px;
+    font-size: 17px;
+    line-height: 15px;
+    padding: 0;
+    text-align: center;
+  }
 }

@@ -1,0 +1,35 @@
+.root {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--14px);
+  font-weight: 500;
+}
+
+.type {
+  font-size: var(--12px);
+  color: var(--secondary);
+  font-weight: 400;
+}
+
+.icon {
+  width: 25px;
+  color: var(--neutral-3);
+  line-height: 25px;
+  position: relative;
+  top: 4px;
+}
+
+.colorSample {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  --rows: 4; /* columns have same number */
+  background:
+    conic-gradient(var(--fill-color)),
+    conic-gradient(#777 0 90deg, #444 0 180deg, #777 0 270deg, #444 0) 0 0/50% 50%;
+  overflow: clip;
+}

@@ -1,7 +1,7 @@
 import { Component, createRef } from 'react'
 import styles from './CircleSlider.module.scss'
 import { SoftVector4 } from '@mateuszjs/magic-render/types'
-import { softVecToHandles } from '../CreatorPanels/components/ShapePropsPanel/components/utils'
+import { softVecToHandles } from '../CreatorPanels/components/EffectsListPanel/components/utils'
 import { getConicGradient } from './getConicGradient'
 import { sanitizeOnChange } from './sanitizeChange'
 import { TAU } from '@/consts'
@@ -60,7 +60,6 @@ export class CircleSlider extends Component<Props> {
     // Again, same issue as Before, "value" is stale, from previous render
     const newComponent = this.angleFromPointer(event.clientX, event.clientY)
     const newValue = sanitizeOnChange(this.props.value, index, newComponent)
-    console.log('onMouseMove', newValue)
     this.props.onChange(newValue, isMouseUp)
   }
 
@@ -140,8 +139,6 @@ export class CircleSlider extends Component<Props> {
     if (z == null || y == null) {
       throw Error(`in soft vec 4 y and z are null at once. ${value}`)
     }
-
-    console.log(value)
 
     const handles = softVecToHandles(value)
 

@@ -50,6 +50,7 @@
   min-width: 1em;
   font-size: inherit;
   padding: 0.3em 0.5em;
+  font-variant-numeric: tabular-nums;
 }
 
 .suffix {

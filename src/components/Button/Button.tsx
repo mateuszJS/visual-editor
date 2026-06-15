@@ -1,26 +1,31 @@
 import styles from './Button.module.css'
 import cn from 'classnames'
+import Link from '@/components/Link/Link'
 
-export type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+type SharedButtonProps = {
   variant?: 'primary' | 'secondary' | 'ghost'
   children: React.ReactNode
-  onClick?: React.MouseEventHandler<HTMLButtonElement>
   expand?: boolean
-  className?: string
   iconOnly?: boolean
   noHover?: boolean
   small?: boolean
 }
+
+export type Props = SharedButtonProps &
+  (
+    | ({ href?: undefined } & React.ButtonHTMLAttributes<HTMLButtonElement>)
+    | ({ href: string } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>)
+  )
 
 export default function Button({
   variant = 'primary',
   expand = false,
   className,
   children,
-  onClick,
   iconOnly,
   noHover,
   small,
+  href,
   ...rest
 }: Props) {
   const classNames = cn(styles.button, className, {
@@ -33,8 +38,20 @@ export default function Button({
     [styles.small]: small,
   })
 
+  if (href) {
+    const linkRest = rest as Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>
+
+    return (
+      <Link href={href} className={classNames} {...linkRest}>
+        {children}
+      </Link>
+    )
+  }
+
+  const buttonRest = rest as React.ButtonHTMLAttributes<HTMLButtonElement>
+
   return (
-    <button className={classNames} onClick={onClick} {...rest}>
+    <button className={classNames} {...buttonRest}>
       {children}
     </button>
   )

@@ -10,8 +10,10 @@ interface Props {
 const panelIdToTitle = {
   projectProps: 'Project Properties',
   bounds: 'Bounds',
-  shapeProps: 'Shape Properties',
+  effects: 'Effects',
   typography: 'Typography',
+  layers: 'Layers',
+  properties: 'Properties',
 } as const
 
 export default function PanelWrapper({ id, children }: Props) {

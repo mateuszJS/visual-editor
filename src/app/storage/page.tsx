@@ -12,6 +12,9 @@ import useDeleteStorageItem from '@/hooks/useDeleteStorageItem/useDeleteStorageI
 import styles from './storage.module.css'
 import { timeAgo } from '@/utils/timeAgo'
 import { ErrorReloadButton } from '@/components/ErrorReloadButton/ErrorReloadButton'
+import { useSnapshot } from 'valtio'
+import userStore from '@/hooks/userStore/userStore'
+import LoginCTA from '@/components/LoginCTA/LoginCTA'
 
 const MAX_STORAGE = 1024 * 1024 * 5 // 5MB
 
@@ -20,6 +23,17 @@ export default function Explore() {
   const deleteStorageItem = useDeleteStorageItem()
 
   const usedStorage = Array.from(items).reduce((acc, [, item]) => acc + item.size, 0)
+
+  const { user } = useSnapshot(userStore)
+
+  if (user === null) {
+    return (
+      <main>
+        <h1 className="page-title">Projects</h1>
+        <LoginCTA title="Sign in to view your assets library" />
+      </main>
+    )
+  }
 
   return (
     <main>

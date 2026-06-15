@@ -74,7 +74,7 @@
   --diagonal: calc(100% * sqrt(2));
   width: var(--diagonal);
   margin-left: calc((var(--diagonal) - 100%) * -0.5);
-  translate: 0 -83%;
+  translate: 0 -50%;
   rotate: 135deg;
   position: absolute;
 

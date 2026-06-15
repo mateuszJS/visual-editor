@@ -20,6 +20,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.913.0",
     "@aws-sdk/s3-request-presigner": "^3.913.0",
+    "@dnd-kit/helpers": "^0.4.0",
+    "@dnd-kit/react": "^0.4.0",
     "@mateuszjs/magic-render": "^0.0.16",
     "@vercel/functions": "^2.0.0",
     "classnames": "^2.5.1",

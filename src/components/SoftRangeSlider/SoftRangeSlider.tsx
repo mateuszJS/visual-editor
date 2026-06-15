@@ -3,7 +3,7 @@ import Slider from '@/components/Slider/Slider'
 import styles from './SoftRangeSlider.module.css'
 import { exponentialToLinear, linearToExponential } from './utils'
 import { SoftVector4 } from '@mateuszjs/magic-render/types'
-import { softVecToHandles } from '../CreatorPanels/components/ShapePropsPanel/components/utils'
+import { softVecToHandles } from '../CreatorPanels/components/EffectsListPanel/components/utils'
 
 interface Props {
   ariaLabel: string

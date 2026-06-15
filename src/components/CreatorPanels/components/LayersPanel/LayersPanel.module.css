@@ -1,0 +1,72 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  padding: 2px 0;
+}
+
+.empty {
+  color: var(--neutral-4);
+  font-size: var(--12px);
+  font-weight: 300;
+  padding: 6px 4px;
+  text-align: center;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  margin-block-end: 2px;
+  border-radius: 4px;
+  font-size: var(--13px);
+  font-weight: 300;
+  color: var(--neutral-2);
+  background-color: var(--neutral-9);
+  user-select: none;
+  cursor: grab;
+  touch-action: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:last-child {
+    margin-block-end: 0;
+  }
+
+  &:hover {
+    background-color: var(--neutral-8);
+  }
+
+  &.selected {
+    background: var(--neutral-7);
+  }
+
+  &.dragging {
+    cursor: grabbing;
+    scale: 1.1;
+  }
+}
+
+.icon {
+  flex: none;
+  width: var(--14px);
+  height: var(--14px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neutral-3);
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

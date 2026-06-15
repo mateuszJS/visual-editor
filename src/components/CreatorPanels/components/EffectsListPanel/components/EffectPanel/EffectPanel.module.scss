@@ -1,3 +1,22 @@
+$space-before-list: 5px;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  --space-before-list: 5px;
+  gap: $space-before-list;
+  /* followign proeprties areo nly because of drag'n'drop */
+  background: var(--neutral-8);
+  border-radius: 5px;
+  margin-top: 8px;
+}
+
+.programRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .programButton {
   display: inline-flex;
   align-items: center;
@@ -12,7 +31,6 @@
   text-align: left;
   flex: 1;
   min-width: 0;
-  margin-right: 4px;
 }
 
 .programName {
@@ -29,30 +47,65 @@
   line-height: 1;
 }
 
+.dragHandle {
+  flex-shrink: 0;
+  line-height: 23px;
+  color: var(--secondary);
+  cursor: grab;
+
+  &:hover {
+    color: var(--neutral-4);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  svg {
+    position: relative;
+    top: 3px;
+  }
+}
+
 .inputsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   overflow: clip;
-  overflow-clip-margin: 15px;
+  overflow-clip-margin: $space-before-list + 1px
+    /* calc doesn't work for this particular property */;
 }
 
 .input {
   --adornment-width: 15px;
   --color: var(--secondary);
 
+  position: relative;
   display: flex;
   margin-left: calc(20px + var(--adornment-width));
-  margin-top: 16px;
 }
 
-.inputName {
-  position: relative;
-  margin-bottom: 4px;
-  --gap: 5px; /* gap between input name and center on circlular adornment */
-  --adornment-diameter: 3px;
-  --offset-y: 5px;
+.triggerButton {
+  --hover-background: var(--neutral-7);
+
+  width: 100%;
+  padding: 2px;
+  text-align: left;
+
+  &:hover {
+    background: var(--neutral-7);
+  }
 }
 
 .inputAdornment {
   display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  --adornment-diameter: 3px;
+  --gap: 5px;
+  --offset-y: 18px;
 
   &:before {
     content: '';
@@ -80,4 +133,9 @@
     right: calc(100% + var(--gap));
     bottom: calc(var(--adornment-diameter) / 2 + var(--offset-y));
   }
+}
+
+.dragging {
+  scale: 1.05;
+  box-shadow: 0 2px 5px #000;
 }

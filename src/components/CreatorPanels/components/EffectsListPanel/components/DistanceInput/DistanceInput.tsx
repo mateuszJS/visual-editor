@@ -14,7 +14,7 @@ interface Props {
 
 export function DistanceInput({ value, onChange, min, max }: Props) {
   return (
-    <div>
+    <div className={styles.root}>
       {/* <NumberInput
         label="From:"
         value={value[1]}
@@ -50,7 +50,6 @@ export function DistanceInput({ value, onChange, min, max }: Props) {
       /> */}
       <SoftRangeSlider
         ariaLabel="Update effect range"
-        className={styles.range}
         min={min}
         max={max}
         value={value}

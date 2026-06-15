@@ -1,7 +1,9 @@
 .root {
   grid-area: panels;
-  width: 200px;
+  width: 220px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 
   & > *:not(:last-child) {
     margin-block-end: 10px;

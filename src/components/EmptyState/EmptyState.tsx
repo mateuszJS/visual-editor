@@ -13,11 +13,11 @@ export default function EmptyState({ className, title, children }: Props) {
     <div className={cn(styles.root, className)}>
       <h2>{title}</h2>
       {children}
-      <Spark />
-      <Spark />
-      <Spark />
-      <Spark />
-      <Spark />
+      <Spark className={styles.spark1} />
+      <Spark className={styles.spark2} />
+      <Spark className={styles.spark3} />
+      <Spark className={styles.spark4} />
+      <Spark className={styles.spark5} />
     </div>
   )
 }

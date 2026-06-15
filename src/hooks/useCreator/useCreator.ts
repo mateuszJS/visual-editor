@@ -88,9 +88,12 @@ function useCreator() {
     )
   }
 
+  const currentSnapshot = stateSnapshot.historySnapshots[stateSnapshot.historySnapshotIndex]
+
   return {
     isReady: !!stateSnapshot.creator,
     selectedAssetId: stateSnapshot.selectedAssetId,
+    assets: currentSnapshot?.assets ?? [],
     undo: canUndo ? () => setHistoricSnapshot(stateSnapshot.historySnapshotIndex - 1) : null,
     redo: canRedo ? () => setHistoricSnapshot(stateSnapshot.historySnapshotIndex + 1) : null,
     tool: stateSnapshot.tool,
@@ -246,6 +249,18 @@ function useCreator() {
       if (!creator) throw Error('Creator is not initialized')
 
       creator.updateAssetTypoProps(props, commit)
+    },
+    reorderAssets(newAssets: Asset[]) {
+      const creator = stateSnapshot.creator
+      if (!creator) throw Error('Creator is not initialized')
+
+      const snapshot = creatorState.historySnapshots[creatorState.historySnapshotIndex]
+      if (!snapshot) return
+
+      creator.setSnapshot(
+        { width: snapshot.width, height: snapshot.height, assets: newAssets },
+        { produceSnapshot: true, addHistoryEntry: true }
+      )
     },
   }
 }

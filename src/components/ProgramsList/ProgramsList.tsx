@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import imagePanelStyles from '@/components/shared/imagePanel.module.css'
 import styles from './ProgramsList.module.css'
-import { Program, ProgramInputs, SoftVector4, Vector4 } from '@mateuszjs/magic-render/types'
+import { ProgramInputs, SoftVector4, Vector4 } from '@mateuszjs/magic-render/types'
 
 interface PredefinedPrograms {
   name: string
@@ -12,7 +12,17 @@ interface PredefinedPrograms {
   inputs: Record<string, SoftVector4 | Vector4>
 }
 
+export const SOLID_FILL_CODE = `let fill = c_color(s);
+let distance = d_distance(s);
+color=vec4f(fill.rgb, distance);`
+
 const PROGRAMS_LIST: PredefinedPrograms[] = [
+  {
+    name: 'Solid Fill',
+    code: SOLID_FILL_CODE,
+    previewSrc: 'https://images.pexels.com/photos/6752832/pexels-photo-6752832.jpeg',
+    inputs: {},
+  },
   {
     name: 'Ring',
     code: `let fill = c_Color(s);
@@ -21,9 +31,9 @@ let angle = a_angle(s);
 color = vec4f(fill.rgb, fill.a * dist * angle);`,
     previewSrc: 'https://images.pexels.com/photos/13661207/pexels-photo-13661207.jpeg',
     inputs: {
-      a_angle: [1.4826521374313906, 2.180203890593174, 3.075500207999294, 3.295124411240022],
-      c_Color: [0.8588235294117647, 0, 0.4823529411764706, 1],
-      d_distance: [null, 10, -10, null],
+      a_angle_1: [1.4826521374313906, 2.180203890593174, 3.075500207999294, 3.295124411240022],
+      c_Color_1: [0.8588235294117647, 0, 0.4823529411764706, 1],
+      d_distance_1: [null, 10, -10, null],
     },
   },
   {
@@ -33,7 +43,7 @@ let dist = d_distance(s);
 color = vec4f(0.5, 1, 0.5, dist);`,
     previewSrc: 'https://images.pexels.com/photos/13649223/pexels-photo-13649223.jpeg',
     inputs: {
-      d_distance: [50, 0, 0, -50],
+      d_distance_1: [50, 0, 0, -50],
     },
   },
   {
@@ -43,8 +53,8 @@ let dist = d_distance(s);
 color = vec4f(fill.rgb, fill.a * dist);`,
     previewSrc: 'https://images.pexels.com/photos/6687532/pexels-photo-6687532.jpeg',
     inputs: {
-      c_Color: [0.1, 0.1, 0.9, 1],
-      d_distance: [0, 0, 0, -150],
+      c_Color_1: [0.1, 0.1, 0.9, 1],
+      d_distance_1: [0, 0, 0, -150],
     },
   },
   {
@@ -55,8 +65,8 @@ let dist = d_distance(s);
 color = vec4f(fill.rgb, fill.a * progress * dist);`,
     previewSrc: 'https://images.pexels.com/photos/32694153/pexels-photo-32694153.jpeg',
     inputs: {
-      c_Color: [0.1, 0.1, 0.9, 1],
-      d_distance: [20, 10, -10, -20],
+      c_Color_1: [0.1, 0.1, 0.9, 1],
+      d_distance_1: [20, 10, -10, -20],
     },
   },
 ]
@@ -64,10 +74,10 @@ color = vec4f(fill.rgb, fill.a * progress * dist);`,
 interface Props {
   initial: {
     // this prop is captured only once, when component is rendered
-    program: Program
+    code: string
     inputs: ProgramInputs['props']
   }
-  onChange: (program: Program, inputs: ProgramInputs['props'], commit: boolean) => void
+  onChange: (code: string, inputs: ProgramInputs['props'], commit: boolean) => void
 }
 
 export function ProgramsList({ initial, onChange }: Props) {
@@ -82,7 +92,7 @@ export function ProgramsList({ initial, onChange }: Props) {
   useEffect(() => {
     return () => {
       if (initialRef.current) {
-        onChange(initialRef.current.program, initialRef.current.inputs, false)
+        onChange(initialRef.current.code, initialRef.current.inputs, false)
       }
     }
   }, [])
@@ -130,7 +140,7 @@ export function ProgramsList({ initial, onChange }: Props) {
               // }}
               onClick={() => {
                 initialRef.current = null
-                onChange({ code: program.code }, program.inputs, true)
+                onChange(program.code, program.inputs, true)
               }}
               className={imagePanelStyles.imagePanel}
               style={

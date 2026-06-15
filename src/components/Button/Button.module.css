@@ -47,6 +47,26 @@
   .ghost {
   }
 
+  .chunky {
+    color: var(--neutral-2);
+    font-size: var(--12px);
+    border: 1px solid var(--neutral-6);
+    padding: 2px;
+
+    --border-width: 1px;
+    font-weight: 300;
+    font-size: 12px;
+    gap: 5px;
+
+    svg {
+      font-size: 10px;
+    }
+
+    &:hover {
+      background: var(--neutral-9);
+    }
+  }
+
   /* .danger {
   color: var(--danger);
 } */

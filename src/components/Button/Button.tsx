@@ -3,7 +3,7 @@ import cn from 'classnames'
 import Link from '@/components/Link/Link'
 
 type SharedButtonProps = {
-  variant?: 'primary' | 'secondary' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'ghost' | 'chunky'
   children: React.ReactNode
   expand?: boolean
   iconOnly?: boolean
@@ -32,7 +32,8 @@ export default function Button({
     [styles.primary]: variant === 'primary',
     [styles.secondary]: variant === 'secondary',
     [styles.ghost]: variant === 'ghost',
-    [styles.expand]: expand,
+    [styles.chunky]: variant === 'chunky',
+    [styles.expand]: expand || variant === 'chunky',
     [styles.onlyIcon]: iconOnly,
     [styles.noHover]: noHover,
     [styles.small]: small,

@@ -6,7 +6,6 @@ import PanelWrapper from '../PanelWrapper/PanelWrapper'
 import { ProgramInputs } from '@mateuszjs/magic-render/types'
 import Button from '@/components/Button/Button'
 import PlusIcon from 'assets/plus-icon.svg'
-import styles from './EffectsListPanel.module.css'
 import { SOLID_FILL_CODE } from '@/components/ProgramsList/ProgramsList'
 import { DragDropProvider, DragEndEvent, DragOverEvent } from '@dnd-kit/react'
 import { move } from '@dnd-kit/helpers'
@@ -114,7 +113,7 @@ export function EffectsListPanel() {
   return (
     <PanelWrapper id="effects">
       <div>
-        <Button small variant="ghost" className={styles.addEffectButton} onClick={addNewEffect}>
+        <Button variant="chunky" className="mt-8" onClick={addNewEffect}>
           <PlusIcon />
           <span>Add Effect</span>
         </Button>

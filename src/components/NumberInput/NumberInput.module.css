@@ -26,6 +26,13 @@
   cursor: pointer;
   align-self: center;
 
+  svg {
+    display: block;
+    width: 1.5em;
+    height: 1.5em;
+    color: var(--neutral-3);
+  }
+
   &.labelLarge {
     font-size: var(--18px);
     margin-right: 5px;

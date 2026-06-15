@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, ReactNode } from 'react'
 import styles from './NumberInput.module.css'
 import decimals from '@/utils/decimals'
 import useUniqueId from '@/hooks/useUniqueId/useUniqueId'
@@ -9,7 +9,7 @@ interface Props extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   'onChange' | 'min' | 'max'
 > {
-  label: string
+  label: ReactNode
   value: number
   unit?: string
   roundDecimals?: boolean

@@ -13,5 +13,7 @@
   },
   "[jsonc]": {
     "editor.formatOnSave": false
-  }
+  },
+  "typescript.preferences.preferGoToSourceDefinition": true,
+  "javascript.preferences.preferGoToSourceDefinition": true
 }

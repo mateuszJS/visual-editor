@@ -73,7 +73,9 @@
     border: 1px solid var(--neutral-7);
     border-radius: 4px;
 
-    display: flex;
+    &:popover-open {
+      display: flex;
+    }
     flex-direction: column;
     gap: 1px;
 
